@@ -31,15 +31,9 @@ public class ComappingServer {
 	private String autoLoginKey = null;
 
 	// private methods
-	private String doLogin(String email, String password, String loginMethod) {
+	private String requestToServer(ArrayList<BasicNameValuePair> data) {
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(serverURL);
-
-		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
-		data.add(new BasicNameValuePair("action", "notifier_login"));
-		data.add(new BasicNameValuePair("login", email));
-		data.add(new BasicNameValuePair("password", password));
-		data.add(new BasicNameValuePair("loginMethod", loginMethod));
 
 		UrlEncodedFormEntity entity = null;
 		try {
@@ -47,7 +41,7 @@ public class ComappingServer {
 		} catch (UnsupportedEncodingException e1) {
 			Log.e("Comapping Server", "Unsupported Encoding for Entity");
 		}
-
+		
 		post.setEntity(entity);
 
 		HttpResponse response = null;
@@ -67,8 +61,19 @@ public class ComappingServer {
 		} catch (IOException e) {
 			Log.e("Comapping Server", "Error while reading response");
 		}
-
+		
 		return "";
+	}
+	
+	private String doLogin(String email, String password, String loginMethod) {
+		
+		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
+		data.add(new BasicNameValuePair("action", "notifier_login"));
+		data.add(new BasicNameValuePair("login", email));
+		data.add(new BasicNameValuePair("password", password));
+		data.add(new BasicNameValuePair("loginMethod", loginMethod));
+
+		return requestToServer(data);
 	}
 
 	private boolean checkLoginResult() {
@@ -103,12 +108,16 @@ public class ComappingServer {
 
 		String salt = doLogin(email, passwordHash, "simple");
 
-		if ((salt.length() > 0) && (salt.charAt(0) == '#')) {
-			salt = salt.substring(1);
+		if (salt.length() > 0) {
+			if (salt.charAt(0) == '#') {
+				salt = salt.substring(1);
 
-			autoLogin(email, MD5Encode(password + salt), "withSalt");
+				autoLogin(email, MD5Encode(password + salt), "withSalt");
+			} else {
+				clientId = salt;
+			}
 		} else {
-			// not acceptable salt
+			//login failed
 		}
 	}
 
@@ -131,30 +140,13 @@ public class ComappingServer {
 
 	public void logout() throws NotLoggedInException {
 		loginRequired();
-
-		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost(serverURL);
-
+		clientId = null;
+		
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));
 
-		UrlEncodedFormEntity entity = null;
-		try {
-			entity = new UrlEncodedFormEntity(data);
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		post.setEntity(entity);
-
-		HttpResponse response = null;
-		try {
-			response = client.execute(post);
-		} catch (Exception e) {
-		}
-
-		clientId = null;
+		requestToServer(data);
 	}
 
 	public String getComap(String mapId) throws NotLoggedInException {
@@ -162,35 +154,12 @@ public class ComappingServer {
 
 		loginRequired();
 
-		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost(serverURL);
-
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
 		data.add(new BasicNameValuePair("format", "comap"));
 		data.add(new BasicNameValuePair("clientID", clientId));
 		data.add(new BasicNameValuePair("mapid", mapId));
 
-		UrlEncodedFormEntity entity = null;
-		try {
-			entity = new UrlEncodedFormEntity(data);
-		} catch (UnsupportedEncodingException e1) {
-			Log.e("Comapping Server", "Unsupported Encoding");
-		}
-
-		post.setEntity(entity);
-
-		HttpResponse response = null;
-
-		try {
-			response = client.execute(post);
-			return getTextFromResponse(response);
-		} catch (ClientProtocolException e) {
-			Log.e("Comapping Server", "Client protocol exception");
-		} catch (IOException e) {
-			Log.e("Comapping Server", "IO exception");
-		}
-
-		return null;
+		return requestToServer(data);
 	}
 }
