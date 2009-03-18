@@ -82,8 +82,9 @@ public class ComappingServer {
 		if (checkLoginResult()) {
 			autoLoginKey = key;
 
-			Log.i("Comapping Server", email + " logged in");
-		} else clientId = null;
+			Log.i("Comapping Server", email + " logged in" + ":" + this);
+		} else
+			clientId = null;
 	}
 
 	// public methods
@@ -97,7 +98,7 @@ public class ComappingServer {
 
 	public void login(String email, String password) {
 		clientId = null;
-		
+
 		String passwordHash = MD5Encode(password);
 
 		String salt = doLogin(email, passwordHash, "simple");
@@ -118,18 +119,19 @@ public class ComappingServer {
 	public void autoLogin(String name, String key) {
 		autoLogin(name, key, "flashCookie");
 	}
-	
+
 	public boolean isLoggedIn() {
 		return clientId != null;
 	}
 
 	private void loginRequired() throws NotLoggedInException {
-		if (!isLoggedIn()) throw new NotLoggedInException();
+		if (!isLoggedIn())
+			throw new NotLoggedInException();
 	}
-	
+
 	public void logout() throws NotLoggedInException {
 		loginRequired();
-		
+
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(serverURL);
 
@@ -151,13 +153,15 @@ public class ComappingServer {
 			response = client.execute(post);
 		} catch (Exception e) {
 		}
-		
+
 		clientId = null;
 	}
 
 	public String getComap(String mapId) throws NotLoggedInException {
+		Log.i("Comapping Server", "get comap by " + clientId);
+
 		loginRequired();
-		
+
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(serverURL);
 
@@ -173,20 +177,20 @@ public class ComappingServer {
 		} catch (UnsupportedEncodingException e1) {
 			Log.e("Comapping Server", "Unsupported Encoding");
 		}
-		
+
 		post.setEntity(entity);
 
 		HttpResponse response = null;
-		
+
 		try {
 			response = client.execute(post);
-			return getTextFromResponse(response);	
+			return getTextFromResponse(response);
 		} catch (ClientProtocolException e) {
 			Log.e("Comapping Server", "Client protocol exception");
 		} catch (IOException e) {
 			Log.e("Comapping Server", "IO exception");
 		}
-		
+
 		return null;
 	}
 }

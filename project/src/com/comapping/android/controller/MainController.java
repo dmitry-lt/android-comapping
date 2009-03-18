@@ -12,6 +12,7 @@ import com.comapping.android.commapingserver.ComappingServer;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MainController extends Activity {
 	public static MainController instance = null;
@@ -20,13 +21,16 @@ public class MainController extends Activity {
 		return instance;
 	}
 
-	public ComappingServer server = new ComappingServer();
+	public ComappingServer server;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Log.i("Main Controller", "Application onCreate");
+
 		instance = this;
+		server = new ComappingServer();
 
 		LoginViewController.instance.activate();
 	}

@@ -28,34 +28,37 @@ public class LoginViewController {
 	}
 
 	// use server from MainController
-	ComappingServer server = MainController.instance.server;
-	
-	private void finishLoginAttempt(String errorMsg) {
-		if (server.isLoggedIn()) {
-			MainController.instance.login();
-		} else
-			changeErrorText(errorMsg);
+	ComappingServer server = null;
+
+	private void finishLoginAttempt(final String errorMsg) {
+		MainController.instance.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (server.isLoggedIn()) {
+					MainController.instance.login();
+				} else
+					changeErrorText(errorMsg);
+			}
+		});
 	}
-	
+
 	private void loginClick(final String email, final String password) {
 		changeErrorText("Loading ...");
 
-		server.login(email, password);
-		finishLoginAttempt("Email or password is incorrect");
+		new Thread() {
+			public void run() {
+				server.login(email, password);
+
+				finishLoginAttempt("Email or password is incorrect");
+			}
+		}.start();
 	}
 
 	private void changeErrorText(final String error) {
 		final TextView errorText = (TextView) MainController.instance
 				.findViewById(R.id.error);
 
-		MainController.instance.runOnUiThread(new Runnable(){
-			@Override
-			public void run() {
-				errorText.setText(error);
-			}
-		});
-		
-		errorText.postInvalidate();
+		errorText.setText(error);
 	}
 
 	private void loadLoginView() {
@@ -72,7 +75,7 @@ public class LoginViewController {
 						.findViewById(R.id.email)).getText().toString();
 				final String password = ((TextView) MainController.instance
 						.findViewById(R.id.password)).getText().toString();
-				
+
 				loginClick(email, password);
 			}
 		});
@@ -84,12 +87,14 @@ public class LoginViewController {
 	}
 
 	public void activate() {
+		server = MainController.instance.server;
+
 		if (!Storage.instance.get("key").equals("")) {
 			// attempt to autoLogin
 			server.autoLogin(Storage.instance.get("email"), Storage.instance
-							.get("key"));
+					.get("key"));
 			finishLoginAttempt("Email or password is incorrect");
-			
+
 			if (server.isLoggedIn())
 				MainController.instance.login();
 			else {

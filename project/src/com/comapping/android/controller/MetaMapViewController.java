@@ -32,7 +32,7 @@ public class MetaMapViewController {
 			Log.e("MetaMap View", "User not logged in");
 		}
 
-		Log.i("MetaMapView Control", "MetaMap text: " + metaMapData);
+		Log.i("MetaMap View", "MetaMap text: " + metaMapData);
 
 		MainController.instance.setContentView(R.layout.metamap);
 
