@@ -8,6 +8,8 @@
 
 package com.comapping.android.controller;
 
+import com.comapping.android.commapingserver.NotLoggedInException;
+
 import android.util.Log;
 import android.widget.TextView;
 
@@ -23,7 +25,12 @@ public class MetaMapViewController {
 	}
 
 	public void activate() {
-		String metaMapData = MainController.instance.server.getComap("25276");
+		String metaMapData = "";
+		try {
+			metaMapData = MainController.instance.server.getComap("25276");
+		} catch (NotLoggedInException e) {
+			Log.e("MetaMap View", "User not logged in");
+		}
 
 		Log.i("MetaMapView Control", "MetaMap text: " + metaMapData);
 

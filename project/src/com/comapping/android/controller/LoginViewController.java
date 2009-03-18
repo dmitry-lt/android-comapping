@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.comapping.android.commapingserver.ComappingServer;
-import com.comapping.android.commapingserver.ComappingServer.Status;
 import com.comapping.android.storage.Storage;
 
 public class LoginViewController {
@@ -30,32 +29,32 @@ public class LoginViewController {
 
 	// use server from MainController
 	ComappingServer server = MainController.instance.server;
-
-	private void loginClick(String email, String password) {
-		// TODO: Why isn't work?
+	
+	private void finishLoginAttempt(String errorMsg) {
+		if (server.isLoggedIn()) {
+			MainController.instance.login();
+		} else
+			changeErrorText(errorMsg);
+	}
+	
+	private void loginClick(final String email, final String password) {
 		changeErrorText("Loading ...");
 
 		server.login(email, password);
-
-		if (server.getStatus() == Status.LOGGEDIN) {
-			MainController.instance.login();
-		} else
-			changeErrorText("Login or password is incorrect");
+		finishLoginAttempt("Email or password is incorrect");
 	}
 
-	private void changeErrorText(String error) {
-		TextView errorText = (TextView) MainController.instance
+	private void changeErrorText(final String error) {
+		final TextView errorText = (TextView) MainController.instance
 				.findViewById(R.id.error);
 
-		final String error_msg = error; 
-		final TextView error_rv = errorText;
 		MainController.instance.runOnUiThread(new Runnable(){
-
 			@Override
 			public void run() {
-				error_rv.setText(error_msg);
+				errorText.setText(error);
 			}
 		});
+		
 		errorText.postInvalidate();
 	}
 
@@ -74,14 +73,7 @@ public class LoginViewController {
 				final String password = ((TextView) MainController.instance
 						.findViewById(R.id.password)).getText().toString();
 				
-				new Thread()
-				{
-					public void run() {
-						
-						loginClick(email, password);
-					}
-					//loginClick();
-				}.start();
+				loginClick(email, password);
 			}
 		});
 	}
@@ -95,9 +87,10 @@ public class LoginViewController {
 		if (!Storage.instance.get("key").equals("")) {
 			// attempt to autoLogin
 			server.autoLogin(Storage.instance.get("email"), Storage.instance
-					.get("key"));
-
-			if (server.getStatus() == Status.LOGGEDIN)
+							.get("key"));
+			finishLoginAttempt("Email or password is incorrect");
+			
+			if (server.isLoggedIn())
 				MainController.instance.login();
 			else {
 				loadLoginView("AutoLogin attempt failed");
