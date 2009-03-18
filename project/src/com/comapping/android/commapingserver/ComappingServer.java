@@ -8,7 +8,7 @@
 
 package com.comapping.android.commapingserver;
 
-import static com.comapping.android.commapingserver.ComappingServerHelper.GetText;
+import static com.comapping.android.commapingserver.ComappingServerHelper.getTextFromResponse;
 import static com.comapping.android.commapingserver.ComappingServerHelper.MD5Encode;
 
 import java.io.IOException;
@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -25,14 +26,9 @@ import org.apache.http.message.BasicNameValuePair;
 import android.util.Log;
 
 public class ComappingServer {
-	public enum Status {
-		NOTLOGGEDIN, LOGGEDIN
-	};
-
 	private String serverURL = "";
-	private Status status = Status.NOTLOGGEDIN;
-	private String clientId = "";
-	private String autoLoginKey = "";
+	private String clientId = null;
+	private String autoLoginKey = null;
 
 	// private methods
 	private String doLogin(String email, String password, String loginMethod) {
@@ -59,7 +55,7 @@ public class ComappingServer {
 			// TODO: what if response null ?
 			response = client.execute(post);
 
-			String responseText = GetText(response);
+			String responseText = getTextFromResponse(response);
 
 			Log.i("Comapping Server", "Response from server:" + responseText);
 
@@ -77,7 +73,6 @@ public class ComappingServer {
 
 	private boolean checkLoginResult() {
 		return (!clientId.equals(""));
-
 		// TODO: write a normal clientId check
 	}
 
@@ -87,10 +82,8 @@ public class ComappingServer {
 		if (checkLoginResult()) {
 			autoLoginKey = key;
 
-			status = Status.LOGGEDIN;
-
 			Log.i("Comapping Server", email + " logged in");
-		}
+		} else clientId = null;
 	}
 
 	// public methods
@@ -103,8 +96,8 @@ public class ComappingServer {
 	}
 
 	public void login(String email, String password) {
-		status = Status.NOTLOGGEDIN;
-
+		clientId = null;
+		
 		String passwordHash = MD5Encode(password);
 
 		String salt = doLogin(email, passwordHash, "simple");
@@ -125,10 +118,18 @@ public class ComappingServer {
 	public void autoLogin(String name, String key) {
 		autoLogin(name, key, "flashCookie");
 	}
+	
+	public boolean isLoggedIn() {
+		return clientId != null;
+	}
 
-	public void logout() {
-		status = Status.NOTLOGGEDIN;
-
+	private void loginRequired() throws NotLoggedInException {
+		if (!isLoggedIn()) throw new NotLoggedInException();
+	}
+	
+	public void logout() throws NotLoggedInException {
+		loginRequired();
+		
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(serverURL);
 
@@ -150,13 +151,13 @@ public class ComappingServer {
 			response = client.execute(post);
 		} catch (Exception e) {
 		}
+		
+		clientId = null;
 	}
 
-	public Status getStatus() {
-		return status;
-	}
-
-	public String getComap(String mapId) {
+	public String getComap(String mapId) throws NotLoggedInException {
+		loginRequired();
+		
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(serverURL);
 
@@ -170,19 +171,22 @@ public class ComappingServer {
 		try {
 			entity = new UrlEncodedFormEntity(data);
 		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Log.e("Comapping Server", "Unsupported Encoding");
 		}
+		
 		post.setEntity(entity);
 
 		HttpResponse response = null;
+		
 		try {
 			response = client.execute(post);
-			String responseText = GetText(response);
-			return responseText;
-		} catch (Exception e) {
+			return getTextFromResponse(response);	
+		} catch (ClientProtocolException e) {
+			Log.e("Comapping Server", "Client protocol exception");
+		} catch (IOException e) {
+			Log.e("Comapping Server", "IO exception");
 		}
-
-		return "";
+		
+		return null;
 	}
 }

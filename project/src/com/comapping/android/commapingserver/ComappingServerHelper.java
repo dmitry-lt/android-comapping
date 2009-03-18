@@ -9,13 +9,16 @@
 package com.comapping.android.commapingserver;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.w3c.dom.Entity;
 
 import android.util.Log;
 
@@ -46,7 +49,7 @@ public class ComappingServerHelper {
 		return output.toString();
 	}
 
-	static String GetText(InputStream in) {
+	static String getTextFromInputStream(InputStream in) {
 		String text = "";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		try {
@@ -59,23 +62,30 @@ public class ComappingServerHelper {
 				line = reader.readLine();
 			}
 		} catch (Exception ex) {
-			Log.e("Comapping Server", "Reader error");
+			Log.e("Comapping Server", "Reader Exception");
 		} finally {
 			try {
 				in.close();
 			} catch (Exception ex) {
-				Log.e("Comapping Server", "InputStream close error");
+				Log.e("Comapping Server", "InputStream Close Exception");
 			}
 		}
 		return text;
 	}
 
-	static String GetText(HttpResponse response) {
-		String text = "";
+	static String getTextFromResponse(HttpResponse response) {
 		try {
-			text = GetText(response.getEntity().getContent());
-		} catch (Exception ex) {
+			HttpEntity entity = response.getEntity();
+			
+			if (entity != null) {
+				return getTextFromInputStream(entity.getContent());
+			}
+		} catch (IllegalStateException e) {
+			Log.e("Comapping Server", "Http Response State Exception");
+		} catch (IOException e) {
+			Log.e("Comapping Server", "Http Response IO Exception");
 		}
-		return text;
+		
+		return null;
 	}
 }
