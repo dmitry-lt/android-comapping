@@ -31,14 +31,9 @@ public class LoginViewController {
 	// use server from MainController
 	ComappingServer server = MainController.instance.server;
 
-	private void loginClick() {
+	private void loginClick(String email, String password) {
 		// TODO: Why isn't work?
 		changeErrorText("Loading ...");
-
-		String email = ((TextView) MainController.instance
-				.findViewById(R.id.email)).getText().toString();
-		String password = ((TextView) MainController.instance
-				.findViewById(R.id.password)).getText().toString();
 
 		server.login(email, password);
 
@@ -52,7 +47,16 @@ public class LoginViewController {
 		TextView errorText = (TextView) MainController.instance
 				.findViewById(R.id.error);
 
-		errorText.setText(error);
+		final String error_msg = error; 
+		final TextView error_rv = errorText;
+		MainController.instance.runOnUiThread(new Runnable(){
+
+			@Override
+			public void run() {
+				error_rv.setText(error_msg);
+			}
+		});
+		errorText.postInvalidate();
 	}
 
 	private void loadLoginView() {
@@ -65,12 +69,24 @@ public class LoginViewController {
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				loginClick();
+				final String email = ((TextView) MainController.instance
+						.findViewById(R.id.email)).getText().toString();
+				final String password = ((TextView) MainController.instance
+						.findViewById(R.id.password)).getText().toString();
+				
+				new Thread()
+				{
+					public void run() {
+						
+						loginClick(email, password);
+					}
+					//loginClick();
+				}.start();
 			}
 		});
 	}
 
-	private void loadLoginView(String error) {
+	private void loadLoginView(final String error) {
 		loadLoginView();
 		changeErrorText(error);
 	}
