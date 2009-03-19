@@ -80,7 +80,13 @@ public class Client {
 	}
 
 	private boolean checkLoginResult() {
-		return (!clientId.equals(""));
+		if (clientId.equals("") || (clientId.charAt(0) == '#')) {
+			clientId = null;
+			return false;
+		} else {
+			return true;
+		}
+		
 		// TODO: write a normal clientId check
 	}
 
@@ -91,8 +97,7 @@ public class Client {
 			autoLoginKey = key;
 
 			Log.i("Comapping Server", email + " logged in" + ":" + this);
-		} else
-			clientId = null;
+		}
 	}
 
 	// public methods
@@ -103,7 +108,7 @@ public class Client {
 	public Client(String serverURL) {
 		this.serverURL = serverURL;
 	}
-
+	
 	public void login(String email, String password) {
 		clientId = null;
 
@@ -118,6 +123,7 @@ public class Client {
 				autoLogin(email, MD5Encode(password + salt), "withSalt");
 			} else {
 				clientId = salt;
+				autoLoginKey = "#"+passwordHash;
 			}
 		} else {
 			// login failed
@@ -128,8 +134,14 @@ public class Client {
 		return autoLoginKey;
 	}
 
-	public void autoLogin(String name, String key) {
-		autoLogin(name, key, "flashCookie");
+	public void autoLogin(String email, String key) {
+		if ((key.length() > 0) && (key.charAt(0) == '#')) {
+			clientId = doLogin(email, key.substring(1), "simple");
+			
+			checkLoginResult();
+		} else {
+			autoLogin(email, key, "flashCookie");
+		}
 	}
 
 	public boolean isLoggedIn() {
