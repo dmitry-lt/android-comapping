@@ -33,8 +33,9 @@ public class Client {
 
 	// private methods
 	private String requestToServer(ArrayList<BasicNameValuePair> data) {
-		Log.i("Comapping Server", "Request to server: "+Arrays.toString(data.toArray()));
-		
+		Log.i("Comapping Server", "Request to server: "
+				+ Arrays.toString(data.toArray()));
+
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(serverURL);
 
@@ -44,7 +45,7 @@ public class Client {
 		} catch (UnsupportedEncodingException e1) {
 			Log.e("Comapping Server", "Unsupported Encoding for Entity");
 		}
-		
+
 		post.setEntity(entity);
 
 		HttpResponse response = null;
@@ -64,12 +65,12 @@ public class Client {
 		} catch (IOException e) {
 			Log.e("Comapping Server", "Error while reading response");
 		}
-		
+
 		return "";
 	}
-	
+
 	private String doLogin(String email, String password, String loginMethod) {
-		
+
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_login"));
 		data.add(new BasicNameValuePair("login", email));
@@ -120,7 +121,7 @@ public class Client {
 				clientId = salt;
 			}
 		} else {
-			//login failed
+			// login failed
 		}
 	}
 
@@ -144,7 +145,7 @@ public class Client {
 	public void logout() throws NotLoggedInException {
 		loginRequired();
 		clientId = null;
-		
+
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));

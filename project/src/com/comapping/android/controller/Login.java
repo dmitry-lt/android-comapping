@@ -19,9 +19,11 @@ import com.comapping.android.storage.Storage;
 public class Login {
 	// Singleton
 	private Login() {
+
 	}
 
 	public static Login instance = new Login();
+	private com.comapping.android.view.Login loginView = new com.comapping.android.view.Login();
 
 	public static Login getInstance() {
 		return instance;
@@ -36,14 +38,15 @@ public class Login {
 			public void run() {
 				if (client.isLoggedIn()) {
 					Main.instance.login();
-				} else
-					changeErrorText(errorMsg);
+				} else {
+					loginView.changeErrorText(errorMsg);
+				}
 			}
 		});
 	}
 
-	private void loginClick(final String email, final String password) {
-		changeErrorText("Loading ...");
+	public void loginClick(final String email, final String password) {
+		loginView.changeErrorText("Loading ...");
 
 		new Thread() {
 			public void run() {
@@ -52,38 +55,6 @@ public class Login {
 				finishLoginAttempt("Email or password is incorrect");
 			}
 		}.start();
-	}
-
-	private void changeErrorText(final String error) {
-		final TextView errorText = (TextView) Main.instance
-				.findViewById(R.id.error);
-
-		errorText.setText(error);
-	}
-
-	private void loadLoginView() {
-		Main.instance.setContentView(R.layout.login);
-
-		// bind login button
-		Button loginButton = (Button) Main.instance
-				.findViewById(R.id.login);
-
-		loginButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				final String email = ((TextView) Main.instance
-						.findViewById(R.id.email)).getText().toString();
-				final String password = ((TextView) Main.instance
-						.findViewById(R.id.password)).getText().toString();
-
-				loginClick(email, password);
-			}
-		});
-	}
-
-	private void loadLoginView(final String error) {
-		loadLoginView();
-		changeErrorText(error);
 	}
 
 	public void activate() {
@@ -98,9 +69,10 @@ public class Login {
 			if (client.isLoggedIn())
 				Main.instance.login();
 			else {
-				loadLoginView("AutoLogin attempt failed");
+				loginView.load("AutoLogin attempt failed");
 			}
-		} else
-			loadLoginView();
+		} else {
+			loginView.load();
+		}
 	}
 }

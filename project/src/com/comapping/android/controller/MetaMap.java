@@ -19,6 +19,7 @@ public class MetaMap {
 	};
 
 	public static MetaMap instance = new MetaMap();
+	private com.comapping.android.view.MetaMap metaMapView = new com.comapping.android.view.MetaMap();
 
 	public static MetaMap getInstance() {
 		return instance;
@@ -29,16 +30,11 @@ public class MetaMap {
 		try {
 			metaMapData = Main.instance.client.getComap("25276");
 		} catch (NotLoggedInException e) {
-			Log.e("MetaMap View", "User not logged in");
+			Log.e("MetaMap", "User not logged in");
 		}
 
-		Log.i("MetaMap View", "MetaMap text: " + metaMapData);
+		Log.i("MetaMap", "MetaMap text: " + metaMapData);
 
-		Main.instance.setContentView(R.layout.metamap);
-
-		TextView metaMapText = (TextView) Main.instance
-				.findViewById(R.id.metaMapText);
-
-		metaMapText.setText("(" + metaMapData + ")");
+		metaMapView.load(metaMapData);
 	}
 }

@@ -44,10 +44,11 @@ public class ClientHelper {
 		StringBuffer output = new StringBuffer();
 		for (byte b : bytes) {
 			String toAdd = String.format("%x", b);
-			int spacesToAdd = 2-toAdd.length();
-			
-			for (int i = 0; i < spacesToAdd; i++) output.append("0");
-			
+			int spacesToAdd = 2 - toAdd.length();
+
+			for (int i = 0; i < spacesToAdd; i++)
+				output.append("0");
+
 			output.append(toAdd);
 		}
 
@@ -81,7 +82,7 @@ public class ClientHelper {
 	static String getTextFromResponse(HttpResponse response) {
 		try {
 			HttpEntity entity = response.getEntity();
-			
+
 			if (entity != null) {
 				return getTextFromInputStream(entity.getContent());
 			}
@@ -90,7 +91,7 @@ public class ClientHelper {
 		} catch (IOException e) {
 			Log.e("Comapping Server", "Http Response IO Exception");
 		}
-		
+
 		return null;
 	}
 }
