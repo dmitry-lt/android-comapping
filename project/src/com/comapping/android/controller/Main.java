@@ -14,10 +14,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class MainController extends Activity {
-	public static MainController instance = null;
+public class Main extends Activity {
+	public static Main instance = null;
 
-	public static MainController getInstance() {
+	public static Main getInstance() {
 		return instance;
 	}
 
@@ -32,10 +32,10 @@ public class MainController extends Activity {
 		instance = this;
 		client = new Client();
 
-		LoginViewController.instance.activate();
+		Login.instance.activate();
 	}
 
 	public void login() {
-		MetaMapViewController.instance.activate();
+		MetaMap.instance.activate();
 	}
 }

@@ -16,14 +16,14 @@ import android.widget.TextView;
 import com.comapping.android.communication.Client;
 import com.comapping.android.storage.Storage;
 
-public class LoginViewController {
+public class Login {
 	// Singleton
-	private LoginViewController() {
+	private Login() {
 	}
 
-	public static LoginViewController instance = new LoginViewController();
+	public static Login instance = new Login();
 
-	public static LoginViewController getInstance() {
+	public static Login getInstance() {
 		return instance;
 	}
 
@@ -31,11 +31,11 @@ public class LoginViewController {
 	Client client = null;
 
 	private void finishLoginAttempt(final String errorMsg) {
-		MainController.instance.runOnUiThread(new Runnable() {
+		Main.instance.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if (client.isLoggedIn()) {
-					MainController.instance.login();
+					Main.instance.login();
 				} else
 					changeErrorText(errorMsg);
 			}
@@ -55,25 +55,25 @@ public class LoginViewController {
 	}
 
 	private void changeErrorText(final String error) {
-		final TextView errorText = (TextView) MainController.instance
+		final TextView errorText = (TextView) Main.instance
 				.findViewById(R.id.error);
 
 		errorText.setText(error);
 	}
 
 	private void loadLoginView() {
-		MainController.instance.setContentView(R.layout.login);
+		Main.instance.setContentView(R.layout.login);
 
 		// bind login button
-		Button loginButton = (Button) MainController.instance
+		Button loginButton = (Button) Main.instance
 				.findViewById(R.id.login);
 
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final String email = ((TextView) MainController.instance
+				final String email = ((TextView) Main.instance
 						.findViewById(R.id.email)).getText().toString();
-				final String password = ((TextView) MainController.instance
+				final String password = ((TextView) Main.instance
 						.findViewById(R.id.password)).getText().toString();
 
 				loginClick(email, password);
@@ -87,7 +87,7 @@ public class LoginViewController {
 	}
 
 	public void activate() {
-		client = MainController.instance.client;
+		client = Main.instance.client;
 
 		if (!Storage.instance.get("key").equals("")) {
 			// attempt to autoLogin
@@ -96,7 +96,7 @@ public class LoginViewController {
 			finishLoginAttempt("Email or password is incorrect");
 
 			if (client.isLoggedIn())
-				MainController.instance.login();
+				Main.instance.login();
 			else {
 				loadLoginView("AutoLogin attempt failed");
 			}

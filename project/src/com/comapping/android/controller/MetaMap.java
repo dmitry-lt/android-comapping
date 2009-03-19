@@ -13,30 +13,30 @@ import com.comapping.android.communication.NotLoggedInException;
 import android.util.Log;
 import android.widget.TextView;
 
-public class MetaMapViewController {
+public class MetaMap {
 	// Singleton
-	private MetaMapViewController() {
+	private MetaMap() {
 	};
 
-	public static MetaMapViewController instance = new MetaMapViewController();
+	public static MetaMap instance = new MetaMap();
 
-	public static MetaMapViewController getInstance() {
+	public static MetaMap getInstance() {
 		return instance;
 	}
 
 	public void activate() {
 		String metaMapData = "";
 		try {
-			metaMapData = MainController.instance.client.getComap("25276");
+			metaMapData = Main.instance.client.getComap("25276");
 		} catch (NotLoggedInException e) {
 			Log.e("MetaMap View", "User not logged in");
 		}
 
 		Log.i("MetaMap View", "MetaMap text: " + metaMapData);
 
-		MainController.instance.setContentView(R.layout.metamap);
+		Main.instance.setContentView(R.layout.metamap);
 
-		TextView metaMapText = (TextView) MainController.instance
+		TextView metaMapText = (TextView) Main.instance
 				.findViewById(R.id.metaMapText);
 
 		metaMapText.setText("(" + metaMapData + ")");
