@@ -18,7 +18,6 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.w3c.dom.Entity;
 
 import android.util.Log;
 

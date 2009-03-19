@@ -11,7 +11,6 @@ package com.comapping.android.controller;
 import com.comapping.android.communication.NotLoggedInException;
 
 import android.util.Log;
-import android.widget.TextView;
 
 public class MetaMap {
 	// Singleton
