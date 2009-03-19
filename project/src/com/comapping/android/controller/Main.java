@@ -9,6 +9,8 @@
 package com.comapping.android.controller;
 
 import com.comapping.android.communication.Client;
+import com.comapping.android.communication.NotLoggedInException;
+import com.comapping.android.storage.Storage;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -21,7 +23,7 @@ public class Main extends Activity {
 		return instance;
 	}
 
-	public Client client;
+	public Client client = new Client();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -30,12 +32,27 @@ public class Main extends Activity {
 		Log.i("Main Controller", "Application onCreate");
 
 		instance = this;
-		client = new Client();
+		client.clear();
 
 		Login.instance.activate();
 	}
 
 	public void login() {
 		MetaMap.instance.activate();
+	}
+
+	public void logout() {
+		Storage.instance.set("key", "");
+		Login.instance.activate();
+
+		new Thread() {
+			public void run() {
+				try {
+					client.logout();
+				} catch (NotLoggedInException e) {
+					Log.e("Main", "Logout without login");
+				}
+			}
+		}.start();
 	}
 }

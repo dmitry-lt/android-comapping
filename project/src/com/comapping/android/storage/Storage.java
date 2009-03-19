@@ -8,6 +8,13 @@
 
 package com.comapping.android.storage;
 
+import com.comapping.android.controller.Main;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.util.Log;
+
 public class Storage {
 	// Singleton
 	private Storage() {
@@ -20,10 +27,18 @@ public class Storage {
 	}
 
 	public void set(String key, String value) {
+		Editor edit = Main.instance.getPreferences(Context.MODE_PRIVATE).edit();
+
+		edit.putString(key, value);
+		edit.commit();
+
+		Log.i("Storage", "[" + key + "] = " + value);
 	}
 
 	public String get(String key) {
-		return "";
-	}
+		Log.i("Storage", "get [" + key + "]");
 
+		return Main.instance.getPreferences(Context.MODE_PRIVATE).getString(
+				key, "");
+	}
 }

@@ -8,7 +8,11 @@
 
 package com.comapping.android.controller;
 
+import android.util.Log;
+import android.widget.CheckBox;
+
 import com.comapping.android.communication.Client;
+import com.comapping.android.communication.NotLoggedInException;
 import com.comapping.android.storage.Storage;
 
 public class Login {
@@ -27,11 +31,27 @@ public class Login {
 	// use server from MainController
 	Client client = null;
 
-	private void finishLoginAttempt(final String errorMsg) {
+	private void saveLoginAndPassword() {
+		try {
+			Storage.instance.set("email", client.getEmail());
+			Storage.instance.set("key", client.getAutoLoginKey());
+		} catch (NotLoggedInException e) {
+			Log.e("Login", "User not logged in");
+		}
+	}
+
+	private void finishLoginAttempt(final String errorMsg,
+			final boolean remember) {
 		Main.instance.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if (client.isLoggedIn()) {
+					if (remember) {
+						saveLoginAndPassword();
+					} else {
+						Storage.instance.set("key", "");
+					}
+
 					Main.instance.login();
 				} else {
 					loginView.changeErrorText(errorMsg);
@@ -47,7 +67,11 @@ public class Login {
 			public void run() {
 				client.login(email, password);
 
-				finishLoginAttempt("Email or password is incorrect");
+				CheckBox remember = (CheckBox) Main.instance
+						.findViewById(R.id.CheckBox01);
+
+				finishLoginAttempt("Email or password is incorrect", remember
+						.isChecked());
 			}
 		}.start();
 	}
@@ -57,15 +81,13 @@ public class Login {
 
 		if (!Storage.instance.get("key").equals("")) {
 			// attempt to autoLogin
-			client.autoLogin(Storage.instance.get("email"), Storage.instance
-					.get("key"));
-			finishLoginAttempt("Email or password is incorrect");
-
-			if (client.isLoggedIn())
-				Main.instance.login();
-			else {
-				loginView.load("AutoLogin attempt failed");
-			}
+			new Thread() {
+				public void run() {
+					client.autoLogin(Storage.instance.get("email"),
+							Storage.instance.get("key"));
+					finishLoginAttempt("Autologin attempt failed", true);
+				}
+			}.start();
 		} else {
 			loginView.load();
 		}

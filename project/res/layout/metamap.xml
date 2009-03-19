@@ -9,5 +9,6 @@
 
 
 <EditText android:id="@+id/EditText01" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
-<Button android:id="@+id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Go" android:layout_gravity="center" android:textSize="30px"></Button><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/metaMapText"></TextView>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Go" android:layout_gravity="center" android:textSize="30px" android:id="@+id/go"></Button><Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/logout" android:text="Log out" android:textSize="30px" android:layout_gravity="center"></Button><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/metaMapText"></TextView>
+
 </LinearLayout>

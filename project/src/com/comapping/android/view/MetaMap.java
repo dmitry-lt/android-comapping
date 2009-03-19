@@ -13,23 +13,31 @@ public class MetaMap {
 	public void setMetaMapText(String text) {
 		TextView metaMapText = (TextView) Main.instance
 				.findViewById(R.id.metaMapText);
-		
+
 		metaMapText.setText(text);
 	}
-	
+
 	public void load() {
 		Main.instance.setContentView(R.layout.metamap);
 
-		Button go = (Button) Main.instance
-				.findViewById(R.id.Button01);
+		Button go = (Button) Main.instance.findViewById(R.id.go);
 		final EditText mapName = (EditText) Main.instance
 				.findViewById(R.id.EditText01);
-		
+
 		go.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				com.comapping.android.controller.MetaMap.instance.loadMap(mapName.getText().toString());
-			}			
+				com.comapping.android.controller.MetaMap.instance
+						.loadMap(mapName.getText().toString());
+			}
+		});
+
+		Button logout = (Button) Main.instance.findViewById(R.id.logout);
+		logout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Main.instance.logout();
+			}
 		});
 	}
 }

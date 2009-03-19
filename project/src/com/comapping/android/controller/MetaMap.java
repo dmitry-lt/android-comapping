@@ -23,20 +23,20 @@ public class MetaMap {
 	}
 
 	public void loadMap(final String mapId) {
-		metaMapView.setMetaMapText("Loading #"+mapId+" map ... ");
-		
+		metaMapView.setMetaMapText("Loading #" + mapId + " map ... ");
+
 		new Thread() {
 			public void run() {
 				String result;
-				
+
 				try {
 					result = Main.instance.client.getComap(mapId);
 				} catch (NotLoggedInException e) {
 					result = "You not logged in!";
 				}
-				
+
 				final String finalResult = result;
-				
+
 				Main.instance.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -46,7 +46,7 @@ public class MetaMap {
 			}
 		}.start();
 	}
-	
+
 	public void activate() {
 		metaMapView.load();
 	}

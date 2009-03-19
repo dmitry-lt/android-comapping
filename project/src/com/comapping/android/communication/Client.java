@@ -28,6 +28,7 @@ import android.util.Log;
 public class Client {
 	private String serverURL = "";
 	private String clientId = null;
+	private String email = null;
 	private String autoLoginKey = null;
 
 	// private methods
@@ -69,6 +70,7 @@ public class Client {
 	}
 
 	private String doLogin(String email, String password, String loginMethod) {
+		this.email = email;
 
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_login"));
@@ -86,7 +88,7 @@ public class Client {
 		} else {
 			return true;
 		}
-		
+
 		// TODO: write a normal clientId check
 	}
 
@@ -108,7 +110,7 @@ public class Client {
 	public Client(String serverURL) {
 		this.serverURL = serverURL;
 	}
-	
+
 	public void login(String email, String password) {
 		clientId = null;
 
@@ -123,21 +125,31 @@ public class Client {
 				autoLogin(email, MD5Encode(password + salt), "withSalt");
 			} else {
 				clientId = salt;
-				autoLoginKey = "#"+passwordHash;
+				autoLoginKey = "#" + passwordHash;
 			}
 		} else {
 			// login failed
 		}
 	}
 
-	public String getAutoLoginKey() {
+	public String getAutoLoginKey() throws NotLoggedInException {
+		loginRequired();
+
 		return autoLoginKey;
 	}
 
+	public String getEmail() throws NotLoggedInException {
+		loginRequired();
+
+		return email;
+	}
+
 	public void autoLogin(String email, String key) {
+		autoLoginKey = key;
+
 		if ((key.length() > 0) && (key.charAt(0) == '#')) {
 			clientId = doLogin(email, key.substring(1), "simple");
-			
+
 			checkLoginResult();
 		} else {
 			autoLogin(email, key, "flashCookie");
@@ -151,6 +163,10 @@ public class Client {
 	private void loginRequired() throws NotLoggedInException {
 		if (!isLoggedIn())
 			throw new NotLoggedInException();
+	}
+
+	public void clear() {
+		clientId = null;
 	}
 
 	public void logout() throws NotLoggedInException {
