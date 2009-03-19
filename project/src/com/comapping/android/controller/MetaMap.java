@@ -10,8 +10,6 @@ package com.comapping.android.controller;
 
 import com.comapping.android.communication.NotLoggedInException;
 
-import android.util.Log;
-
 public class MetaMap {
 	// Singleton
 	private MetaMap() {
@@ -24,16 +22,32 @@ public class MetaMap {
 		return instance;
 	}
 
+	public void loadMap(final String mapId) {
+		metaMapView.setMetaMapText("Loading #"+mapId+" map ... ");
+		
+		new Thread() {
+			public void run() {
+				String result;
+				
+				try {
+					result = Main.instance.client.getComap(mapId);
+				} catch (NotLoggedInException e) {
+					result = "You not logged in!";
+				}
+				
+				final String finalResult = result;
+				
+				Main.instance.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						metaMapView.setMetaMapText(finalResult);
+					}
+				});
+			}
+		}.start();
+	}
+	
 	public void activate() {
-		String metaMapData = "";
-		try {
-			metaMapData = Main.instance.client.getComap("25276");
-		} catch (NotLoggedInException e) {
-			Log.e("MetaMap", "User not logged in");
-		}
-
-		Log.i("MetaMap", "MetaMap text: " + metaMapData);
-
-		metaMapView.load(metaMapData);
+		metaMapView.load();
 	}
 }
