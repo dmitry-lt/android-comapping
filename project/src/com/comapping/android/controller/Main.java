@@ -17,8 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class Main extends Activity {
-	public static Main instance = null;
-
+	private static Main instance = null;
 	public static Main getInstance() {
 		return instance;
 	}
@@ -34,16 +33,16 @@ public class Main extends Activity {
 		instance = this;
 		client.clear();
 
-		Login.instance.activate();
+		Login.getInstance().activate();
 	}
 
 	public void login() {
-		MetaMap.instance.activate();
+		MetaMap.getInstance().activate();
 	}
 
 	public void logout() {
 		Storage.instance.set("key", "");
-		Login.instance.activate();
+		Login.getInstance().activate();
 
 		new Thread() {
 			public void run() {

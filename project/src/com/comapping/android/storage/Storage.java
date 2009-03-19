@@ -27,7 +27,7 @@ public class Storage {
 	}
 
 	public void set(String key, String value) {
-		Editor edit = Main.instance.getPreferences(Context.MODE_PRIVATE).edit();
+		Editor edit = Main.getInstance().getPreferences(Context.MODE_PRIVATE).edit();
 
 		edit.putString(key, value);
 		edit.commit();
@@ -38,7 +38,7 @@ public class Storage {
 	public String get(String key) {
 		Log.i("Storage", "get [" + key + "]");
 
-		return Main.instance.getPreferences(Context.MODE_PRIVATE).getString(
+		return Main.getInstance().getPreferences(Context.MODE_PRIVATE).getString(
 				key, "");
 	}
 }

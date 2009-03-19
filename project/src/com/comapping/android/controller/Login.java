@@ -18,15 +18,14 @@ import com.comapping.android.storage.Storage;
 public class Login {
 	// Singleton
 	private Login() {
-
 	}
 
-	public static Login instance = new Login();
-	private com.comapping.android.view.Login loginView = new com.comapping.android.view.Login();
-
+	private static Login instance = new Login();
 	public static Login getInstance() {
 		return instance;
 	}
+
+	private com.comapping.android.view.Login loginView = new com.comapping.android.view.Login();
 
 	// use server from MainController
 	Client client = null;
@@ -42,7 +41,7 @@ public class Login {
 
 	private void finishLoginAttempt(final String errorMsg,
 			final boolean remember) {
-		Main.instance.runOnUiThread(new Runnable() {
+		Main.getInstance().runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if (client.isLoggedIn()) {
@@ -52,7 +51,7 @@ public class Login {
 						Storage.instance.set("key", "");
 					}
 
-					Main.instance.login();
+					Main.getInstance().login();
 				} else {
 					loginView.changeErrorText(errorMsg);
 				}
@@ -67,7 +66,7 @@ public class Login {
 			public void run() {
 				client.login(email, password);
 
-				CheckBox remember = (CheckBox) Main.instance
+				CheckBox remember = (CheckBox) Main.getInstance()
 						.findViewById(R.id.CheckBox01);
 
 				finishLoginAttempt("Email or password is incorrect", remember
@@ -77,7 +76,7 @@ public class Login {
 	}
 
 	public void activate() {
-		client = Main.instance.client;
+		client = Main.getInstance().client;
 
 		if (!Storage.instance.get("key").equals("")) {
 			// attempt to autoLogin

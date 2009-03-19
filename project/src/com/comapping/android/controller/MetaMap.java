@@ -15,12 +15,12 @@ public class MetaMap {
 	private MetaMap() {
 	};
 
-	public static MetaMap instance = new MetaMap();
-	private com.comapping.android.view.MetaMap metaMapView = new com.comapping.android.view.MetaMap();
-
+	private static MetaMap instance = new MetaMap();
 	public static MetaMap getInstance() {
 		return instance;
 	}
+
+	private com.comapping.android.view.MetaMap metaMapView = new com.comapping.android.view.MetaMap();
 
 	public void loadMap(final String mapId) {
 		metaMapView.setMetaMapText("Loading #" + mapId + " map ... ");
@@ -30,14 +30,14 @@ public class MetaMap {
 				String result;
 
 				try {
-					result = Main.instance.client.getComap(mapId);
+					result = Main.getInstance().client.getComap(mapId);
 				} catch (NotLoggedInException e) {
 					result = "You not logged in!";
 				}
 
 				final String finalResult = result;
 
-				Main.instance.runOnUiThread(new Runnable() {
+				Main.getInstance().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						metaMapView.setMetaMapText(finalResult);
