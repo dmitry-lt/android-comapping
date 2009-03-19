@@ -14,6 +14,7 @@ import static com.comapping.android.commapingserver.ComappingServerHelper.MD5Enc
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -32,6 +33,8 @@ public class ComappingServer {
 
 	// private methods
 	private String requestToServer(ArrayList<BasicNameValuePair> data) {
+		Log.i("Comapping Server", "Request to server: "+Arrays.toString(data.toArray()));
+		
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(serverURL);
 

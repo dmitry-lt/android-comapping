@@ -43,7 +43,12 @@ public class ComappingServerHelper {
 
 		StringBuffer output = new StringBuffer();
 		for (byte b : bytes) {
-			output.append(String.format("%x", b));
+			String toAdd = String.format("%x", b);
+			int spacesToAdd = 2-toAdd.length();
+			
+			for (int i = 0; i < spacesToAdd; i++) output.append("0");
+			
+			output.append(toAdd);
 		}
 
 		return output.toString();
