@@ -13,7 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.comapping.android.commapingserver.ComappingServer;
+import com.comapping.android.communication.Client;
 import com.comapping.android.storage.Storage;
 
 public class LoginViewController {
@@ -28,13 +28,13 @@ public class LoginViewController {
 	}
 
 	// use server from MainController
-	ComappingServer server = null;
+	Client client = null;
 
 	private void finishLoginAttempt(final String errorMsg) {
 		MainController.instance.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (server.isLoggedIn()) {
+				if (client.isLoggedIn()) {
 					MainController.instance.login();
 				} else
 					changeErrorText(errorMsg);
@@ -47,7 +47,7 @@ public class LoginViewController {
 
 		new Thread() {
 			public void run() {
-				server.login(email, password);
+				client.login(email, password);
 
 				finishLoginAttempt("Email or password is incorrect");
 			}
@@ -87,15 +87,15 @@ public class LoginViewController {
 	}
 
 	public void activate() {
-		server = MainController.instance.server;
+		client = MainController.instance.client;
 
 		if (!Storage.instance.get("key").equals("")) {
 			// attempt to autoLogin
-			server.autoLogin(Storage.instance.get("email"), Storage.instance
+			client.autoLogin(Storage.instance.get("email"), Storage.instance
 					.get("key"));
 			finishLoginAttempt("Email or password is incorrect");
 
-			if (server.isLoggedIn())
+			if (client.isLoggedIn())
 				MainController.instance.login();
 			else {
 				loadLoginView("AutoLogin attempt failed");

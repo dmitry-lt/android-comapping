@@ -8,7 +8,7 @@
 
 package com.comapping.android.controller;
 
-import com.comapping.android.commapingserver.ComappingServer;
+import com.comapping.android.communication.Client;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -21,7 +21,7 @@ public class MainController extends Activity {
 		return instance;
 	}
 
-	public ComappingServer server;
+	public Client client;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class MainController extends Activity {
 		Log.i("Main Controller", "Application onCreate");
 
 		instance = this;
-		server = new ComappingServer();
+		client = new Client();
 
 		LoginViewController.instance.activate();
 	}

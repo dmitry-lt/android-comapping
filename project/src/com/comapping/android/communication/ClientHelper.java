@@ -6,7 +6,7 @@
  * Helper for Comapping Server class
  */
 
-package com.comapping.android.commapingserver;
+package com.comapping.android.communication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import org.w3c.dom.Entity;
 
 import android.util.Log;
 
-public class ComappingServerHelper {
+public class ClientHelper {
 	static String MD5Encode(String string) {
 		MessageDigest md5 = null;
 		try {

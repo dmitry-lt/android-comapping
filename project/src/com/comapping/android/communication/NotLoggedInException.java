@@ -1,4 +1,4 @@
-package com.comapping.android.commapingserver;
+package com.comapping.android.communication;
 
 public class NotLoggedInException extends Exception {
 	public NotLoggedInException() {

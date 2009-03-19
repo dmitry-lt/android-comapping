@@ -6,10 +6,10 @@
  * Class implements bridge to Comapping Web Server
  */
 
-package com.comapping.android.commapingserver;
+package com.comapping.android.communication;
 
-import static com.comapping.android.commapingserver.ComappingServerHelper.getTextFromResponse;
-import static com.comapping.android.commapingserver.ComappingServerHelper.MD5Encode;
+import static com.comapping.android.communication.ClientHelper.getTextFromResponse;
+import static com.comapping.android.communication.ClientHelper.MD5Encode;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,7 +26,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.util.Log;
 
-public class ComappingServer {
+public class Client {
 	private String serverURL = "";
 	private String clientId = null;
 	private String autoLoginKey = null;
@@ -96,11 +96,11 @@ public class ComappingServer {
 	}
 
 	// public methods
-	public ComappingServer() {
+	public Client() {
 		this("http://go.comapping.com/cgi-bin/comapping.n");
 	}
 
-	public ComappingServer(String serverURL) {
+	public Client(String serverURL) {
 		this.serverURL = serverURL;
 	}
 
