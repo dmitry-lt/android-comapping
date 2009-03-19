@@ -27,7 +27,7 @@ public class ClientHelper {
 		try {
 			md5 = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			Log.e("Comapping Server", "MD5 not supported");
+			Log.e("Comapping", "Communication: MD5 not supported");
 		}
 
 		byte[] bytes = null;
@@ -35,7 +35,7 @@ public class ClientHelper {
 		try {
 			bytes = string.getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
-			Log.e("Comapping Server", "Unsupported Encoding");
+			Log.e("Comapping", "Communication: UTF-8 encoding not supported");
 		}
 
 		bytes = md5.digest(bytes);
@@ -54,43 +54,30 @@ public class ClientHelper {
 		return output.toString();
 	}
 
-	static String getTextFromInputStream(InputStream in) {
+	static String getTextFromInputStream(InputStream input) throws IOException {
 		String text = "";
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		try {
-			text = reader.readLine();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-			String line = reader.readLine();
+		text = reader.readLine();
+		String line = reader.readLine();
 
-			while (line != null) {
-				text += "\n" + line;
-				line = reader.readLine();
-			}
-		} catch (Exception ex) {
-			Log.e("Comapping Server", "Reader Exception");
-		} finally {
-			try {
-				in.close();
-			} catch (Exception ex) {
-				Log.e("Comapping Server", "InputStream Close Exception");
-			}
+		while (line != null) {
+			text += "\n" + line;
+			line = reader.readLine();
 		}
+		
+		reader.close();
+		
 		return text;
 	}
 
-	static String getTextFromResponse(HttpResponse response) {
-		try {
-			HttpEntity entity = response.getEntity();
+	static String getTextFromResponse(HttpResponse response) throws IOException {
+		HttpEntity entity = response.getEntity();
 
-			if (entity != null) {
-				return getTextFromInputStream(entity.getContent());
-			}
-		} catch (IllegalStateException e) {
-			Log.e("Comapping Server", "Http Response State Exception");
-		} catch (IOException e) {
-			Log.e("Comapping Server", "Http Response IO Exception");
+		if (entity != null) {
+			return getTextFromInputStream(entity.getContent());
+		} else {
+			return "";
 		}
-
-		return null;
 	}
 }

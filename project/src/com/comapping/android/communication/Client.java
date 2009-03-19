@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -32,8 +33,8 @@ public class Client {
 	private String autoLoginKey = null;
 
 	// private methods
-	private String requestToServer(ArrayList<BasicNameValuePair> data) {
-		Log.i("Comapping Server", "Request to server: "
+	private String requestToServer(ArrayList<BasicNameValuePair> data) throws ConnectionException {
+		Log.d("Comapping", "Communication: request to server "
 				+ Arrays.toString(data.toArray()));
 
 		HttpClient client = new DefaultHttpClient();
@@ -43,33 +44,30 @@ public class Client {
 		try {
 			entity = new UrlEncodedFormEntity(data);
 		} catch (UnsupportedEncodingException e1) {
-			Log.e("Comapping Server", "Unsupported Encoding for Entity");
+			Log.e("Comapping", "Communication: unsupported encoding for data in request");
 		}
 
 		post.setEntity(entity);
-
-		HttpResponse response = null;
+		
+		String responseText = "";
+		
 		try {
-			// TODO: what if response null ?
-			response = client.execute(post);
-
-			String responseText = getTextFromResponse(response);
-
-			Log.i("Comapping Server", "Response from server:" + responseText);
-
-			// TODO: why GetText return null value ?
-			if (responseText == null)
-				responseText = "";
-
-			return responseText;
+			HttpResponse response = client.execute(post);
+			responseText = getTextFromResponse(response);
+		} catch (ClientProtocolException e) {
+			Log.d("Comapping", "Communication: client protocol exception");
+			throw new ConnectionException();
 		} catch (IOException e) {
-			Log.e("Comapping Server", "Error while reading response");
+			Log.d("Comapping", "Communication: IO exception");
+			throw new ConnectionException();
 		}
-
-		return "";
+		
+		Log.i("Comapping", "Communication: response from server: " + responseText);
+		
+		return responseText;
 	}
 
-	private String doLogin(String email, String password, String loginMethod) {
+	private String doLogin(String email, String password, String loginMethod) throws ConnectionException {
 		this.email = email;
 
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
@@ -81,18 +79,36 @@ public class Client {
 		return requestToServer(data);
 	}
 
-	private boolean checkLoginResult() {
-		if (clientId.equals("") || (clientId.charAt(0) == '#')) {
-			clientId = null;
-			return false;
+	private boolean checkClientId(String clientId) {
+		if (clientId.length() == 0) return false;
+		
+		for (int i = 0; i < clientId.length(); i++)
+			if (!Character.isLetterOrDigit(clientId.charAt(i))) return false;
+		
+		return true;
+	}
+	
+	private void setClientId(String clientId) {
+		/*if (clientId != null) {
+			if (checkClientId(clientId)) {
+				LoginController
+			}
 		} else {
-			return true;
-		}
-
+			this.clientId = null;
+		}*/
 		// TODO: write a normal clientId check
 	}
 
-	private void autoLogin(String email, String key, String loginMethod) {
+	private boolean checkLoginResult() {
+		if (checkClientId(clientId)) {
+			return true;
+		} else {
+			clientId = null;
+			return false;
+		}
+	}
+	
+	private void autoLogin(String email, String key, String loginMethod) throws ConnectionException {
 		clientId = doLogin(email, key, loginMethod);
 
 		if (checkLoginResult()) {
@@ -111,7 +127,7 @@ public class Client {
 		this.serverURL = serverURL;
 	}
 
-	public void login(String email, String password) {
+	public void login(String email, String password) throws ConnectionException {
 		clientId = null;
 
 		String passwordHash = MD5Encode(password);
@@ -144,7 +160,7 @@ public class Client {
 		return email;
 	}
 
-	public void autoLogin(String email, String key) {
+	public void autoLogin(String email, String key) throws ConnectionException {
 		autoLoginKey = key;
 
 		if ((key.length() > 0) && (key.charAt(0) == '#')) {
@@ -169,7 +185,7 @@ public class Client {
 		clientId = null;
 	}
 
-	public void logout() throws NotLoggedInException {
+	public void logout() throws NotLoggedInException, ConnectionException {
 		loginRequired();
 		clientId = null;
 
@@ -180,7 +196,7 @@ public class Client {
 		requestToServer(data);
 	}
 
-	public String getComap(String mapId) throws NotLoggedInException {
+	public String getComap(String mapId) throws NotLoggedInException, ConnectionException {
 		Log.i("Comapping Server", "get comap by " + clientId);
 
 		loginRequired();
