@@ -4,8 +4,10 @@
 
 
 
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:textSize="20px" android:text="Map #25276" android:id="@+id/metaMapHeader"></TextView>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:textSize="20px" android:id="@+id/metaMapHeader" android:text="Map Viewer"></TextView>
 
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/metaMapText"></TextView>
 
+
+<EditText android:id="@+id/EditText01" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
+<Button android:id="@+id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Go" android:layout_gravity="center" android:textSize="30px"></Button><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/metaMapText"></TextView>
 </LinearLayout>
