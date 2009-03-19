@@ -55,18 +55,19 @@ public class ClientHelper {
 	}
 
 	static String getTextFromInputStream(InputStream input) throws IOException {
-		String text = "";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-		text = reader.readLine();
+		String text = reader.readLine();
+		
 		String line = reader.readLine();
-
 		while (line != null) {
 			text += "\n" + line;
 			line = reader.readLine();
 		}
 		
 		reader.close();
+		
+		if (text == null) text = "";
 		
 		return text;
 	}

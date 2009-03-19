@@ -24,6 +24,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.comapping.android.controller.LoginController;
+
 import android.util.Log;
 
 public class Client {
@@ -89,32 +91,14 @@ public class Client {
 	}
 	
 	private void setClientId(String clientId) {
-		/*if (clientId != null) {
+		if (clientId != null) {
 			if (checkClientId(clientId)) {
-				LoginController
+				this.clientId = clientId;
+				Log.i("Comapping", "Communication: "+email+" logged in!");
+				LoginController.getInstance().loggedIn();
 			}
 		} else {
 			this.clientId = null;
-		}*/
-		// TODO: write a normal clientId check
-	}
-
-	private boolean checkLoginResult() {
-		if (checkClientId(clientId)) {
-			return true;
-		} else {
-			clientId = null;
-			return false;
-		}
-	}
-	
-	private void autoLogin(String email, String key, String loginMethod) throws ConnectionException {
-		clientId = doLogin(email, key, loginMethod);
-
-		if (checkLoginResult()) {
-			autoLoginKey = key;
-
-			Log.i("Comapping Server", email + " logged in" + ":" + this);
 		}
 	}
 
@@ -128,7 +112,7 @@ public class Client {
 	}
 
 	public void login(String email, String password) throws ConnectionException {
-		clientId = null;
+		setClientId(null);
 
 		String passwordHash = MD5Encode(password);
 
@@ -137,11 +121,14 @@ public class Client {
 		if (salt.length() > 0) {
 			if (salt.charAt(0) == '#') {
 				salt = salt.substring(1);
-
-				autoLogin(email, MD5Encode(password + salt), "withSalt");
+				
+				autoLoginKey = MD5Encode(password + salt);
+				
+				setClientId(doLogin(email, autoLoginKey, "withSalt"));
 			} else {
-				clientId = salt;
 				autoLoginKey = "#" + passwordHash;
+				
+				setClientId(salt);
 			}
 		} else {
 			// login failed
@@ -164,11 +151,9 @@ public class Client {
 		autoLoginKey = key;
 
 		if ((key.length() > 0) && (key.charAt(0) == '#')) {
-			clientId = doLogin(email, key.substring(1), "simple");
-
-			checkLoginResult();
+			setClientId(doLogin(email, key.substring(1), "simple"));
 		} else {
-			autoLogin(email, key, "flashCookie");
+			setClientId(doLogin(email, key, "flashCookie"));
 		}
 	}
 
@@ -184,20 +169,21 @@ public class Client {
 	public void clear() {
 		clientId = null;
 	}
-
+	
 	public void logout() throws NotLoggedInException, ConnectionException {
 		loginRequired();
-		clientId = null;
-
+		
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));
 
+		clear();
+		
 		requestToServer(data);
 	}
 
 	public String getComap(String mapId) throws NotLoggedInException, ConnectionException {
-		Log.i("Comapping Server", "get comap by " + clientId);
+		Log.d("Comapping", "Getting comap by " + getEmail());
 
 		loginRequired();
 

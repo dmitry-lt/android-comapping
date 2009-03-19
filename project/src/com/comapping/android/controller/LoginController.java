@@ -80,6 +80,10 @@ public class LoginController {
 		}.start();
 	}
 
+	public void loggedIn() {
+		
+	}
+	
 	public void activate() {
 		client = MainController.getInstance().client;
 
