@@ -14,6 +14,8 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
+        public static final int Button01=0x7f05000c;
+        public static final int EditText01=0x7f05000b;
         public static final int TableLayout01=0x7f050001;
         public static final int TableRow01=0x7f050002;
         public static final int TableRow02=0x7f050005;
@@ -24,7 +26,7 @@ public final class R {
         public static final int error=0x7f050009;
         public static final int login=0x7f050008;
         public static final int metaMapHeader=0x7f05000a;
-        public static final int metaMapText=0x7f05000b;
+        public static final int metaMapText=0x7f05000d;
         public static final int password=0x7f050007;
     }
     public static final class layout {
