@@ -10,6 +10,9 @@ import com.comapping.android.Log;
  *
  */
 public class Topic implements Iterable<Topic> {
+	
+	public Object renderData;
+	
 	private String text;
 	private ArrayList<Topic> children;
 
