@@ -3,9 +3,7 @@ package com.comapping.android.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.comapping.android.Options;
-
-import android.util.Log;
+import com.comapping.android.Log;
 
 /**
  * @author Passichenko Victor and Yuri Zemlyanskiy
