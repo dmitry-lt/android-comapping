@@ -48,9 +48,7 @@ public class Topic implements Iterable<Topic> {
 
 	public Topic[] getChildTopics() {
 		Topic[] result = new Topic[children.size()];
-		int i = 0;
-		for (Topic child : children)
-			result[i++] = child;
+		children.toArray(result);
 		return result;
 	}
 
