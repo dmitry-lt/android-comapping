@@ -52,10 +52,12 @@ public class Client {
 		post.setEntity(entity);
 		
 		String responseText = "";
+		int responseStatus = 0;
 		
 		try {
 			HttpResponse response = client.execute(post);
 			responseText = getTextFromResponse(response);
+			responseStatus = response.getStatusLine().getStatusCode();
 		} catch (ClientProtocolException e) {
 			Log.d("Comapping", "Communication: client protocol exception");
 			throw new ConnectionException();
@@ -65,6 +67,7 @@ public class Client {
 		}
 		
 		Log.i("Comapping", "Communication: response from server: " + responseText);
+		Log.d("Comapping", "Communication: status code: " + responseStatus);
 		
 		return responseText;
 	}

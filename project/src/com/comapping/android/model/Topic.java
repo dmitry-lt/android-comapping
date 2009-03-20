@@ -3,8 +3,14 @@ package com.comapping.android.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.comapping.android.Options;
+
 import android.util.Log;
 
+/**
+ * @author Passichenko Victor and Yuri Zemlyanskiy
+ *
+ */
 public class Topic implements Iterable<Topic> {
 	private String text;
 	private ArrayList<Topic> children;
@@ -18,7 +24,7 @@ public class Topic implements Iterable<Topic> {
 		this.children = new ArrayList<Topic>();
 		this.text = text;
 
-		Log.i("Map Model", "Created " + this);
+		Log.d("Map Model" , "Created " + this);
 	}
 
 	public void setText(String text) {

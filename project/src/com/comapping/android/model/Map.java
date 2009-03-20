@@ -1,5 +1,9 @@
 package com.comapping.android.model;
 
+/**
+ * @author Passichenko Victor and Yuri Zemlyanskiy
+ *
+ */
 public class Map extends Topic {
 
 	private int maxDeepRecursive(Topic currentTopic) {
