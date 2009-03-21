@@ -1,9 +1,9 @@
 package com.comapping.android.communication;
 
-import android.util.Log;
+import com.comapping.android.Log;
 
 public class NotLoggedInException extends Exception {
 	public NotLoggedInException() {
-		Log.e("Comapping", "Communication: not logged in exception");
+		Log.e(Log.connectionTag, "not logged in exception");
 	}
 }

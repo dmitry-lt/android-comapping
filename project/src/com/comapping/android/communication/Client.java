@@ -196,7 +196,7 @@ public class Client {
 		if (clientId != null) {
 			if (checkClientId(clientId)) {
 				this.clientId = clientId;
-				Log.i("Comapping", "Communication: " + email + " logged in!");
+				Log.i(Log.connectionTag, email + " logged in!");
 				LoginController.getInstance().loggedIn();
 			}
 		} else {

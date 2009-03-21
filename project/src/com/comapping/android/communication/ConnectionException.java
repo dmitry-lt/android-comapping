@@ -1,9 +1,9 @@
 package com.comapping.android.communication;
 
-import android.util.Log;
+import com.comapping.android.Log;
 
 public class ConnectionException extends Exception {
 	public ConnectionException() {
-		Log.e("Comapping", "Communication: connection exception");
+		Log.e(Log.connectionTag, "connection exception");
 	}
 }
