@@ -95,6 +95,8 @@ public class MapBuilder {
 			Log.e(Log.modelTag, e.toString());
 			throw new MapParsingException();
 		}
+		
+		Log.i(Log.modelTag, "map was built successfully");
 
 		return map;
 	}

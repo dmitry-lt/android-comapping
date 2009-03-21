@@ -19,6 +19,7 @@ import android.util.Log;
 
 public class MainController extends Activity {
 	private static MainController instance = null;
+
 	public static MainController getInstance() {
 		return instance;
 	}
@@ -48,13 +49,11 @@ public class MainController extends Activity {
 		new Thread() {
 			public void run() {
 				try {
-					try {
-						client.logout();
-					} catch (ConnectionException e) {
-						Log.e("Comapping", "Main: connection exception");
-					}
+					client.logout();
 				} catch (NotLoggedInException e) {
 					Log.e("Main", "Logout without login");
+				} catch (ConnectionException e) {
+					Log.e("Comapping", "Main: connection exception");
 				}
 			}
 		}.start();

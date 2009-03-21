@@ -11,11 +11,17 @@ import com.comapping.android.controller.MetaMapController;
 import com.comapping.android.controller.R;
 
 public class MetaMapView {
-	public void setMetaMapText(String text) {
-		TextView metaMapText = (TextView) MainController.getInstance()
+	public void setMetaMapText(final String text) {
+		
+		final TextView metaMapText = (TextView) MainController.getInstance()
 				.findViewById(R.id.metaMapText);
 
-		metaMapText.setText(text);
+		MainController.getInstance().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				metaMapText.setText(text);	
+			}			
+		});
 	}
 
 	public void load() {
