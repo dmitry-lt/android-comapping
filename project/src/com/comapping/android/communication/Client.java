@@ -134,7 +134,7 @@ public class Client {
 				+ Arrays.toString(data.toArray()));
 
 		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost(Options.server);
+		HttpPost post = new HttpPost(Options.SERVER);
 
 		UrlEncodedFormEntity entity = null;
 		try {
