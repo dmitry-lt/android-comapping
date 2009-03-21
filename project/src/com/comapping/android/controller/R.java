@@ -15,7 +15,7 @@ public final class R {
     }
     public static final class id {
         public static final int CheckBox01=0x7f050009;
-        public static final int EditText01=0x7f05000e;
+        public static final int EditText01=0x7f05000d;
         public static final int RelativeLayout01=0x7f050008;
         public static final int TableLayout01=0x7f050001;
         public static final int TableRow01=0x7f050002;
@@ -25,13 +25,12 @@ public final class R {
         public static final int TextView03=0x7f050000;
         public static final int email=0x7f050004;
         public static final int error=0x7f05000b;
-        public static final int go=0x7f05000f;
+        public static final int go=0x7f05000e;
         public static final int login=0x7f05000a;
-        public static final int logout=0x7f050010;
-        public static final int metaMapHeader=0x7f05000d;
-        public static final int metaMapText=0x7f050011;
+        public static final int logout=0x7f05000f;
+        public static final int metaMapHeader=0x7f05000c;
+        public static final int metaMapText=0x7f050010;
         public static final int password=0x7f050007;
-        public static final int testModel=0x7f05000c;
     }
     public static final class layout {
         public static final int login=0x7f030000;
