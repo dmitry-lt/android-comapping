@@ -96,7 +96,7 @@ class TopicIterator implements Iterator<Topic> {
 
 	@Override
 	public boolean hasNext() {
-		return index <= topic.getChildrenCount();
+		return index < topic.getChildrenCount();
 	}
 
 	@Override
