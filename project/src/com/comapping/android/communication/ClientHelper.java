@@ -20,7 +20,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
 public class ClientHelper {
-	
+
 	static String MD5Encode(String string) {
 		MessageDigest md5 = null;
 		try {
@@ -57,17 +57,18 @@ public class ClientHelper {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
 		String text = reader.readLine();
-		
+
 		String line = reader.readLine();
 		while (line != null) {
 			text += "\n" + line;
 			line = reader.readLine();
 		}
-		
+
 		reader.close();
-		
-		if (text == null) text = "";
-		
+
+		if (text == null)
+			text = "";
+
 		return text;
 	}
 
