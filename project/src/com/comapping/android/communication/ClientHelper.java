@@ -19,15 +19,14 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
-import android.util.Log;
-
 public class ClientHelper {
+	
 	static String MD5Encode(String string) {
 		MessageDigest md5 = null;
 		try {
 			md5 = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			Log.e("Comapping", "Communication: MD5 not supported");
+			throw new MD5NotSupportedError();
 		}
 
 		byte[] bytes = null;
@@ -35,7 +34,7 @@ public class ClientHelper {
 		try {
 			bytes = string.getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
-			Log.e("Comapping", "Communication: UTF-8 encoding not supported");
+			throw new UTF8NotSupportedError();
 		}
 
 		bytes = md5.digest(bytes);
