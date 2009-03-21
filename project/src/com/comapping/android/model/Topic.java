@@ -7,31 +7,40 @@ import com.comapping.android.Log;
 
 /**
  * @author Passichenko Victor and Yuri Zemlyanskiy
- *
+ * 
  */
 public class Topic implements Iterable<Topic> {
-	
+
 	public Object renderData;
-	
+
+	private final int id;
 	private String text;
 	private ArrayList<Topic> children;
 
-	public Topic() {
+	public Topic(int id) {
+		this.id = id;
 		this.children = new ArrayList<Topic>();
 		this.text = "";
+
+		Log.d(Log.modelTag, "created " + this);
 	}
 
-	public Topic(String text) {
+	public Topic(int id, String text) {
+		this.id = id;
 		this.children = new ArrayList<Topic>();
 		this.text = text;
 
-		Log.d("Map Model" , "Created " + this);
+		Log.d(Log.modelTag, "created " + this);
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public void setText(String text) {
-		this.text = text;
+		Log.d(Log.modelTag, "set text=\"" + text + "\" in " + this);
 
-		Log.i("Map Model", "Set text " + this);
+		this.text = text;
 	}
 
 	public String getText() {
@@ -55,20 +64,22 @@ public class Topic implements Iterable<Topic> {
 	public void addChild(Topic child) {
 		children.add(child);
 
-		Log.i("Map Model", "Add " + child + " in " + this);
+		Log.d(Log.modelTag, "add " + child + " in " + this);
 	}
 
 	public void removeChildByIndex(int index) throws IndexOutOfBoundsException {
-		Log.i("Map Model", "Remove " + getChildByIndex(index));
+		Log.d(Log.modelTag, "remove " + getChildByIndex(index) + " from "
+				+ this);
 
 		children.remove(index);
 	}
 
+	@Override
 	public String toString() {
-		return "[Topic : " + this.getText() + "]";
+		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText()
+				+ "\"]";
 	}
 
-	@Override
 	public TopicIterator iterator() {
 		return new TopicIterator(this);
 	}
