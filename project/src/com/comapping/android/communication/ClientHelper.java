@@ -56,20 +56,25 @@ public class ClientHelper {
 	static String getTextFromInputStream(InputStream input) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-		String text = reader.readLine();
-
 		String line = reader.readLine();
+		StringBuilder text;
+
+		if (line != null) {
+			text = new StringBuilder(line);
+		} else {
+			// not exist first line
+			return "";
+		}
+
+		line = reader.readLine();
 		while (line != null) {
-			text += "\n" + line;
+			text.append("\n").append(line);
 			line = reader.readLine();
 		}
 
 		reader.close();
 
-		if (text == null)
-			text = "";
-
-		return text;
+		return text.toString();
 	}
 
 	static String getTextFromResponse(HttpResponse response) throws IOException {
