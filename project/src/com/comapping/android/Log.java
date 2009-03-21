@@ -4,6 +4,7 @@ public class Log {
 	private static final String applicationTag = "Comapping";
 	
 	public static final String connectionTag = "Communication";
+	public static final String modelTag = "Model";
 	
 	public static void v(String module, String msg) {
 		android.util.Log.v(applicationTag, module + ": " + msg);
