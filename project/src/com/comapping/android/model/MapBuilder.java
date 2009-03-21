@@ -1,6 +1,8 @@
 package com.comapping.android.model;
 
 import java.io.*;
+import java.sql.Time;
+import java.util.Timer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,7 +25,9 @@ import com.comapping.android.Log;
 public class MapBuilder {
 	public static Map buildMap(String xmlDocument)
 			throws StringToXMLConvertionException, MapParsingException {
-		Log.i(Log.modelTag, "parsing xml document: \n" + xmlDocument);		
+		Log.i(Log.modelTag, "parsing xml document: \n" + xmlDocument);
+		
+		long startTime = System.currentTimeMillis();
 		// creating document
 		Document document;
 		try {
@@ -95,8 +99,9 @@ public class MapBuilder {
 			Log.e(Log.modelTag, e.toString());
 			throw new MapParsingException();
 		}
-		
-		Log.i(Log.modelTag, "map was built successfully");
+				
+		long parsingTime = System.currentTimeMillis() - startTime;
+		Log.w(Log.modelTag, "map was built successfully, parsing time: " + parsingTime);
 
 		return map;
 	}
