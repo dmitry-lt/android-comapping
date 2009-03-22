@@ -1,5 +1,7 @@
 package com.comapping.android.view;
 
+import java.util.HashMap;
+
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
 
@@ -12,10 +14,13 @@ import android.view.View;
 
 public class MapView extends View {
 
-	private static final int xShift = 20;
-	private static final int yShift = 20;
+	private static final int xShift = 30;
+	private static final int yShift = 30;
+	private static final int oSize = 10;
+	private static final int iSize = 5;
 	
 	private Map map;
+	private HashMap<Integer, Boolean> open = new HashMap<Integer, Boolean>();
 	
 	private int x;
 	private int y;
@@ -32,30 +37,52 @@ public class MapView extends View {
 		Paint p = new Paint();
 		p.setColor(Color.GRAY);
 		c.drawLine(x, y, x + xShift, y, p);
+		int id = topic.getId();		
+		if (topic.getChildrenCount() > 0)
+		{
+			c.drawCircle(x, y, oSize, p);
+			if (open.get(id) == null)
+				open.put(id, true);
+		}
 		x += xShift;
 		p.setColor(Color.BLACK);
 		Rect r = new Rect();
 		String text = topic.getText();
 		p.getTextBounds(text, 0, text.length(), r);
-		c.drawText(text, x + 10, y + r.height() / 2, p);
-		int yp = y;
-		for (Topic i : topic.getChildTopics())
+		c.drawText(text, x + oSize + 5, y + r.height() / 2, p);
+		int ty = y;
+		if (topic.getChildrenCount() > 0 && open.get(id))
 		{
-			p.setColor(Color.GRAY);
-			y += yShift;
-			c.drawLine(x, yp, x, y, p);
-			yp = y;
-			drawTopic(i, c);
+			int yp = y;
+			boolean flag = false;
+			for (Topic i : topic.getChildTopics())
+			{
+				p.setColor(Color.GRAY);
+				y += yShift;
+				if (flag)
+					yp += oSize;
+				c.drawLine(x, yp, x, y, p);
+				yp = y;
+				drawTopic(i, c);
+				flag = !(i == null || i.getChildTopics().length == 0);
+			}
 		}
 		x -= xShift;
+		if (topic.getChildrenCount() > 0)
+		{
+			p.setColor(Color.BLACK);
+			c.drawLine(x - iSize, ty, x + iSize, ty, p);
+			if (!open.get(id))
+				c.drawLine(x, ty - iSize, x, ty + iSize, p);
+		}
 	}
 		
 	@Override
 	protected void onDraw(Canvas c)
 	{
 		c.drawARGB(255, 255, 255, 255);
-		x = 10;
-		y = 10;
+		x = 15;
+		y = 15;
 		drawTopic(map.getRoot(), c);
 	}
 	
