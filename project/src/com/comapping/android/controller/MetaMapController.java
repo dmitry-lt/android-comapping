@@ -9,6 +9,7 @@
 package com.comapping.android.controller;
 
 import com.comapping.android.Log;
+import com.comapping.android.ViewType;
 import com.comapping.android.communication.ConnectionException;
 import com.comapping.android.communication.NotLoggedInException;
 import com.comapping.android.model.Map;
@@ -30,7 +31,7 @@ public class MetaMapController {
 
 	private MetaMapView metaMapView = new MetaMapView();
 
-	public void loadMap(final String mapId) {
+	public void loadMap(final String mapId, final ViewType viewType) {
 		metaMapView.setMetaMapText("Loading #" + mapId + " map ... ");
 
 		new Thread() {
@@ -45,7 +46,7 @@ public class MetaMapController {
 					MainController.getInstance().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							MapController.getInstance().loadMap(map);
+							MapController.getInstance().loadMap(map, viewType);
 						};
 					});
 				} catch (NotLoggedInException e) {
