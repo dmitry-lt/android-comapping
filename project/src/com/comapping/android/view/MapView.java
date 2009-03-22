@@ -25,6 +25,7 @@ public class MapView extends View {
 	private static final int yShift = 30;
 	private static final int oSize = 10;
 	private static final int iSize = 5;
+	private static final int bSize = 3;
 	
 	private Map map;
 	private HashMap<Integer, Boolean> open = new HashMap<Integer, Boolean>();
@@ -46,6 +47,18 @@ public class MapView extends View {
 		}
 	}
 	
+	private class RGBColor
+	{
+		public int[] rgb = new int[3];
+		
+		public RGBColor(int color)
+		{
+			rgb[2] = color % 256; color /= 256;
+			rgb[1] = color % 256; color /= 256;
+			rgb[0] = color % 256; color /= 256;
+		}
+	}
+	
 	private void drawTopic(Topic topic, Canvas c)
 	{
 		if (topic == null)
@@ -60,14 +73,19 @@ public class MapView extends View {
 			if (toUpdate)
 				es.add(new EventPoint(x, y, id));
 			if (open.get(id) == null)
-				open.put(id, true);
+				open.put(id, false);
 		}
 		x += xShift;
-		p.setColor(Color.BLACK);
+		int[] rgb = (new RGBColor(topic.getBgColor())).rgb;
+		p.setARGB(255, rgb[0], rgb[1], rgb[2]);
 		Rect r = new Rect();
 		String text = topic.getText();
 		p.getTextBounds(text, 0, text.length(), r);
-		c.drawText(text, x + oSize + 5, y + r.height() / 2, p);
+		x += 5;
+		c.drawRect(x, y - r.height() / 2 - bSize, x + r.width() + 2 * bSize, y + r.height() / 2 + bSize, p);
+		p.setColor(Color.BLACK);
+		c.drawText(text, x + bSize, y + r.height() / 2, p);
+		x -= 5;
 		int ty = y;
 		if (topic.getChildrenCount() > 0 && open.get(id))
 		{
