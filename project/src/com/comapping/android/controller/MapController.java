@@ -1,6 +1,7 @@
 package com.comapping.android.controller;
 
 import com.comapping.android.model.Map;
+import com.comapping.android.view.MapView;
 import com.comapping.android.view.TestMapView;
 
 public class MapController {
@@ -15,7 +16,7 @@ public class MapController {
 
 	public void loadMap(Map map) {
 		MainController.getInstance().setContentView(
-				new TestMapView(MainController.getInstance()
+				new MapView(MainController.getInstance()
 						.getApplicationContext(), map));
 	}
 }
