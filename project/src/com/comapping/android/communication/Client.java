@@ -9,8 +9,11 @@
 package com.comapping.android.communication;
 
 import static com.comapping.android.communication.ClientHelper.getTextFromResponse;
+import static com.comapping.android.communication.ClientHelper.getTextFromInputStream;
 import static com.comapping.android.communication.ClientHelper.MD5Encode;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -128,10 +131,39 @@ public class Client {
 	}
 
 	// private methods
+	private String fakeRequestToServer(ArrayList<BasicNameValuePair> data)
+			throws ConnectionException {
+		String response = "";
+
+		if (data.get(0).getValue().equals("download")) {
+			// Get comap request
+			try {
+				response = getTextFromInputStream(new FileInputStream(
+						Options.XML_FILE_SERVER));
+			} catch (FileNotFoundException e) {
+				Log.e(Log.connectionTag, "XML File Server not found");
+				throw new ConnectionException();
+			} catch (IOException e) {
+				Log.e(Log.connectionTag, "XML File IO exception");
+				throw new ConnectionException();
+			}
+		} else {
+			// for successful login
+			response = "12345";
+		}
+
+		Log.d(Log.connectionTag, "fake response: " + response);
+		return response;
+	}
+
 	private String requestToServer(ArrayList<BasicNameValuePair> data)
 			throws ConnectionException {
 		Log.d(Log.connectionTag, "request to server "
 				+ Arrays.toString(data.toArray()));
+
+		if (Options.FAKE_SERVER) {
+			return fakeRequestToServer(data);
+		}
 
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(Options.SERVER);
