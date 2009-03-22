@@ -15,7 +15,7 @@
 <RelativeLayout android:id="@+id/RelativeLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center"><CheckBox android:id="@+id/CheckBox01" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
 <TextView android:id="@+id/TextView03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Remember Me" android:textSize="20px" android:layout_toRightOf="@+id/CheckBox01" android:layout_alignBaseline="@+id/CheckBox01"></TextView>
 </RelativeLayout><Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:id="@+id/login" android:textSize="30px" android:text="Log In"></Button>
-<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:id="@+id/test" android:textSize="30px" android:text="Test"></Button>
+
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/error" android:layout_gravity="center"></TextView>
 
 
