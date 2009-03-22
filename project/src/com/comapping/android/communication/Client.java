@@ -137,9 +137,10 @@ public class Client {
 
 		if (data.get(0).getValue().equals("download")) {
 			// Get comap request
+			String mapId = data.get(3).getValue();
 			try {
 				response = getTextFromInputStream(new FileInputStream(
-						Options.XML_FILE_SERVER));
+						Options.COMAP_FILE_SERVER+mapId+".comap"));
 			} catch (FileNotFoundException e) {
 				Log.e(Log.connectionTag, "XML File Server not found");
 				throw new ConnectionException();

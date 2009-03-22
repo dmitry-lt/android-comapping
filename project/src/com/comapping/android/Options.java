@@ -5,5 +5,7 @@ public class Options {
 
 	// Fake server settings
 	final public static boolean FAKE_SERVER = false;
-	final public static String XML_FILE_SERVER = "/sdcard/map.xml";
+	// Folder with *.comap files. If you open comap with id 1234 server returned
+	// content of "id.comap" file in COMAP_FILE_SERVER
+	final public static String COMAP_FILE_SERVER = "/sdcard/";
 }
