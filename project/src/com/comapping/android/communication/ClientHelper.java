@@ -1,11 +1,9 @@
-/*
- * Comapping Server Helper
- * Android Comapping, 2009
- * Last change: Abishev Timur
+/**
+ * A class representing a helper for Client class.
  * 
- * Helper for Comapping Server class
+ * @author Abishev Timur
+ * @version 1.0
  */
-
 package com.comapping.android.communication;
 
 import java.io.BufferedReader;
@@ -20,8 +18,12 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
 public class ClientHelper {
-
-	static String MD5Encode(String string) {
+	/**
+	 * Method for encoding string by MD5
+	 * @param string String for encoding	
+	 * @return Encoded string
+	 */
+	public static String MD5Encode(String string) {
 		MessageDigest md5 = null;
 		try {
 			md5 = MessageDigest.getInstance("MD5");
@@ -53,7 +55,13 @@ public class ClientHelper {
 		return output.toString();
 	}
 
-	static String getTextFromInputStream(InputStream input) throws IOException {
+	/**
+	 * Method for getting text from InputStream
+	 * @param input InputStream 
+	 * @return Text Text from InputStream
+	 * @throws IOException
+	 */
+	public static String getTextFromInputStream(InputStream input) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
 		String line = reader.readLine();
@@ -77,7 +85,13 @@ public class ClientHelper {
 		return text.toString();
 	}
 
-	static String getTextFromResponse(HttpResponse response) throws IOException {
+	/**
+	 * Method for getting text from HttpResponse
+	 * @param response HttpResponse
+	 * @return Text Text from InputStream
+	 * @throws IOException
+	 */
+	public static String getTextFromResponse(HttpResponse response) throws IOException {
 		HttpEntity entity = response.getEntity();
 
 		if (entity != null) {

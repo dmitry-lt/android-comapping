@@ -33,7 +33,7 @@ public class MainController extends Activity {
 		Log.i("Main Controller", "Application onCreate");
 
 		instance = this;
-		client.clear();
+		client.clientSideLogout();
 
 		LoginController.getInstance().activate();
 	}

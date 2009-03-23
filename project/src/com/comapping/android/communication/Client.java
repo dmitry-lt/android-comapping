@@ -1,11 +1,9 @@
-/*
- * Comapping Server
- * Android Comapping, 2009
- * Last change: Abishev Timur
+/**
+ * A class implements a client for comnapping server.
  * 
- * Class implements bridge to Comapping Web Server
+ * @author Abishev Timur
+ * @version 1.0
  */
-
 package com.comapping.android.communication;
 
 import static com.comapping.android.communication.ClientHelper.getTextFromResponse;
@@ -38,11 +36,15 @@ public class Client {
 	private String autoLoginKey = null;
 
 	// public methods
-
-	// login methods
-	// manual login
+	/**
+	 * Method for manual login with email and password
+	 * 
+	 * @param email
+	 * @param password
+	 * @throws ConnectionException
+	 */
 	public void login(String email, String password) throws ConnectionException {
-		// if you try to log in previous user logged out
+		// if you try to log in, previous user logged out
 		setClientId(null);
 
 		String passwordHash = MD5Encode(password);
@@ -51,7 +53,7 @@ public class Client {
 		if (salt.length() > 0) {
 			// response from server is valid
 			if (salt.charAt(0) == '#') {
-				// account have salt
+				// account with salt
 				salt = salt.substring(1);
 
 				autoLoginKey = MD5Encode(password + salt);
@@ -68,40 +70,71 @@ public class Client {
 		}
 	}
 
-	// Automatic login
+	/**
+	 * Method for automatic login with AutoLogin key
+	 * 
+	 * @param email Email for login
+	 * @param key AutoLogin key
+	 * @throws ConnectionException
+	 */
 	public void autoLogin(String email, String key) throws ConnectionException {
 		autoLoginKey = key;
 
 		if ((key.length() > 0) && (key.charAt(0) == '#')) {
+			//account with salt
 			setClientId(doLogin(email, key.substring(1), "simple"));
 		} else {
+			//account without salt
 			setClientId(doLogin(email, key, "flashCookie"));
 		}
 	}
 
-	// User info getters
+	/**
+	 * Method for AutoLogin key getting
+	 * 
+	 * @return AutoLogin key
+	 * @throws NotLoggedInException
+	 */
 	public String getAutoLoginKey() throws NotLoggedInException {
 		loginRequired();
 
 		return autoLoginKey;
 	}
 
+	/**
+	 * Method for user email getting
+	 * 
+	 * @return User email
+	 * @throws NotLoggedInException
+	 */
 	public String getEmail() throws NotLoggedInException {
 		loginRequired();
 
 		return email;
 	}
 
+	/**
+	 * Method for check user login status
+	 * 
+	 * @return true or false
+	 */
 	public boolean isLoggedIn() {
 		return clientId != null;
 	}
 
-	// Only client side logout
-	public void clear() {
+	/**
+	 * Method for only client side logout
+	 */
+	public void clientSideLogout() {
 		clientId = null;
 	}
 
-	// Server and client side logout
+	/**
+	 * Method for both client and server side logout
+	 * 
+	 * @throws NotLoggedInException
+	 * @throws ConnectionException
+	 */
 	public void logout() throws NotLoggedInException, ConnectionException {
 		loginRequired();
 
@@ -109,12 +142,19 @@ public class Client {
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));
 
-		clear();
+		clientSideLogout();
 
 		requestToServer(data);
 	}
 
-	// Method for get comap
+	/**
+	 * Method for getting comap file from server
+	 * 
+	 * @param mapId Comap Id
+	 * @return Comap in String format
+	 * @throws NotLoggedInException
+	 * @throws ConnectionException
+	 */
 	public String getComap(String mapId) throws NotLoggedInException,
 			ConnectionException {
 		Log.d(Log.connectionTag, "getting " + mapId + " comap");
@@ -136,7 +176,7 @@ public class Client {
 		String response = "";
 
 		if (data.get(0).getValue().equals("download")) {
-			// Get comap request
+			// "get comap" request
 			String mapId = data.get(3).getValue();
 			try {
 				response = getTextFromInputStream(new FileInputStream(

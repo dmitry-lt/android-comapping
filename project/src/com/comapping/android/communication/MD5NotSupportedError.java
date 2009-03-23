@@ -1,3 +1,9 @@
+/**
+ * A class representing a MD5 not support error.
+ * 
+ * @author Abishev Timur
+ * @version 1.0
+ */
 package com.comapping.android.communication;
 
 import com.comapping.android.Log;
