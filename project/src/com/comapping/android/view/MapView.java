@@ -3,24 +3,37 @@ package com.comapping.android.view;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.comapping.android.controller.MainController;
+import com.comapping.android.model.Map;
+import com.comapping.android.model.Topic;
+import com.comapping.android.controller.LoginController;
+import com.comapping.android.controller.MainController;
+import com.comapping.android.controller.MapController;
+import com.comapping.android.controller.R;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 public class MapView extends View {
 
 	public MapView(Context context, Map map) {
 		super(context);
 		this.map = map;
+		loadImages();
 	}	
 	
+	private static final int imageSize = 15;
 	private static final int xShift = 30;
 	private static final int yShift = 30;
 	private static final int oSize = 10;
@@ -34,6 +47,31 @@ public class MapView extends View {
 	private int y;
 	private boolean toUpdate = true;
 	private ArrayList<EventPoint> es = new ArrayList<EventPoint>();
+	private Bitmap[] prs = new Bitmap[9];
+	
+	private Bitmap getBitmap(Drawable image)
+	{
+		Bitmap bitmap = Bitmap.createBitmap(imageSize, imageSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        image.setBounds(0, 0, imageSize, imageSize);
+        image.draw(canvas);
+        
+        return bitmap;
+	}
+	
+	private void loadImages()
+	{
+		Resources r = MainController.getInstance().getResources();
+		prs[1] = getBitmap(r.getDrawable(R.drawable.p1));
+		prs[2] = getBitmap(r.getDrawable(R.drawable.p2));
+		prs[3] = getBitmap(r.getDrawable(R.drawable.p3));
+		prs[4] = getBitmap(r.getDrawable(R.drawable.p4));
+/*		prs[5] = getBitmap(r.getDrawable(R.drawable.p5));
+		prs[6] = getBitmap(r.getDrawable(R.drawable.p6));
+		prs[7] = getBitmap(r.getDrawable(R.drawable.p7));
+		prs[8] = getBitmap(r.getDrawable(R.drawable.p8));
+		prs[9] = getBitmap(r.getDrawable(R.drawable.p9));*/
+	}
 	
 	private class EventPoint
 	{
@@ -82,9 +120,16 @@ public class MapView extends View {
 		String text = topic.getText();
 		p.getTextBounds(text, 0, text.length(), r);
 		x += 5;
+		if (topic.getPriority() != 0)
+		{
+			c.drawBitmap(prs[topic.getPriority()], x, y - imageSize / 2, null);
+			x += imageSize + 5;
+		}
 		c.drawRect(x, y - r.height() / 2 - bSize, x + r.width() + 2 * bSize, y + r.height() / 2 + bSize, p);
 		p.setColor(Color.BLACK);
 		c.drawText(text, x + bSize, y + r.height() / 2, p);
+		if (topic.getPriority() != 0)
+			x -= imageSize + 5;
 		x -= 5;
 		int ty = y;
 		if (topic.getChildrenCount() > 0 && open.get(id))
