@@ -86,7 +86,8 @@ public class LoginController {
 	
 	public void activate() {
 		client = MainController.getInstance().client;
-
+		loginView.load();
+		
 		if (!Storage.instance.get("key").equals("")) {
 			// attempt to autoLogin
 			new Thread() {
@@ -101,7 +102,7 @@ public class LoginController {
 				}
 			}.start();
 		} else {
-			loginView.load();
+			// manual login
 		}
 	}
 }
