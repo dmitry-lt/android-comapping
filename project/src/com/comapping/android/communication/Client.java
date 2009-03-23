@@ -6,9 +6,7 @@
  */
 package com.comapping.android.communication;
 
-import static com.comapping.android.communication.ClientHelper.getTextFromResponse;
-import static com.comapping.android.communication.ClientHelper.getTextFromInputStream;
-import static com.comapping.android.communication.ClientHelper.MD5Encode;
+import static com.comapping.android.communication.ClientHelper.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
