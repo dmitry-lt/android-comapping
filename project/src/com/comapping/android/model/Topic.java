@@ -141,6 +141,10 @@ public class Topic implements Iterable<Topic> {
 	public int getIconCount() {
 		return icons.getCount();
 	}
+	
+	public ArrayList<Icon> getIcons() {
+		return icons.getIcons();
+	}
 
 	public String getNote() {
 		return note;
