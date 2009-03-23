@@ -18,7 +18,7 @@ public class Topic implements Iterable<Topic> {
 
 	private int id;
 	private String lastModificationDate;
-	private int bgColor;
+	private int bgColor = Color.WHITE;
 	private Flag flag;
 	private int priority;
 	private Smiley smiley;
