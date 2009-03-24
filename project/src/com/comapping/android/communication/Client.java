@@ -1,5 +1,5 @@
 /**
- * A class implements a client for comnapping server.
+ * Class implements client for comapping server.
  * 
  * @author Abishev Timur
  * @version 1.0
@@ -28,11 +28,18 @@ import com.comapping.android.Options;
 import com.comapping.android.controller.LoginController;
 
 public class Client {
+	final static private char SALT_FLAG = '#';
+	final static private String SIMPLE_LOGIN_METHOD = "simple";
+	final static private String COOKIE_LOGIN_METHOD = "flashCookie";
+	final static private String WITH_SALT_LOGIN_METHOD = "withSalt";
+	
+	
 	private String clientId = null;
 
 	private String email = null;
 	private String autoLoginKey = null;
 
+	
 	// public methods
 	/**
 	 * Method for manual login with email and password
@@ -46,23 +53,28 @@ public class Client {
 		setClientId(null);
 
 		String passwordHash = MD5Encode(password);
-		String salt = doLogin(email, passwordHash, "simple");
+		String loginResponse = loginRequest(email, passwordHash, SIMPLE_LOGIN_METHOD);
 
-		if (salt.length() > 0) {
+		if (loginResponse.length() > 0) {
 			// response from server is valid
-			if (salt.charAt(0) == '#') {
+			String clientId;
+
+			if (loginResponse.charAt(0) == SALT_FLAG) {
 				// account with salt
-				salt = salt.substring(1);
+				String salt = loginResponse.substring(1);
 
-				autoLoginKey = MD5Encode(password + salt);
+				autoLoginKey = SALT_FLAG + MD5Encode(password + salt);
 
-				setClientId(doLogin(email, autoLoginKey, "withSalt"));
+				clientId = loginRequest(email, autoLoginKey.substring(1),
+						WITH_SALT_LOGIN_METHOD);
 			} else {
 				// account without salt
-				autoLoginKey = "#" + passwordHash;
+				autoLoginKey = passwordHash;
 
-				setClientId(salt);
+				clientId = loginResponse;
 			}
+
+			setClientId(clientId);
 		} else {
 			// login failed
 		}
@@ -71,19 +83,21 @@ public class Client {
 	/**
 	 * Method for automatic login with AutoLogin key
 	 * 
-	 * @param email Email for login
-	 * @param key AutoLogin key
+	 * @param email
+	 *            Email for login
+	 * @param key
+	 *            AutoLogin key
 	 * @throws ConnectionException
 	 */
 	public void autoLogin(String email, String key) throws ConnectionException {
 		autoLoginKey = key;
 
-		if ((key.length() > 0) && (key.charAt(0) == '#')) {
-			//account with salt
-			setClientId(doLogin(email, key.substring(1), "simple"));
+		if ((key.length() > 0) && (key.charAt(0) == SALT_FLAG)) {
+			// account with salt
+			setClientId(loginRequest(email, key.substring(1), SIMPLE_LOGIN_METHOD));
 		} else {
-			//account without salt
-			setClientId(doLogin(email, key, "flashCookie"));
+			// account without salt
+			setClientId(loginRequest(email, key, COOKIE_LOGIN_METHOD));
 		}
 	}
 
@@ -94,7 +108,7 @@ public class Client {
 	 * @throws NotLoggedInException
 	 */
 	public String getAutoLoginKey() throws NotLoggedInException {
-		loginRequired();
+		isLoggedInAssertion();
 
 		return autoLoginKey;
 	}
@@ -106,7 +120,7 @@ public class Client {
 	 * @throws NotLoggedInException
 	 */
 	public String getEmail() throws NotLoggedInException {
-		loginRequired();
+		isLoggedInAssertion();
 
 		return email;
 	}
@@ -114,7 +128,7 @@ public class Client {
 	/**
 	 * Method for check user login status
 	 * 
-	 * @return true or false
+	 * @return True if user is logged in and false otherwise
 	 */
 	public boolean isLoggedIn() {
 		return clientId != null;
@@ -134,7 +148,7 @@ public class Client {
 	 * @throws ConnectionException
 	 */
 	public void logout() throws NotLoggedInException, ConnectionException {
-		loginRequired();
+		isLoggedInAssertion();
 
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
@@ -148,7 +162,8 @@ public class Client {
 	/**
 	 * Method for getting comap file from server
 	 * 
-	 * @param mapId Comap Id
+	 * @param mapId
+	 *            Comap Id
 	 * @return Comap in String format
 	 * @throws NotLoggedInException
 	 * @throws ConnectionException
@@ -157,7 +172,7 @@ public class Client {
 			ConnectionException {
 		Log.d(Log.connectionTag, "getting " + mapId + " comap");
 
-		loginRequired();
+		isLoggedInAssertion();
 
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
@@ -178,7 +193,7 @@ public class Client {
 			String mapId = data.get(3).getValue();
 			try {
 				response = getTextFromInputStream(new FileInputStream(
-						Options.COMAP_FILE_SERVER+mapId+".comap"));
+						Options.COMAP_FILE_SERVER + mapId + ".comap"));
 			} catch (FileNotFoundException e) {
 				Log.e(Log.connectionTag, "XML File Server not found");
 				throw new ConnectionException();
@@ -239,8 +254,8 @@ public class Client {
 		return responseText;
 	}
 
-	private String doLogin(String email, String password, String loginMethod)
-			throws ConnectionException {
+	private String loginRequest(String email, String password,
+			String loginMethod) throws ConnectionException {
 		this.email = email;
 
 		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
@@ -253,12 +268,15 @@ public class Client {
 	}
 
 	private boolean checkClientId(String clientId) {
-		if (clientId.length() == 0)
+		if (clientId.length() == 0) {
 			return false;
+		}
 
-		for (int i = 0; i < clientId.length(); i++)
-			if (!Character.isLetterOrDigit(clientId.charAt(i)))
+		for (int i = 0; i < clientId.length(); i++) {
+			if (!Character.isLetterOrDigit(clientId.charAt(i))) {
 				return false;
+			}
+		}
 
 		return true;
 	}
@@ -275,8 +293,9 @@ public class Client {
 		}
 	}
 
-	private void loginRequired() throws NotLoggedInException {
-		if (!isLoggedIn())
+	private void isLoggedInAssertion() throws NotLoggedInException {
+		if (!isLoggedIn()) {
 			throw new NotLoggedInException();
+		}
 	}
 }
