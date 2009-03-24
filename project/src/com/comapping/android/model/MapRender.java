@@ -7,13 +7,27 @@
  */
 package com.comapping.android.model;
 
+import com.comapping.android.controller.R;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 
 public class MapRender {
 
+	//Metod is public because it MUST be removed to
+	//MapView or to MapActivity.
+	//if it would be private member then javac will generate
+	//getter and setter for it. It's not good ;)
+	public static Bitmap[] icons; 
+	
 	private class Item
 	{
 		public Item[] childs;
@@ -26,6 +40,9 @@ public class MapRender {
 		private static final int BORDER_SIZE = 8;
 		
 		private static final int ROW_LENGTH = 30;
+		
+		private static final int ICON_SIZE = 15;
+		private static final int ICON_BORDER = 4;
 		
 		public String getRow(int id)
 		{
@@ -59,7 +76,13 @@ public class MapRender {
 					width = Math.max(width, bounds.width());
 					// width += bounds.width();
 				}
+
 				lazyWidth = width + BORDER_SIZE * 2;
+				
+				if (topicData.getPriority() != 0)
+				{
+					lazyWidth += ICON_SIZE + ICON_BORDER*2;
+				}
 			}
 			return lazyWidth;
 		}
@@ -96,7 +119,6 @@ public class MapRender {
 		
 		public void draw(int x, int y, Canvas c)
 		{
-			String text = topicData.getText();
 			int vertOffset = getOffset();
 			
 			Paint p = new Paint();
@@ -121,11 +143,16 @@ public class MapRender {
 				
 				c.drawText(rowText, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE + textVertOffset, p);
 				
-				//c.drawText(text, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE, p);
-				
 				textVertOffset+=bounds.height();
 			}
-			//c.drawText(text, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE, p);
+			
+			//Draw priority icon
+			if (topicData.getPriority() != 0)
+			{
+				c.drawBitmap(icons[topicData.getPriority() - 1], 
+						x + getWidth() - BORDER_SIZE - ICON_BORDER - ICON_SIZE, y + getUnderlineOffset() - ICON_SIZE - ICON_BORDER, 
+						new Paint());
+			}
 		}
 		
 		private int lazyUnderlineOffset = -1;
@@ -137,7 +164,6 @@ public class MapRender {
 			return lazyUnderlineOffset;
 		}
 	
-		
 	}
 	
 	
@@ -146,14 +172,23 @@ public class MapRender {
 	public static final int FONT_SIZE_LAYER3 = 20;
 
 	public static final int FONT_SIZE_LAYERX = 10;
-	
 	public static final int MAX_TEXT_LEN_IN_ROW = 10;
 
+	public static final int PRIORITY_COUND = 4;
 	Item root;
 
-	public MapRender(Topic mapItem) {
+	public MapRender(Topic mapItem, Context contex) {
 		root = buildTree(mapItem);
 		recalcData(root, 0);
+		
+		Resources resourceLib = contex.getResources();
+		
+		icons = new Bitmap[PRIORITY_COUND];
+		icons[0] = BitmapFactory.decodeResource(resourceLib, R.drawable.p1);
+		icons[1] = BitmapFactory.decodeResource(resourceLib, R.drawable.p2);
+		icons[2] = BitmapFactory.decodeResource(resourceLib, R.drawable.p3);
+		icons[3] = BitmapFactory.decodeResource(resourceLib, R.drawable.p4);
+		
 	}
 	
 
