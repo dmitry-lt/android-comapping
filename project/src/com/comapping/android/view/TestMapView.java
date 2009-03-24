@@ -15,6 +15,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -41,7 +42,12 @@ public class TestMapView extends View {
 		Paint p = new Paint();
 		canvas.drawARGB(255, 255, 255, 255);
 		
+		canvas.save();
+		Matrix m =  canvas.getMatrix();
+		m.postScale(0.4f, 0.4f);
+		canvas.setMatrix(m);
 		render.draw(canvas);
+		canvas.restore();
 		
 		p.setColor(Color.GREEN);
 		canvas.drawText("FPS: " + FPS, 10, 10, p);

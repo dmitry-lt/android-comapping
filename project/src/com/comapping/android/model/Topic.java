@@ -14,8 +14,6 @@ import com.comapping.android.Log;
  */
 public class Topic implements Iterable<Topic> {
 
-	public Object renderData;
-
 	private int id;
 	private String lastModificationDate;
 	private int bgColor = Color.WHITE;

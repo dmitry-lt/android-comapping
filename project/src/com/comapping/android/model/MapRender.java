@@ -14,69 +14,114 @@ import android.graphics.Rect;
 
 public class MapRender {
 
-	private class MapItemData {
-		public MapItemData(int w) {
-			subtreeWidth = w;
-		}
-
-		public int subtreeWidth;
-	}
-	
-	private static class ItemDrawer
+	private class Item
 	{
-		private static int UNDERLINE_OFFSET = 3;
+		public Item[] childs;
+		public int subtreeWidth;
+		public Topic topicData;
 		
-		private static int BORDER_SIZE = 8;
 		
-		public static int getWidth(Topic item)
+		private static final int UNDERLINE_OFFSET = 3;
+		
+		private static final int BORDER_SIZE = 8;
+		
+		private static final int ROW_LENGTH = 30;
+		
+		public String getRow(int id)
 		{
-			String text = item.getText();
+			String res = topicData.getText();
+			if (id < getRowCount())
+			{
+				return res.substring(id*ROW_LENGTH, Math.min(res.length(), (id+1)*ROW_LENGTH));
+			}
+			else
+				return "";
+		}
+		
+		public int getRowCount()
+		{
+			return  topicData.getText().length()/ROW_LENGTH + 1;
+		}
+		
+		public int getWidth()
+		{
 			Paint p = new Paint();
 			Rect bounds = new Rect();
-			p.getTextBounds(text, 0, text.length(), bounds);
-			return bounds.width() + BORDER_SIZE*2;
+			
+			int linesCount = getRowCount();
+			int width = 0;
+			for(int i = 0; i < linesCount; i++)
+			{
+				String rowText = getRow(i);
+				p.getTextBounds(rowText, 0, rowText.length(), bounds);
+				width =Math.max(width, bounds.width());
+				//width += bounds.width();
+			}
+			return width + BORDER_SIZE*2;
 		}
 		
-		public static int getHeight(Topic item)
+		public int getHeight()
 		{
-			String text = item.getText();
 			Paint p = new Paint();
 			Rect bounds = new Rect();
-			p.getTextBounds(text, 0, text.length(), bounds);
-			return bounds.height() + UNDERLINE_OFFSET + BORDER_SIZE*2;
+			int linesCount = getRowCount();
+			int height = 0;
+			for(int i = 0; i < linesCount; i++)
+			{
+				String rowText = getRow(i);
+				p.getTextBounds(rowText, 0, rowText.length(), bounds);
+
+				height+=bounds.height();
+			}
+			return height + UNDERLINE_OFFSET + BORDER_SIZE*2;
 		}
 		
-		private static int getOffset(Topic item)
+		private int getOffset()
 		{
-			return ((((MapItemData) item.renderData).subtreeWidth)-getHeight(item))/2; 
+			return (subtreeWidth-getHeight())/2; 
 		}
 		
-		public static void draw(Topic item, int x, int y, Canvas c)
+		public void draw(int x, int y, Canvas c)
 		{
-			String text = item.getText();
-			int vertOffset = getOffset(item);
+			String text = topicData.getText();
+			int vertOffset = getOffset();
 			
 			Paint p = new Paint();
 			p.setColor(Color.BLACK);
 
-			//For underline length
-			Rect bounds = new Rect();
-			p.getTextBounds(text, 0, text.length(), bounds);
-
+			int underlineOffset = getUnderlineOffset();
 			//Draw underline
-			c.drawLine(x, y + vertOffset+ bounds.height() + UNDERLINE_OFFSET + BORDER_SIZE, 
-					x + bounds.width() + BORDER_SIZE*2, y + vertOffset + bounds.height() + UNDERLINE_OFFSET + BORDER_SIZE, p);
+			c.drawLine(x, y + underlineOffset, 
+					x + getWidth(),y+ underlineOffset, p);
 
 			//Draw text
-			c.drawText(text, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE, p);
+			int linesCount = getRowCount();
+			int textVertOffset = 0;
+			for(int i = 0; i < linesCount; i++)
+			{
+				String rowText = getRow(i);
+				
+				Rect bounds = new Rect();
+				p.getTextBounds(rowText, 
+						0, Math.min(rowText.length(), ROW_LENGTH),
+						bounds);
+				
+				c.drawText(rowText, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE + textVertOffset, p);
+				
+				//c.drawText(text, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE, p);
+				
+				textVertOffset+=bounds.height();
+			}
+			//c.drawText(text, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE, p);
 		}
 		
-		public static int getUnderlineOffset(Topic item)
+		public int getUnderlineOffset()
 		{
-			return getHeight(item)+ getOffset(item) - BORDER_SIZE;
+			return getHeight()+ getOffset() - BORDER_SIZE;
 		}
 	}
-
+	
+	
 	public static final int FONT_SIZE_LAYER1 = 20;
 	public static final int FONT_SIZE_LAYER2 = 20;
 	public static final int FONT_SIZE_LAYER3 = 20;
@@ -85,59 +130,67 @@ public class MapRender {
 	
 	public static final int MAX_TEXT_LEN_IN_ROW = 10;
 
-	Topic root;
+	Item root;
 
 	public MapRender(Topic mapItem) {
-		root = mapItem;
+		root = buildTree(mapItem);
 		recalcData(root, 0);
 	}
+	
 
-	void recalcData(Topic item, int layerId) {
+	private Item buildTree(Topic itm)
+	{
+		Item res = new Item();
+		res.childs = new Item[itm.getChildrenCount()];
+		res.topicData = itm;
+		int index = 0;
+		for (Topic i : itm) {
+			res.childs[index++] = buildTree(i);
+		}
+		return res;
+	}
+
+	void recalcData(Item item, int layerId) {
 		if (item == null)
 			return;
 
 		int w = 0;
-		for (Topic i : item.getChildTopics()) {
+		for (Item i : item.childs) {
 			recalcData(i, layerId + 1);
-			w += ((MapItemData) i.renderData).subtreeWidth;
+			w += i.subtreeWidth;
 		}
-		item.renderData = new MapItemData(Math.max(w, ItemDrawer.getHeight(item)));
+		item.subtreeWidth = Math.max(w, item.getHeight());
 	}
 	
 	public void draw(Canvas c) {
 		draw(0, 0, root, c);
 	}
 
-	private void draw(int baseX, int baseY, Topic itm, Canvas c) {
-
-		//MapItemData data = (MapItemData) itm.renderData;
-		
-		ItemDrawer.draw(itm, baseX, baseY, c);
-		int dataLen = ItemDrawer.getWidth(itm); 
+	private void draw(int baseX, int baseY, Item itm, Canvas c) {
+		itm.draw(baseX, baseY, c);
+		int dataLen = itm.getWidth(); 
 		
 		int vertOffset = 0;
-		for (Topic i : itm.getChildTopics()) {
+		for (Item i : itm.childs) {
 			draw(baseX + dataLen, baseY + vertOffset, i, c);
-			vertOffset += (((MapItemData) i.renderData).subtreeWidth);
+			vertOffset += i.subtreeWidth;
 		}
 		
-		if (itm.getChildrenCount() != 0)
+		if (itm.childs.length != 0)
 		{
 			Paint p = new Paint();
 			p.setColor(Color.BLACK);
 			
-			Topic first = itm.getChildByIndex(0);
-			Topic last = itm.getChildByIndex(itm.getChildrenCount() - 1);
+			Item first = itm.childs[0];
+			Item last = itm.childs[itm.childs.length - 1];
 			
 			//Calculating offset for last child
-			vertOffset-= (((MapItemData) last.renderData).subtreeWidth);
+			vertOffset-= last.subtreeWidth;
 			
 			//Connecting childs
-			c.drawLine(baseX + dataLen, baseY + ItemDrawer.getUnderlineOffset(first) , 
-					baseX + dataLen, baseY + vertOffset+ ItemDrawer.getUnderlineOffset(last), p);
+			c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset() , 
+					baseX + dataLen, baseY + vertOffset+ last.getUnderlineOffset(), p);
 			
-//			
-//			c.drawLine(baseX, baseY + offset + 3, baseX + dataLen, baseY + offset + 3, p);
 		}
 	}
 }
