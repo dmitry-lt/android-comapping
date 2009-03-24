@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.comapping.android.controller.MainController;
 import com.comapping.android.model.Map;
+import com.comapping.android.model.Smiley;
 import com.comapping.android.model.Topic;
 import com.comapping.android.controller.LoginController;
 import com.comapping.android.controller.MainController;
@@ -48,6 +49,7 @@ public class MapView extends View {
 	private boolean toUpdate = true;
 	private ArrayList<EventPoint> es = new ArrayList<EventPoint>();
 	private Bitmap[] prs = new Bitmap[9];
+	private Bitmap happy;
 	
 	private Bitmap getBitmap(Drawable image)
 	{
@@ -71,6 +73,7 @@ public class MapView extends View {
 		prs[7] = getBitmap(r.getDrawable(R.drawable.p7));
 		prs[8] = getBitmap(r.getDrawable(R.drawable.p8));
 		prs[9] = getBitmap(r.getDrawable(R.drawable.p9));*/
+		happy = getBitmap(r.getDrawable(R.drawable.happy));
 	}
 	
 	private class EventPoint
@@ -125,10 +128,18 @@ public class MapView extends View {
 			c.drawBitmap(prs[topic.getPriority()], x, y - imageSize / 2, null);
 			x += imageSize + 5;
 		}
+		if (topic.getSmiley() != null)
+		{
+			if (topic.getSmiley() == Smiley.HAPPY)
+				c.drawBitmap(happy, x, y - imageSize / 2, null);
+			x += imageSize + 5;
+		}
 		c.drawRect(x, y - r.height() / 2 - bSize, x + r.width() + 2 * bSize, y + r.height() / 2 + bSize, p);
 		p.setColor(Color.BLACK);
 		c.drawText(text, x + bSize, y + r.height() / 2, p);
 		if (topic.getPriority() != 0)
+			x -= imageSize + 5;
+		if (topic.getSmiley() != null)
 			x -= imageSize + 5;
 		x -= 5;
 		int ty = y;
