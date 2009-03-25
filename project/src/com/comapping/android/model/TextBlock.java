@@ -30,7 +30,7 @@ public class TextBlock {
 	}
 
 	public void setText(String text) {
-		this.text = unescape(text);
+		this.text = unescape(text.replace('#', '&'));
 	}
 
 	public boolean hasNext() {

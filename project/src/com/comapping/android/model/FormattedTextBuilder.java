@@ -20,20 +20,26 @@ public class FormattedTextBuilder {
 	private static final TextFormat defFormat = getDefFormat();
 
 	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {
-		if ((xmlString.length() == 0) || (xmlString.charAt(0) != '<')) {
-			return new FormattedText(new TextBlock(xmlString, defFormat));
-		}
-
+		xmlString = xmlString.replace('&', '#');
+		xmlString = "<P><FONT>" + xmlString + "</FONT></P>";
+		Log.d(Log.modelTag, "parsing text: " + xmlString);
+		
 		Document document = DocumentBuilder.buildDocument(xmlString);
-
-		TextFormat defFormat = new TextFormat();
-		TextBlock first = buildTextBlock(document.getDocumentElement(), defFormat);
+		
+		TextBlock first;
+		if (document.getDocumentElement() == null) {
+			first = new TextBlock(xmlString, defFormat);
+		} else {
+			first = buildTextBlock(document.getDocumentElement(), defFormat);
+		}
 
 		return new FormattedText(first);
 	}
 
 	private static TextBlock buildTextBlock(Node node, TextFormat curFormat) {
+		Log.d(Log.modelTag, "nodeName: " + node.getNodeName());
 		if (node.getNodeType() == Node.TEXT_NODE) {
+			Log.d(Log.modelTag, "nodeValue: " + node.getNodeValue());
 			return new TextBlock(node.getNodeValue(), curFormat);
 
 		} else {
@@ -50,7 +56,7 @@ public class FormattedTextBuilder {
 				TextBlock first = buildTextBlock(childNodes.item(0), curFormat.clone());
 				TextBlock cur = first;
 				for (int i = 1; i < childNodes.getLength(); i++) {
-					cur.setNext(buildTextBlock(childNodes.item(0), curFormat.clone()));
+					cur.setNext(buildTextBlock(childNodes.item(i), curFormat.clone()));
 					cur = cur.getNext();
 				}
 
