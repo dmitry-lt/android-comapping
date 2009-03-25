@@ -23,7 +23,7 @@ public class ClientHelper {
 	 * @param string String for encoding	
 	 * @return Encoded string
 	 */
-	public static String MD5Encode(String string) {
+	public static String md5Encode(String string) {
 		MessageDigest md5 = null;
 		try {
 			md5 = MessageDigest.getInstance("MD5");

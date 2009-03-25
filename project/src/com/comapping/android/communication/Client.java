@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -52,7 +53,7 @@ public class Client {
 		// if you try to log in, previous user logged out
 		setClientId(null);
 
-		String passwordHash = MD5Encode(password);
+		String passwordHash = md5Encode(password);
 		String loginResponse = loginRequest(email, passwordHash, SIMPLE_LOGIN_METHOD);
 
 		if (loginResponse.length() > 0) {
@@ -63,7 +64,7 @@ public class Client {
 				// account with salt
 				String salt = loginResponse.substring(1);
 
-				autoLoginKey = SALT_FLAG + MD5Encode(password + salt);
+				autoLoginKey = SALT_FLAG + md5Encode(password + salt);
 
 				clientId = loginRequest(email, autoLoginKey.substring(1),
 						WITH_SALT_LOGIN_METHOD);
@@ -150,7 +151,7 @@ public class Client {
 	public void logout() throws NotLoggedInException, ConnectionException {
 		isLoggedInAssertion();
 
-		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
+		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));
 
@@ -174,7 +175,7 @@ public class Client {
 
 		isLoggedInAssertion();
 
-		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
+		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
 		data.add(new BasicNameValuePair("format", "comap"));
 		data.add(new BasicNameValuePair("clientID", clientId));
@@ -184,7 +185,7 @@ public class Client {
 	}
 
 	// private methods
-	private String fakeRequestToServer(ArrayList<BasicNameValuePair> data)
+	private String fakeRequestToServer(List<BasicNameValuePair> data)
 			throws ConnectionException {
 		String response = "";
 
@@ -210,7 +211,7 @@ public class Client {
 		return response;
 	}
 
-	private String requestToServer(ArrayList<BasicNameValuePair> data)
+	private String requestToServer(List<BasicNameValuePair> data)
 			throws ConnectionException {
 		Log.d(Log.connectionTag, "request to server "
 				+ Arrays.toString(data.toArray()));
@@ -258,7 +259,7 @@ public class Client {
 			String loginMethod) throws ConnectionException {
 		this.email = email;
 
-		ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
+		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_login"));
 		data.add(new BasicNameValuePair("login", email));
 		data.add(new BasicNameValuePair("password", password));
