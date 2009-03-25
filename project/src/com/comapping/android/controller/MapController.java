@@ -6,8 +6,8 @@ import com.comapping.android.ViewType;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
 import com.comapping.android.view.ComappingRender;
+import com.comapping.android.view.ExplorerRender;
 import com.comapping.android.view.MainMapView;
-import com.comapping.android.view.MapView;
 import com.comapping.android.view.Render;
 
 public class MapController {
@@ -22,19 +22,16 @@ public class MapController {
 
 	public void loadMap(Map map, ViewType viewType) {
 		View view = null;
+		Render r = null;
 		switch (viewType) {
 			case EXPLORER_VIEW:
-				view = new MapView(MainController.getInstance()
-						.getApplicationContext(), map);
+				r = new ExplorerRender(MainController.getInstance(), map);
 				break;
 			case TREE_VIEW:
-			{
-				Render r = new ComappingRender(MainController.getInstance(), map.getRoot());
-				
-				view = new MainMapView(MainController.getInstance(), r);
+				r = new ComappingRender(MainController.getInstance(), map.getRoot());				
 				break;
-			}
 		}
+		view = new MainMapView(MainController.getInstance(), r);
 		if (view != null) MainController.getInstance().setContentView(view);
 	}
 }
