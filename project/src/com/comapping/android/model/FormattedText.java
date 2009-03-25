@@ -1,18 +1,22 @@
 package com.comapping.android.model;
 
+import java.util.List;
+
 public class FormattedText {
 
-	private TextBlock first;
+	private List<TextBlock> textBlocks;
 	private int maxFontSize;
+	private String simpleText;
 
-	public FormattedText(TextBlock first) {
-		this.first = first;
+	public FormattedText(List<TextBlock> textBlocks) {
+		this.textBlocks = textBlocks;
 
-		TextBlock cur = first;
-		while (cur != null) {
+		StringBuilder text = new StringBuilder();
+		for (TextBlock cur : textBlocks) {
 			maxFontSize = Math.max(maxFontSize, cur.getFormat().getFontSize());
-			cur = cur.getNext();
+			text.append(cur.getText());
 		}
+		this.simpleText = text.toString();
 	}
 
 	public int getMaxFontSize() {
@@ -20,18 +24,10 @@ public class FormattedText {
 	}
 
 	public String getSimpleText() {
-		StringBuilder text = new StringBuilder();
-
-		TextBlock cur = first;
-		while (cur != null) {
-			text.append(cur.getText());
-			cur = cur.getNext();
-		}
-
-		return text.toString();
+		return simpleText;
 	}
 
-	public TextBlock getFirst() {
-		return first;
+	public List<TextBlock> getTextBlocks() {
+		return textBlocks;
 	}
 }

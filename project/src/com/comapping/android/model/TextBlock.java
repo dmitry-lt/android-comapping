@@ -3,26 +3,10 @@ package com.comapping.android.model;
 public class TextBlock {
 	private String text;
 	private TextFormat format;
-
-	private TextBlock next;
-	private TextBlock prev;
-
+	
 	public TextBlock(String text, TextFormat format) {
 		setText(text);
 		setFormat(format);
-	}
-
-	public TextBlock getNext() {
-		return next;
-	}
-
-	public void setNext(TextBlock next) {
-		this.next = next;
-		next.prev = this;
-	}
-
-	public TextBlock getPrev() {
-		return prev;
 	}
 
 	public String getText() {
@@ -31,14 +15,6 @@ public class TextBlock {
 
 	public void setText(String text) {
 		this.text = unescape(text.replace('#', '&'));
-	}
-
-	public boolean hasNext() {
-		return (next != null);
-	}
-
-	public boolean hasPrev() {
-		return (prev != null);
 	}
 
 	public void setFormat(TextFormat format) {

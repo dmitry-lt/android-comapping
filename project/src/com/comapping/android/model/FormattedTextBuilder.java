@@ -1,5 +1,8 @@
 package com.comapping.android.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -26,21 +29,18 @@ public class FormattedTextBuilder {
 		
 		Document document = DocumentBuilder.buildDocument(xmlString);
 		
-		TextBlock first;
-		if (document.getDocumentElement() == null) {
-			first = new TextBlock(xmlString, defFormat);
-		} else {
-			first = buildTextBlock(document.getDocumentElement(), defFormat);
-		}
+		List<TextBlock> textBlocks = buildTextBlocks(document.getDocumentElement(), defFormat);		
 
-		return new FormattedText(first);
+		return new FormattedText(textBlocks);
 	}
 
-	private static TextBlock buildTextBlock(Node node, TextFormat curFormat) {
+	private static List<TextBlock> buildTextBlocks(Node node, TextFormat curFormat) {
+		List<TextBlock> result = new ArrayList<TextBlock>();
+		
 		Log.d(Log.modelTag, "nodeName: " + node.getNodeName());
 		if (node.getNodeType() == Node.TEXT_NODE) {
 			Log.d(Log.modelTag, "nodeValue: " + node.getNodeValue());
-			return new TextBlock(node.getNodeValue(), curFormat);
+			result.add(new TextBlock(node.getNodeValue(), curFormat));
 
 		} else {
 			NamedNodeMap attributes = node.getAttributes();
@@ -52,19 +52,12 @@ public class FormattedTextBuilder {
 			}
 
 			NodeList childNodes = node.getChildNodes();
-			if (childNodes.getLength() != 0) {
-				TextBlock first = buildTextBlock(childNodes.item(0), curFormat.clone());
-				TextBlock cur = first;
-				for (int i = 1; i < childNodes.getLength(); i++) {
-					cur.setNext(buildTextBlock(childNodes.item(i), curFormat.clone()));
-					cur = cur.getNext();
-				}
-
-				return first;
-			} else {
-				return new TextBlock("", curFormat);
-			}
+			for (int i = 0; i < childNodes.getLength(); i++) {
+				result.addAll(buildTextBlocks(childNodes.item(i), curFormat.clone()));					
+			}									
 		}
+		
+		return result;
 	}
 
 	private static void changeFormat(TextFormat format, String tag, String attr, String value) {
