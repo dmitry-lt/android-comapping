@@ -28,7 +28,7 @@ public class TestMapView extends View {
 
 	public TestMapView(Context context, Map map) {
 		super(context);
-		render = new MapRender(map.getRoot());
+		render = new MapRender(map.getRoot(), context);
 	}
 
 	int count = 0;
