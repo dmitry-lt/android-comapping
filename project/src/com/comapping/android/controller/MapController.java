@@ -9,7 +9,6 @@ import com.comapping.android.view.ComappingRender;
 import com.comapping.android.view.MainMapView;
 import com.comapping.android.view.MapView;
 import com.comapping.android.view.Render;
-import com.comapping.android.view.TestMapView;
 
 public class MapController {
 	private MapController() {
