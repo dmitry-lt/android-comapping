@@ -16,7 +16,7 @@ public class Icons {
 	}
 
 	public boolean hasIcon(Icon icon) {
-		return (mask & (1 << icon.ordinal())) == 0;
+		return (mask & (1 << icon.ordinal())) != 0;
 	}
 
 	public int getCount() {
