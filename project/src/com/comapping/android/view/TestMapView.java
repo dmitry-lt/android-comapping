@@ -9,7 +9,6 @@
 package com.comapping.android.view;
 
 import com.comapping.android.model.Map;
-import com.comapping.android.model.MapRender;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,13 +25,13 @@ public class TestMapView extends View {
 
 	Drawable image;
 	Bitmap bmp;
-	MapRender render;
+	ComappingRender render;
 	
 	VelocityTracker mVelocityTracker;
 
 	public TestMapView(Context context, Map map) {
 		super(context);
-		render = new MapRender(map.getRoot(), context);
+		render = new ComappingRender(context, map.getRoot());
 	}
 
 	int count = 0;
@@ -52,11 +51,11 @@ public class TestMapView extends View {
 		Matrix m =  canvas.getMatrix();
 		m.postScale(0.75f, 0.75f);
 		canvas.setMatrix(m);
-		render.draw(canvas);
+		render.draw(0, 0, 320, 480,canvas);
 		canvas.restore();
 		
-		p.setColor(Color.GREEN);
-		canvas.drawText("FPS: " + FPS, 10, 10, p);
+		p.setColor(Color.BLACK);
+		canvas.drawText("FPS: " + FPS, 10, 30, p);
 		if (System.currentTimeMillis() - startTime > 1000) {
 			FPS = (1000 * count) / (System.currentTimeMillis() - startTime);
 			startTime = System.currentTimeMillis();

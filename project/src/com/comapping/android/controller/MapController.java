@@ -4,7 +4,11 @@ import android.view.View;
 
 import com.comapping.android.ViewType;
 import com.comapping.android.model.Map;
+import com.comapping.android.model.Topic;
+import com.comapping.android.view.ComappingRender;
+import com.comapping.android.view.MainMapView;
 import com.comapping.android.view.MapView;
+import com.comapping.android.view.Render;
 import com.comapping.android.view.TestMapView;
 
 public class MapController {
@@ -25,9 +29,12 @@ public class MapController {
 						.getApplicationContext(), map);
 				break;
 			case TREE_VIEW:
-				view = new TestMapView(MainController.getInstance()
-						.getApplicationContext(), map);
-				break;				
+			{
+				Render r = new ComappingRender(MainController.getInstance(), map.getRoot());
+				
+				view = new MainMapView(MainController.getInstance(), r);
+				break;
+			}
 		}
 		if (view != null) MainController.getInstance().setContentView(view);
 	}

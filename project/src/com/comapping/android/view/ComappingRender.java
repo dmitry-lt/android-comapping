@@ -5,9 +5,11 @@
  * 
  * Render of map in comapping.com style
  */
-package com.comapping.android.model;
+package com.comapping.android.view;
 
 import com.comapping.android.controller.R;
+import com.comapping.android.model.Map;
+import com.comapping.android.model.Topic;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -20,7 +22,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
-public class MapRender {
+public class ComappingRender extends Render{
 
 	//Metod is public because it MUST be removed to
 	//MapView or to MapActivity.
@@ -177,11 +179,11 @@ public class MapRender {
 	public static final int PRIORITY_COUND = 4;
 	Item root;
 
-	public MapRender(Topic mapItem, Context contex) {
-		root = buildTree(mapItem);
+	public ComappingRender(Context context, Topic map) {
+		root = buildTree(map);
 		recalcData(root, 0);
 		
-		Resources resourceLib = contex.getResources();
+		Resources resourceLib = context.getResources();
 		
 		icons = new Bitmap[PRIORITY_COUND];
 		icons[0] = BitmapFactory.decodeResource(resourceLib, R.drawable.p1);
@@ -215,11 +217,6 @@ public class MapRender {
 		}
 		item.subtreeWidth = Math.max(w, item.getHeight());
 	}
-	
-	public void draw(Canvas c) {
-		draw(0, 0, root, c);
-	}
-
 	private void draw(int baseX, int baseY, Item itm, Canvas c) {
 		itm.draw(baseX, baseY, c);
 		int dataLen = itm.getWidth(); 
@@ -250,11 +247,24 @@ public class MapRender {
 	
 	public int getWidth()
 	{
-		return 1000;	
+		return root.subtreeWidth;	
 	}
 	
 	public int getHeight()
 	{
 		return 1000;	
+	}
+
+
+	@Override
+	public void draw(int x, int y, int width, int height, Canvas c) {
+		draw(-x, -y, root, c);
+	}
+
+
+	@Override
+	public void onTouch(int x, int y) {
+		// TODO Auto-generated method stub
+		
 	}
 }
