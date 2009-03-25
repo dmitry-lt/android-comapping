@@ -43,13 +43,7 @@ public class ClientHelper {
 
 		StringBuffer output = new StringBuffer();
 		for (byte b : bytes) {
-			String toAdd = String.format("%x", b);
-			int spacesToAdd = 2 - toAdd.length();
-
-			for (int i = 0; i < spacesToAdd; i++)
-				output.append("0");
-
-			output.append(toAdd);
+			output.append(String.format("%02x", b));
 		}
 
 		return output.toString();
