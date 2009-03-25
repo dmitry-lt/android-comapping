@@ -247,4 +247,14 @@ public class MapRender {
 			
 		}
 	}
+	
+	public int getWidth()
+	{
+		return 1000;	
+	}
+	
+	public int getHeight()
+	{
+		return 1000;	
+	}
 }

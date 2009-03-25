@@ -18,6 +18,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 
 public class TestMapView extends View {
@@ -25,6 +27,8 @@ public class TestMapView extends View {
 	Drawable image;
 	Bitmap bmp;
 	MapRender render;
+	
+	VelocityTracker mVelocityTracker;
 
 	public TestMapView(Context context, Map map) {
 		super(context);
@@ -35,6 +39,8 @@ public class TestMapView extends View {
 	long FPS = 0;
 	long startTime = System.currentTimeMillis();
 	
+
+	
 	//FPS added for cheking if we make a mistake in code
 	//Rendering must be fast for smooth scrolling
 	@Override
@@ -44,7 +50,7 @@ public class TestMapView extends View {
 		
 		canvas.save();
 		Matrix m =  canvas.getMatrix();
-		m.postScale(0.4f, 0.4f);
+		m.postScale(0.75f, 0.75f);
 		canvas.setMatrix(m);
 		render.draw(canvas);
 		canvas.restore();
