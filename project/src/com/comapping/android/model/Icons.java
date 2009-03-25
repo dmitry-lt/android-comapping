@@ -22,16 +22,16 @@ public class Icons {
 	public int getCount() {
 		return Integer.bitCount(mask);
 	}
-	
+
 	public ArrayList<Icon> getIcons() {
 		ArrayList<Icon> result = new ArrayList<Icon>();
-		
+
 		for (Icon icon : Icon.values()) {
 			if (this.hasIcon(icon)) {
 				result.add(icon);
 			}
 		}
-			
+
 		return result;
 	}
 }

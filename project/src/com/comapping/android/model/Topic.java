@@ -1,7 +1,6 @@
 package com.comapping.android.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 import android.graphics.Color;
@@ -23,6 +22,7 @@ public class Topic implements Iterable<Topic> {
 	private TaskCompletion taskCompletion;
 
 	private String text;
+	private FormattedText formattedText;
 	private ArrayList<Topic> children = new ArrayList<Topic>();
 
 	private Icons icons = new Icons();
@@ -47,15 +47,25 @@ public class Topic implements Iterable<Topic> {
 		return id;
 	}
 
-	public void setText(String text) {
-		text = unescape(text);
-		Log.d(Log.modelTag, "set text=\"" + text + "\" in " + this);
+	public void setText(String text) throws StringToXMLConvertionException {
+		setFormattedText(FormattedTextBuilder.buildFormattedText(text));
+		String unescText = getFormattedText().getSimpleText();
 
-		this.text = text;
+		Log.d(Log.modelTag, "set text=\"" + unescText + "\" in " + this);
+
+		this.text = unescText;
 	}
 
 	public String getText() {
 		return this.text;
+	}
+
+	public FormattedText getFormattedText() {
+		return formattedText;
+	}
+
+	public void setFormattedText(FormattedText formattedText) {
+		this.formattedText = formattedText;
 	}
 
 	public String getLastModificationDate() {
@@ -65,8 +75,7 @@ public class Topic implements Iterable<Topic> {
 	public void setLastModificationDate(String lastModificationDate) {
 		this.lastModificationDate = lastModificationDate;
 
-		Log.d(Log.modelTag, "set setLastModificationDate=\""
-				+ lastModificationDate + "\" in " + this);
+		Log.d(Log.modelTag, "set setLastModificationDate=\"" + lastModificationDate + "\" in " + this);
 	}
 
 	public int getBgColor() {
@@ -116,8 +125,7 @@ public class Topic implements Iterable<Topic> {
 	public void setTaskCompletion(TaskCompletion taskCompletion) {
 		this.taskCompletion = taskCompletion;
 
-		Log.d(Log.modelTag, "set taskCompletion=\"" + taskCompletion + "\" in "
-				+ this);
+		Log.d(Log.modelTag, "set taskCompletion=\"" + taskCompletion + "\" in " + this);
 	}
 
 	public void addIcon(Icon icon) {
@@ -139,7 +147,7 @@ public class Topic implements Iterable<Topic> {
 	public int getIconCount() {
 		return icons.getCount();
 	}
-	
+
 	public ArrayList<Icon> getIcons() {
 		return icons.getIcons();
 	}
@@ -185,31 +193,18 @@ public class Topic implements Iterable<Topic> {
 	}
 
 	public void removeChildByIndex(int index) throws IndexOutOfBoundsException {
-		Log.d(Log.modelTag, "remove " + getChildByIndex(index) + " from "
-				+ this);
+		Log.d(Log.modelTag, "remove " + getChildByIndex(index) + " from " + this);
 
 		children.remove(index);
 	}
 
 	@Override
 	public String toString() {
-		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText()
-				+ "\"]";
+		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText() + "\"]";
 	}
 
 	public TopicIterator iterator() {
 		return new TopicIterator(this);
-	}
-
-	private String unescape(String str) {
-		str = str.replace("&amp;", "&");
-		str = str.replace("&lt;", "<");
-		str = str.replace("&gt;", ">");
-		str = str.replace("&#039;", "\\");
-		str = str.replace("&#39;", "'");
-		str = str.replace("&quot;", "\"");
-		str = str.replace("&lt;", "<");
-		return str;
 	}
 }
 

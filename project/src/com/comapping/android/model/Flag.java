@@ -2,7 +2,7 @@ package com.comapping.android.model;
 
 public enum Flag {
 	GO, FOR_DISCUSSION, POSSIBILITY;
-	
+
 	public static Flag parse(String s) throws EnumParsingException {
 		if (s.equals("go")) {
 			return Flag.GO;

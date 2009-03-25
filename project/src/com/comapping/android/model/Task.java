@@ -26,7 +26,7 @@ public class Task {
 	public void setResponsible(String responsible) {
 		this.responsible = responsible;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "[Task: deadline=" + deadline + ", responsible=\"" + "\"]";

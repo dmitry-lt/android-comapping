@@ -2,7 +2,7 @@ package com.comapping.android.model;
 
 public enum TaskCompletion {
 	TO_DO, TWENTY_FIVE, FIFTY, SEVENTY_FIVE, COMPLETE;
-	
+
 	public static TaskCompletion parse(String s) throws EnumParsingException {
 		if (s.equals("0")) {
 			return TaskCompletion.TO_DO;

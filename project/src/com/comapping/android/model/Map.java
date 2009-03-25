@@ -69,8 +69,7 @@ public class Map {
 
 	@Override
 	public String toString() {
-		return "[Map: id=" + this.getId() + ", name=\"" + this.getName()
-				+ "\"]";
+		return "[Map: id=" + this.getId() + ", name=\"" + this.getName() + "\"]";
 	}
 
 }
