@@ -1,5 +1,7 @@
 package com.comapping.android.view;
 
+import java.util.HashMap;
+
 import com.comapping.android.controller.MainController;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.FormattedText;
@@ -15,12 +17,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.IInterface;
 
 public class ExplorerRender extends Render {
 
 	private static final int iconSize = 26;
 	private static final int xShift = 30;
-	private static final int yShift = 30;
+	private static final int yShift = 15;
 	private static final int outerSize = 10;
 	private static final int innerSize = 5;
 	private static final int borderSize = 3;
@@ -28,6 +31,7 @@ public class ExplorerRender extends Render {
 	private static final int textShift = 3;
 	
 	private Map map;
+	private HashMap<Integer, Boolean> open = new HashMap();
 	private Bitmap[] priorityIcon = new Bitmap[10];
 	private Bitmap happyIcon;
 	
@@ -56,12 +60,10 @@ public class ExplorerRender extends Render {
         return bitmap;
 	}
 	
-	private int[] drawTopic(Topic topic, int x, int y, Canvas c)
+	private int[] drawTopicContext(Topic topic, int x, int y, Canvas c)
 	{
-		if (topic == null)
-		{
-			return new int[2];
-		}
+		int[] ret = new int[2];
+		ret[0] = x;
 		
 		FormattedText text = topic.getFormattedText();
 		Paint p = new Paint();
@@ -83,11 +85,21 @@ public class ExplorerRender extends Render {
 		
 		int ty = Math.max(iconSize / 2, ySize / 2 + borderSize);
 		ty = Math.max(ty, iconSize / 2);
+		ret[1] = ty * 2;
 		y += ty;
 		
 		p.setColor(Color.GRAY);
 		c.drawLine(x, y, x + xShift, y, p);
-		c.drawCircle(x, y, outerSize, p);
+		if (topic.getChildrenCount() > 0)
+		{
+			if (open.get(topic.getId()) == null)
+				open.put(topic.getId(), true);
+			c.drawCircle(x, y, outerSize, p);
+			p.setColor(Color.BLACK);
+			c.drawLine(x - innerSize, y, x + innerSize, y, p);
+			if (!open.get(topic.getId()))
+				c.drawLine(x, y - innerSize, x, y + innerSize, p);
+		}
 		x += xShift;
 		
 		//draw icons
@@ -115,12 +127,65 @@ public class ExplorerRender extends Render {
 			c.drawText(cur.getText(), x, y + ySize / 2, p);
 			x += r.width();
 		}
-		return new int[2];
+		
+		x += borderSize;
+		ret[0] = x - ret[0];
+		
+		return ret;
+	}
+	
+	private int[] drawTopic(Topic topic, int x, int y, Canvas c)
+	{
+		if (topic == null)
+		{
+			return new int[2];
+		}
+		
+		int[] temp = drawTopicContext(topic, x, y, c);		
+		int[] ret = new int[3];
+		ret[0] = temp[0];
+		ret[1] = y;
+		ret[2] = temp[1] / 2;
+		x += xShift;
+		y += temp[1];
+		
+		if (topic.getChildrenCount() > 0 && open.get(topic.getId()))
+		{
+			int flag = 0;
+			int py = y - ret[2];
+			Paint p = new Paint();
+			p.setColor(Color.GRAY);
+			for (int i = 0; i < topic.getChildrenCount(); i++)
+			{
+				y += yShift;
+				temp = drawTopic(topic.getChildByIndex(i), x, y, c);
+
+				if (flag == 1)
+					py += outerSize;
+				c.drawLine(x + outerSize, py, x + outerSize, y + temp[2], p);
+				py = y + temp[2]; 
+				if (topic.getChildByIndex(i).getChildrenCount() > 0)
+					flag = 1;
+				else
+					flag = 0;
+				
+				ret[0] = Math.max(ret[0], temp[0] + xShift);
+				y += temp[1];
+			}
+		}
+		
+		ret[1] = y - ret[1];
+		
+		return ret;
 	}
 	
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		drawTopic(map.getRoot(), x, y, c);
+		int[] temp = drawTopic(map.getRoot(), x, y, c);
+		Paint p = new Paint();
+		p.setColor(Color.BLACK);
+		c.drawLine(x + temp[0], y, x + temp[0], y + temp[1], p);
+		c.drawLine(x, y + temp[1], x + temp[0], y + temp[1], p);
 	}
 
 	@Override
