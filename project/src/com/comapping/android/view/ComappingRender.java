@@ -33,7 +33,7 @@ public class ComappingRender extends Render{
 	private class Item
 	{
 		public Item[] childs;
-		public int subtreeWidth;
+		public Item parent = null;
 		public Topic topicData;
 		
 		
@@ -46,6 +46,25 @@ public class ComappingRender extends Render{
 		private static final int ICON_SIZE = 15;
 		private static final int ICON_BORDER = 4;
 		
+		private boolean childsVisible = true;
+		
+		public void showChilds()
+		{
+			childsVisible = true;
+			clearLazyBuffers();
+		}
+		
+		public void hideChilds()
+		{
+			childsVisible = false;
+			clearLazyBuffers();
+		}
+		
+		public boolean isChildsVisible()
+		{
+			return childsVisible;
+		}
+		
 		public String getRow(int id)
 		{
 			String res = topicData.getText();
@@ -55,6 +74,44 @@ public class ComappingRender extends Render{
 			}
 			else
 				return "";
+		}
+
+		public void draw(int x, int y, Canvas c)
+		{
+			int vertOffset = getOffset();
+			
+			Paint p = new Paint();
+			p.setColor(Color.BLACK);
+
+			int underlineOffset = getUnderlineOffset();
+			//Draw underline
+			c.drawLine(x, y + underlineOffset, 
+					x + getWidth(),y+ underlineOffset, p);
+
+			//Draw text
+			int linesCount = getRowCount();
+			int textVertOffset = 0;
+			for(int i = 0; i < linesCount; i++)
+			{
+				String rowText = getRow(i);
+				
+				Rect bounds = new Rect();
+				p.getTextBounds(rowText, 
+						0, Math.min(rowText.length(), ROW_LENGTH),
+						bounds);
+				
+				c.drawText(rowText, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE + textVertOffset, p);
+				
+				textVertOffset+=bounds.height();
+			}
+			
+			//Draw priority icon
+			if (topicData.getPriority() != 0)
+			{
+				c.drawBitmap(icons[topicData.getPriority() - 1], 
+						x + getWidth() - BORDER_SIZE - ICON_BORDER - ICON_SIZE, y + getUnderlineOffset() - ICON_SIZE - ICON_BORDER, 
+						new Paint());
+			}
 		}
 		
 		private int lazyRowCount = -1;
@@ -113,48 +170,10 @@ public class ComappingRender extends Render{
 		{
 			if (lazyOffset == -1)
 			{
-				lazyOffset = (subtreeWidth-getHeight())/2;
+				lazyOffset = (getSubtreeHeight()-getHeight())/2;
 			}
 			
 			return lazyOffset;
-		}
-		
-		public void draw(int x, int y, Canvas c)
-		{
-			int vertOffset = getOffset();
-			
-			Paint p = new Paint();
-			p.setColor(Color.BLACK);
-
-			int underlineOffset = getUnderlineOffset();
-			//Draw underline
-			c.drawLine(x, y + underlineOffset, 
-					x + getWidth(),y+ underlineOffset, p);
-
-			//Draw text
-			int linesCount = getRowCount();
-			int textVertOffset = 0;
-			for(int i = 0; i < linesCount; i++)
-			{
-				String rowText = getRow(i);
-				
-				Rect bounds = new Rect();
-				p.getTextBounds(rowText, 
-						0, Math.min(rowText.length(), ROW_LENGTH),
-						bounds);
-				
-				c.drawText(rowText, x + BORDER_SIZE, y + vertOffset + bounds.height()+BORDER_SIZE + textVertOffset, p);
-				
-				textVertOffset+=bounds.height();
-			}
-			
-			//Draw priority icon
-			if (topicData.getPriority() != 0)
-			{
-				c.drawBitmap(icons[topicData.getPriority() - 1], 
-						x + getWidth() - BORDER_SIZE - ICON_BORDER - ICON_SIZE, y + getUnderlineOffset() - ICON_SIZE - ICON_BORDER, 
-						new Paint());
-			}
 		}
 		
 		private int lazyUnderlineOffset = -1;
@@ -166,6 +185,48 @@ public class ComappingRender extends Render{
 			return lazyUnderlineOffset;
 		}
 	
+
+		private int lazySubtreeHeight = -1;
+		public int getSubtreeHeight()
+		{
+			if (lazySubtreeHeight == -1) {
+				int w = 0;
+				if (childsVisible)
+					for (Item i : childs) {
+						w += i.getSubtreeHeight();
+					}
+				lazySubtreeHeight = Math.max(w, getHeight());
+			}
+			return lazySubtreeHeight;
+		}
+		
+		private int lazySubtreeWidth = -1;
+		public int getSubtreeWidth()
+		{
+			if (lazySubtreeWidth == -1) {
+				int w = 0;
+				if (childsVisible)
+					for (Item i : childs) {
+						w = Math.max(i.getSubtreeWidth(), w);
+					}
+				lazySubtreeWidth = this.getWidth() + w;
+			}
+			return lazySubtreeWidth;
+		}
+
+		private void clearLazyBuffers()
+		{
+			if (parent!= null)
+				parent.clearLazyBuffers();
+			
+			lazyRowCount = -1;
+			lazyWidth = -1;
+			lazyHeight = -1;
+			lazyOffset = -1;
+			lazyUnderlineOffset = -1;
+			lazySubtreeHeight = -1;
+			lazySubtreeWidth = -1;
+		}
 	}
 	
 	
@@ -180,8 +241,7 @@ public class ComappingRender extends Render{
 	Item root;
 
 	public ComappingRender(Context context, Topic map) {
-		root = buildTree(map);
-		recalcData(root, 0);
+		root = buildTree(map, null);
 		
 		Resources resourceLib = context.getResources();
 		
@@ -194,65 +254,61 @@ public class ComappingRender extends Render{
 	}
 	
 
-	private Item buildTree(Topic itm)
+	private Item buildTree(Topic itm, Item parent)
 	{
 		Item res = new Item();
 		res.childs = new Item[itm.getChildrenCount()];
 		res.topicData = itm;
+		res.parent = parent;
+		if (parent!=null)
+			res.hideChilds();
+		
 		int index = 0;
 		for (Topic i : itm) {
-			res.childs[index++] = buildTree(i);
+			res.childs[index++] = buildTree(i, res);
 		}
 		return res;
 	}
-
-	void recalcData(Item item, int layerId) {
-		if (item == null)
-			return;
-
-		int w = 0;
-		for (Item i : item.childs) {
-			recalcData(i, layerId + 1);
-			w += i.subtreeWidth;
-		}
-		item.subtreeWidth = Math.max(w, item.getHeight());
-	}
+	
 	private void draw(int baseX, int baseY, Item itm, Canvas c) {
 		itm.draw(baseX, baseY, c);
-		int dataLen = itm.getWidth(); 
-		
-		int vertOffset = 0;
-		for (Item i : itm.childs) {
-			draw(baseX + dataLen, baseY + vertOffset, i, c);
-			vertOffset += i.subtreeWidth;
-		}
-		
-		if (itm.childs.length != 0)
-		{
-			Paint p = new Paint();
-			p.setColor(Color.BLACK);
-			
-			Item first = itm.childs[0];
-			Item last = itm.childs[itm.childs.length - 1];
-			
-			//Calculating offset for last child
-			vertOffset-= last.subtreeWidth;
-			
-			//Connecting childs
-			c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset() , 
-					baseX + dataLen, baseY + vertOffset+ last.getUnderlineOffset(), p);
-			
+
+		if (itm.isChildsVisible()) {
+			int dataLen = itm.getWidth();
+
+			int vertOffset = 0;
+			for (Item i : itm.childs) {
+				draw(baseX + dataLen, baseY + vertOffset, i, c);
+				vertOffset += i.getSubtreeHeight();
+			}
+
+			if (itm.childs.length != 0) {
+				Paint p = new Paint();
+				p.setColor(Color.BLACK);
+
+				Item first = itm.childs[0];
+				Item last = itm.childs[itm.childs.length - 1];
+
+				// Calculating offset for last child
+				vertOffset -= last.getSubtreeHeight();
+
+				// Connecting childs
+				c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset(),
+						baseX + dataLen, baseY + vertOffset
+								+ last.getUnderlineOffset(), p);
+
+			}
 		}
 	}
 	
 	public int getWidth()
 	{
-		return 1000;	
+		return root.getSubtreeWidth();	
 	}
 	
 	public int getHeight()
 	{
-		return root.subtreeWidth;	
+		return root.getSubtreeHeight();	
 	}
 
 

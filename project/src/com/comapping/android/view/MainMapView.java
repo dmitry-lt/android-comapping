@@ -74,15 +74,15 @@ public class MainMapView extends View {
 			oldX = (int) ev.getX();
 			oldY = (int) ev.getY();
 			
-			if (mScroller.getCurrX() + deltaX < 0)
-				deltaX = -mScroller.getCurrX();
-			if (mScroller.getCurrY() + deltaY < 0)
-				deltaY = -mScroller.getCurrY();
-			
 			if (mScroller.getCurrX() + deltaX > getScrollWidth())
 				deltaX = getScrollWidth() - mScroller.getCurrX();
 			if (mScroller.getCurrY() + deltaY > getScrollHeight())
 				deltaY = getScrollHeight() - mScroller.getCurrY();
+			
+			if (mScroller.getCurrX() + deltaX < 0)
+				deltaX = -mScroller.getCurrX();
+			if (mScroller.getCurrY() + deltaY < 0)
+				deltaY = -mScroller.getCurrY();
 
 			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
 					deltaX, deltaY, 0);
