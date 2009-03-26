@@ -33,14 +33,12 @@ public class Client {
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
 	final static private String COOKIE_LOGIN_METHOD = "flashCookie";
 	final static private String WITH_SALT_LOGIN_METHOD = "withSalt";
-	
-	
+
 	private String clientId = null;
 
 	private String email = null;
 	private String autoLoginKey = null;
 
-	
 	// public methods
 	/**
 	 * Method for manual login with email and password
@@ -66,8 +64,7 @@ public class Client {
 
 				autoLoginKey = SALT_FLAG + md5Encode(password + salt);
 
-				clientId = loginRequest(email, autoLoginKey.substring(1),
-						WITH_SALT_LOGIN_METHOD);
+				clientId = loginRequest(email, autoLoginKey.substring(1), WITH_SALT_LOGIN_METHOD);
 			} else {
 				// account without salt
 				autoLoginKey = passwordHash;
@@ -95,10 +92,10 @@ public class Client {
 
 		if ((key.length() > 0) && (key.charAt(0) == SALT_FLAG)) {
 			// account with salt
-			setClientId(loginRequest(email, key.substring(1), SIMPLE_LOGIN_METHOD));
+			setClientId(loginRequest(email, key.substring(1), COOKIE_LOGIN_METHOD));
 		} else {
 			// account without salt
-			setClientId(loginRequest(email, key, COOKIE_LOGIN_METHOD));
+			setClientId(loginRequest(email, key, SIMPLE_LOGIN_METHOD));
 		}
 	}
 
@@ -169,8 +166,7 @@ public class Client {
 	 * @throws NotLoggedInException
 	 * @throws ConnectionException
 	 */
-	public String getComap(String mapId) throws NotLoggedInException,
-			ConnectionException {
+	public String getComap(String mapId) throws NotLoggedInException, ConnectionException {
 		Log.d(Log.connectionTag, "getting " + mapId + " comap");
 
 		isLoggedInAssertion();
@@ -185,16 +181,14 @@ public class Client {
 	}
 
 	// private methods
-	private String fakeRequestToServer(List<BasicNameValuePair> data)
-			throws ConnectionException {
+	private String fakeRequestToServer(List<BasicNameValuePair> data) throws ConnectionException {
 		String response = "";
 
 		if (data.get(0).getValue().equals("download")) {
 			// "get comap" request
 			String mapId = data.get(3).getValue();
 			try {
-				response = getTextFromInputStream(new FileInputStream(
-						Options.COMAP_FILE_SERVER + mapId + ".comap"));
+				response = getTextFromInputStream(new FileInputStream(Options.COMAP_FILE_SERVER + mapId + ".comap"));
 			} catch (FileNotFoundException e) {
 				Log.e(Log.connectionTag, "XML File Server not found");
 				throw new ConnectionException();
@@ -211,10 +205,8 @@ public class Client {
 		return response;
 	}
 
-	private String requestToServer(List<BasicNameValuePair> data)
-			throws ConnectionException {
-		Log.d(Log.connectionTag, "request to server "
-				+ Arrays.toString(data.toArray()));
+	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException {
+		Log.d(Log.connectionTag, "request to server " + Arrays.toString(data.toArray()));
 
 		if (Options.FAKE_SERVER) {
 			return fakeRequestToServer(data);
@@ -227,9 +219,7 @@ public class Client {
 		try {
 			entity = new UrlEncodedFormEntity(data);
 		} catch (UnsupportedEncodingException e1) {
-			Log
-					.e(Log.connectionTag,
-							"unsupported encoding for data in request");
+			Log.e(Log.connectionTag, "unsupported encoding for data in request");
 		}
 
 		post.setEntity(entity);
@@ -255,8 +245,7 @@ public class Client {
 		return responseText;
 	}
 
-	private String loginRequest(String email, String password,
-			String loginMethod) throws ConnectionException {
+	private String loginRequest(String email, String password, String loginMethod) throws ConnectionException {
 		this.email = email;
 
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
