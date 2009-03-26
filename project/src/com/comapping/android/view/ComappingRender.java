@@ -112,6 +112,7 @@ public class ComappingRender extends Render{
 						x + getWidth() - BORDER_SIZE - ICON_BORDER - ICON_SIZE, y + getUnderlineOffset() - ICON_SIZE - ICON_BORDER, 
 						new Paint());
 			}
+			
 		}
 		
 		private int lazyRowCount = -1;
@@ -139,6 +140,11 @@ public class ComappingRender extends Render{
 				lazyWidth = width + BORDER_SIZE * 2;
 				
 				if (topicData.getPriority() != 0)
+				{
+					lazyWidth += ICON_SIZE + ICON_BORDER*2;
+				}
+				
+				if (childs.length > 0)
 				{
 					lazyWidth += ICON_SIZE + ICON_BORDER*2;
 				}
@@ -320,7 +326,38 @@ public class ComappingRender extends Render{
 
 	@Override
 	public void onTouch(int x, int y) {
-		// TODO Auto-generated method stub
+		onTouch(0,0, root, x, y);
+	}
+	
+	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY)
+	{
+		int yStart = itm.getOffset() + baseY;
+		int yEnd = yStart + itm.getHeight();
 		
+		int xStart = baseX;
+		int xEnd = xStart + itm.getWidth();
+		
+		if ((destX > xStart)&(destX < xEnd)&
+			(destY > yStart)&(destY < yEnd))
+		{
+			if (itm.isChildsVisible())
+				itm.hideChilds();
+			else
+				itm.showChilds();
+			return true;
+		}
+		
+		if (itm.isChildsVisible()) {
+			int dataLen = itm.getWidth();
+
+			int vertOffset = 0;
+			for (Item i : itm.childs) {
+				if (onTouch(baseX + dataLen, baseY + vertOffset, i, destX, destY))
+					return true;
+				
+				vertOffset += i.getSubtreeHeight();
+			}
+		}
+		return false;
 	}
 }
