@@ -68,8 +68,8 @@ public class ExplorerRender extends Render {
 		priorityIcon[8] = getBitmap(r.getDrawable(R.drawable.p8));
 		priorityIcon[9] = getBitmap(r.getDrawable(R.drawable.p9));*/
 		happyIcon = getBitmap(r.getDrawable(R.drawable.happy));
-//		neutralIcon = getBitmap(r.getDrawable(R.drawable.neutral));
-//		sadIcon = getBitmap(r.getDrawable(R.drawable.sad));
+		neutralIcon = getBitmap(r.getDrawable(R.drawable.happy));
+		sadIcon = getBitmap(r.getDrawable(R.drawable.happy));
 		toDoIcon = getBitmap(r.getDrawable(R.drawable.to_do));
 	}
 
