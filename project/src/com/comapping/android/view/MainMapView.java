@@ -36,6 +36,8 @@ public class MainMapView extends View {
 
 		p.setColor(Color.BLACK);
 		canvas.drawText("FPS: " + fps, 20, 30, p);
+		canvas.drawText("Width: " + mRender.getWidth(), 20, 50, p);
+		canvas.drawText("Height: " + mRender.getHeight(), 20, 70, p);
 		if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
 			fps = (1000 * frameCount)
 					/ (System.currentTimeMillis() - lastFPSCalcTime);
@@ -50,7 +52,7 @@ public class MainMapView extends View {
 	int oldX = -1, oldY = -1;
 	long touchStartTime = 0;
 
-	private static final long TAP_MAX_TIME = 100;
+	private static final long TAP_MAX_TIME = 300;
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
@@ -71,6 +73,16 @@ public class MainMapView extends View {
 			int deltaY = (int) (oldY - ev.getY());
 			oldX = (int) ev.getX();
 			oldY = (int) ev.getY();
+			
+			if (mScroller.getCurrX() + deltaX < 0)
+				deltaX = -mScroller.getCurrX();
+			if (mScroller.getCurrY() + deltaY < 0)
+				deltaY = -mScroller.getCurrY();
+			
+			if (mScroller.getCurrX() + deltaX > getScrollWidth())
+				deltaX = getScrollWidth() - mScroller.getCurrX();
+			if (mScroller.getCurrY() + deltaY > getScrollHeight())
+				deltaY = getScrollHeight() - mScroller.getCurrY();
 
 			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
 					deltaX, deltaY, 0);
@@ -92,12 +104,9 @@ public class MainMapView extends View {
 
 				mScroller
 						.fling(mScroller.getCurrX(), mScroller.getCurrY(), -vx,
-								-vy, 0, mRender.getWidth(), 0, mRender
-										.getHeight());
+								-vy, 0, getScrollWidth(), 0, getScrollHeight());
 
 				mVelocityTracker.recycle();
-				
-				mRender.onTouch(10000, 10000);
 
 				return true;
 			}
@@ -105,5 +114,14 @@ public class MainMapView extends View {
 
 		}
 		return true;
+	}
+	
+	private final int getScrollWidth()
+	{
+		return mRender.getWidth() - this.getWidth();
+	}
+	private final int getScrollHeight()
+	{
+		return mRender.getHeight() - this.getHeight();
 	}
 }

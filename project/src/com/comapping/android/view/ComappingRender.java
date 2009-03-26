@@ -247,12 +247,12 @@ public class ComappingRender extends Render{
 	
 	public int getWidth()
 	{
-		return root.subtreeWidth;	
+		return 1000;	
 	}
 	
 	public int getHeight()
 	{
-		return 1000;	
+		return root.subtreeWidth;	
 	}
 
 
