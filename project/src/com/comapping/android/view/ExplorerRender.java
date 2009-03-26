@@ -235,6 +235,8 @@ public class ExplorerRender extends Render {
 	
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
+		x = -x;
+		y = -y;
 		if (toUpdate)
 			points.clear();
 		int[] temp = drawTopic(map.getRoot(), x, y, c);
@@ -243,6 +245,11 @@ public class ExplorerRender extends Render {
 		p.setColor(Color.BLACK);
 		c.drawLine(x + temp[0], y, x + temp[0], y + temp[1], p);
 		c.drawLine(x, y + temp[1], x + temp[0], y + temp[1], p);
+		p.setColor(Color.RED);
+		for (touchPoint point : points)
+		{
+			c.drawCircle(point.x, point.y, 2, p);
+		}
 	}
 
 	@Override
@@ -257,6 +264,11 @@ public class ExplorerRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
+		if (x == 10000)
+		{
+			toUpdate = true;
+			return;
+		}
 		for (touchPoint point : points)
 		{
 			if (Math.hypot(point.x - x, point.y - y) <= outerSize)

@@ -58,7 +58,6 @@ public class MainMapView extends View {
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN: {
-			// mRender.onTouch((int)ev.getX(), (int)ev.getY());
 			mVelocityTracker = VelocityTracker.obtain();
 			oldX = (int) ev.getX();
 			oldY = (int) ev.getY();
@@ -79,8 +78,7 @@ public class MainMapView extends View {
 		}
 		case MotionEvent.ACTION_UP: {
 			if (System.currentTimeMillis() - touchStartTime < TAP_MAX_TIME) {
-				mRender.onTouch(mScroller.getCurrX() + (int)ev.getX(), 
-						mScroller.getCurrY() + (int)ev.getY());
+				mRender.onTouch((int)ev.getX(), (int)ev.getY());
 			} else {
 				mVelocityTracker.addMovement(ev);
 
@@ -98,6 +96,8 @@ public class MainMapView extends View {
 										.getHeight());
 
 				mVelocityTracker.recycle();
+				
+				mRender.onTouch(10000, 10000);
 
 				return true;
 			}
