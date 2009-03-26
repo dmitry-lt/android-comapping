@@ -52,6 +52,7 @@ public class MainMapView extends View {
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN: {
+			mRender.onTouch((int)ev.getX(), (int)ev.getY());
 			mVelocityTracker = VelocityTracker.obtain();
 			oldX = (int) ev.getX();
 			oldY = (int) ev.getY();

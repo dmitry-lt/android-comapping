@@ -1,11 +1,14 @@
 package com.comapping.android.view;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.comapping.android.controller.MainController;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.FormattedText;
 import com.comapping.android.model.Map;
+import com.comapping.android.model.Smiley;
+import com.comapping.android.model.TaskCompletion;
 import com.comapping.android.model.TextBlock;
 import com.comapping.android.model.Topic;
 
@@ -17,10 +20,21 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.IInterface;
 
 public class ExplorerRender extends Render {
 
+	private class touchPoint
+	{
+		public int x, y, id;
+		
+		public touchPoint(int x, int y, int id)
+		{
+			this.x = x;
+			this.y = y;
+			this.id = id;
+		}
+	}
+	
 	private static final int iconSize = 26;
 	private static final int xShift = 30;
 	private static final int yShift = 15;
@@ -34,6 +48,11 @@ public class ExplorerRender extends Render {
 	private HashMap<Integer, Boolean> open = new HashMap();
 	private Bitmap[] priorityIcon = new Bitmap[10];
 	private Bitmap happyIcon;
+	private Bitmap neutralIcon;
+	private Bitmap sadIcon;
+	private Bitmap toDoIcon;
+	private boolean toUpdate = true;
+	private ArrayList<touchPoint> points = new ArrayList();
 	
 	public ExplorerRender (Context context, Map map)
 	{
@@ -48,7 +67,10 @@ public class ExplorerRender extends Render {
 		priorityIcon[7] = getBitmap(r.getDrawable(R.drawable.p7));
 		priorityIcon[8] = getBitmap(r.getDrawable(R.drawable.p8));
 		priorityIcon[9] = getBitmap(r.getDrawable(R.drawable.p9));*/
-		happyIcon = getBitmap(r.getDrawable(R.drawable.happy));		
+		happyIcon = getBitmap(r.getDrawable(R.drawable.happy));
+//		neutralIcon = getBitmap(r.getDrawable(R.drawable.neutral));
+//		sadIcon = getBitmap(r.getDrawable(R.drawable.sad));
+		toDoIcon = getBitmap(r.getDrawable(R.drawable.to_do));
 	}
 
 	private Bitmap getBitmap(Drawable image)
@@ -95,6 +117,8 @@ public class ExplorerRender extends Render {
 			if (open.get(topic.getId()) == null)
 				open.put(topic.getId(), true);
 			c.drawCircle(x, y, outerSize, p);
+			if (toUpdate)
+				points.add(new touchPoint(x, y, topic.getId()));
 			p.setColor(Color.BLACK);
 			c.drawLine(x - innerSize, y, x + innerSize, y, p);
 			if (!open.get(topic.getId()))
@@ -109,6 +133,33 @@ public class ExplorerRender extends Render {
 			c.drawBitmap(priorityIcon[topic.getPriority()], x, y - iconSize / 2, null);
 			x += iconSize;
 		}
+		
+		if (topic.getSmiley() != null)
+		{
+			Bitmap bitmap;
+			if (topic.getSmiley() == Smiley.HAPPY)
+				bitmap = happyIcon;
+			else if (topic.getSmiley() == Smiley.NEUTRAL)
+				bitmap = neutralIcon;
+			else
+				bitmap = sadIcon;
+			x += blockShift;
+			c.drawBitmap(bitmap, x, y - iconSize / 2, null);
+			x += iconSize;
+		}
+		
+		if (topic.getTaskCompletion() != null)
+		{
+			Bitmap bitmap;
+			if (topic.getTaskCompletion() == TaskCompletion.TO_DO)
+				bitmap = toDoIcon;
+			else
+				bitmap = toDoIcon;
+
+			x += blockShift;
+			c.drawBitmap(bitmap, x, y - iconSize / 2, null);
+			x += iconSize;
+		}		
 
 		//draw text		
 		x += blockShift;
@@ -162,7 +213,10 @@ public class ExplorerRender extends Render {
 
 				if (flag == 1)
 					py += outerSize;
-				c.drawLine(x + outerSize, py, x + outerSize, y + temp[2], p);
+				int ny = y + temp[2];
+				if (topic.getChildByIndex(i).getChildrenCount() > 0)
+					ny -= outerSize;
+				c.drawLine(x + outerSize, py, x + outerSize, ny, p);
 				py = y + temp[2]; 
 				if (topic.getChildByIndex(i).getChildrenCount() > 0)
 					flag = 1;
@@ -181,7 +235,10 @@ public class ExplorerRender extends Render {
 	
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
+		if (toUpdate)
+			points.clear();
 		int[] temp = drawTopic(map.getRoot(), x, y, c);
+		toUpdate = false;
 		Paint p = new Paint();
 		p.setColor(Color.BLACK);
 		c.drawLine(x + temp[0], y, x + temp[0], y + temp[1], p);
@@ -200,8 +257,15 @@ public class ExplorerRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		// TODO Auto-generated method stub
-		
+		for (touchPoint point : points)
+		{
+			if (Math.hypot(point.x - x, point.y - y) <= outerSize)
+			{
+				open.put(point.id, !open.get(point.id));
+				toUpdate = true;
+				break;
+			}
+		}
 	}
 
 }
