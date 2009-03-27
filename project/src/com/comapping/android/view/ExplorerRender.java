@@ -53,6 +53,8 @@ public class ExplorerRender extends Render {
 	private Bitmap toDoIcon;
 	private boolean toUpdate = true;
 	private ArrayList<touchPoint> points = new ArrayList();
+	private int xPlus, yPlus;
+	private int height, width;
 	
 	public ExplorerRender (Context context, Map map)
 	{
@@ -118,7 +120,7 @@ public class ExplorerRender extends Render {
 				open.put(topic.getId(), true);
 			c.drawCircle(x, y, outerSize, p);
 			if (toUpdate)
-				points.add(new touchPoint(x, y, topic.getId()));
+				points.add(new touchPoint(x - xPlus, y - yPlus, topic.getId()));
 			p.setColor(Color.BLACK);
 			c.drawLine(x - innerSize, y, x + innerSize, y, p);
 			if (!open.get(topic.getId()))
@@ -237,41 +239,41 @@ public class ExplorerRender extends Render {
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		x = -x;
 		y = -y;
+		xPlus = x;
+		yPlus = y;
 		if (toUpdate)
 			points.clear();
 		int[] temp = drawTopic(map.getRoot(), x, y, c);
+		this.width = temp[0];
+		this.height = temp[1];
 		toUpdate = false;
-		Paint p = new Paint();
+/*		Paint p = new Paint();
 		p.setColor(Color.BLACK);
 		c.drawLine(x + temp[0], y, x + temp[0], y + temp[1], p);
 		c.drawLine(x, y + temp[1], x + temp[0], y + temp[1], p);
+		
 		p.setColor(Color.RED);
 		for (touchPoint point : points)
 		{
-			c.drawCircle(point.x, point.y, 2, p);
-		}
+			c.drawCircle(point.x + xPlus, point.y + yPlus, 2, p);
+		}*/
 	}
 
 	@Override
 	public int getHeight() {
-		return 1000;
+		return height;
 	}
 
 	@Override
 	public int getWidth() {
-		return 1000;
+		return width;
 	}
 
 	@Override
 	public void onTouch(int x, int y) {
-		if (x == 10000)
-		{
-			toUpdate = true;
-			return;
-		}
 		for (touchPoint point : points)
 		{
-			if (Math.hypot(point.x - x, point.y - y) <= outerSize)
+			if (Math.hypot(point.x + xPlus - x, point.y + yPlus - y) <= outerSize)
 			{
 				open.put(point.id, !open.get(point.id));
 				toUpdate = true;
