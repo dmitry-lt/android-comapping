@@ -24,21 +24,24 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.content.Intent;
+
 import com.comapping.android.Log;
 import com.comapping.android.Options;
-import com.comapping.android.controller.LoginController;
+import com.comapping.android.controller.MainController;
 
 public class Client {
 	final static private char SALT_FLAG = '#';
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
 	final static private String COOKIE_LOGIN_METHOD = "flashCookie";
 	final static private String WITH_SALT_LOGIN_METHOD = "withSalt";
+	final static private int SLEEP_TIME = 100;
 
 	private String clientId = null;
 
 	private String email = null;
 	private String autoLoginKey = null;
-
+	
 	// public methods
 	/**
 	 * Method for manual login with email and password
@@ -106,8 +109,8 @@ public class Client {
 	 * @throws NotLoggedInException
 	 */
 	public String getAutoLoginKey() throws NotLoggedInException {
-		isLoggedInAssertion();
-
+		loginRequired();
+		
 		return autoLoginKey;
 	}
 
@@ -118,8 +121,8 @@ public class Client {
 	 * @throws NotLoggedInException
 	 */
 	public String getEmail() throws NotLoggedInException {
-		isLoggedInAssertion();
-
+		loginRequired();
+		
 		return email;
 	}
 
@@ -146,8 +149,8 @@ public class Client {
 	 * @throws ConnectionException
 	 */
 	public void logout() throws NotLoggedInException, ConnectionException {
-		isLoggedInAssertion();
-
+		loginRequired();
+		
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));
@@ -169,8 +172,8 @@ public class Client {
 	public String getComap(String mapId) throws NotLoggedInException, ConnectionException {
 		Log.d(Log.connectionTag, "getting " + mapId + " comap");
 
-		isLoggedInAssertion();
-
+		loginRequired();
+		
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
 		data.add(new BasicNameValuePair("format", "comap"));
@@ -223,12 +226,13 @@ public class Client {
 		}
 
 		post.setEntity(entity);
-
+		
 		String responseText = "";
 		int responseStatus = 0;
 
 		try {
 			HttpResponse response = client.execute(post);
+			
 			responseText = getTextFromResponse(response);
 			responseStatus = response.getStatusLine().getStatusCode();
 		} catch (ClientProtocolException e) {
@@ -276,16 +280,24 @@ public class Client {
 			if (checkClientId(clientId)) {
 				this.clientId = clientId;
 				Log.i(Log.connectionTag, email + " logged in!");
-				LoginController.getInstance().loggedIn();
+				// code here
 			}
 		} else {
 			this.clientId = null;
 		}
 	}
 
-	private void isLoggedInAssertion() throws NotLoggedInException {
+	private void loginRequired() {
 		if (!isLoggedIn()) {
-			throw new NotLoggedInException();
+			MainController.getInstance().startActivity(new Intent("com.comapping.android.intent.LOGIN"));
+			
+			while (!isLoggedIn()) {
+				try {
+					Thread.sleep(SLEEP_TIME);
+				} catch (InterruptedException e) {
+					Log.i(Log.connectionTag, "login required interrupted exception");
+				}
+			}
 		}
 	}
 }

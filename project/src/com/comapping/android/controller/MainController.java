@@ -35,7 +35,7 @@ public class MainController extends Activity {
 		instance = this;
 		client.clientSideLogout();
 
-		LoginController.getInstance().activate();
+		MetaMapController.getInstance().activate();
 	}
 
 	public void login() {
@@ -43,7 +43,7 @@ public class MainController extends Activity {
 	}
 
 	public void logout() {
-		Storage.instance.set("key", "");
+	/*	Storage.instance.set("key", "");
 		LoginController.getInstance().activate();
 
 		new Thread() {
@@ -57,5 +57,6 @@ public class MainController extends Activity {
 				}
 			}
 		}.start();
+		*/
 	}
 }
