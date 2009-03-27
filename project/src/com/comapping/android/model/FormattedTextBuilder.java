@@ -13,6 +13,8 @@ import android.graphics.Color;
 import com.comapping.android.Log;
 
 public class FormattedTextBuilder {
+	private static final String PARAGRAPH_TAG = "P";
+	
 	private static final String FONT_TAG = "FONT";
 	private static final String FONT_ATTR_SIZE_TAG = "SIZE";
 	private static final String FONT_ATTR_COLOR_TAG = "COLOR";
@@ -28,8 +30,8 @@ public class FormattedTextBuilder {
 		
 		Document document = DocumentBuilder.buildDocument(xmlString);
 		
-		List<TextParagraph> textParagraphs = new ArrayList<TextParagraph>();
-		NodeList paragraphNodes = document.getDocumentElement().getChildNodes();
+		NodeList paragraphNodes = document.getElementsByTagName(PARAGRAPH_TAG);
+		List<TextParagraph> textParagraphs = new ArrayList<TextParagraph>();		
 		for (int i = 0; i < paragraphNodes.getLength(); i++) {
 			List<TextBlock> textBlocks = buildTextBlocks(paragraphNodes.item(i), defFormat);
 			textParagraphs.add(new TextParagraph(textBlocks));

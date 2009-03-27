@@ -5,7 +5,8 @@ import java.util.List;
 
 /**
  * This class represents text, that can consist of differently formatted parts,
- * it contains list of TextBlock, each of them has it's own format
+ * it contains list of TextParagraph, each of them consist of TextBlocks which
+ * can have different format
  * 
  * @author Passichenko Victor
  * @author Yuri Zemlyanskiy
