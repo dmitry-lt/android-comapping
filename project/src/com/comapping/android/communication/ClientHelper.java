@@ -11,11 +11,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+
+import android.util.Log;
 
 public class ClientHelper {
 	/**
@@ -56,9 +60,10 @@ public class ClientHelper {
 	 * @throws IOException
 	 */
 	public static String getTextFromInputStream(InputStream input) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-
+		BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));		
+		
 		String line = reader.readLine();
+		
 		StringBuilder text;
 
 		if (line != null) {
