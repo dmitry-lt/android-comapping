@@ -97,4 +97,11 @@ public class LoginActivity extends Activity {
 			// manual login
 		}
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		if (!client.isLoggedIn()) MainController.getInstance().finish();
+	}
 }
