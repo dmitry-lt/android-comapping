@@ -1,5 +1,6 @@
 package com.comapping.android.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,17 +13,20 @@ import java.util.List;
  */
 public class FormattedText {
 
+	private List<TextParagraph> textParagraphs;
 	private List<TextBlock> textBlocks;
 	private int maxFontSize;
 	private String simpleText;
 
-	public FormattedText(List<TextBlock> textBlocks) {
-		this.textBlocks = textBlocks;
+	public FormattedText(List<TextParagraph> textParagraphs) {
+		this.textParagraphs = textParagraphs;
 
+		textBlocks = new ArrayList<TextBlock>();
 		StringBuilder text = new StringBuilder();
-		for (TextBlock cur : textBlocks) {
-			maxFontSize = Math.max(maxFontSize, cur.getFormat().getFontSize());
-			text.append(cur.getText());
+		for (TextParagraph cur : textParagraphs) {
+			maxFontSize = Math.max(maxFontSize, cur.getMaxFontSize());
+			text.append(cur.getSimpleText());
+			textBlocks.addAll(cur.getTextBlocks());
 		}
 		this.simpleText = text.toString();
 	}
@@ -33,6 +37,10 @@ public class FormattedText {
 
 	public String getSimpleText() {
 		return simpleText;
+	}
+
+	public List<TextParagraph> getTextParagraphs() {
+		return textParagraphs;
 	}
 
 	public List<TextBlock> getTextBlocks() {

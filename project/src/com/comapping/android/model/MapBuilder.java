@@ -131,8 +131,7 @@ public class MapBuilder {
 	private static Topic buildTopic(Node node) throws MapParsingException, ParseException, EnumParsingException,
 			StringToXMLConvertionException {
 		NamedNodeMap attributes = node.getAttributes();
-
-		// int id =
+		
 		// Integer.parseInt(attributes.getNamedItem("id").getNodeValue());
 		// Log.d("Map Builder", "parsing node with id=" + id);
 
@@ -171,8 +170,9 @@ public class MapBuilder {
 			}
 		}
 
-		if (!hasId)
+		if (!hasId) {
 			throw new MapParsingException();
+		}
 
 		NodeList childNodes = node.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {

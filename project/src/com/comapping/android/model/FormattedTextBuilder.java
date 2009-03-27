@@ -28,9 +28,14 @@ public class FormattedTextBuilder {
 		
 		Document document = DocumentBuilder.buildDocument(xmlString);
 		
-		List<TextBlock> textBlocks = buildTextBlocks(document.getDocumentElement(), defFormat);		
+		List<TextParagraph> textParagraphs = new ArrayList<TextParagraph>();
+		NodeList paragraphNodes = document.getDocumentElement().getChildNodes();
+		for (int i = 0; i < paragraphNodes.getLength(); i++) {
+			List<TextBlock> textBlocks = buildTextBlocks(paragraphNodes.item(i), defFormat);
+			textParagraphs.add(new TextParagraph(textBlocks));
+		}
 
-		return new FormattedText(textBlocks);
+		return new FormattedText(textParagraphs);
 	}
 
 	private static List<TextBlock> buildTextBlocks(Node node, TextFormat curFormat) {
