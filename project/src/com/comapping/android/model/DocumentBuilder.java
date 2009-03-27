@@ -1,8 +1,8 @@
 package com.comapping.android.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -20,11 +20,7 @@ public class DocumentBuilder {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			javax.xml.parsers.DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
-			// TODO choose best method to convert String to InputStream
-			// maybe it's better:
-			// InputStream stream = new
-			// ByteArrayInputStream(xmlDocument.getBytes("UTF-8"));
-			InputStream stream = new StringBufferInputStream(xmlText);
+			InputStream stream = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
 
 			document = documentBuilder.parse(stream);
 		} catch (FactoryConfigurationError e) {
