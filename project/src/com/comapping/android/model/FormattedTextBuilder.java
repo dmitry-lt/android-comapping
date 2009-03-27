@@ -22,9 +22,8 @@ public class FormattedTextBuilder {
 
 	private static final TextFormat defFormat = getDefFormat();
 
-	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {
-		xmlString = xmlString.replace('&', '#');
-		xmlString = "<P><FONT>" + xmlString + "</FONT></P>";
+	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {		
+		xmlString = "<TEXT><P><FONT>" + xmlString + "</FONT></P></TEXT>";
 		Log.d(Log.modelTag, "parsing text: " + xmlString);
 		
 		Document document = DocumentBuilder.buildDocument(xmlString);
@@ -39,17 +38,21 @@ public class FormattedTextBuilder {
 		
 		Log.d(Log.modelTag, "nodeName: " + node.getNodeName());
 		if (node.getNodeType() == Node.TEXT_NODE) {
-			Log.d(Log.modelTag, "nodeValue: " + node.getNodeValue());
-			result.add(new TextBlock(node.getNodeValue(), curFormat));
+			String text = node.getNodeValue();
+			Log.d(Log.modelTag, "nodeValue: " + text);
+			result.add(new TextBlock(text, curFormat));
 
-		} else {
-			NamedNodeMap attributes = node.getAttributes();
-			if (attributes.getLength() == 0)
+		} else {						
+			if (node.hasAttributes()) {
+				NamedNodeMap attributes = node.getAttributes();
+				for (int i = 0; i < attributes.getLength(); i++) {
+					Node curAttribute = attributes.item(i);
+					changeFormat(curFormat, node.getNodeName(), curAttribute.getNodeName(), curAttribute.getNodeValue());
+				}				
+			} else {
 				changeFormat(curFormat, node.getNodeName(), "", "");
-			for (int i = 0; i < attributes.getLength(); i++) {
-				Node curAttribute = attributes.item(i);
-				changeFormat(curFormat, node.getNodeName(), curAttribute.getNodeName(), curAttribute.getNodeValue());
 			}
+			
 
 			NodeList childNodes = node.getChildNodes();
 			for (int i = 0; i < childNodes.getLength(); i++) {

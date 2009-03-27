@@ -14,7 +14,7 @@ public class TextBlock {
 	}
 
 	public void setText(String text) {
-		this.text = unescape(text.replace('#', '&'));
+		this.text = text;
 	}
 
 	public void setFormat(TextFormat format) {
@@ -23,17 +23,5 @@ public class TextBlock {
 
 	public TextFormat getFormat() {
 		return format;
-	}
-
-	private String unescape(String str) {
-		str = str.replace("&amp;", "&");
-		str = str.replace("&lt;", "<");
-		str = str.replace("&gt;", ">");
-		str = str.replace("&#039;", "\\");
-		str = str.replace("&#39;", "'");
-		str = str.replace("&quot;", "\"");
-		str = str.replace("&lt;", "<");
-		str = str.replace("&apos;", "'");
-		return str;
 	}
 }

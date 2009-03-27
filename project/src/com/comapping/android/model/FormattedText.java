@@ -2,6 +2,14 @@ package com.comapping.android.model;
 
 import java.util.List;
 
+/**
+ * This class represents text, that can consist of differently formatted parts,
+ * it contains list of TextBlock, each of them has it's own format
+ * 
+ * @author Passichenko Victor
+ * @author Yuri Zemlyanskiy
+ * 
+ */
 public class FormattedText {
 
 	private List<TextBlock> textBlocks;
