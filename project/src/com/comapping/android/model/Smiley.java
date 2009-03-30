@@ -1,7 +1,7 @@
 package com.comapping.android.model;
 
 public enum Smiley {
-	HAPPY, NEUTRAL, SAD;
+	HAPPY, NEUTRAL, SAD, FURIOUS;
 
 	public static Smiley parse(String s) throws EnumParsingException {
 		if (s.equals("happy")) {
@@ -10,6 +10,8 @@ public enum Smiley {
 			return Smiley.NEUTRAL;
 		} else if (s.equals("sad")) {
 			return Smiley.SAD;
+		} else if (s.equals("furious")) {
+			return Smiley.FURIOUS;
 		} else {
 			throw new EnumParsingException();
 		}
