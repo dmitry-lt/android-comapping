@@ -14,26 +14,17 @@ import java.util.List;
  */
 public class FormattedText {
 
-	private List<TextParagraph> textParagraphs;
-	private List<TextBlock> textBlocks;
-	private int maxFontSize;
+	private List<TextParagraph> textParagraphs;	
 	private String simpleText;
 
 	public FormattedText(List<TextParagraph> textParagraphs) {
 		this.textParagraphs = textParagraphs;
-
-		textBlocks = new ArrayList<TextBlock>();
+		
 		StringBuilder text = new StringBuilder();
-		for (TextParagraph cur : textParagraphs) {
-			maxFontSize = Math.max(maxFontSize, cur.getMaxFontSize());
+		for (TextParagraph cur : textParagraphs) {		
 			text.append(cur.getSimpleText());
-			textBlocks.addAll(cur.getTextBlocks());
 		}
 		this.simpleText = text.toString();
-	}
-
-	public int getMaxFontSize() {
-		return maxFontSize;
 	}
 
 	public String getSimpleText() {
@@ -42,9 +33,5 @@ public class FormattedText {
 
 	public List<TextParagraph> getTextParagraphs() {
 		return textParagraphs;
-	}
-
-	public List<TextBlock> getTextBlocks() {
-		return textBlocks;
 	}
 }

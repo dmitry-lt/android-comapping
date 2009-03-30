@@ -23,6 +23,7 @@ public final class R {
     public static final class id {
         public static final int CheckBox01=0x7f050009;
         public static final int EditText01=0x7f05000d;
+        public static final int Loading=0x7f050012;
         public static final int RelativeLayout01=0x7f050008;
         public static final int TableLayout01=0x7f050001;
         public static final int TableRow01=0x7f050002;
@@ -43,6 +44,7 @@ public final class R {
     public static final class layout {
         public static final int login=0x7f030000;
         public static final int metamap=0x7f030001;
+        public static final int splash=0x7f030002;
     }
     public static final class string {
         public static final int app_name=0x7f040000;

@@ -40,19 +40,19 @@ public class ExplorerRender extends Render {
 	private static final int yShift = 15;
 	private static final int outerSize = 10;
 	private static final int innerSize = 5;
-	private static final int borderSize = 3;
+	private static final int borderSize = 4;
 	private static final int blockShift = 5;
-	private static final int textShift = 3;
 	
 	private Map map;
-	private HashMap<Integer, Boolean> open = new HashMap();
+	private HashMap<Integer, Boolean> open = new HashMap<Integer, Boolean>();
+	private HashMap<Integer, TextRender> renders = new HashMap<Integer, TextRender>();
 	private Bitmap[] priorityIcon = new Bitmap[10];
 	private Bitmap happyIcon;
 	private Bitmap neutralIcon;
 	private Bitmap sadIcon;
 	private Bitmap toDoIcon;
 	private boolean toUpdate = true;
-	private ArrayList<touchPoint> points = new ArrayList();
+	private ArrayList<touchPoint> points = new ArrayList<touchPoint>();
 	private int xPlus, yPlus;
 	private int height, width;
 	
@@ -89,29 +89,22 @@ public class ExplorerRender extends Render {
 		int[] ret = new int[2];
 		ret[0] = x;
 		
-		FormattedText text = topic.getFormattedText();
 		Paint p = new Paint();
-		Rect r = new Rect();
 		
 		x += outerSize;
 		
 		//calculate sizes
-		int xSize = -textShift, ySize = 0;
-		
-		for (TextBlock cur : text.getTextBlocks())
-		{
-			p.setTextSize(cur.getFormat().getFontSize());
-			p.getTextBounds(cur.getText(), 0, cur.getText().length(), r);
-			xSize += r.width() + textShift;
-			p.getTextBounds("1", 0, 1, r);
-			ySize = Math.max(ySize, r.height());
-		}
-		
+		if (renders.get(topic.getId()) == null)
+			renders.put(topic.getId(), new TextRender(topic.getFormattedText()));
+		TextRender render = renders.get(topic.getId());
+		int xSize = render.getWidth(), ySize = render.getHeight();
+				
 		int ty = Math.max(iconSize / 2, ySize / 2 + borderSize);
 		ty = Math.max(ty, iconSize / 2);
 		ret[1] = ty * 2;
 		y += ty;
 		
+		//draw circle and line
 		p.setColor(Color.GRAY);
 		c.drawLine(x, y, x + xShift, y, p);
 		if (topic.getChildrenCount() > 0)
@@ -169,19 +162,11 @@ public class ExplorerRender extends Render {
 		p.setAlpha(255);
 		c.drawRect(x, y - ySize / 2 - borderSize, x + xSize + borderSize * 2, y + ySize / 2 + borderSize, p);
 		
-		x += borderSize - textShift;
-		
-		for (TextBlock cur : text.getTextBlocks())
-		{
-			p.setTextSize(cur.getFormat().getFontSize());
-			p.setColor(cur.getFormat().getFontColor());
-			p.getTextBounds(cur.getText(), 0, cur.getText().length(), r);
-			x += textShift;
-			c.drawText(cur.getText(), x, y + ySize / 2, p);
-			x += r.width();
-		}
-		
 		x += borderSize;
+		
+		render.draw(x, y - ySize / 2, 0, 0, c);
+		
+		x += render.getWidth() + borderSize;
 		ret[0] = x - ret[0];
 		
 		return ret;
@@ -247,7 +232,7 @@ public class ExplorerRender extends Render {
 		this.width = temp[0];
 		this.height = temp[1];
 		toUpdate = false;
-/*		Paint p = new Paint();
+		/*Paint p = new Paint();
 		p.setColor(Color.BLACK);
 		c.drawLine(x + temp[0], y, x + temp[0], y + temp[1], p);
 		c.drawLine(x, y + temp[1], x + temp[0], y + temp[1], p);
