@@ -3,23 +3,13 @@ package com.comapping.android.view;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.comapping.android.controller.MainController;
-import com.comapping.android.controller.R;
-import com.comapping.android.model.FormattedText;
 import com.comapping.android.model.Map;
-import com.comapping.android.model.Smiley;
-import com.comapping.android.model.TaskCompletion;
-import com.comapping.android.model.TextBlock;
 import com.comapping.android.model.Topic;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 
 public class ExplorerRender extends Render {
 
@@ -35,7 +25,6 @@ public class ExplorerRender extends Render {
 		}
 	}
 	
-	private static final int iconSize = 26;
 	private static final int xShift = 30;
 	private static final int yShift = 15;
 	private static final int outerSize = 10;
@@ -46,11 +35,8 @@ public class ExplorerRender extends Render {
 	private Map map;
 	private HashMap<Integer, Boolean> open = new HashMap<Integer, Boolean>();
 	private HashMap<Integer, TextRender> renders = new HashMap<Integer, TextRender>();
-	private Bitmap[] priorityIcon = new Bitmap[10];
-	private Bitmap happyIcon;
-	private Bitmap neutralIcon;
-	private Bitmap sadIcon;
-	private Bitmap toDoIcon;
+	private HashMap<Integer, IconRender> renders1 = new HashMap<Integer, IconRender>();
+
 	private boolean toUpdate = true;
 	private ArrayList<touchPoint> points = new ArrayList<touchPoint>();
 	private int xPlus, yPlus;
@@ -58,30 +44,7 @@ public class ExplorerRender extends Render {
 	
 	public ExplorerRender (Context context, Map map)
 	{
-		this.map = map;
-		Resources r = MainController.getInstance().getResources();
-		priorityIcon[1] = getBitmap(r.getDrawable(R.drawable.p1));
-		priorityIcon[2] = getBitmap(r.getDrawable(R.drawable.p2));
-		priorityIcon[3] = getBitmap(r.getDrawable(R.drawable.p3));
-		priorityIcon[4] = getBitmap(r.getDrawable(R.drawable.p4));
-/*		priorityIcon[5] = getBitmap(r.getDrawable(R.drawable.p5));
-		priorityIcon[6] = getBitmap(r.getDrawable(R.drawable.p6));
-		priorityIcon[7] = getBitmap(r.getDrawable(R.drawable.p7));
-		priorityIcon[8] = getBitmap(r.getDrawable(R.drawable.p8));
-		priorityIcon[9] = getBitmap(r.getDrawable(R.drawable.p9));*/
-		happyIcon = getBitmap(r.getDrawable(R.drawable.happy));
-		neutralIcon = getBitmap(r.getDrawable(R.drawable.happy));
-		sadIcon = getBitmap(r.getDrawable(R.drawable.happy));
-		toDoIcon = getBitmap(r.getDrawable(R.drawable.to_do));
-	}
-
-	private Bitmap getBitmap(Drawable image)
-	{
-		Bitmap bitmap = Bitmap.createBitmap(iconSize, iconSize, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        image.setBounds(0, 0, iconSize, iconSize);
-        image.draw(canvas);        
-        return bitmap;
+		this.map = map;		
 	}
 	
 	private int[] drawTopicContext(Topic topic, int x, int y, Canvas c)
@@ -96,11 +59,14 @@ public class ExplorerRender extends Render {
 		//calculate sizes
 		if (renders.get(topic.getId()) == null)
 			renders.put(topic.getId(), new TextRender(topic.getFormattedText()));
+		if (renders1.get(topic.getId()) == null)
+			renders1.put(topic.getId(), new IconRender(topic));
 		TextRender render = renders.get(topic.getId());
+		IconRender render1 = renders1.get(topic.getId());
 		int xSize = render.getWidth(), ySize = render.getHeight();
 				
-		int ty = Math.max(iconSize / 2, ySize / 2 + borderSize);
-		ty = Math.max(ty, iconSize / 2);
+		int ty = Math.max(outerSize / 2, ySize / 2 + borderSize);
+		ty = Math.max(ty, render1.getHeight());
 		ret[1] = ty * 2;
 		y += ty;
 		
@@ -122,39 +88,9 @@ public class ExplorerRender extends Render {
 		x += xShift;
 		
 		//draw icons
-		if (topic.getPriority() != 0)
-		{
-			x += blockShift;
-			c.drawBitmap(priorityIcon[topic.getPriority()], x, y - iconSize / 2, null);
-			x += iconSize;
-		}
-		
-		if (topic.getSmiley() != null)
-		{
-			Bitmap bitmap;
-			if (topic.getSmiley() == Smiley.HAPPY)
-				bitmap = happyIcon;
-			else if (topic.getSmiley() == Smiley.NEUTRAL)
-				bitmap = neutralIcon;
-			else
-				bitmap = sadIcon;
-			x += blockShift;
-			c.drawBitmap(bitmap, x, y - iconSize / 2, null);
-			x += iconSize;
-		}
-		
-		if (topic.getTaskCompletion() != null)
-		{
-			Bitmap bitmap;
-			if (topic.getTaskCompletion() == TaskCompletion.TO_DO)
-				bitmap = toDoIcon;
-			else
-				bitmap = toDoIcon;
-
-			x += blockShift;
-			c.drawBitmap(bitmap, x, y - iconSize / 2, null);
-			x += iconSize;
-		}		
+		x += blockShift;
+		render1.draw(x, y - render1.getHeight() / 2, 0, 0, c);
+		x += render1.getWidth();
 
 		//draw text		
 		x += blockShift;
