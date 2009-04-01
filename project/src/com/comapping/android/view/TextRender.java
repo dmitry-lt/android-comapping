@@ -5,7 +5,6 @@ import com.comapping.android.model.TextBlock;
 import com.comapping.android.model.TextParagraph;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -17,13 +16,13 @@ public class TextRender extends Render {
 	private int width;
 	private int height;
 	private FormattedText text;
-	private int[] parsHeight;	
+	private int[] parsHeight;
 
 	public TextRender(FormattedText text) {
 		this.text = text;
-		
+
 		// calculate sizes
-		parsHeight = new int[text.getTextParagraphs().size()];		
+		parsHeight = new int[text.getTextParagraphs().size()];
 		if (text.getTextParagraphs().size() > 0) {
 			Paint p = new Paint();
 			Rect r = new Rect();
@@ -31,15 +30,15 @@ public class TextRender extends Render {
 				TextParagraph paragraph = text.getTextParagraphs().get(i);
 				int parHeight = 0;
 				int parWidth = 0;
-				
+
 				p.setTextSize(paragraph.getMaxFontSize());
 				p.getTextBounds("1", 0, 1, r);
 				parHeight = Math.max(parHeight, r.height());
-				
+
 				for (TextBlock block : paragraph.getTextBlocks()) {
 					p.setTextSize(block.getFormat().getFontSize());
 					p.getTextBounds(block.getText(), 0, block.getText().length(), r);
-					parWidth += r.width();					
+					parWidth += r.width();
 				}
 				parsHeight[i] = parHeight;
 				parWidth += HORISONTAL_MERGING * (paragraph.getTextBlocks().size() - 1);
@@ -52,17 +51,17 @@ public class TextRender extends Render {
 			width = 0;
 			height = 0;
 		}
-		
+
 	}
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (text.getTextParagraphs().size() > 0) {
 			Paint p = new Paint();
-			Rect r = new Rect();			
+			Rect r = new Rect();
 			int curY = y;
 			for (int i = 0; i < text.getTextParagraphs().size(); i++) {
-				TextParagraph paragraph = text.getTextParagraphs().get(i);				
+				TextParagraph paragraph = text.getTextParagraphs().get(i);
 				int curX = x;
 				curY += parsHeight[i];
 				for (TextBlock block : paragraph.getTextBlocks()) {
@@ -70,16 +69,17 @@ public class TextRender extends Render {
 					p.setColor(block.getFormat().getFontColor());
 					c.drawText(block.getText(), curX, curY, p);
 					p.getTextBounds(block.getText(), 0, block.getText().length(), r);
-					
-//					p.setColor(Color.BLACK);
-//					c.drawLine(curX, curY - parsHeight[i], curX + r.width(), curY - parsHeight[i], p);
-					
-					curX += r.width() + HORISONTAL_MERGING;					
+
+					// p.setColor(Color.BLACK);
+					// c.drawLine(curX, curY - parsHeight[i], curX + r.width(),
+					// curY - parsHeight[i], p);
+
+					curX += r.width() + HORISONTAL_MERGING;
 				}
 				curY += VERTICAL_MERGING;
-			}			
+			}
 		} else {
-			//nothing to draw
+			// nothing to draw
 		}
 	}
 

@@ -1,6 +1,5 @@
 package com.comapping.android.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,14 +13,14 @@ import java.util.List;
  */
 public class FormattedText {
 
-	private List<TextParagraph> textParagraphs;	
+	private List<TextParagraph> textParagraphs;
 	private String simpleText;
 
 	public FormattedText(List<TextParagraph> textParagraphs) {
 		this.textParagraphs = textParagraphs;
-		
+
 		StringBuilder text = new StringBuilder();
-		for (TextParagraph cur : textParagraphs) {		
+		for (TextParagraph cur : textParagraphs) {
 			text.append(cur.getSimpleText());
 		}
 		this.simpleText = text.toString();

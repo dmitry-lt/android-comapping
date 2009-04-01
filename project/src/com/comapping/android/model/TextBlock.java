@@ -3,7 +3,7 @@ package com.comapping.android.model;
 public class TextBlock {
 	private String text;
 	private TextFormat format;
-	
+
 	public TextBlock(String text, TextFormat format) {
 		setText(text);
 		setFormat(format);

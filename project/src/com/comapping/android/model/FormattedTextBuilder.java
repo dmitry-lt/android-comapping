@@ -14,7 +14,7 @@ import com.comapping.android.Log;
 
 public class FormattedTextBuilder {
 	private static final String PARAGRAPH_TAG = "P";
-	
+
 	private static final String FONT_TAG = "FONT";
 	private static final String FONT_ATTR_SIZE_TAG = "SIZE";
 	private static final String FONT_ATTR_COLOR_TAG = "COLOR";
@@ -24,14 +24,14 @@ public class FormattedTextBuilder {
 
 	private static final TextFormat defFormat = getDefFormat();
 
-	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {		
+	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {
 		xmlString = "<TEXT><P><FONT>" + xmlString + "</FONT></P></TEXT>";
 		Log.d(Log.modelTag, "parsing text: " + xmlString);
-		
+
 		Document document = DocumentBuilder.buildDocument(xmlString);
-		
+
 		NodeList paragraphNodes = document.getElementsByTagName(PARAGRAPH_TAG);
-		List<TextParagraph> textParagraphs = new ArrayList<TextParagraph>();		
+		List<TextParagraph> textParagraphs = new ArrayList<TextParagraph>();
 		for (int i = 0; i < paragraphNodes.getLength(); i++) {
 			List<TextBlock> textBlocks = buildTextBlocks(paragraphNodes.item(i), defFormat);
 			textParagraphs.add(new TextParagraph(textBlocks));
@@ -42,31 +42,30 @@ public class FormattedTextBuilder {
 
 	private static List<TextBlock> buildTextBlocks(Node node, TextFormat curFormat) {
 		List<TextBlock> result = new ArrayList<TextBlock>();
-		
+
 		Log.d(Log.modelTag, "nodeName: " + node.getNodeName());
 		if (node.getNodeType() == Node.TEXT_NODE) {
 			String text = node.getNodeValue();
 			Log.d(Log.modelTag, "nodeValue: " + text);
 			result.add(new TextBlock(text, curFormat));
 
-		} else {						
+		} else {
 			if (node.hasAttributes()) {
 				NamedNodeMap attributes = node.getAttributes();
 				for (int i = 0; i < attributes.getLength(); i++) {
 					Node curAttribute = attributes.item(i);
 					changeFormat(curFormat, node.getNodeName(), curAttribute.getNodeName(), curAttribute.getNodeValue());
-				}				
+				}
 			} else {
 				changeFormat(curFormat, node.getNodeName(), "", "");
 			}
-			
 
 			NodeList childNodes = node.getChildNodes();
 			for (int i = 0; i < childNodes.getLength(); i++) {
-				result.addAll(buildTextBlocks(childNodes.item(i), curFormat.clone()));					
-			}									
+				result.addAll(buildTextBlocks(childNodes.item(i), curFormat.clone()));
+			}
 		}
-		
+
 		return result;
 	}
 
