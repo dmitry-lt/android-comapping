@@ -307,6 +307,10 @@ public class Client {
 					Log.i(Log.connectionTag, "login required interrupted exception");
 				}
 			}
+
+			if (loginInterrupted) {
+				throw new LoginInterruptedException();
+			}
 		}
 	}
 }

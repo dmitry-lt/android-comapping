@@ -7,55 +7,55 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.comapping.android.ViewType;
-import com.comapping.android.controller.MainController;
-import com.comapping.android.controller.MetaMapController;
+import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 
 public class MetaMapView {
-	public void setMetaMapText(final String text) {
-		
-		final TextView metaMapText = (TextView) MainController.getInstance()
-				.findViewById(R.id.metaMapText);
+	private MetaMapActivity metaMapActivity;
 
-		MainController.getInstance().runOnUiThread(new Runnable() {
+	public MetaMapView(MetaMapActivity metaMapActivity) {
+		this.metaMapActivity = metaMapActivity;
+	}
+
+	public void setMetaMapText(final String text) {
+
+		final TextView metaMapText = (TextView) metaMapActivity.findViewById(R.id.metaMapText);
+
+		metaMapActivity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				metaMapText.setText(text);	
-			}			
+				metaMapText.setText(text);
+			}
 		});
 	}
 
 	public void load() {
-		MainController.getInstance().setContentView(R.layout.metamap);
+		metaMapActivity.setContentView(R.layout.metamap);
 
-		Button loadTreeView = (Button) MainController.getInstance().findViewById(R.id.loadTreeView);
-		final EditText mapName = (EditText) MainController.getInstance()
-				.findViewById(R.id.EditText01);
+		Button loadTreeView = (Button) metaMapActivity.findViewById(R.id.loadTreeView);
+		final EditText mapName = (EditText) metaMapActivity.findViewById(R.id.EditText01);
 
 		loadTreeView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MetaMapController.getInstance()
-						.loadMap(mapName.getText().toString(), ViewType.TREE_VIEW);
+				metaMapActivity.loadMap(mapName.getText().toString(), ViewType.TREE_VIEW);
 			}
 		});
 
-		Button loadExplorerView = (Button) MainController.getInstance().findViewById(R.id.loadExplorerView);
-		
+		Button loadExplorerView = (Button) metaMapActivity.findViewById(R.id.loadExplorerView);
+
 		loadExplorerView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MetaMapController.getInstance()
-						.loadMap(mapName.getText().toString(), ViewType.EXPLORER_VIEW);
+				metaMapActivity.loadMap(mapName.getText().toString(), ViewType.EXPLORER_VIEW);
 			}
 		});
 
-		
-		Button logout = (Button) MainController.getInstance().findViewById(R.id.logout);
+		Button logout = (Button) metaMapActivity.findViewById(R.id.logout);
 		logout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MainController.getInstance().logout();
+				// metaMapActivity.logout();
 			}
 		});
 	}

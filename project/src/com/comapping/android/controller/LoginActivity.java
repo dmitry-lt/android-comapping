@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.CheckBox;
 
-import com.comapping.android.Options;
 import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
 import com.comapping.android.communication.LoginInterruptedException;
@@ -22,6 +21,8 @@ import com.comapping.android.view.LoginView;
 
 public class LoginActivity extends Activity {
 	private LoginView loginView;
+
+	public static final int RESULT_LOGIN_SUCCESSFUL = 200;
 
 	// use server from MainController
 	Client client = null;
@@ -46,6 +47,7 @@ public class LoginActivity extends Activity {
 						Storage.instance.set("key", "");
 					}
 
+					setResult(RESULT_LOGIN_SUCCESSFUL);
 					finish();
 				} else {
 					loginView.changeErrorText(errorMsg);
@@ -74,7 +76,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		client = MainController.getInstance().client;
+		client = MetaMapActivity.client;
 		loginView = new LoginView(this);
 		loginView.load();
 
@@ -97,8 +99,6 @@ public class LoginActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		setResult(Options.RESULT_CHAIN_CLOSE);
-
 		super.onDestroy();
 
 		if (!client.isLoggedIn()) {

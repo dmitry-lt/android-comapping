@@ -1,6 +1,6 @@
 package com.comapping.android.view;
 
-import com.comapping.android.controller.MainController;
+import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Smiley;
 import com.comapping.android.model.TaskCompletion;
@@ -42,7 +42,7 @@ public class IconRender extends Render {
 	
 	private void loadIcons()
 	{
-		Resources r = MainController.getInstance().getResources();
+		Resources r = MetaMapActivity.getInstance().getResources();
 		
 		priorityIcon[1] = getBitmap(r.getDrawable(R.drawable.p1));
 		priorityIcon[2] = getBitmap(r.getDrawable(R.drawable.p2));

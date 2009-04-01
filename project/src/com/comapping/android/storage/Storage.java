@@ -8,7 +8,7 @@
 
 package com.comapping.android.storage;
 
-import com.comapping.android.controller.MainController;
+import com.comapping.android.controller.MetaMapActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
@@ -26,7 +26,7 @@ public class Storage {
 	}
 
 	public void set(String key, String value) {
-		Editor edit = MainController.getInstance().getPreferences(Context.MODE_PRIVATE).edit();
+		Editor edit = MetaMapActivity.getInstance().getPreferences(Context.MODE_PRIVATE).edit();
 
 		edit.putString(key, value);
 		edit.commit();
@@ -37,6 +37,6 @@ public class Storage {
 	public String get(String key) {
 		Log.i("Storage", "get [" + key + "]");
 
-		return MainController.getInstance().getPreferences(Context.MODE_PRIVATE).getString(key, "");
+		return MetaMapActivity.getInstance().getPreferences(Context.MODE_PRIVATE).getString(key, "");
 	}
 }
