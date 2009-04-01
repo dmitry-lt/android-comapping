@@ -13,30 +13,29 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.CheckBox;
 
+import com.comapping.android.Options;
 import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
-import com.comapping.android.communication.NotLoggedInException;
+import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.storage.Storage;
 import com.comapping.android.view.LoginView;
 
 public class LoginActivity extends Activity {
 	private LoginView loginView;
 
-	
 	// use server from MainController
 	Client client = null;
 
 	private void saveLoginAndPassword() {
 		try {
-			Storage.instance.set("email", client.getEmail());
-			Storage.instance.set("key", client.getAutoLoginKey());
-		} catch (NotLoggedInException e) {
+			Storage.instance.set("email", client.getEmail(this));
+			Storage.instance.set("key", client.getAutoLoginKey(this));
+		} catch (LoginInterruptedException e) {
 			Log.e("Login", "User not logged in");
 		}
 	}
 
-	private void finishLoginAttempt(final String errorMsg,
-			final boolean remember) {
+	private void finishLoginAttempt(final String errorMsg, final boolean remember) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -67,26 +66,24 @@ public class LoginActivity extends Activity {
 				}
 				CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
 
-				finishLoginAttempt("Email or password is incorrect", remember
-						.isChecked());
+				finishLoginAttempt("Email or password is incorrect", remember.isChecked());
 			}
 		}.start();
 	}
-	
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		client = MainController.getInstance().client;
 		loginView = new LoginView(this);
 		loginView.load();
-		
+
 		if (!Storage.instance.get("key").equals("")) {
 			// attempt to autoLogin
 			new Thread() {
 				public void run() {
 					try {
-						client.autoLogin(Storage.instance.get("email"),
-								Storage.instance.get("key"));
+						client.autoLogin(Storage.instance.get("email"), Storage.instance.get("key"));
 					} catch (ConnectionException e) {
 						Log.e("Comapping", "Login: connection exception");
 					}
@@ -97,13 +94,15 @@ public class LoginActivity extends Activity {
 			// manual login
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
+		setResult(Options.RESULT_CHAIN_CLOSE);
+
 		super.onDestroy();
-		
+
 		if (!client.isLoggedIn()) {
-			MainController.getInstance().finish();
+			client.interruptLogin();
 		}
 	}
 }

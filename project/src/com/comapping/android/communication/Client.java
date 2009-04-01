@@ -24,11 +24,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import com.comapping.android.Log;
 import com.comapping.android.Options;
-import com.comapping.android.controller.MainController;
 
 public class Client {
 	final static private char SALT_FLAG = '#';
@@ -37,11 +37,15 @@ public class Client {
 	final static private String WITH_SALT_LOGIN_METHOD = "withSalt";
 	final static private int SLEEP_TIME = 100;
 
+	final static public int LOGIN_REQUEST_CODE = 438134;
+
 	private String clientId = null;
 
 	private String email = null;
 	private String autoLoginKey = null;
-	
+
+	private boolean loginInterrupted = false;
+
 	// public methods
 	/**
 	 * Method for manual login with email and password
@@ -106,11 +110,11 @@ public class Client {
 	 * Method for AutoLogin key getting
 	 * 
 	 * @return AutoLogin key
-	 * @throws NotLoggedInException
+	 * @throws LoginInterruptedException
 	 */
-	public String getAutoLoginKey() throws NotLoggedInException {
-		loginRequired();
-		
+	public String getAutoLoginKey(Activity context) throws LoginInterruptedException {
+		loginRequired(context);
+
 		return autoLoginKey;
 	}
 
@@ -118,11 +122,11 @@ public class Client {
 	 * Method for user email getting
 	 * 
 	 * @return User email
-	 * @throws NotLoggedInException
+	 * @throws LoginInterruptedException
 	 */
-	public String getEmail() throws NotLoggedInException {
-		loginRequired();
-		
+	public String getEmail(Activity context) throws LoginInterruptedException {
+		loginRequired(context);
+
 		return email;
 	}
 
@@ -145,12 +149,12 @@ public class Client {
 	/**
 	 * Method for both client and server side logout
 	 * 
-	 * @throws NotLoggedInException
 	 * @throws ConnectionException
+	 * @throws LoginInterruptedException
 	 */
-	public void logout() throws NotLoggedInException, ConnectionException {
-		loginRequired();
-		
+	public void logout(Activity context) throws ConnectionException, LoginInterruptedException {
+		loginRequired(context);
+
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));
@@ -166,14 +170,14 @@ public class Client {
 	 * @param mapId
 	 *            Comap Id
 	 * @return Comap in String format
-	 * @throws NotLoggedInException
 	 * @throws ConnectionException
+	 * @throws LoginInterruptedException
 	 */
-	public String getComap(String mapId) throws NotLoggedInException, ConnectionException {
+	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException {
 		Log.d(Log.connectionTag, "getting " + mapId + " comap");
 
-		loginRequired();
-		
+		loginRequired(context);
+
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
 		data.add(new BasicNameValuePair("format", "comap"));
@@ -181,6 +185,10 @@ public class Client {
 		data.add(new BasicNameValuePair("mapid", mapId));
 
 		return requestToServer(data);
+	}
+
+	public void interruptLogin() {
+		loginInterrupted = true;
 	}
 
 	// private methods
@@ -226,13 +234,13 @@ public class Client {
 		}
 
 		post.setEntity(entity);
-		
+
 		String responseText = "";
 		int responseStatus = 0;
 
 		try {
 			HttpResponse response = client.execute(post);
-			
+
 			responseText = getTextFromResponse(response);
 			responseStatus = response.getStatusLine().getStatusCode();
 		} catch (ClientProtocolException e) {
@@ -287,11 +295,12 @@ public class Client {
 		}
 	}
 
-	private void loginRequired() {
+	private void loginRequired(Activity context) throws LoginInterruptedException {
 		if (!isLoggedIn()) {
-			MainController.getInstance().startActivity(new Intent("com.comapping.android.intent.LOGIN"));
-			
-			while (!isLoggedIn()) {
+			loginInterrupted = false;
+			context.startActivityForResult(new Intent("com.comapping.android.intent.LOGIN"), LOGIN_REQUEST_CODE);
+
+			while (!isLoggedIn() && (!loginInterrupted)) {
 				try {
 					Thread.sleep(SLEEP_TIME);
 				} catch (InterruptedException e) {

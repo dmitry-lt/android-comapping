@@ -37,7 +37,6 @@ public class Storage {
 	public String get(String key) {
 		Log.i("Storage", "get [" + key + "]");
 
-		return MainController.getInstance().getPreferences(Context.MODE_PRIVATE).getString(
-				key, "");
+		return MainController.getInstance().getPreferences(Context.MODE_PRIVATE).getString(key, "");
 	}
 }

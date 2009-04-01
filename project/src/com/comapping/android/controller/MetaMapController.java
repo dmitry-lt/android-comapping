@@ -11,7 +11,7 @@ package com.comapping.android.controller;
 import com.comapping.android.Log;
 import com.comapping.android.ViewType;
 import com.comapping.android.communication.ConnectionException;
-import com.comapping.android.communication.NotLoggedInException;
+import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.MapBuilder;
 import com.comapping.android.model.MapParsingException;
@@ -39,8 +39,7 @@ public class MetaMapController {
 				String result = "";
 
 				try {
-					result = MainController.getInstance().client
-							.getComap(mapId);
+					result = MainController.getInstance().client.getComap(mapId, MainController.getInstance());
 
 					final Map map = MapBuilder.buildMap(result);
 					MainController.getInstance().runOnUiThread(new Runnable() {
@@ -49,8 +48,8 @@ public class MetaMapController {
 							MapController.getInstance().loadMap(map, viewType);
 						};
 					});
-				} catch (NotLoggedInException e) {
-					metaMapView.setMetaMapText("You not logged in!");
+				} catch (LoginInterruptedException e) {
+					metaMapView.setMetaMapText("Logint interrupted!");
 				} catch (ConnectionException e) {
 					Log.e(Log.metaMapControllerTag, "connection exception");
 				} catch (StringToXMLConvertionException e) {
