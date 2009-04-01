@@ -18,6 +18,8 @@ public class IconRender extends Render {
 	
 	private static Bitmap[] priorityIcon = new Bitmap[10];
 	
+	private static boolean toLoad = true;
+	
 	private static Bitmap happyIcon;
 	private static Bitmap neutralIcon;
 	private static Bitmap sadIcon;
@@ -38,7 +40,7 @@ public class IconRender extends Render {
         return bitmap;
 	}	
 	
-	private static void loadIcons()
+	private void loadIcons()
 	{
 		Resources r = MainController.getInstance().getResources();
 		
@@ -69,7 +71,11 @@ public class IconRender extends Render {
 	
 	public IconRender(Topic topic)
 	{
-		loadIcons();
+		if (toLoad)
+		{
+			loadIcons();
+			toLoad = false;
+		}
 		this.topic = topic;
 		int c = 0;
 		if (topic.getPriority() != 0)			

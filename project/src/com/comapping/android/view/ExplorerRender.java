@@ -66,7 +66,7 @@ public class ExplorerRender extends Render {
 		int xSize = render.getWidth(), ySize = render.getHeight();
 				
 		int ty = Math.max(outerSize / 2, ySize / 2 + borderSize);
-		ty = Math.max(ty, render1.getHeight());
+		ty = Math.max(ty, render1.getHeight() / 2);
 		ret[1] = ty * 2;
 		y += ty;
 		
@@ -168,12 +168,13 @@ public class ExplorerRender extends Render {
 		this.width = temp[0];
 		this.height = temp[1];
 		toUpdate = false;
+		
 		/*Paint p = new Paint();
 		p.setColor(Color.BLACK);
 		c.drawLine(x + temp[0], y, x + temp[0], y + temp[1], p);
-		c.drawLine(x, y + temp[1], x + temp[0], y + temp[1], p);
+		c.drawLine(x, y + temp[1], x + temp[0], y + temp[1], p);*/
 		
-		p.setColor(Color.RED);
+		/*p.setColor(Color.RED);
 		for (touchPoint point : points)
 		{
 			c.drawCircle(point.x + xPlus, point.y + yPlus, 2, p);
