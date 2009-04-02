@@ -10,12 +10,24 @@ import com.comapping.android.controller.R;
 
 public class LoginView {
 	private LoginActivity loginActivity;
-	
+
 	public LoginView(LoginActivity loginActivity) {
 		this.loginActivity = loginActivity;
 	}
-	
-	public void changeErrorText(final String error) {
+
+	public void setEmailText(final String email) {
+		final TextView errorText = (TextView) loginActivity.findViewById(R.id.email);
+
+		errorText.setText(email);
+	}
+
+	public void setPasswordText(final String password) {
+		final TextView errorText = (TextView) loginActivity.findViewById(R.id.password);
+
+		errorText.setText(password);
+	}
+
+	public void setErrorText(final String error) {
 		final TextView errorText = (TextView) loginActivity.findViewById(R.id.error);
 
 		errorText.setText(error);
@@ -25,7 +37,7 @@ public class LoginView {
 		loginActivity.setContentView(R.layout.login);
 
 		// bind login button
-		Button loginButton = (Button) loginActivity.findViewById(R.id.login);		
+		Button loginButton = (Button) loginActivity.findViewById(R.id.login);
 
 		loginButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -35,12 +47,12 @@ public class LoginView {
 
 				loginActivity.loginClick(email, password);
 			}
-		});	
-		
+		});
+
 	}
 
 	public void load(final String error) {
 		load();
-		changeErrorText(error);
+		setErrorText(error);
 	}
 }
