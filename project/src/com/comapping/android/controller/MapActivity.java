@@ -4,15 +4,25 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.comapping.android.Cache;
+import com.comapping.android.Log;
 import com.comapping.android.ViewType;
+import com.comapping.android.communication.ConnectionException;
+import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.model.Map;
+import com.comapping.android.model.MapBuilder;
+import com.comapping.android.model.MapParsingException;
+import com.comapping.android.model.StringToXMLConvertionException;
 import com.comapping.android.view.ComappingRender;
 import com.comapping.android.view.ExplorerRender;
 import com.comapping.android.view.MainMapView;
 import com.comapping.android.view.Render;
 
 public class MapActivity extends Activity {
+	public static final String MAP_ACTIVITY_INTENT = "com.comapping.android.intent.MAP";
+
 	public static final String EXT_VIEW_TYPE = "viewType";
+	public static final String EXT_MAP_ID = "mapId";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +30,44 @@ public class MapActivity extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 
-		ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
+		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
+		final String mapId = extras.getString(EXT_MAP_ID);
 
-		loadMap(MetaMapActivity.getInstance().currentMap, viewType);
+		Map map = (Map) Cache.get(mapId);
+		final Activity current = this;
+
+		if (map == null) {
+			new Thread() {
+				public void run() {
+					String result = "";
+					try {
+						result = MetaMapActivity.client.getComap(mapId, current);
+
+						final Map buildedMap = MapBuilder.buildMap(result);
+
+						// add to chache
+						Cache.set(mapId, buildedMap);
+
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								loadMap(buildedMap, viewType);
+							};
+						});
+					} catch (LoginInterruptedException e) {
+						Log.e(Log.mapControllerTag, "login interrupted");
+					} catch (ConnectionException e) {
+						Log.e(Log.mapControllerTag, "connection exception");
+					} catch (StringToXMLConvertionException e) {
+						Log.e(Log.mapControllerTag, e.toString());
+					} catch (MapParsingException e) {
+						Log.e(Log.mapControllerTag, e.toString());
+					}
+				}
+			}.start();
+		} else {
+			loadMap(map, viewType);
+		}
 	}
 
 	public void loadMap(Map map, ViewType viewType) {

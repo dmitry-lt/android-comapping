@@ -27,8 +27,10 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.comapping.android.Cache;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
+import com.comapping.android.controller.LoginActivity;
 
 public class Client {
 	final static private char SALT_FLAG = '#';
@@ -144,6 +146,7 @@ public class Client {
 	 */
 	public void clientSideLogout() {
 		clientId = null;
+		Cache.clear();
 	}
 
 	/**
@@ -298,7 +301,7 @@ public class Client {
 	private void loginRequired(Activity context) throws LoginInterruptedException {
 		if (!isLoggedIn()) {
 			loginInterrupted = false;
-			context.startActivityForResult(new Intent("com.comapping.android.intent.LOGIN"), LOGIN_REQUEST_CODE);
+			context.startActivityForResult(new Intent(LoginActivity.LOGIN_ACTIVITY_INTENT), LOGIN_REQUEST_CODE);
 
 			while (!isLoggedIn() && (!loginInterrupted)) {
 				try {

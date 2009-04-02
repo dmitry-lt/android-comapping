@@ -20,11 +20,12 @@ import com.comapping.android.storage.Storage;
 import com.comapping.android.view.LoginView;
 
 public class LoginActivity extends Activity {
+	public static final int RESULT_LOGIN_SUCCESSFUL = 200;
+	public static final String LOGIN_ACTIVITY_INTENT = "com.comapping.android.intent.LOGIN";
+
 	private LoginView loginView;
 
-	public static final int RESULT_LOGIN_SUCCESSFUL = 200;
-
-	// use server from MainController
+	// use server from MetaMapController
 	Client client = null;
 
 	private void saveLoginAndPassword() {
