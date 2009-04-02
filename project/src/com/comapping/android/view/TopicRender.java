@@ -3,7 +3,6 @@ package com.comapping.android.view;
 import com.comapping.android.model.Topic;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 public class TopicRender extends Render {
