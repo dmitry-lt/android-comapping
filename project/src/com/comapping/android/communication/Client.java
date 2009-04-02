@@ -155,9 +155,11 @@ public class Client {
 	 * @throws ConnectionException
 	 * @throws LoginInterruptedException
 	 */
-	public void logout(Activity context) throws ConnectionException, LoginInterruptedException {
-		loginRequired(context);
-
+	public void logout(Activity context) throws ConnectionException {
+		if (!isLoggedIn()) {
+			Log.i(Log.connectionTag, "logout without logn");
+		}
+		
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));

@@ -16,7 +16,9 @@ import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 import com.comapping.android.communication.Client;
+import com.comapping.android.communication.ConnectionException;
 import com.comapping.android.model.Map;
+import com.comapping.android.storage.Storage;
 import com.comapping.android.view.MetaMapView;
 
 public class MetaMapActivity extends Activity {
@@ -34,14 +36,30 @@ public class MetaMapActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		metaMapView = new MetaMapView(this);
-		metaMapView.load();
-
 		instance = this;
+		metaMapRefresh();
 
 		super.onCreate(savedInstanceState);
 	}
 
+	private void metaMapRefresh() {
+		metaMapView = new MetaMapView(this);
+		metaMapView.load();
+	}
+	
+	public void logout() {
+		Storage.getInstance().set("key", "");
+		try {
+			client.logout(this);
+		} catch (ConnectionException e) {
+			Log.e(Log.metaMapControllerTag, "connection exception in logout");
+		}
+		
+		metaMapRefresh();
+		
+		metaMapView.setMetaMapText("Logout successfull");
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
