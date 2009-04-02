@@ -15,16 +15,15 @@ public class TopicRender extends Render {
 	private TextRender textRender;
 	private Topic topic;
 	private int width, height;
+	private boolean selected;
 
 	public TopicRender(Topic topic) {
 		this.topic = topic;
 		textRender = new TextRender(topic.getFormattedText());
 		iconRender = new IconRender(topic);
 
-		height = Math.max(iconRender.getHeight(), textRender.getHeight()
-				+ BORDER_SIZE * 2);
-		width = iconRender.getWidth() + HORISONTAL_MERGING
-				+ textRender.getWidth() + BORDER_SIZE * 2;
+		height = Math.max(iconRender.getHeight(), textRender.getHeight() + BORDER_SIZE * 2);
+		width = iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth() + BORDER_SIZE * 2;
 	}
 
 	@Override
@@ -42,14 +41,21 @@ public class TopicRender extends Render {
 		x += HORISONTAL_MERGING;
 		p.setColor(topic.getBgColor());
 		p.setAlpha(255);
-		c.drawRect(x, y - textRender.getHeight() / 2 - BORDER_SIZE, x
-				+ textRender.getWidth() + BORDER_SIZE * 2, y
+		c.drawRect(x, y - textRender.getHeight() / 2 - BORDER_SIZE, x + textRender.getWidth() + BORDER_SIZE * 2, y
 				+ textRender.getHeight() / 2 + BORDER_SIZE, p);
 
 		x += BORDER_SIZE;
 
 		textRender.draw(x, y - textRender.getHeight() / 2, 0, 0, c);
 
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+	
+	public boolean isSelected() {
+		return selected;
 	}
 	
 	public int getLineOffset() {
