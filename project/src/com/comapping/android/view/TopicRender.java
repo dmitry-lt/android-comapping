@@ -51,6 +51,10 @@ public class TopicRender extends Render {
 		textRender.draw(x, y - textRender.getHeight() / 2, 0, 0, c);
 
 	}
+	
+	public int getLineOffset() {
+		return height;
+	}
 
 	@Override
 	public int getHeight() {
