@@ -1,6 +1,7 @@
 package com.comapping.android.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import android.graphics.Color;
@@ -14,7 +15,7 @@ import com.comapping.android.Log;
 public class Topic implements Iterable<Topic> {
 
 	private int id;
-	private String lastModificationDate;
+	private Date lastModificationDate;
 	private int bgColor = Color.WHITE;
 	private Flag flag;
 	private int priority;
@@ -68,11 +69,11 @@ public class Topic implements Iterable<Topic> {
 		this.formattedText = formattedText;
 	}
 
-	public String getLastModificationDate() {
+	public Date getLastModificationDate() {
 		return lastModificationDate;
 	}
 
-	public void setLastModificationDate(String lastModificationDate) {
+	public void setLastModificationDate(Date lastModificationDate) {
 		this.lastModificationDate = lastModificationDate;
 
 		Log.d(Log.modelTag, "set setLastModificationDate=\"" + lastModificationDate + "\" in " + this);

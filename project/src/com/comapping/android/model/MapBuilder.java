@@ -7,6 +7,8 @@
 package com.comapping.android.model;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -110,6 +112,10 @@ public class MapBuilder {
 			e.printStackTrace();
 			Log.e(Log.modelTag, e.toString());
 			throw new MapParsingException();
+		} catch (DateParsingException e) {
+			e.printStackTrace();
+			Log.e(Log.modelTag, e.toString());
+			throw new MapParsingException();
 		}
 
 		long parsingTime = System.currentTimeMillis() - startTime;
@@ -127,9 +133,10 @@ public class MapBuilder {
 	 * @throws ParseException
 	 * @throws EnumParsingException
 	 * @throws StringToXMLConvertionException
+	 * @throws DateParsingException 
 	 */
 	private static Topic buildTopic(Node node) throws MapParsingException, ParseException, EnumParsingException,
-			StringToXMLConvertionException {
+			StringToXMLConvertionException, DateParsingException {
 		NamedNodeMap attributes = node.getAttributes();
 
 		// Integer.parseInt(attributes.getNamedItem("id").getNodeValue());
@@ -148,7 +155,15 @@ public class MapBuilder {
 
 			} else if (curAttr.getNodeName().equals(TOPIC_LAST_MODIFICATION_DATE_TAG)) {
 				String strDate = curAttr.getNodeValue();
-				topic.setLastModificationDate(strDate);
+				SimpleDateFormat dateFormat = new SimpleDateFormat();
+				dateFormat.applyPattern("yyyy-MM-dd HH:mm:ss");
+				Date date = new Date();
+				try {
+					date = dateFormat.parse(strDate);
+				} catch (ParseException e) {
+					throw new DateParsingException();					
+				}
+				topic.setLastModificationDate(date);
 
 			} else if (curAttr.getNodeName().equals(TOPIC_BGCOLOR_TAG)) {
 				topic.setBgColor(Integer.parseInt(curAttr.getNodeValue()));
