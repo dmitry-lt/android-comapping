@@ -39,9 +39,23 @@ public class ExplorerRender extends Render {
 	private ArrayList<touchPoint> points = new ArrayList<touchPoint>();
 	private int xPlus, yPlus;
 	private int height, width;
+	private int screenWidth, screenHeight;
 
 	public ExplorerRender(Context context, Map map) {
 		this.map = map;
+	}
+
+	private boolean intersects(int a, int b, int c, int d) {
+		if (b < c)
+			return false;
+		if (d < a)
+			return false;
+		return true;
+	}
+
+	private boolean onScreen(int x1, int y1, int x2, int y2) {
+		return intersects(0, screenWidth, x1, x2)
+				&& intersects(0, screenHeight, y1, y2);
 	}
 
 	private int[] drawTopic(Topic topic, int x, int y, Canvas c) {
@@ -62,27 +76,35 @@ public class ExplorerRender extends Render {
 
 		x += OUTER_SIZE;
 		y += (height - topicRender.getHeight()) / 2;
-		topicRender.draw(x + X_SHIFT + BLOCK_SHIFT, y, 0, 0, c);
+		x += X_SHIFT + BLOCK_SHIFT;
+		if (onScreen(x, y, x + topicRender.getWidth(), y
+				+ topicRender.getHeight()))
+			topicRender.draw(x, y, 0, 0, c);
+		x -= X_SHIFT + BLOCK_SHIFT;
 
 		// draw circle and line
 		y = ret[1] + ret[2];
 		Paint p = new Paint();
 		p.setColor(Color.GRAY);
-		c.drawLine(x, y, x + X_SHIFT, y, p);
+		if (onScreen(x, y, x + X_SHIFT, y))
+			c.drawLine(x, y, x + X_SHIFT, y, p);
 		if (topic.getChildrenCount() > 0) {
 			if (open.get(topic.getId()) == null)
 				open.put(topic.getId(), true);
-			c.drawCircle(x, y, OUTER_SIZE, p);
-			p.setColor(Color.WHITE);
-			c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
-			p.setColor(Color.GRAY);
 			if (toUpdate)
 				points.add(new touchPoint(x - xPlus, y - yPlus, topic.getId()));
-			c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
-					+ PLUS_WIDTH, p);
-			if (!open.get(topic.getId()))
-				c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH, y
-						+ PLUS_LENGTH, p);
+			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y
+					+ OUTER_SIZE)) {
+				c.drawCircle(x, y, OUTER_SIZE, p);
+				p.setColor(Color.WHITE);
+				c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
+				p.setColor(Color.GRAY);
+				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
+						+ PLUS_WIDTH, p);
+				if (!open.get(topic.getId()))
+					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH,
+							y + PLUS_LENGTH, p);
+			}
 		}
 
 		// draw subtopics
@@ -92,20 +114,24 @@ public class ExplorerRender extends Render {
 			int py = y - ret[2];
 			p.setColor(Color.GRAY);
 			int[] temp;
-			for (int i = 0; i < topic.getChildrenCount(); i++) {
-				y += Y_SHIFT;
-				temp = drawTopic(topic.getChildByIndex(i), x - OUTER_SIZE, y, c);
+			if (y <= screenHeight) {
+				for (int i = 0; i < topic.getChildrenCount(); i++) {
+					y += Y_SHIFT;
+					temp = drawTopic(topic.getChildByIndex(i), x - OUTER_SIZE,
+							y, c);
 
-				int ny = y + temp[2];
-				if (topic.getChildByIndex(i).getChildrenCount() > 0)
-					ny -= OUTER_SIZE;
-				c.drawLine(x, py, x, ny, p);
-				py = y + temp[2];
-				if (topic.getChildByIndex(i).getChildrenCount() > 0)
-					py += OUTER_SIZE;
+					int ny = y + temp[2];
+					if (topic.getChildByIndex(i).getChildrenCount() > 0)
+						ny -= OUTER_SIZE;
+					if (onScreen(x, py, x, ny))
+						c.drawLine(x, py, x, ny, p);
+					py = y + temp[2];
+					if (topic.getChildByIndex(i).getChildrenCount() > 0)
+						py += OUTER_SIZE;
 
-				ret[0] = Math.max(ret[0], temp[0] - OUTER_SIZE);
-				y += temp[1];
+					ret[0] = Math.max(ret[0], temp[0] - OUTER_SIZE);
+					y += temp[1];
+				}
 			}
 		}
 
@@ -121,13 +147,14 @@ public class ExplorerRender extends Render {
 		y = -y;
 		xPlus = x;
 		yPlus = y;
+		screenWidth = width;
+		screenHeight = height;
 		if (toUpdate)
 			points.clear();
 		int[] temp = drawTopic(map.getRoot(), x, y, c);
 		this.width = temp[0];
 		this.height = temp[1];
 		toUpdate = false;
-
 	}
 
 	@Override

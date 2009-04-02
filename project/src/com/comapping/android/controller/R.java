@@ -21,9 +21,7 @@ public final class R {
         public static final int p3=0x7f020007;
         public static final int p4=0x7f020008;
         public static final int sad=0x7f020009;
-        public static final int smiley_furious=0x7f02000a;
-        public static final int smiley_sad=0x7f02000b;
-        public static final int to_do=0x7f02000c;
+        public static final int to_do=0x7f02000a;
     }
     public static final class id {
         public static final int CheckBox01=0x7f050009;
