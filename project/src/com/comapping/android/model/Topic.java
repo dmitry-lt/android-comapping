@@ -75,9 +75,9 @@ public class Topic implements Iterable<Topic> {
 	}
 
 	public void setLastModificationDate(Date lastModificationDate) {
-		this.lastModificationDate = lastModificationDate;
-
-		Log.d(Log.modelTag, "set setLastModificationDate=\"" + lastModificationDate + "\" in " + this);
+		//this.lastModificationDate = lastModificationDate;
+		
+		Log.d(Log.modelTag, "set LastModificationDate=\"" + lastModificationDate.toLocaleString() + "\" in " + this);
 	}
 
 	public int getBgColor() {
