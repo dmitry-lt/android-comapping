@@ -44,7 +44,7 @@ public class IconRender extends Render {
 				getBitmap(r.getDrawable(R.drawable.smiley_normal)), getBitmap(r.getDrawable(R.drawable.smiley_sad)),
 				getBitmap(r.getDrawable(R.drawable.smiley_furious)) };
 
-		taskCompletionIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.task_completion_0)),
+		taskCompletionIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.task_completion_todo)),
 				getBitmap(r.getDrawable(R.drawable.task_completion_25)),
 				getBitmap(r.getDrawable(R.drawable.task_completion_50)),
 				getBitmap(r.getDrawable(R.drawable.task_completion_75)),

@@ -42,12 +42,11 @@ public final class R {
         public static final int smiley_happy=0x7f02001c;
         public static final int smiley_normal=0x7f02001d;
         public static final int smiley_sad=0x7f02001e;
-        public static final int task_completion_0=0x7f02001f;
-        public static final int task_completion_25=0x7f020020;
-        public static final int task_completion_50=0x7f020021;
-        public static final int task_completion_75=0x7f020022;
-        public static final int task_completion_complete=0x7f020023;
-        public static final int task_completion_todo=0x7f020024;
+        public static final int task_completion_25=0x7f02001f;
+        public static final int task_completion_50=0x7f020020;
+        public static final int task_completion_75=0x7f020021;
+        public static final int task_completion_complete=0x7f020022;
+        public static final int task_completion_todo=0x7f020023;
     }
     public static final class id {
         public static final int CheckBox01=0x7f050009;
