@@ -37,17 +37,17 @@ public class LoginActivity extends Activity {
 	// dialog
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		DialogInterface.OnCancelListener autologinCancelled = new DialogInterface.OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				finishLoginAttempt("Autologin canceled", true);
-			}
-		};
+		// DialogInterface.OnCancelListener autologinCancelled = new
+		// DialogInterface.OnCancelListener() {
+		// @Override
+		// public void onCancel(DialogInterface dialog) {
+		// finishLoginAttempt("Autologin canceled", true);
+		// }
+		// };
 
 		switch (id) {
 		case AUTOLOGIN_ATTEMPT:
-			return new AlertDialog.Builder(this).setMessage(AUTOLOGIN_ATTEMPT_MESSAGE).setOnCancelListener(
-					autologinCancelled).create();
+			return new AlertDialog.Builder(this).setMessage(AUTOLOGIN_ATTEMPT_MESSAGE).create();
 		}
 
 		// default
