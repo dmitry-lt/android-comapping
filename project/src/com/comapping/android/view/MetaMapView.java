@@ -55,7 +55,7 @@ public class MetaMapView {
 		logout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// metaMapActivity.logout();
+				metaMapActivity.logout();
 			}
 		});
 	}
