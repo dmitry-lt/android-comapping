@@ -233,10 +233,10 @@ public class ComappingRender extends Render {
 		Resources resourceLib = context.getResources();
 
 		icons = new Bitmap[PRIORITY_COUND];
-		icons[0] = BitmapFactory.decodeResource(resourceLib, R.drawable.p1);
-		icons[1] = BitmapFactory.decodeResource(resourceLib, R.drawable.p2);
-		icons[2] = BitmapFactory.decodeResource(resourceLib, R.drawable.p3);
-		icons[3] = BitmapFactory.decodeResource(resourceLib, R.drawable.p4);
+		icons[0] = BitmapFactory.decodeResource(resourceLib, R.drawable.priority1);
+		icons[1] = BitmapFactory.decodeResource(resourceLib, R.drawable.priority2);
+		icons[2] = BitmapFactory.decodeResource(resourceLib, R.drawable.priority3);
+		icons[3] = BitmapFactory.decodeResource(resourceLib, R.drawable.priority4);
 
 	}
 

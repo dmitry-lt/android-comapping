@@ -7,6 +7,7 @@ public class Log {
 	public static final String modelTag = "Model";
 	public static final String metaMapControllerTag = "MetaMapController";
 	public static final String mapControllerTag = "MapController";
+	public static final String explorerRender = "ExplorerRender";
 
 	public static void v(String module, String msg) {
 		android.util.Log.v(applicationTag, module + ": " + msg);

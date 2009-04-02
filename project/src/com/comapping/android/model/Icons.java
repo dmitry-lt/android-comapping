@@ -1,6 +1,7 @@
 package com.comapping.android.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Icons {
 	private int mask;
@@ -23,7 +24,7 @@ public class Icons {
 		return Integer.bitCount(mask);
 	}
 
-	public ArrayList<Icon> getIcons() {
+	public List<Icon> getIcons() {
 		ArrayList<Icon> result = new ArrayList<Icon>();
 
 		for (Icon icon : Icon.values()) {

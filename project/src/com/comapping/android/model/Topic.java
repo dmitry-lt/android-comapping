@@ -3,6 +3,7 @@ package com.comapping.android.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import android.graphics.Color;
 
@@ -149,7 +150,7 @@ public class Topic implements Iterable<Topic> {
 		return icons.getCount();
 	}
 
-	public ArrayList<Icon> getIcons() {
+	public List<Icon> getIcons() {
 		return icons.getIcons();
 	}
 

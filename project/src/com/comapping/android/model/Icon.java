@@ -1,27 +1,27 @@
 package com.comapping.android.model;
 
 public enum Icon {
-	QUESTION, LOOK_HERE, CRITICAL, GOOD_YES, BAD_NO, CHECK, MONEY, HEART, TIME;
+	QUESTION_MARK, EXCLAMATION_MARK, BOMB, THUMBS_UP, THUMBS_DOWN, MAGNIFIER, DOLLAR, HEART, CLOCK;
 
 	public static Icon parse(String s) throws EnumParsingException {
 		if (s.equals("question_mark")) {
-			return Icon.QUESTION;
+			return Icon.QUESTION_MARK;
 		} else if (s.equals("exclamation_mark")) {
-			return Icon.LOOK_HERE;
+			return Icon.EXCLAMATION_MARK;
 		} else if (s.equals("bomb")) {
-			return Icon.CRITICAL;
+			return Icon.BOMB;
 		} else if (s.equals("thumbs_up")) {
-			return Icon.GOOD_YES;
+			return Icon.THUMBS_UP;
 		} else if (s.equals("thumbs_down")) {
-			return Icon.BAD_NO;
+			return Icon.THUMBS_DOWN;
 		} else if (s.equals("magnifier")) {
-			return Icon.CHECK;
+			return Icon.MAGNIFIER;
 		} else if (s.equals("dollar")) {
-			return Icon.MONEY;
+			return Icon.DOLLAR;
 		} else if (s.equals("heart")) {
 			return Icon.HEART;
 		} else if (s.equals("clock")) {
-			return Icon.TIME;
+			return Icon.CLOCK;
 		} else {
 			throw new EnumParsingException();
 		}
