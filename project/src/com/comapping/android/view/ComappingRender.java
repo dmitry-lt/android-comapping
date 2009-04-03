@@ -32,16 +32,14 @@ public class ComappingRender extends Render {
 		public Item parent = null;
 		public Topic topicData;
 
-		private static final int UNDERLINE_OFFSET = 3;
-
-		private static final int BORDER_SIZE = 8;
-
-		private static final int ROW_LENGTH = 30;
-
-		private static final int ICON_SIZE = 15;
-		private static final int ICON_BORDER = 4;
-
 		private boolean childsVisible = true;
+
+		private TopicRender render;
+
+		public Item(Topic topic) {
+			topicData = topic;
+			render = new TopicRender(topicData);
+		}
 
 		public void showChilds() {
 			childsVisible = true;
@@ -57,103 +55,21 @@ public class ComappingRender extends Render {
 			return childsVisible;
 		}
 
-		public String getRow(int id) {
-			String res = topicData.getText();
-			if (id < getRowCount()) {
-				return res.substring(id * ROW_LENGTH, Math.min(res.length(), (id + 1) * ROW_LENGTH));
-			} else
-				return "";
-		}
-
 		public void draw(int x, int y, Canvas c) {
 			int vertOffset = getOffset();
 
-			Paint p = new Paint();
-			p.setColor(Color.BLACK);
-
-			int underlineOffset = getUnderlineOffset();
-			// Draw underline
-			c.drawLine(x, y + underlineOffset, x + getWidth(), y + underlineOffset, p);
-
-			// Draw text
-			int linesCount = getRowCount();
-			int textVertOffset = 0;
-			for (int i = 0; i < linesCount; i++) {
-				String rowText = getRow(i);
-
-				Rect bounds = new Rect();
-				p.getTextBounds(rowText, 0, Math.min(rowText.length(), ROW_LENGTH), bounds);
-
-				c
-						.drawText(rowText, x + BORDER_SIZE, y + vertOffset + bounds.height() + BORDER_SIZE
-								+ textVertOffset, p);
-
-				textVertOffset += bounds.height();
-			}
-
-			// Draw priority icon
-			if (topicData.getPriority() != 0) {
-				c.drawBitmap(icons[topicData.getPriority() - 1],
-						x + getWidth() - BORDER_SIZE - ICON_BORDER - ICON_SIZE, y + getUnderlineOffset() - ICON_SIZE
-								- ICON_BORDER, new Paint());
-			}
+			render.draw(x, vertOffset + y, getWidth(), getHeight(), c);
+			c.drawLine(x, y + getUnderlineOffset(), x + getWidth(), y
+					+ getUnderlineOffset(), new Paint());
 
 		}
-
-		private int lazyRowCount = -1;
-
-		public int getRowCount() {
-			if (lazyRowCount == -1)
-				lazyRowCount = topicData.getText().length() / ROW_LENGTH + 1;
-			return lazyRowCount;
-		}
-
-		private int lazyWidth = -1;
 
 		public int getWidth() {
-			if (lazyWidth == -1) {
-				Paint p = new Paint();
-				Rect bounds = new Rect();
-
-				int linesCount = getRowCount();
-				int width = 0;
-				for (int i = 0; i < linesCount; i++) {
-					String rowText = getRow(i);
-					p.getTextBounds(rowText, 0, rowText.length(), bounds);
-					width = Math.max(width, bounds.width());
-					// width += bounds.width();
-				}
-
-				lazyWidth = width + BORDER_SIZE * 2;
-
-				if (topicData.getPriority() != 0) {
-					lazyWidth += ICON_SIZE + ICON_BORDER * 2;
-				}
-
-				if (childs.length > 0) {
-					lazyWidth += ICON_SIZE + ICON_BORDER * 2;
-				}
-			}
-			return lazyWidth;
+			return render.getWidth();
 		}
 
-		private int lazyHeight = -1;
-
 		public int getHeight() {
-			if (lazyWidth == -1) {
-				Paint p = new Paint();
-				Rect bounds = new Rect();
-				int linesCount = getRowCount();
-				int height = 0;
-				for (int i = 0; i < linesCount; i++) {
-					String rowText = getRow(i);
-					p.getTextBounds(rowText, 0, rowText.length(), bounds);
-
-					height += bounds.height();
-				}
-				lazyHeight = height + UNDERLINE_OFFSET + BORDER_SIZE * 2;
-			}
-			return lazyHeight;
+			return render.getHeight();
 		}
 
 		private int lazyOffset = -1;
@@ -166,13 +82,8 @@ public class ComappingRender extends Render {
 			return lazyOffset;
 		}
 
-		private int lazyUnderlineOffset = -1;
-
 		public int getUnderlineOffset() {
-			if (lazyUnderlineOffset == -1)
-				lazyUnderlineOffset = getHeight() + getOffset() - BORDER_SIZE;
-
-			return lazyUnderlineOffset;
+			return getOffset() + render.getLineOffset();
 		}
 
 		private int lazySubtreeHeight = -1;
@@ -207,11 +118,7 @@ public class ComappingRender extends Render {
 			if (parent != null)
 				parent.clearLazyBuffers();
 
-			lazyRowCount = -1;
-			lazyWidth = -1;
-			lazyHeight = -1;
 			lazyOffset = -1;
-			lazyUnderlineOffset = -1;
 			lazySubtreeHeight = -1;
 			lazySubtreeWidth = -1;
 		}
@@ -233,20 +140,21 @@ public class ComappingRender extends Render {
 		Resources resourceLib = context.getResources();
 
 		icons = new Bitmap[PRIORITY_COUND];
-		icons[0] = BitmapFactory.decodeResource(resourceLib, R.drawable.priority1);
-		icons[1] = BitmapFactory.decodeResource(resourceLib, R.drawable.priority2);
-		icons[2] = BitmapFactory.decodeResource(resourceLib, R.drawable.priority3);
-		icons[3] = BitmapFactory.decodeResource(resourceLib, R.drawable.priority4);
+		icons[0] = BitmapFactory.decodeResource(resourceLib,
+				R.drawable.priority1);
+		icons[1] = BitmapFactory.decodeResource(resourceLib,
+				R.drawable.priority2);
+		icons[2] = BitmapFactory.decodeResource(resourceLib,
+				R.drawable.priority3);
+		icons[3] = BitmapFactory.decodeResource(resourceLib,
+				R.drawable.priority4);
 
 	}
 
 	private Item buildTree(Topic itm, Item parent) {
-		Item res = new Item();
+		Item res = new Item(itm);
 		res.childs = new Item[itm.getChildrenCount()];
-		res.topicData = itm;
 		res.parent = parent;
-		if (parent != null)
-			res.hideChilds();
 
 		int index = 0;
 		for (Topic i : itm) {
@@ -278,8 +186,9 @@ public class ComappingRender extends Render {
 				vertOffset -= last.getSubtreeHeight();
 
 				// Connecting childs
-				c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset(), baseX + dataLen, baseY + vertOffset
-						+ last.getUnderlineOffset(), p);
+				c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset(),
+						baseX + dataLen, baseY + vertOffset
+								+ last.getUnderlineOffset(), p);
 
 			}
 		}
@@ -310,7 +219,8 @@ public class ComappingRender extends Render {
 		int xStart = baseX;
 		int xEnd = xStart + itm.getWidth();
 
-		if ((destX > xStart) & (destX < xEnd) & (destY > yStart) & (destY < yEnd)) {
+		if ((destX > xStart) & (destX < xEnd) & (destY > yStart)
+				& (destY < yEnd)) {
 			if (itm.isChildsVisible())
 				itm.hideChilds();
 			else
@@ -323,7 +233,8 @@ public class ComappingRender extends Render {
 
 			int vertOffset = 0;
 			for (Item i : itm.childs) {
-				if (onTouch(baseX + dataLen, baseY + vertOffset, i, destX, destY))
+				if (onTouch(baseX + dataLen, baseY + vertOffset, i, destX,
+						destY))
 					return true;
 
 				vertOffset += i.getSubtreeHeight();
