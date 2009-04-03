@@ -69,44 +69,52 @@ public class MainMapView extends View {
 			oldY = (int) ev.getY();
 			startX = oldX;
 			startY = oldY;
-			
+
 			touchStartTime = System.currentTimeMillis();
 			return true;
 		}
 		case MotionEvent.ACTION_MOVE: {
-			mVelocityTracker.addMovement(ev);
+			long timeDelta = System.currentTimeMillis() - touchStartTime;
+			int pathLen = (startX - (int) ev.getX())
+					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
+					* (startY - (int) ev.getY());
 
-			int deltaX = (int) (oldX - ev.getX());
-			int deltaY = (int) (oldY - ev.getY());
-			oldX = (int) ev.getX();
-			oldY = (int) ev.getY();
+			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
+				mVelocityTracker.addMovement(ev);
 
-			if (mScroller.getCurrX() + deltaX > getScrollWidth())
-				deltaX = getScrollWidth() - mScroller.getCurrX();
-			if (mScroller.getCurrY() + deltaY > getScrollHeight())
-				deltaY = getScrollHeight() - mScroller.getCurrY();
+				int deltaX = (int) (oldX - ev.getX());
+				int deltaY = (int) (oldY - ev.getY());
+				oldX = (int) ev.getX();
+				oldY = (int) ev.getY();
 
-			if (mScroller.getCurrX() + deltaX < 0)
-				deltaX = -mScroller.getCurrX();
-			if (mScroller.getCurrY() + deltaY < 0)
-				deltaY = -mScroller.getCurrY();
+				if (mScroller.getCurrX() + deltaX > getScrollWidth())
+					deltaX = getScrollWidth() - mScroller.getCurrX();
+				if (mScroller.getCurrY() + deltaY > getScrollHeight())
+					deltaY = getScrollHeight() - mScroller.getCurrY();
 
-			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
-					deltaX, deltaY, 0);
+				if (mScroller.getCurrX() + deltaX < 0)
+					deltaX = -mScroller.getCurrX();
+				if (mScroller.getCurrY() + deltaY < 0)
+					deltaY = -mScroller.getCurrY();
+
+				mScroller.startScroll(mScroller.getCurrX(), mScroller
+						.getCurrY(), deltaX, deltaY, 0);
+			}
 			return true;
 		}
 		case MotionEvent.ACTION_UP: {
-			long timeDelta =  System.currentTimeMillis() - touchStartTime;
-			int pathLen = (startX - (int) ev.getX())*(startX - (int) ev.getX()) +
-					(startY - (int) ev.getY())*(startY - (int) ev.getY());
-			
-			Log.i("Test", "Time:" +  timeDelta + " Path len:" + pathLen);
-			if ((timeDelta < TAP_MAX_TIME)&&(pathLen < BLOCK_PATH_LEN )) {
-				mRender.onTouch((int) ev.getX(), (int) ev.getY()
-						- getVertOffset());
+			long timeDelta = System.currentTimeMillis() - touchStartTime;
+			int pathLen = (startX - (int) ev.getX())
+					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
+					* (startY - (int) ev.getY());
+
+			Log.i("Test", "Time:" + timeDelta + " Path len:" + pathLen);
+			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
+				mRender.onTouch((int) ev.getX() + mScroller.getCurrX(),
+						(int) ev.getY() + mScroller.getCurrY()
+								- getVertOffset());
 				Log.i("Test", "Touch!");
-			} else
-			{
+			} else {
 				Log.i("Test", "Scroll!");
 				mVelocityTracker.addMovement(ev);
 
