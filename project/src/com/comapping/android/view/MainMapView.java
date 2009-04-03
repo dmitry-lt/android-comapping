@@ -31,8 +31,9 @@ public class MainMapView extends View {
 		Paint p = new Paint();
 		canvas.drawARGB(255, 255, 255, 255);
 
-		mRender.draw(mScroller.getCurrX(), mScroller.getCurrY(), this
-				.getWidth(), this.getHeight(), canvas);
+		mRender.draw(mScroller.getCurrX(), -getVertOffset()
+				+ mScroller.getCurrY(), this.getWidth(), this.getHeight(),
+				canvas);
 
 		p.setColor(Color.BLACK);
 		canvas.drawText("FPS: " + fps, 20, 30, p);
@@ -73,12 +74,12 @@ public class MainMapView extends View {
 			int deltaY = (int) (oldY - ev.getY());
 			oldX = (int) ev.getX();
 			oldY = (int) ev.getY();
-			
+
 			if (mScroller.getCurrX() + deltaX > getScrollWidth())
 				deltaX = getScrollWidth() - mScroller.getCurrX();
 			if (mScroller.getCurrY() + deltaY > getScrollHeight())
 				deltaY = getScrollHeight() - mScroller.getCurrY();
-			
+
 			if (mScroller.getCurrX() + deltaX < 0)
 				deltaX = -mScroller.getCurrX();
 			if (mScroller.getCurrY() + deltaY < 0)
@@ -90,7 +91,8 @@ public class MainMapView extends View {
 		}
 		case MotionEvent.ACTION_UP: {
 			if (System.currentTimeMillis() - touchStartTime < TAP_MAX_TIME) {
-				mRender.onTouch((int)ev.getX(), (int)ev.getY());
+				mRender.onTouch((int) ev.getX(), (int) ev.getY()
+						- getVertOffset());
 			} else {
 				mVelocityTracker.addMovement(ev);
 
@@ -102,9 +104,8 @@ public class MainMapView extends View {
 				vx = vx * 3 / 4;
 				vy = vy * 3 / 4;
 
-				mScroller
-						.fling(mScroller.getCurrX(), mScroller.getCurrY(), -vx,
-								-vy, 0, getScrollWidth(), 0, getScrollHeight());
+				mScroller.fling(mScroller.getCurrX(), mScroller.getCurrY(),
+						-vx, -vy, 0, getScrollWidth(), 0, getScrollHeight());
 
 				mVelocityTracker.recycle();
 
@@ -115,13 +116,19 @@ public class MainMapView extends View {
 		}
 		return true;
 	}
-	
-	private final int getScrollWidth()
-	{
+
+	private final int getVertOffset() {
+		if (mRender.getHeight() >= this.getHeight())
+			return 0;
+		else
+			return (this.getHeight() - mRender.getHeight()) / 2;
+	}
+
+	private final int getScrollWidth() {
 		return mRender.getWidth() - this.getWidth();
 	}
-	private final int getScrollHeight()
-	{
-		return mRender.getHeight() - this.getHeight();
+
+	private final int getScrollHeight() {
+		return mRender.getHeight() - this.getHeight() - getVertOffset();
 	}
 }
