@@ -54,6 +54,7 @@ public class MainMapView extends View {
 	int oldX = -1, oldY = -1;
 	int startX = -1, startY = -1;
 	long touchStartTime = 0;
+	boolean fixedScroll = true;
 
 	private static final long TAP_MAX_TIME = 100;
 	private static final long BLOCK_PATH_LEN = 1000;
@@ -71,15 +72,20 @@ public class MainMapView extends View {
 			startY = oldY;
 
 			touchStartTime = System.currentTimeMillis();
+			fixedScroll = true;
 			return true;
 		}
 		case MotionEvent.ACTION_MOVE: {
-			long timeDelta = System.currentTimeMillis() - touchStartTime;
 			int pathLen = (startX - (int) ev.getX())
 					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
 					* (startY - (int) ev.getY());
+			long timeDelta = System.currentTimeMillis() - touchStartTime;
 
-			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
+			if ((timeDelta >= TAP_MAX_TIME) || (pathLen >= BLOCK_PATH_LEN))
+				fixedScroll = false;
+			
+			if (!fixedScroll)
+			{
 				mVelocityTracker.addMovement(ev);
 
 				int deltaX = (int) (oldX - ev.getX());
