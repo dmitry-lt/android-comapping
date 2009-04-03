@@ -21,13 +21,8 @@ import android.graphics.Rect;
 
 public class ComappingRender extends Render {
 
-	// Metod is public because it MUST be removed to
-	// MapView or to MapActivity.
-	// if it would be private member then javac will generate
-	// getter and setter for it. It's not good ;)
-	public static Bitmap[] icons;
-
 	private class Item {
+		private static final int BORDER_SIZE = 10;
 		public Item[] childs;
 		public Item parent = null;
 		public Topic topicData;
@@ -58,7 +53,7 @@ public class ComappingRender extends Render {
 		public void draw(int x, int y, Canvas c) {
 			int vertOffset = getOffset();
 
-			render.draw(x, vertOffset + y, getWidth(), getHeight(), c);
+			render.draw(x, vertOffset + y, render.getWidth(), render.getHeight(), c);
 			c.drawLine(x, y + getUnderlineOffset(), x + getWidth(), y
 					+ getUnderlineOffset(), new Paint());
 
@@ -69,7 +64,7 @@ public class ComappingRender extends Render {
 		}
 
 		public int getHeight() {
-			return render.getHeight();
+			return render.getHeight() + BORDER_SIZE;
 		}
 
 		private int lazyOffset = -1;
@@ -124,31 +119,10 @@ public class ComappingRender extends Render {
 		}
 	}
 
-	public static final int FONT_SIZE_LAYER1 = 20;
-	public static final int FONT_SIZE_LAYER2 = 20;
-	public static final int FONT_SIZE_LAYER3 = 20;
-
-	public static final int FONT_SIZE_LAYERX = 10;
-	public static final int MAX_TEXT_LEN_IN_ROW = 10;
-
-	public static final int PRIORITY_COUND = 4;
 	Item root;
 
 	public ComappingRender(Context context, Topic map) {
 		root = buildTree(map, null);
-
-		Resources resourceLib = context.getResources();
-
-		icons = new Bitmap[PRIORITY_COUND];
-		icons[0] = BitmapFactory.decodeResource(resourceLib,
-				R.drawable.priority1);
-		icons[1] = BitmapFactory.decodeResource(resourceLib,
-				R.drawable.priority2);
-		icons[2] = BitmapFactory.decodeResource(resourceLib,
-				R.drawable.priority3);
-		icons[3] = BitmapFactory.decodeResource(resourceLib,
-				R.drawable.priority4);
-
 	}
 
 	private Item buildTree(Topic itm, Item parent) {
@@ -189,6 +163,10 @@ public class ComappingRender extends Render {
 				c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset(),
 						baseX + dataLen, baseY + vertOffset
 								+ last.getUnderlineOffset(), p);
+				
+				//Connecting base and first
+				c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset(),
+						baseX + dataLen, baseY + itm.getUnderlineOffset(), p);
 
 			}
 		}
