@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -51,9 +52,11 @@ public class MainMapView extends View {
 
 	VelocityTracker mVelocityTracker;
 	int oldX = -1, oldY = -1;
+	int startX = -1, startY = -1;
 	long touchStartTime = 0;
 
-	private static final long TAP_MAX_TIME = 300;
+	private static final long TAP_MAX_TIME = 100;
+	private static final long BLOCK_PATH_LEN = 1000;
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
@@ -64,6 +67,9 @@ public class MainMapView extends View {
 			mVelocityTracker = VelocityTracker.obtain();
 			oldX = (int) ev.getX();
 			oldY = (int) ev.getY();
+			startX = oldX;
+			startY = oldY;
+			
 			touchStartTime = System.currentTimeMillis();
 			return true;
 		}
@@ -90,10 +96,18 @@ public class MainMapView extends View {
 			return true;
 		}
 		case MotionEvent.ACTION_UP: {
-			if (System.currentTimeMillis() - touchStartTime < TAP_MAX_TIME) {
+			long timeDelta =  System.currentTimeMillis() - touchStartTime;
+			int pathLen = (startX - (int) ev.getX())*(startX - (int) ev.getX()) +
+					(startY - (int) ev.getY())*(startY - (int) ev.getY());
+			
+			Log.i("Test", "Time:" +  timeDelta + " Path len:" + pathLen);
+			if ((timeDelta < TAP_MAX_TIME)&&(pathLen < BLOCK_PATH_LEN )) {
 				mRender.onTouch((int) ev.getX(), (int) ev.getY()
 						- getVertOffset());
-			} else {
+				Log.i("Test", "Touch!");
+			} else
+			{
+				Log.i("Test", "Scroll!");
 				mVelocityTracker.addMovement(ev);
 
 				mVelocityTracker.computeCurrentVelocity(1000);
