@@ -33,14 +33,17 @@ import com.comapping.android.Options;
 import com.comapping.android.controller.LoginActivity;
 
 public class Client {
-	final static private char SALT_FLAG = '#';
+	// constants
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
 	final static private String COOKIE_LOGIN_METHOD = "flashCookie";
 	final static private String WITH_SALT_LOGIN_METHOD = "withSalt";
+	
 	final static private int SLEEP_TIME = 100;
-
 	final static public int LOGIN_REQUEST_CODE = 438134;
 
+	final static private char SALT_FLAG = '#';
+
+	// private variables
 	private String clientId = null;
 
 	private String email = null;
@@ -275,10 +278,12 @@ public class Client {
 	}
 
 	private boolean checkClientId(String clientId) {
+		// length > 0 ?
 		if (clientId.length() == 0) {
 			return false;
 		}
 
+		// only letters or digits in clientId ?
 		for (int i = 0; i < clientId.length(); i++) {
 			if (!Character.isLetterOrDigit(clientId.charAt(i))) {
 				return false;
@@ -293,7 +298,6 @@ public class Client {
 			if (checkClientId(clientId)) {
 				this.clientId = clientId;
 				Log.i(Log.connectionTag, email + " logged in!");
-				// code here
 			}
 		} else {
 			this.clientId = null;

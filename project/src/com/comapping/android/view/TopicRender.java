@@ -53,7 +53,7 @@ public class TopicRender extends Render {
 			width = 0;
 		}
 
-		Log.d(Log.topicRender, "created " + this);
+		Log.d(Log.topicRenderTag, "created " + this);
 	}
 
 	@Override

@@ -11,11 +11,10 @@ package com.comapping.android.controller;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.CheckBox;
 
+import com.comapping.android.Log;
 import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
 import com.comapping.android.communication.LoginInterruptedException;
@@ -23,12 +22,18 @@ import com.comapping.android.storage.Storage;
 import com.comapping.android.view.LoginView;
 
 public class LoginActivity extends Activity {
-	public static final int RESULT_LOGIN_SUCCESSFUL = 200;
-	public static final int AUTOLOGIN_ATTEMPT = 3542352;
+	private static final int RESULT_LOGIN_SUCCESSFUL = 200;
+	private static final int AUTOLOGIN_ATTEMPT_DIALOG = 3542352;
 
-	public static final String AUTOLOGIN_ATTEMPT_MESSAGE = "Autologin attempt...";
 	public static final String LOGIN_ACTIVITY_INTENT = "com.comapping.android.intent.LOGIN";
 
+	// messages
+	private static final String AUTOLOGIN_ATTEMPT_MESSAGE = "Autologin attempt...";
+	private static final String AUTOLOGIN_ATTEMPT_FAILED_MESSAGE = "Autologin attempt failed";
+	private static final String CONNECTION_ERROR_MESSAGE = "Connection error";
+	private static final String LOADING_MESSAGE = "Loading...";
+	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "Email or password is incorrect";
+	
 	private LoginView loginView;
 
 	// use server from MetaMapController
@@ -46,7 +51,7 @@ public class LoginActivity extends Activity {
 		// };
 
 		switch (id) {
-		case AUTOLOGIN_ATTEMPT:
+		case AUTOLOGIN_ATTEMPT_DIALOG:
 			return new AlertDialog.Builder(this).setMessage(AUTOLOGIN_ATTEMPT_MESSAGE).create();
 		}
 
@@ -59,7 +64,7 @@ public class LoginActivity extends Activity {
 			Storage.instance.set("email", client.getEmail(this));
 			Storage.instance.set("key", client.getAutoLoginKey(this));
 		} catch (LoginInterruptedException e) {
-			Log.e("Login", "User not logged in");
+			Log.e(Log.loginTag, "login interrupted");
 		}
 	}
 
@@ -85,18 +90,22 @@ public class LoginActivity extends Activity {
 	}
 
 	public void loginClick(final String email, final String password) {
-		loginView.setErrorText("Loading ...");
+		loginView.setErrorText(LOADING_MESSAGE);
 
 		new Thread() {
 			public void run() {
+				String errorMsg = EMAIL_OR_PASSWORD_INCORRECT_MESSAGE;
+				
 				try {
 					client.login(email, password);
 				} catch (ConnectionException e) {
-					Log.e("Comapping", "Login: connection exception");
+					Log.e(Log.loginTag, "connection exception");
+					errorMsg = CONNECTION_ERROR_MESSAGE;
 				}
+				
 				CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
 
-				finishLoginAttempt("Email or password is incorrect", remember.isChecked());
+				finishLoginAttempt(errorMsg, remember.isChecked());
 			}
 		}.start();
 	}
@@ -109,20 +118,25 @@ public class LoginActivity extends Activity {
 		loginView.load();
 
 		if (!Storage.getInstance().get("key").equals("")) {
-			// autologin attemption
+			// autologin attempt
 			loginView.setEmailText(Storage.getInstance().get("email"));
 			loginView.setPasswordText("******");
 
-			showDialog(AUTOLOGIN_ATTEMPT);
+			showDialog(AUTOLOGIN_ATTEMPT_DIALOG);
 
 			new Thread() {
 				public void run() {
+					String errorMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
+					
 					try {
 						client.autoLogin(Storage.instance.get("email"), Storage.instance.get("key"));
 					} catch (ConnectionException e) {
-						Log.e("Comapping", "Login: connection exception");
+						Log.e(Log.loginTag, "connection exception");
+						errorMsg = CONNECTION_ERROR_MESSAGE;
 					}
-					finishLoginAttempt("Autologin attempt failed", true);
+					
+					finishLoginAttempt(errorMsg, true);
+					removeDialog(AUTOLOGIN_ATTEMPT_DIALOG);
 				}
 			}.start();
 		} else {
