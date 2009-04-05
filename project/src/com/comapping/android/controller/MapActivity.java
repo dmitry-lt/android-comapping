@@ -1,12 +1,15 @@
 package com.comapping.android.controller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.comapping.android.Cache;
 import com.comapping.android.Log;
+import com.comapping.android.Options;
 import com.comapping.android.ViewType;
+import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
 import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.model.Map;
@@ -85,5 +88,17 @@ public class MapActivity extends Activity {
 		if (view != null) {
 			this.setContentView(view);
 		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
+				|| (resultCode == Options.RESULT_CHAIN_CLOSE)) {
+			setResult(Options.RESULT_CHAIN_CLOSE);
+			Log.i(Log.mapControllerTag, "finish");
+			finish();
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 }

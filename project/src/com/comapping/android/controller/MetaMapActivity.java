@@ -46,7 +46,7 @@ public class MetaMapActivity extends Activity {
 		metaMapView = new MetaMapView(this);
 		metaMapView.load();
 	}
-	
+
 	public void logout() {
 		Storage.getInstance().set("key", "");
 		try {
@@ -54,12 +54,12 @@ public class MetaMapActivity extends Activity {
 		} catch (ConnectionException e) {
 			Log.e(Log.metaMapControllerTag, "connection exception in logout");
 		}
-		
+
 		metaMapRefresh();
-		
+
 		metaMapView.setMetaMapText("Logout successfull");
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))

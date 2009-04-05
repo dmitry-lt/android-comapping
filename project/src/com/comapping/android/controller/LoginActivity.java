@@ -33,7 +33,7 @@ public class LoginActivity extends Activity {
 	private static final String CONNECTION_ERROR_MESSAGE = "Connection error";
 	private static final String LOADING_MESSAGE = "Loading...";
 	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "Email or password is incorrect";
-	
+
 	private LoginView loginView;
 
 	// use server from MetaMapController
@@ -95,14 +95,16 @@ public class LoginActivity extends Activity {
 		new Thread() {
 			public void run() {
 				String errorMsg = EMAIL_OR_PASSWORD_INCORRECT_MESSAGE;
-				
+
 				try {
 					client.login(email, password);
 				} catch (ConnectionException e) {
 					Log.e(Log.loginTag, "connection exception");
 					errorMsg = CONNECTION_ERROR_MESSAGE;
+				} catch (LoginInterruptedException e) {
+					Log.e(Log.loginTag, "login interrupted");
 				}
-				
+
 				CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
 
 				finishLoginAttempt(errorMsg, remember.isChecked());
@@ -127,14 +129,16 @@ public class LoginActivity extends Activity {
 			new Thread() {
 				public void run() {
 					String errorMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
-					
+
 					try {
 						client.autoLogin(Storage.instance.get("email"), Storage.instance.get("key"));
 					} catch (ConnectionException e) {
 						Log.e(Log.loginTag, "connection exception");
 						errorMsg = CONNECTION_ERROR_MESSAGE;
+					} catch (LoginInterruptedException e) {
+						Log.e(Log.loginTag, "login interrupted");
 					}
-					
+
 					finishLoginAttempt(errorMsg, true);
 					removeDialog(AUTOLOGIN_ATTEMPT_DIALOG);
 				}

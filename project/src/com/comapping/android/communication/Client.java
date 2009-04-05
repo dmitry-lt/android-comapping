@@ -37,7 +37,7 @@ public class Client {
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
 	final static private String COOKIE_LOGIN_METHOD = "flashCookie";
 	final static private String WITH_SALT_LOGIN_METHOD = "withSalt";
-	
+
 	final static private int SLEEP_TIME = 100;
 	final static public int LOGIN_REQUEST_CODE = 438134;
 
@@ -58,8 +58,9 @@ public class Client {
 	 * @param email
 	 * @param password
 	 * @throws ConnectionException
+	 * @throws LoginInterruptedException
 	 */
-	public void login(String email, String password) throws ConnectionException {
+	public void login(String email, String password) throws ConnectionException, LoginInterruptedException {
 		// if you try to log in, previous user logged out
 		setClientId(null);
 
@@ -98,8 +99,9 @@ public class Client {
 	 * @param key
 	 *            AutoLogin key
 	 * @throws ConnectionException
+	 * @throws LoginInterruptedException
 	 */
-	public void autoLogin(String email, String key) throws ConnectionException {
+	public void autoLogin(String email, String key) throws ConnectionException, LoginInterruptedException {
 		autoLoginKey = key;
 
 		if ((key.length() > 0) && (key.charAt(0) == SALT_FLAG)) {
@@ -156,20 +158,23 @@ public class Client {
 	 * Method for both client and server side logout
 	 * 
 	 * @throws ConnectionException
-	 * @throws LoginInterruptedException
 	 */
 	public void logout(Activity context) throws ConnectionException {
 		if (!isLoggedIn()) {
 			Log.i(Log.connectionTag, "logout without logn");
 		}
-		
+
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "notifier_logout"));
 		data.add(new BasicNameValuePair("clientId", clientId));
 
 		clientSideLogout();
-
-		requestToServer(data);
+		
+		try {
+			requestToServer(data);
+		} catch (LoginInterruptedException e) {
+			Log.e(Log.connectionTag, "login interrupted in logout");
+		}
 	}
 
 	/**
@@ -224,7 +229,7 @@ public class Client {
 		return response;
 	}
 
-	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException {
+	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException, LoginInterruptedException {
 		Log.d(Log.connectionTag, "request to server " + Arrays.toString(data.toArray()));
 
 		if (Options.FAKE_SERVER) {
@@ -262,10 +267,15 @@ public class Client {
 		Log.i(Log.connectionTag, "response from server: " + responseText);
 		Log.d(Log.connectionTag, "response status code: " + responseStatus);
 
+		if (loginInterrupted) {
+			throw new LoginInterruptedException();
+		}
+
 		return responseText;
 	}
 
-	private String loginRequest(String email, String password, String loginMethod) throws ConnectionException {
+	private String loginRequest(String email, String password, String loginMethod) throws ConnectionException,
+			LoginInterruptedException {
 		this.email = email;
 
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
