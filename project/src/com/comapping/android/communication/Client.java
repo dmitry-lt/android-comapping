@@ -18,9 +18,9 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -236,7 +236,13 @@ public class Client {
 			return fakeRequestToServer(data);
 		}
 
-		HttpClient client = new DefaultHttpClient();
+		DefaultHttpClient client = new DefaultHttpClient();
+		
+		// add proxy if needed
+		if (Options.USE_PROXY) {
+			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, Options.PROXY_HOST);
+		}
+		
 		HttpPost post = new HttpPost(Options.SERVER);
 
 		UrlEncodedFormEntity entity = null;
