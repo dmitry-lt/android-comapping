@@ -1,52 +1,94 @@
 package com.comapping.android.view;
 
+import com.comapping.android.Log;
 import com.comapping.android.model.Topic;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 
 public class TopicRender extends Render {
 
 	private static final int HORISONTAL_MERGING = 5;
-	private static final int BORDER_SIZE = 4;
+
+	private boolean isEmpty;
 
 	private IconRender iconRender;
 	private TextRender textRender;
+	private TaskRender taskRender;
+	private NoteRender noteRender;
+
 	private Topic topic;
 	private int width, height;
+	private int lineOffset;
 	private boolean selected;
 
 	public TopicRender(Topic topic) {
-		this.topic = topic;
-		textRender = new TextRender(topic.getFormattedText());
-		iconRender = new IconRender(topic);
+		if (topic != null) {
+			isEmpty = false;
+		} else {
+			isEmpty = true;
+		}
 
-		height = Math.max(iconRender.getHeight(), textRender.getHeight() + BORDER_SIZE * 2);
-		width = iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth() + BORDER_SIZE * 2;
+		if (!isEmpty) {
+			this.topic = topic;
+			textRender = new TextRender(topic.getFormattedText());
+			iconRender = new IconRender(topic);
+			taskRender = new TaskRender(topic.getTask());
+			noteRender = new NoteRender(topic.getNote());
+
+			lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
+
+			height = Math.max(iconRender.getHeight(), textRender.getHeight()) + taskRender.getHeight()
+					+ noteRender.getHeight();
+			width = Math.max(iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth(), Math.max(taskRender
+					.getWidth(), noteRender.getWidth()));
+			taskRender.setWidth(width);
+		} else {
+			height = 0;
+			width = 0;
+		}
+
+		Log.d(Log.topicRender, "created " + this);
 	}
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
+		if (!isEmpty) {
+			Paint p = new Paint();
+			int curX = x, curY = y;
 
-		Paint p = new Paint();
+			curY += this.getLineOffset() / 2;
 
-		y += this.height / 2;
+			// draw icons
+			iconRender.draw(curX, curY - iconRender.getHeight() / 2, 0, 0, c);
+			curX += iconRender.getWidth();
 
-		// draw icons
-		iconRender.draw(x, y - iconRender.getHeight() / 2, 0, 0, c);
-		x += iconRender.getWidth();
+			// draw text
+			curX += HORISONTAL_MERGING;
+			p.setColor(topic.getBgColor());
+			p.setAlpha(255);
+			c.drawRect(curX, curY - textRender.getHeight() / 2, curX + textRender.getWidth(), curY
+					+ textRender.getHeight() / 2, p);
 
-		// draw text
-		x += HORISONTAL_MERGING;
-		p.setColor(topic.getBgColor());
-		p.setAlpha(255);
-		c.drawRect(x, y - textRender.getHeight() / 2 - BORDER_SIZE, x + textRender.getWidth() + BORDER_SIZE * 2, y
-				+ textRender.getHeight() / 2 + BORDER_SIZE, p);
+			textRender.draw(curX, curY - textRender.getHeight() / 2, 0, 0, c);
 
-		x += BORDER_SIZE;
+			// draw task
+			curX = x;
+			curY = y + this.getLineOffset();
+			taskRender.draw(curX, curY, width, height, c);
 
-		textRender.draw(x, y - textRender.getHeight() / 2, 0, 0, c);
+			// draw note
+			curX = x;
+			curY += taskRender.getHeight();
+			noteRender.draw(curX, curY, width, height, c);
 
+//			p.setColor(Color.RED);
+//			c.drawLine(x, y, x + getWidth(), y, p);
+//			c.drawLine(x, y + getHeight(), x + getWidth(), y + getHeight(), p);
+		} else {
+			// nothing to draw
+		}
 	}
 
 	public void setSelected(boolean selected) {
@@ -58,7 +100,17 @@ public class TopicRender extends Render {
 	}
 
 	public int getLineOffset() {
-		return height;
+		return lineOffset;
+	}
+
+	@Override
+	public String toString() {
+		if (!isEmpty) {
+			return "[TopicRender: width=" + getWidth() + " height=" + getHeight() + "\n" + iconRender + "\n"
+					+ textRender + "\n" + taskRender + "\n" + noteRender + "]";
+		} else {
+			return "[TopicRender: EMPTY]";
+		}
 	}
 
 	@Override

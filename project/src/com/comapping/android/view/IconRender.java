@@ -15,6 +15,9 @@ public class IconRender extends Render {
 	private static final int ICON_SIZE = 36;
 	private static final int HORISONTAL_MERGING = 5;
 
+	private Topic topic;
+	private int width, height;
+	
 	private static boolean iconsLoaded = false;
 
 	private static Bitmap[] priorityIcons;
@@ -22,7 +25,7 @@ public class IconRender extends Render {
 	private static Bitmap[] taskCompletionIcons;
 	private static Bitmap[] flagIcons;
 	private static Bitmap[] icons;
-
+	
 	private static Bitmap getBitmap(Drawable image) {
 		Bitmap bitmap = Bitmap.createBitmap(ICON_SIZE, ICON_SIZE, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
@@ -62,10 +65,7 @@ public class IconRender extends Render {
 				getBitmap(r.getDrawable(R.drawable.icon_thumbs_down)),
 				getBitmap(r.getDrawable(R.drawable.icon_magnifier)), getBitmap(r.getDrawable(R.drawable.icon_dollar)),
 				getBitmap(r.getDrawable(R.drawable.icon_heart)), getBitmap(r.getDrawable(R.drawable.icon_clock)) };
-	}
-
-	private int width, height;
-	private Topic topic;
+	}	
 
 	public IconRender(Topic topic) {
 		if (!iconsLoaded) {
@@ -126,6 +126,11 @@ public class IconRender extends Render {
 			c.drawBitmap(icons[icon.ordinal()], x, y, null);
 			x += ICON_SIZE + HORISONTAL_MERGING;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "[IconRender: width=" + getWidth() + " height=" + getHeight() + "]";
 	}
 
 	@Override

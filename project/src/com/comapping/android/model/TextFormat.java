@@ -1,11 +1,13 @@
 package com.comapping.android.model;
 
+import android.graphics.Color;
+
 public class TextFormat implements Cloneable {
 
-	private int fontSize;
-	private int fontColor;
-	private String hRef;
-	private boolean underlined;
+	private int fontSize = 16;
+	private int fontColor = Color.BLACK;
+	private String hRef = "";
+	private boolean underlined = false;
 
 	public int getFontSize() {
 		return fontSize;

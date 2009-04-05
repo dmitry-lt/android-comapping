@@ -18,12 +18,7 @@ public class FormattedText {
 
 	public FormattedText(List<TextParagraph> textParagraphs) {
 		this.textParagraphs = textParagraphs;
-
-		StringBuilder text = new StringBuilder();
-		for (TextParagraph cur : textParagraphs) {
-			text.append(cur.getSimpleText());
-		}
-		this.simpleText = text.toString();
+		update();
 	}
 
 	public String getSimpleText() {
@@ -32,5 +27,18 @@ public class FormattedText {
 
 	public List<TextParagraph> getTextParagraphs() {
 		return textParagraphs;
+	}
+	
+	public void add(TextParagraph paragraph) {
+		textParagraphs.add(paragraph);
+		update();
+	}
+	
+	private void update() {
+		StringBuilder text = new StringBuilder();
+		for (TextParagraph cur : textParagraphs) {
+			text.append(cur.getSimpleText());
+		}
+		this.simpleText = text.toString();
 	}
 }

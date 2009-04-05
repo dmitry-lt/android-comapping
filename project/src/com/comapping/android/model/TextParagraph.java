@@ -1,5 +1,6 @@
 package com.comapping.android.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TextParagraph {
@@ -7,15 +8,14 @@ public class TextParagraph {
 	private int maxFontSize;
 	private String simpleText;
 
+	public TextParagraph(String text, TextFormat format) {		
+		this.textBlocks = new ArrayList<TextBlock>();
+		add(new TextBlock(text, format));
+	}
+	
 	public TextParagraph(List<TextBlock> textBlocks) {
 		this.textBlocks = textBlocks;
-
-		StringBuilder text = new StringBuilder();
-		for (TextBlock cur : textBlocks) {
-			maxFontSize = Math.max(maxFontSize, cur.getFormat().getFontSize());
-			text.append(cur.getText());
-		}
-		this.simpleText = text.toString();
+		update();
 	}
 
 	public int getMaxFontSize() {
@@ -25,8 +25,22 @@ public class TextParagraph {
 	public String getSimpleText() {
 		return simpleText;
 	}
-
+	
 	public List<TextBlock> getTextBlocks() {
 		return textBlocks;
+	}
+
+	public void add(TextBlock block) {
+		textBlocks.add(block);
+		update();
+	}
+	
+	private void update() {
+		StringBuilder text = new StringBuilder();
+		for (TextBlock cur : textBlocks) {
+			maxFontSize = Math.max(maxFontSize, cur.getFormat().getFontSize());
+			text.append(cur.getText());
+		}
+		this.simpleText = text.toString();
 	}
 }

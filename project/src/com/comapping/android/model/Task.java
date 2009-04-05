@@ -5,8 +5,8 @@ public class Task {
 	private String responsible;
 
 	public Task(String deadline, String responsible) {
-		this.deadline = deadline;
-		this.responsible = responsible;
+		setDeadline(deadline);
+		setResponsible(responsible);
 	}
 
 	public String getDeadline() {
@@ -14,7 +14,7 @@ public class Task {
 	}
 
 	public void setDeadline(String deadline) {
-		this.deadline = deadline;
+		this.deadline = (deadline != null) ? deadline : "";
 	}
 
 	public String getResponsible() {
@@ -22,7 +22,7 @@ public class Task {
 	}
 
 	public void setResponsible(String responsible) {
-		this.responsible = responsible;
+		this.responsible = (responsible != null) ? responsible : "";
 	}
 
 	@Override

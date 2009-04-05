@@ -4,8 +4,8 @@ public class TextBlock {
 	private String text;
 	private TextFormat format;
 
-	public TextBlock(String text, TextFormat format) {
-		setText(text);
+	public TextBlock(String text, TextFormat format) {		
+		setText(text);		
 		setFormat(format);
 	}
 
@@ -14,11 +14,11 @@ public class TextBlock {
 	}
 
 	public void setText(String text) {
-		this.text = text;
+		this.text = (text != null) ? text : "";
 	}
 
 	public void setFormat(TextFormat format) {
-		this.format = format;
+		this.format = (format != null) ? format : new TextFormat();
 	}
 
 	public TextFormat getFormat() {

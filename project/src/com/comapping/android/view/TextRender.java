@@ -6,24 +6,33 @@ import com.comapping.android.model.TextParagraph;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 
 public class TextRender extends Render {
 
-	private int HORISONTAL_MERGING = 3;
-	private int VERTICAL_MERGING = 3;
+	private static final int HORISONTAL_MERGING = 3;
+	private static final int VERTICAL_MERGING = 3;
+	private static final int BORDER = 4;
 
-	private int width;
-	private int height;
+	private boolean isEmpty;
+
 	private FormattedText text;
+	private int width, height;
 	private int[] parsHeight;
 
 	public TextRender(FormattedText text) {
-		this.text = text;
+		if (text != null && !text.getSimpleText().equals("")) {
+			isEmpty = false;
+		} else {
+			isEmpty = true;
+		}
 
 		// calculate sizes
-		parsHeight = new int[text.getTextParagraphs().size()];
-		if (text.getTextParagraphs().size() > 0) {
+		if (!isEmpty) {
+			this.text = text;
+
+			parsHeight = new int[text.getTextParagraphs().size()];
 			Paint p = new Paint();
 			Rect r = new Rect();
 			for (int i = 0; i < text.getTextParagraphs().size(); i++) {
@@ -47,6 +56,9 @@ public class TextRender extends Render {
 				height += parHeight;
 			}
 			height += VERTICAL_MERGING * (text.getTextParagraphs().size() - 1);
+
+			width += BORDER * 2;
+			height += BORDER * 2;
 		} else {
 			width = 0;
 			height = 0;
@@ -56,7 +68,10 @@ public class TextRender extends Render {
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		if (text.getTextParagraphs().size() > 0) {
+		if (!isEmpty) {
+			x += BORDER;
+			y += BORDER;
+
 			Paint p = new Paint();
 			Rect r = new Rect();
 			int curY = y;
@@ -66,10 +81,11 @@ public class TextRender extends Render {
 				curY += parsHeight[i];
 				for (TextBlock block : paragraph.getTextBlocks()) {
 					p.setTextSize(block.getFormat().getFontSize());
-					p.setColor(block.getFormat().getFontColor());
+					p.setColor(block.getFormat().getFontColor());					
+					p.setAntiAlias(true);  					
 					c.drawText(block.getText(), curX, curY, p);
 					p.getTextBounds(block.getText(), 0, block.getText().length(), r);
-
+					
 					// p.setColor(Color.BLACK);
 					// c.drawLine(curX, curY - parsHeight[i], curX + r.width(),
 					// curY - parsHeight[i], p);
@@ -80,6 +96,20 @@ public class TextRender extends Render {
 			}
 		} else {
 			// nothing to draw
+		}
+	}
+
+	public String getText() {
+		return (text != null) ? text.getSimpleText() : "";
+	}
+
+	@Override
+	public String toString() {
+		if (!isEmpty) {
+			return "[TextRender: width=" + getWidth() + " height=" + getHeight() + " text=" + text.getSimpleText()
+					+ "]";
+		} else {
+			return "[TextRender: EMPTY]";
 		}
 	}
 

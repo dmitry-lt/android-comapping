@@ -8,6 +8,7 @@ public class Log {
 	public static final String metaMapControllerTag = "MetaMapController";
 	public static final String mapControllerTag = "MapController";
 	public static final String explorerRender = "ExplorerRender";
+	public static final String topicRender = "TopicRender";
 
 	public static void v(String module, String msg) {
 		android.util.Log.v(applicationTag, module + ": " + msg);
