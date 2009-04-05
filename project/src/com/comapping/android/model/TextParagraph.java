@@ -8,11 +8,11 @@ public class TextParagraph {
 	private int maxFontSize;
 	private String simpleText;
 
-	public TextParagraph(String text, TextFormat format) {		
+	public TextParagraph(String text, TextFormat format) {
 		this.textBlocks = new ArrayList<TextBlock>();
 		add(new TextBlock(text, format));
 	}
-	
+
 	public TextParagraph(List<TextBlock> textBlocks) {
 		this.textBlocks = textBlocks;
 		update();
@@ -25,7 +25,7 @@ public class TextParagraph {
 	public String getSimpleText() {
 		return simpleText;
 	}
-	
+
 	public List<TextBlock> getTextBlocks() {
 		return textBlocks;
 	}
@@ -34,7 +34,7 @@ public class TextParagraph {
 		textBlocks.add(block);
 		update();
 	}
-	
+
 	private void update() {
 		StringBuilder text = new StringBuilder();
 		for (TextBlock cur : textBlocks) {

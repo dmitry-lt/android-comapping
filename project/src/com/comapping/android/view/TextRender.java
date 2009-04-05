@@ -6,7 +6,6 @@ import com.comapping.android.model.TextParagraph;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 
 public class TextRender extends Render {
@@ -81,11 +80,11 @@ public class TextRender extends Render {
 				curY += parsHeight[i];
 				for (TextBlock block : paragraph.getTextBlocks()) {
 					p.setTextSize(block.getFormat().getFontSize());
-					p.setColor(block.getFormat().getFontColor());					
-					p.setAntiAlias(true);  					
+					p.setColor(block.getFormat().getFontColor());
+					p.setAntiAlias(true);
 					c.drawText(block.getText(), curX, curY, p);
 					p.getTextBounds(block.getText(), 0, block.getText().length(), r);
-					
+
 					// p.setColor(Color.BLACK);
 					// c.drawLine(curX, curY - parsHeight[i], curX + r.width(),
 					// curY - parsHeight[i], p);

@@ -6,10 +6,14 @@ import com.comapping.android.model.Topic;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Paint.Style;
 
 public class TopicRender extends Render {
 
 	private static final int HORISONTAL_MERGING = 5;
+	private static final int SELECTION_COLOR = Color.argb(255, 127, 191, 255);
+	private static final int SELECTION_WIDTH = 3;
 
 	private boolean isEmpty;
 
@@ -83,9 +87,16 @@ public class TopicRender extends Render {
 			curY += taskRender.getHeight();
 			noteRender.draw(curX, curY, width, height, c);
 
-//			p.setColor(Color.RED);
-//			c.drawLine(x, y, x + getWidth(), y, p);
-//			c.drawLine(x, y + getHeight(), x + getWidth(), y + getHeight(), p);
+			// draw selection
+			if (isSelected()) {
+				p.setColor(SELECTION_COLOR);
+				p.setAlpha(255);
+				p.setAntiAlias(true);
+				p.setStyle(Style.STROKE);
+				p.setStrokeWidth(SELECTION_WIDTH);
+				c.drawRoundRect(new RectF(x, y, x + getWidth(), y + getHeight()), 4, 4, p);
+			}
+
 		} else {
 			// nothing to draw
 		}

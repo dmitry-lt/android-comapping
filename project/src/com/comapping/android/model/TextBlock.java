@@ -4,8 +4,8 @@ public class TextBlock {
 	private String text;
 	private TextFormat format;
 
-	public TextBlock(String text, TextFormat format) {		
-		setText(text);		
+	public TextBlock(String text, TextFormat format) {
+		setText(text);
 		setFormat(format);
 	}
 
