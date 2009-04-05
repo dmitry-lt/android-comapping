@@ -31,6 +31,8 @@ public class Topic implements Iterable<Topic> {
 	private String note;
 	private Task task;
 
+	private boolean isFolder;
+
 	Topic() {
 	}
 
@@ -47,6 +49,14 @@ public class Topic implements Iterable<Topic> {
 
 	public int getId() {
 		return id;
+	}
+
+	public boolean isFolder() {
+		return isFolder;
+	}
+
+	public void setFolder(boolean isFolder) {
+		this.isFolder = isFolder;
 	}
 
 	public void setText(String text) throws StringToXMLConvertionException {
@@ -75,8 +85,8 @@ public class Topic implements Iterable<Topic> {
 	}
 
 	public void setLastModificationDate(Date lastModificationDate) {
-		//this.lastModificationDate = lastModificationDate;
-		
+		// this.lastModificationDate = lastModificationDate;
+
 		Log.d(Log.modelTag, "set LastModificationDate=\"" + lastModificationDate.toLocaleString() + "\" in " + this);
 	}
 

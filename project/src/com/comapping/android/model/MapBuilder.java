@@ -44,6 +44,8 @@ public class MapBuilder {
 	private static final String TASK_DEADLINE_TAG = "deadline";
 	private static final String TASK_RESPONSIBLE_TAG = "responsible";
 
+	private static final String TOPIC_FOLDER_TAG = "isFolder";
+
 	/**
 	 * Method that builds Map from comap XML file.
 	 * 
@@ -133,7 +135,7 @@ public class MapBuilder {
 	 * @throws ParseException
 	 * @throws EnumParsingException
 	 * @throws StringToXMLConvertionException
-	 * @throws DateParsingException 
+	 * @throws DateParsingException
 	 */
 	private static Topic buildTopic(Node node) throws MapParsingException, ParseException, EnumParsingException,
 			StringToXMLConvertionException, DateParsingException {
@@ -161,7 +163,7 @@ public class MapBuilder {
 				try {
 					date = dateFormat.parse(strDate);
 				} catch (ParseException e) {
-					throw new DateParsingException();					
+					throw new DateParsingException();
 				}
 				topic.setLastModificationDate(date);
 
@@ -182,6 +184,9 @@ public class MapBuilder {
 			} else if (curAttr.getNodeName().equals(TOPIC_TASK_COMPLETION_TAG)) {
 				String strTaskCompletion = curAttr.getNodeValue();
 				topic.setTaskCompletion(TaskCompletion.parse(strTaskCompletion));
+			} else if (curAttr.getNodeName().equals(TOPIC_FOLDER_TAG)) {
+				String strIsFolder = curAttr.getNodeValue();
+				topic.setFolder(strIsFolder.equals("t"));
 			}
 		}
 
