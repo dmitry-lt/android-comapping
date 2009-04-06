@@ -43,6 +43,11 @@ public class MapBuilder {
 	private static final String TOPIC_TASK_TAG = "task";
 	private static final String TASK_DEADLINE_TAG = "deadline";
 	private static final String TASK_RESPONSIBLE_TAG = "responsible";
+	private static final String TOPIC_ATTACHMENT_TAG = "attachment";
+	private static final String ATTACHMENT_DATE_TAG = "date";
+	private static final String ATTACHMENT_FILENAME_TAG = "filename";
+	private static final String ATTACHMENT_KEY_TAG = "key";
+	private static final String ATTACHMENT_SIZE_TAG = "size";
 
 	private static final String TOPIC_FOLDER_TAG = "isFolder";
 
@@ -218,6 +223,14 @@ public class MapBuilder {
 				String responsible = childNode.getAttributes().getNamedItem(TASK_RESPONSIBLE_TAG).getNodeValue();
 				Task task = new Task(deadline, responsible);
 				topic.setTask(task);
+				
+			} else if (childNode.getNodeName().equals(TOPIC_ATTACHMENT_TAG)) {
+				float fDate = Float.parseFloat(childNode.getAttributes().getNamedItem(ATTACHMENT_DATE_TAG).getNodeValue());
+				String filename = childNode.getAttributes().getNamedItem(ATTACHMENT_FILENAME_TAG).getNodeValue();
+				String key = childNode.getAttributes().getNamedItem(ATTACHMENT_KEY_TAG).getNodeValue();
+				int size = Integer.parseInt(childNode.getAttributes().getNamedItem(ATTACHMENT_SIZE_TAG).getNodeValue());
+				Attachment attachment = new Attachment(new Date(), filename, key, size);
+				topic.setAttachment(attachment);
 			}
 		}
 

@@ -32,6 +32,7 @@ public class Topic implements Iterable<Topic> {
 	private Icons icons = new Icons();
 	private String note;
 	private Task task;
+	private Attachment attachment;
 
 	private boolean isFolder;
 
@@ -191,6 +192,16 @@ public class Topic implements Iterable<Topic> {
 		this.task = task;
 
 		Log.d(Log.modelTag, "set task=\"" + task + "\" in " + this);
+	}
+
+	public void setAttachment(Attachment attachment) {
+		this.attachment = attachment;
+		
+		Log.d(Log.modelTag, "set attachment=" + attachment + " in " + this);
+	}
+
+	public Attachment getAttachment() {
+		return attachment;
 	}
 
 	public int getChildrenCount() {
