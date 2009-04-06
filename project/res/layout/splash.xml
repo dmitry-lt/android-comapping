@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/Loading" android:textSize="50px" android:layout_gravity="center" android:text="Loading..."></TextView>
+
+
+<RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/splashRelativeLayout" android:layout_gravity="center"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/comappingHeaderTextView" android:text="Comapping" android:textSize="50px"></TextView>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/loadingTextView" android:layout_below="@+id/comappingHeaderTextView" android:textSize="20px" android:layout_centerInParent="true" android:text="Loading....."></TextView>
+</RelativeLayout>

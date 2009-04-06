@@ -143,8 +143,8 @@ public class MapBuilder {
 	 * @throws StringToXMLConvertionException
 	 * @throws DateParsingException
 	 */
-	private static Topic buildTopic(Node node, Topic parent) throws MapParsingException, ParseException, EnumParsingException,
-			StringToXMLConvertionException, DateParsingException {
+	private static Topic buildTopic(Node node, Topic parent) throws MapParsingException, ParseException,
+			EnumParsingException, StringToXMLConvertionException, DateParsingException {
 		NamedNodeMap attributes = node.getAttributes();
 
 		// Integer.parseInt(attributes.getNamedItem("id").getNodeValue());
@@ -223,9 +223,10 @@ public class MapBuilder {
 				String responsible = childNode.getAttributes().getNamedItem(TASK_RESPONSIBLE_TAG).getNodeValue();
 				Task task = new Task(deadline, responsible);
 				topic.setTask(task);
-				
+
 			} else if (childNode.getNodeName().equals(TOPIC_ATTACHMENT_TAG)) {
-				float fDate = Float.parseFloat(childNode.getAttributes().getNamedItem(ATTACHMENT_DATE_TAG).getNodeValue());
+				float fDate = Float.parseFloat(childNode.getAttributes().getNamedItem(ATTACHMENT_DATE_TAG)
+						.getNodeValue());
 				String filename = childNode.getAttributes().getNamedItem(ATTACHMENT_FILENAME_TAG).getNodeValue();
 				String key = childNode.getAttributes().getNamedItem(ATTACHMENT_KEY_TAG).getNodeValue();
 				int size = Integer.parseInt(childNode.getAttributes().getNamedItem(ATTACHMENT_SIZE_TAG).getNodeValue());

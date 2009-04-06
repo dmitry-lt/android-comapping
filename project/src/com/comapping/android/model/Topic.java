@@ -17,7 +17,7 @@ public class Topic implements Iterable<Topic> {
 
 	private int id;
 	private Topic parent;
-	
+
 	private Date lastModificationDate;
 	private int bgColor = Color.WHITE;
 	private Flag flag;
@@ -42,7 +42,7 @@ public class Topic implements Iterable<Topic> {
 
 	public Topic(int id, Topic parent) {
 		this(parent);
-		
+
 		this.id = id;
 		this.text = "";
 
@@ -57,16 +57,24 @@ public class Topic implements Iterable<Topic> {
 		return id;
 	}
 
+	public boolean isRoot() {
+		return parent == null;
+	}
+
 	public Topic getParent() {
 		return parent;
 	}
-	
+
 	public String getMapRef() {
 		return mapRef;
 	}
 
 	public void setMapRef(String mapRef) {
 		this.mapRef = mapRef;
+	}
+
+	public boolean isFolder() {
+		return (mapRef == null);
 	}
 
 	public void setText(String text) throws StringToXMLConvertionException {
@@ -196,7 +204,7 @@ public class Topic implements Iterable<Topic> {
 
 	public void setAttachment(Attachment attachment) {
 		this.attachment = attachment;
-		
+
 		Log.d(Log.modelTag, "set attachment=" + attachment + " in " + this);
 	}
 

@@ -140,7 +140,10 @@ public class LoginActivity extends Activity {
 					}
 
 					finishLoginAttempt(errorMsg, true);
-					removeDialog(AUTOLOGIN_ATTEMPT_DIALOG);
+
+					if (!client.isLoggedIn()) {
+						removeDialog(AUTOLOGIN_ATTEMPT_DIALOG);
+					}
 				}
 			}.start();
 		} else {

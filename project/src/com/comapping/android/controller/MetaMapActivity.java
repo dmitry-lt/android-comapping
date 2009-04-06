@@ -17,7 +17,11 @@ import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
+import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.model.Map;
+import com.comapping.android.model.MapBuilder;
+import com.comapping.android.model.MapParsingException;
+import com.comapping.android.model.StringToXMLConvertionException;
 import com.comapping.android.storage.Storage;
 import com.comapping.android.view.MetaMapView;
 
@@ -36,15 +40,50 @@ public class MetaMapActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
 		instance = this;
 		metaMapRefresh();
-
-		super.onCreate(savedInstanceState);
 	}
 
 	private void metaMapRefresh() {
 		metaMapView = new MetaMapView(this);
-		metaMapView.load();
+
+		metaMapView.splash();
+
+		final Activity context = this;
+
+		new Thread() {
+			public void run() {
+				String result = "";
+
+				try {
+					result = client.getComap("meta", context);
+				} catch (ConnectionException e) {
+					Log.e(Log.metaMapControllerTag, "connection error in metamap retrieving");
+				} catch (LoginInterruptedException e) {
+					Log.e(Log.metaMapControllerTag, "login interrupted in metamap retrieving");
+				}
+
+				Map metaMap = null;
+				try {
+					metaMap = MapBuilder.buildMap(result);
+				} catch (StringToXMLConvertionException e) {
+					Log.e(Log.metaMapControllerTag, "xml convertion exception");
+				} catch (MapParsingException e) {
+					Log.e(Log.metaMapControllerTag, "map parsing exception");
+				}
+
+				final Map finalMetaMap = metaMap;
+
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						metaMapView.load(finalMetaMap);
+					}
+				});
+			}
+		}.start();
 	}
 
 	public void logout() {
@@ -56,25 +95,21 @@ public class MetaMapActivity extends Activity {
 		}
 
 		metaMapRefresh();
-
-		metaMapView.setMetaMapText("Logout successfull");
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
 		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
 				|| (resultCode == Options.RESULT_CHAIN_CLOSE)) {
 			setResult(Options.RESULT_CHAIN_CLOSE);
 			Log.i(Log.metaMapControllerTag, "finish");
 			finish();
 		}
-
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public void loadMap(final String mapId, final ViewType viewType) {
-		metaMapView.setMetaMapText("Loading #" + mapId + " map ... ");
-
 		Intent intent = new Intent(MapActivity.MAP_ACTIVITY_INTENT);
 		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());

@@ -321,6 +321,8 @@ public class Client {
 	}
 
 	private void loginRequired(Activity context) throws LoginInterruptedException {
+		Log.d(Log.connectionTag, "login required action with login status: "+isLoggedIn());
+		
 		if (!isLoggedIn()) {
 			loginInterrupted = false;
 			context.startActivityForResult(new Intent(LoginActivity.LOGIN_ACTIVITY_INTENT), LOGIN_REQUEST_CODE);
