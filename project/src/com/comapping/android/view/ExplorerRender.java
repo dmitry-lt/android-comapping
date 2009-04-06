@@ -220,7 +220,8 @@ public class ExplorerRender extends Render {
 		for (TouchPoint point : points) {
 			Log.d(Log.explorerRenderTag, "Point : " + point.x + " " + point.y
 					+ " " + point.index);
-			if (Math.hypot(point.x + xPlus - x, point.y + yPlus - y) <= OUTER_SIZE) {
+			//Changed by Korshakov Stepan
+			if (Math.hypot(point.x - x, point.y - y) <= OUTER_SIZE) {
 				int index = point.index;
 				Log.d(Log.explorerRenderTag, "Touch : " + index);
 				open.set(index, !open.get(index));
