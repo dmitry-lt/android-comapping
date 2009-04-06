@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -115,7 +116,8 @@ public class MainMapView extends View {
 
 			Log.i("Test", "Time:" + timeDelta + " Path len:" + pathLen);
 			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
-				mRender.onTouch((int) ev.getX(), (int) ev.getY());
+				mRender.onTouch(mScroller.getCurrX() + (int) ev.getX(), 
+						mScroller.getCurrY() + (int) ev.getY());
 				Log.i("Test", "Touch!");
 			} else {
 				Log.i("Test", "Scroll!");
