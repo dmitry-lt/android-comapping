@@ -117,7 +117,7 @@ public class MainMapView extends View {
 			Log.i("Test", "Time:" + timeDelta + " Path len:" + pathLen);
 			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
 				mRender.onTouch(mScroller.getCurrX() + (int) ev.getX(), 
-						mScroller.getCurrY() + (int) ev.getY());
+						mScroller.getCurrY() + (int) ev.getY() - getVertOffset());
 				Log.i("Test", "Touch!");
 			} else {
 				Log.i("Test", "Scroll!");
@@ -145,10 +145,11 @@ public class MainMapView extends View {
 	}
 
 	private final int getVertOffset() {
-		if (mRender.getHeight() >= this.getHeight())
-			return 0;
-		else
-			return (this.getHeight() - mRender.getHeight()) / 2;
+		return 0;
+//		if (mRender.getHeight() >= this.getHeight())
+//			return 0;
+//		else
+//			return (this.getHeight() - mRender.getHeight()) / 2;
 	}
 
 	private final int getScrollWidth() {
