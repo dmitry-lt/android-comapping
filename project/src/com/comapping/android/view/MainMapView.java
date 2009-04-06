@@ -56,7 +56,7 @@ public class MainMapView extends View {
 	long touchStartTime = 0;
 	boolean fixedScroll = true;
 
-	private static final long TAP_MAX_TIME = 100;
+	private static final long TAP_MAX_TIME = 500;
 	private static final long BLOCK_PATH_LEN = 1000;
 
 	@Override
@@ -83,9 +83,8 @@ public class MainMapView extends View {
 
 			if ((timeDelta >= TAP_MAX_TIME) || (pathLen >= BLOCK_PATH_LEN))
 				fixedScroll = false;
-			
-			if (!fixedScroll)
-			{
+
+			if (!fixedScroll) {
 				mVelocityTracker.addMovement(ev);
 
 				int deltaX = (int) (oldX - ev.getX());
@@ -116,9 +115,7 @@ public class MainMapView extends View {
 
 			Log.i("Test", "Time:" + timeDelta + " Path len:" + pathLen);
 			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
-				mRender.onTouch((int) ev.getX() + mScroller.getCurrX(),
-						(int) ev.getY() + mScroller.getCurrY()
-								- getVertOffset());
+				mRender.onTouch((int) ev.getX(), (int) ev.getY());
 				Log.i("Test", "Touch!");
 			} else {
 				Log.i("Test", "Scroll!");

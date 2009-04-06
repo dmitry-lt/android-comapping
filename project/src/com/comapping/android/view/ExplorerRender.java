@@ -1,10 +1,10 @@
 package com.comapping.android.view;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
+import com.comapping.android.Log;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,13 +14,13 @@ import android.graphics.Rect;
 
 public class ExplorerRender extends Render {
 
-	private class touchPoint {
-		public int x, y, id;
+	private class TouchPoint {
+		public int x, y, index;
 
-		public touchPoint(int x, int y, int id) {
+		public TouchPoint(int x, int y, int index) {
 			this.x = x;
 			this.y = y;
-			this.id = id;
+			this.index = index;
 		}
 	}
 
@@ -31,22 +31,28 @@ public class ExplorerRender extends Render {
 	private static final int PLUS_LENGTH = 7;
 	private static final int PLUS_WIDTH = 2;
 	private static final int BLOCK_SHIFT = 5;
+	private static final int FAKE_X = 100000000;
 
 	private Map map;
-	private HashMap<Integer, Boolean> open = new HashMap<Integer, Boolean>();
-	private HashMap<Integer, TopicRender> topicRenders = new HashMap<Integer, TopicRender>();
-
 	private boolean toUpdate = true;
-	private ArrayList<touchPoint> points = new ArrayList<touchPoint>();
-	private HashMap<Integer, Integer> topicX = new HashMap<Integer, Integer>();
-	private HashMap<Integer, Integer> topicY = new HashMap<Integer, Integer>();
+
+	private int size;
+	private ArrayList<Boolean> open = new ArrayList<Boolean>();
+	private ArrayList<TopicRender> topicRenders = new ArrayList<TopicRender>();
+	private ArrayList<Integer> topicX = new ArrayList<Integer>();
+	private ArrayList<Integer> topicY = new ArrayList<Integer>();
+	private ArrayList<ArrayList<Integer>> childs = new ArrayList<ArrayList<Integer>>();
+
+	private ArrayList<TouchPoint> points = new ArrayList<TouchPoint>();
 	private ArrayList<Rect> lines = new ArrayList<Rect>();
+
 	private int xPlus, yPlus;
 	private int height, width;
 	private int screenWidth, screenHeight;
 
 	public ExplorerRender(Context context, Map map) {
 		this.map = map;
+		initTopic(map.getRoot());
 	}
 
 	private boolean intersects(int a, int b, int c, int d) {
@@ -62,6 +68,20 @@ public class ExplorerRender extends Render {
 				&& intersects(0, screenHeight, y1, y2);
 	}
 
+	private int initTopic(Topic topic) {
+		open.add(true);
+		topicRenders.add(new TopicRender(topic));
+		topicX.add(0);
+		topicY.add(0);
+		childs.add(new ArrayList<Integer>());
+		int cur = size++;
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		for (int i = 0; i < topic.getChildrenCount(); i++)
+			temp.add(initTopic(topic.getChildByIndex(i)));
+		childs.set(cur, temp);
+		return cur;
+	}
+
 	private void drawTopics(Canvas c) {
 		Paint p = new Paint();
 
@@ -72,32 +92,37 @@ public class ExplorerRender extends Render {
 			int y1 = line.top + yPlus;
 			int x2 = line.right + xPlus;
 			int y2 = line.bottom + yPlus;
-			if (onScreen(x1, y1, x2, y2))
+			if (onScreen(x1, y1, x2, y2)) {
 				c.drawLine(x1, y1, x2, y2, p);
+			}
 		}
 
-		for (touchPoint point : points) {
-			// draw circles
+		// draw circles
+		for (TouchPoint point : points) {
 			int x = point.x + xPlus;
 			int y = point.y + yPlus;
-			int id = point.id;
-			if (open.get(id) != null
-					&& onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE,
-							y + OUTER_SIZE)) {
+			int index = point.index;
+			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y
+					+ OUTER_SIZE)) {
 				c.drawCircle(x, y, OUTER_SIZE, p);
 				p.setColor(Color.WHITE);
 				c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
 				p.setColor(Color.GRAY);
 				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
 						+ PLUS_WIDTH, p);
-				if (!open.get(id))
+				if (!open.get(index))
 					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH,
 							y + PLUS_LENGTH, p);
 			}
-			// draw topics
-			x = topicX.get(id) + xPlus;
-			y = topicY.get(id) + yPlus;
-			TopicRender topicRender = topicRenders.get(id);
+		}
+
+		// draw topics
+		for (int i = 0; i < size; i++) {
+			int x = topicX.get(i) + xPlus;
+			if (x == FAKE_X + xPlus)
+				continue;
+			int y = topicY.get(i) + yPlus;
+			TopicRender topicRender = topicRenders.get(i);
 			if (onScreen(x, y, x + topicRender.getWidth(), y
 					+ topicRender.getHeight()))
 				topicRender.draw(x, y, 0, 0, c);
@@ -105,14 +130,8 @@ public class ExplorerRender extends Render {
 
 	}
 
-	private int[] updateTopic(Topic topic, int x, int y) {
-		if (topic == null) {
-			return new int[3];
-		}
-
-		if (topicRenders.get(topic.getId()) == null)
-			topicRenders.put(topic.getId(), new TopicRender(topic));
-		TopicRender topicRender = topicRenders.get(topic.getId());
+	private int[] updateTopic(Topic topic, int index, int x, int y) {
+		TopicRender topicRender = topicRenders.get(index);
 		int height = topicRender.getHeight();
 		if (topic.getChildrenCount() > 0)
 			height = Math.max(height, OUTER_SIZE * 2);
@@ -124,28 +143,27 @@ public class ExplorerRender extends Render {
 		x += OUTER_SIZE;
 		y += (height - topicRender.getHeight()) / 2;
 		x += X_SHIFT + BLOCK_SHIFT;
-		topicX.put(topic.getId(), x);
-		topicY.put(topic.getId(), y);
+		topicX.set(index, x);
+		topicY.set(index, y);
 		x -= X_SHIFT + BLOCK_SHIFT;
 
 		// update circle and line
 		y = ret[1] + ret[2];
 		lines.add(new Rect(x, y, x + X_SHIFT, y));
 		if (topic.getChildrenCount() > 0) {
-			if (open.get(topic.getId()) == null)
-				open.put(topic.getId(), true);
+			points.add(new TouchPoint(x, y, index));
 		}
-		points.add(new touchPoint(x, y, topic.getId()));
 
 		// update subtopics
 		x += X_SHIFT;
 		y += ret[2];
-		if (topic.getChildrenCount() > 0 && open.get(topic.getId())) {
+		if (topic.getChildrenCount() > 0 && open.get(index)) {
 			int py = y - ret[2];
 			int[] temp;
 			for (int i = 0; i < topic.getChildrenCount(); i++) {
 				y += Y_SHIFT;
-				temp = updateTopic(topic.getChildByIndex(i), x - OUTER_SIZE, y);
+				temp = updateTopic(topic.getChildByIndex(i), childs.get(index)
+						.get(i), x - OUTER_SIZE, y);
 
 				int ny = y + temp[2];
 				if (topic.getChildByIndex(i).getChildrenCount() > 0)
@@ -177,7 +195,9 @@ public class ExplorerRender extends Render {
 		if (toUpdate) {
 			points.clear();
 			lines.clear();
-			int[] temp = updateTopic(map.getRoot(), 0, 0);
+			for (int i = 0; i < size; i++)
+				topicX.set(i, FAKE_X);
+			int[] temp = updateTopic(map.getRoot(), 0, 0, 0);
 			this.width = temp[0];
 			this.height = temp[1];
 			toUpdate = false;
@@ -197,13 +217,14 @@ public class ExplorerRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		for (touchPoint point : points) {
+		for (TouchPoint point : points) {
+			Log.d(Log.explorerRender, "Point : " + point.x + " " + point.y
+					+ " " + point.index);
 			if (Math.hypot(point.x + xPlus - x, point.y + yPlus - y) <= OUTER_SIZE) {
-				if (open.get(point.id) != null) {
-					open.put(point.id, !open.get(point.id));
-					toUpdate = true;
-				}
-				break;
+				int index = point.index;
+				Log.d(Log.explorerRender, "Touch : " + index);
+				open.set(index, !open.get(index));
+				toUpdate = true;
 			}
 		}
 	}
