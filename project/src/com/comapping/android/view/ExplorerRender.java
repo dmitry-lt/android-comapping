@@ -64,8 +64,7 @@ public class ExplorerRender extends Render {
 	}
 
 	private boolean onScreen(int x1, int y1, int x2, int y2) {
-		return intersects(0, screenWidth, x1, x2)
-				&& intersects(0, screenHeight, y1, y2);
+		return intersects(0, screenWidth, x1, x2) && intersects(0, screenHeight, y1, y2);
 	}
 
 	private int initTopic(Topic topic) {
@@ -98,23 +97,22 @@ public class ExplorerRender extends Render {
 		}
 
 		// draw circles
+		p.setAntiAlias(true);
 		for (TouchPoint point : points) {
 			int x = point.x + xPlus;
 			int y = point.y + yPlus;
 			int index = point.index;
-			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y
-					+ OUTER_SIZE)) {
+			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y + OUTER_SIZE)) {
 				c.drawCircle(x, y, OUTER_SIZE, p);
 				p.setColor(Color.WHITE);
 				c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
 				p.setColor(Color.GRAY);
-				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
-						+ PLUS_WIDTH, p);
+				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y + PLUS_WIDTH, p);
 				if (!open.get(index))
-					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH,
-							y + PLUS_LENGTH, p);
+					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH, y + PLUS_LENGTH, p);
 			}
 		}
+		p.setAntiAlias(false);
 
 		// draw topics
 		for (int i = 0; i < size; i++) {
@@ -123,8 +121,7 @@ public class ExplorerRender extends Render {
 				continue;
 			int y = topicY.get(i) + yPlus;
 			TopicRender topicRender = topicRenders.get(i);
-			if (onScreen(x, y, x + topicRender.getWidth(), y
-					+ topicRender.getHeight()))
+			if (onScreen(x, y, x + topicRender.getWidth(), y + topicRender.getHeight()))
 				topicRender.draw(x, y, 0, 0, c);
 		}
 
@@ -162,8 +159,7 @@ public class ExplorerRender extends Render {
 			int[] temp;
 			for (int i = 0; i < topic.getChildrenCount(); i++) {
 				y += Y_SHIFT;
-				temp = updateTopic(topic.getChildByIndex(i), childs.get(index)
-						.get(i), x - OUTER_SIZE, y);
+				temp = updateTopic(topic.getChildByIndex(i), childs.get(index).get(i), x - OUTER_SIZE, y);
 
 				int ny = y + temp[2];
 				if (topic.getChildByIndex(i).getChildrenCount() > 0)
@@ -207,7 +203,7 @@ public class ExplorerRender extends Render {
 
 	@Override
 	public int getHeight() {
-		return height;
+		return Math.max(height, screenHeight);
 	}
 
 	@Override
@@ -218,9 +214,7 @@ public class ExplorerRender extends Render {
 	@Override
 	public void onTouch(int x, int y) {
 		for (TouchPoint point : points) {
-			Log.d(Log.explorerRenderTag, "Point : " + point.x + " " + point.y
-					+ " " + point.index);
-			//Changed by Korshakov Stepan
+			Log.d(Log.explorerRenderTag, "Point : " + point.x + " " + point.y + " " + point.index);
 			if (Math.hypot(point.x - x, point.y - y) <= OUTER_SIZE) {
 				int index = point.index;
 				Log.d(Log.explorerRenderTag, "Touch : " + index);
