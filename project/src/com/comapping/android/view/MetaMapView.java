@@ -29,7 +29,7 @@ public class MetaMapView {
 	public void splash() {
 		metaMapActivity.setContentView(R.layout.splash);
 	}
-	
+
 	public void loadMetaMapTopic(final Map metaMap, final Topic topic) {
 		TextView currentFolder = (TextView) metaMapActivity.findViewById(R.id.currentFolder);
 		currentFolder.setText("Current folder: " + topic.getText());
@@ -56,11 +56,11 @@ public class MetaMapView {
 		// third - folders
 		for (Topic child : topic.getChildTopics()) {
 			if (child.isFolder()) {
-				topicNames.add("[Folder] "+child.getText());
+				topicNames.add("[Folder] " + child.getText());
 				topics.add(child);
 			}
 		}
-		
+
 		// fourth - maps
 		for (Topic child : topic.getChildTopics()) {
 			if (!child.isFolder()) {
@@ -68,27 +68,27 @@ public class MetaMapView {
 				topics.add(child);
 			}
 		}
-		
+
 		listView.setAdapter(new ArrayAdapter<String>(metaMapActivity, R.layout.row, R.id.label, topicNames));
 
 		final List<Topic> finalTopics = topics;
-		
+
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				// get viewType
 				ViewType viewType = null;
-				
+
 				if (((RadioButton) metaMapActivity.findViewById(R.id.explorerViewRadioButton)).isChecked()) {
 					viewType = ViewType.EXPLORER_VIEW;
 				}
-				
+
 				if (((RadioButton) metaMapActivity.findViewById(R.id.treeViewRadioButton)).isChecked()) {
 					viewType = ViewType.TREE_VIEW;
 				}
-		
+
 				Topic current = finalTopics.get(position);
-				
+
 				if (current.isFolder()) {
 					loadMetaMapTopic(metaMap, current);
 				} else {

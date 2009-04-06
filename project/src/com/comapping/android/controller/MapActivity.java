@@ -40,6 +40,8 @@ public class MapActivity extends Activity {
 		final Activity current = this;
 
 		if (map == null) {
+			setContentView(R.layout.splash);
+			
 			new Thread() {
 				public void run() {
 					String result = "";
