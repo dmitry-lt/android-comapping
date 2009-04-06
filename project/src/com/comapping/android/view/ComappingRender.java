@@ -53,7 +53,8 @@ public class ComappingRender extends Render {
 		public void draw(int x, int y, Canvas c) {
 			int vertOffset = getOffset();
 
-			render.draw(x, vertOffset + y, render.getWidth(), render.getHeight(), c);
+			render.draw(x, vertOffset + y, render.getWidth(), render
+					.getHeight(), c);
 			c.drawLine(x, y + getUnderlineOffset(), x + getWidth(), y
 					+ getUnderlineOffset(), new Paint());
 
@@ -163,8 +164,8 @@ public class ComappingRender extends Render {
 				c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset(),
 						baseX + dataLen, baseY + vertOffset
 								+ last.getUnderlineOffset(), p);
-				
-				//Connecting base and first
+
+				// Connecting base and first
 				c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset(),
 						baseX + dataLen, baseY + itm.getUnderlineOffset(), p);
 
@@ -179,15 +180,24 @@ public class ComappingRender extends Render {
 	public int getHeight() {
 		return root.getSubtreeHeight();
 	}
+	
+	private int renderZoneHeight = 0;
+	private final int getVertOffset() {
+		if (getHeight() >= renderZoneHeight)
+			return 0;
+		else
+			return (renderZoneHeight - getHeight()) / 2;
+	}
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		draw(-x, -y, root, c);
+		renderZoneHeight = height;
+		draw(-x, -y + getVertOffset(), root, c);
 	}
 
 	@Override
 	public void onTouch(int x, int y) {
-		onTouch(0, 0, root, x, y);
+		onTouch(0, getVertOffset(), root, x, y);
 	}
 
 	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY) {
@@ -211,6 +221,7 @@ public class ComappingRender extends Render {
 
 			int vertOffset = 0;
 			for (Item i : itm.childs) {
+				
 				if (onTouch(baseX + dataLen, baseY + vertOffset, i, destX,
 						destY))
 					return true;
