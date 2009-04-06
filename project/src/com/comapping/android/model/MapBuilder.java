@@ -86,7 +86,7 @@ public class MapBuilder {
 			NodeList nodes = document.getElementsByTagName(TOPIC_TAG);
 			if (nodes.getLength() > 0) {
 				// first node with TOPIC_TAG must be root topic
-				map.setRoot(buildTopic(nodes.item(0)));
+				map.setRoot(buildTopic(nodes.item(0), null));
 			} else {
 				// there is no topic in this map
 			}
@@ -130,6 +130,7 @@ public class MapBuilder {
 	 * Method that builds Topic and it's children from document's node
 	 * 
 	 * @param node
+	 * @param parent
 	 * @return built topic
 	 * @throws MapParsingException
 	 * @throws ParseException
@@ -137,7 +138,7 @@ public class MapBuilder {
 	 * @throws StringToXMLConvertionException
 	 * @throws DateParsingException
 	 */
-	private static Topic buildTopic(Node node) throws MapParsingException, ParseException, EnumParsingException,
+	private static Topic buildTopic(Node node, Topic parent) throws MapParsingException, ParseException, EnumParsingException,
 			StringToXMLConvertionException, DateParsingException {
 		NamedNodeMap attributes = node.getAttributes();
 
@@ -145,7 +146,7 @@ public class MapBuilder {
 		// Log.d("Map Builder", "parsing node with id=" + id);
 
 		// parsing attributes
-		Topic topic = new Topic();
+		Topic topic = new Topic(parent);
 		boolean hasId = false;
 
 		for (int i = 0; i < attributes.getLength(); i++) {
@@ -202,7 +203,7 @@ public class MapBuilder {
 				topic.setText(getStringValue(childNode));
 
 			} else if (childNode.getNodeName().equals(TOPIC_TAG)) {
-				topic.addChild(buildTopic(childNode));
+				topic.addChild(buildTopic(childNode, topic));
 
 			} else if (childNode.getNodeName().equals(TOPIC_ICON_TAG)) {
 				String iconName = childNode.getAttributes().getNamedItem(ICON_NAME_TAG).getNodeValue();

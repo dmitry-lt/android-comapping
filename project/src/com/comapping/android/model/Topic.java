@@ -16,6 +16,8 @@ import com.comapping.android.Log;
 public class Topic implements Iterable<Topic> {
 
 	private int id;
+	private Topic parent;
+	
 	private Date lastModificationDate;
 	private int bgColor = Color.WHITE;
 	private Flag flag;
@@ -33,10 +35,13 @@ public class Topic implements Iterable<Topic> {
 
 	private boolean isFolder;
 
-	Topic() {
+	Topic(Topic parent) {
+		this.parent = parent;
 	}
 
-	public Topic(int id) {
+	public Topic(int id, Topic parent) {
+		this(parent);
+		
 		this.id = id;
 		this.text = "";
 
@@ -51,6 +56,10 @@ public class Topic implements Iterable<Topic> {
 		return id;
 	}
 
+	public Topic getParent() {
+		return parent;
+	}
+	
 	public boolean isFolder() {
 		return isFolder;
 	}
