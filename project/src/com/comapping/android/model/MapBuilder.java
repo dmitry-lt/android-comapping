@@ -49,7 +49,7 @@ public class MapBuilder {
 	private static final String ATTACHMENT_KEY_TAG = "key";
 	private static final String ATTACHMENT_SIZE_TAG = "size";
 
-	private static final String TOPIC_FOLDER_TAG = "isFolder";
+	private static final String TOPIC_MAP_REF_TAG = "map_ref";
 
 	/**
 	 * Method that builds Map from comap XML file.
@@ -190,9 +190,9 @@ public class MapBuilder {
 			} else if (curAttr.getNodeName().equals(TOPIC_TASK_COMPLETION_TAG)) {
 				String strTaskCompletion = curAttr.getNodeValue();
 				topic.setTaskCompletion(TaskCompletion.parse(strTaskCompletion));
-			} else if (curAttr.getNodeName().equals(TOPIC_FOLDER_TAG)) {
-				String strIsFolder = curAttr.getNodeValue();
-				topic.setFolder(strIsFolder.equals("t"));
+			} else if (curAttr.getNodeName().equals(TOPIC_MAP_REF_TAG)) {
+				String mapRef = curAttr.getNodeValue();
+				topic.setMapRef(mapRef);
 			}
 		}
 

@@ -34,7 +34,7 @@ public class Topic implements Iterable<Topic> {
 	private Task task;
 	private Attachment attachment;
 
-	private boolean isFolder;
+	private String mapRef;
 
 	Topic(Topic parent) {
 		this.parent = parent;
@@ -61,12 +61,12 @@ public class Topic implements Iterable<Topic> {
 		return parent;
 	}
 	
-	public boolean isFolder() {
-		return isFolder;
+	public String getMapRef() {
+		return mapRef;
 	}
 
-	public void setFolder(boolean isFolder) {
-		this.isFolder = isFolder;
+	public void setMapRef(String mapRef) {
+		this.mapRef = mapRef;
 	}
 
 	public void setText(String text) throws StringToXMLConvertionException {
