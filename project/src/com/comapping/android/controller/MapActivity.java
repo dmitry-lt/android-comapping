@@ -13,7 +13,6 @@ import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
 import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.model.Map;
-import com.comapping.android.model.MapBuilder;
 import com.comapping.android.model.MapParsingException;
 import com.comapping.android.model.StringToXMLConvertionException;
 import com.comapping.android.view.ComappingRender;
@@ -48,7 +47,7 @@ public class MapActivity extends Activity {
 					try {
 						result = MetaMapActivity.client.getComap(mapId, current);
 
-						final Map buildedMap = MapBuilder.buildMap(result);
+						final Map buildedMap = MetaMapActivity.mapBuilder.buildMap(result);
 
 						// add to chache
 						Cache.set(mapId, buildedMap);

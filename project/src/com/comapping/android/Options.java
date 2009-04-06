@@ -14,6 +14,6 @@ public class Options {
 	final public static String COMAP_FILE_SERVER = "/sdcard/";
 
 	// Proxy server options
-	final public static boolean USE_PROXY = false;
+	final public static boolean USE_PROXY = true;
 	final public static HttpHost PROXY_HOST = new HttpHost("217.197.3.157", 8089, "http");
 }

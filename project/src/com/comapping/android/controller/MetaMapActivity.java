@@ -19,6 +19,7 @@ import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
 import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.model.Map;
+import com.comapping.android.model.DomMapBuilder;
 import com.comapping.android.model.MapBuilder;
 import com.comapping.android.model.MapParsingException;
 import com.comapping.android.model.StringToXMLConvertionException;
@@ -36,6 +37,8 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public static Client client = new Client();
+	public static MapBuilder mapBuilder = new DomMapBuilder();
+	
 	public Map currentMap;
 
 	@Override
@@ -67,7 +70,7 @@ public class MetaMapActivity extends Activity {
 
 				Map metaMap = null;
 				try {
-					metaMap = MapBuilder.buildMap(result);
+					metaMap = mapBuilder.buildMap(result);
 				} catch (StringToXMLConvertionException e) {
 					Log.e(Log.metaMapControllerTag, "xml convertion exception");
 				} catch (MapParsingException e) {
