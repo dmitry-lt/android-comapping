@@ -218,11 +218,11 @@ public class ExplorerRender extends Render {
 	@Override
 	public void onTouch(int x, int y) {
 		for (TouchPoint point : points) {
-			Log.d(Log.explorerRender, "Point : " + point.x + " " + point.y
+			Log.d(Log.explorerRenderTag, "Point : " + point.x + " " + point.y
 					+ " " + point.index);
 			if (Math.hypot(point.x + xPlus - x, point.y + yPlus - y) <= OUTER_SIZE) {
 				int index = point.index;
-				Log.d(Log.explorerRender, "Touch : " + index);
+				Log.d(Log.explorerRenderTag, "Touch : " + index);
 				open.set(index, !open.get(index));
 				toUpdate = true;
 			}
