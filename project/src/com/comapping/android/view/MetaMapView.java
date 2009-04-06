@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -28,69 +29,70 @@ public class MetaMapView {
 	public void splash() {
 		metaMapActivity.setContentView(R.layout.splash);
 	}
-
+	
 	public void loadMetaMapTopic(final Map metaMap, final Topic topic) {
 		TextView currentFolder = (TextView) metaMapActivity.findViewById(R.id.currentFolder);
 		currentFolder.setText("Current folder: " + topic.getText());
 
 		ListView listView = (ListView) metaMapActivity.findViewById(R.id.listView);
 
-		List<String> topics = new ArrayList<String>();
+		List<String> topicNames = new ArrayList<String>();
+		List<Topic> topics = new ArrayList<Topic>();
 
 		// first - home folder
 		final boolean isHomeRowExist = !topic.isRoot();
 		if (isHomeRowExist) {
-			topics.add("Go to home folder");
+			topicNames.add("Go to home folder");
+			topics.add(metaMap.getRoot());
 		}
 
 		// second - up
 		final boolean isUpRowExist = (!topic.isRoot()) && (!topic.getParent().isRoot());
 		if (isUpRowExist) {
-			topics.add("Go up");
+			topicNames.add("Go up");
+			topics.add(topic.getParent());
 		}
 
+		// third - folders
 		for (Topic child : topic.getChildTopics()) {
-			String childText = "";
-
 			if (child.isFolder()) {
-				childText = "[Folder]";
+				topicNames.add("[Folder] "+child.getText());
+				topics.add(child);
 			}
-
-			childText += " " + child.getText();
-
-			topics.add(childText);
 		}
+		
+		// fourth - maps
+		for (Topic child : topic.getChildTopics()) {
+			if (!child.isFolder()) {
+				topicNames.add(child.getText());
+				topics.add(child);
+			}
+		}
+		
+		listView.setAdapter(new ArrayAdapter<String>(metaMapActivity, R.layout.row, R.id.label, topicNames));
 
-		listView.setAdapter(new ArrayAdapter<String>(metaMapActivity, R.layout.row, R.id.label, topics));
-
+		final List<Topic> finalTopics = topics;
+		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				// get new topic
-				Topic child = null;
-
-				// if home folder
-				if (isHomeRowExist) {
-					if (position == 0)
-						child = metaMap.getRoot();
-					position--;
+				// get viewType
+				ViewType viewType = null;
+				
+				if (((RadioButton) metaMapActivity.findViewById(R.id.explorerViewRadioButton)).isChecked()) {
+					viewType = ViewType.EXPLORER_VIEW;
 				}
-
-				// if up folder
-				if (isUpRowExist) {
-					if (position == 0)
-						child = topic.getParent();
-					position--;
+				
+				if (((RadioButton) metaMapActivity.findViewById(R.id.treeViewRadioButton)).isChecked()) {
+					viewType = ViewType.TREE_VIEW;
 				}
-
-				if (position >= 0) {
-					child = topic.getChildByIndex(position);
-				}
-
-				if (child.isFolder()) {
-					loadMetaMapTopic(metaMap, child);
+		
+				Topic current = finalTopics.get(position);
+				
+				if (current.isFolder()) {
+					loadMetaMapTopic(metaMap, current);
 				} else {
-					metaMapActivity.loadMap(child.getMapRef(), ViewType.EXPLORER_VIEW);
+					metaMapActivity.loadMap(current.getMapRef(), viewType);
 				}
 			}
 		});
