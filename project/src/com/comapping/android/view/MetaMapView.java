@@ -2,7 +2,6 @@ package com.comapping.android.view;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import android.view.View;
@@ -10,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -33,28 +33,30 @@ public class MetaMapView {
 		metaMapActivity.setContentView(R.layout.splash);
 	}
 
-	public void loadMetaMapTopic(final Map metaMap, final Topic topic) {
+	public void loadMetaMapTopic(final Topic topic) {
+		// current folder
 		TextView currentFolder = (TextView) metaMapActivity.findViewById(R.id.currentFolder);
 		currentFolder.setText("Current folder: " + topic.getText());
 
+		// list view
 		ListView listView = (ListView) metaMapActivity.findViewById(R.id.listView);
 
 		final Topic[] children = topic.getChildTopics();
-		
+
 		Arrays.sort(children, new TopicComparator());
-		
+
 		List<String> topicNames = new ArrayList<String>();
-		
+
 		for (Topic child : children) {
 			String name = child.getText();
-			
+
 			if (child.isFolder()) {
-				name = "[Folder] "+name;
+				name = "[Folder] " + name;
 			}
-			
+
 			topicNames.add(name);
 		}
-		
+
 		listView.setAdapter(new ArrayAdapter<String>(metaMapActivity, R.layout.row, R.id.label, topicNames));
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -72,25 +74,58 @@ public class MetaMapView {
 				}
 
 				if (children[position].isFolder()) {
-					loadMetaMapTopic(metaMap, children[position]);
+					loadMetaMapTopic(children[position]);
 				} else {
 					metaMapActivity.loadMap(children[position].getMapRef(), viewType);
 				}
 			}
 		});
+
+		// up button
+		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
+		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
+
+		if (topic.isRoot()) {
+			// deactivate buttons
+			upLevelButton.setEnabled(false);
+			homeButton.setEnabled(false);
+		} else {
+			// activate buttons
+			upLevelButton.setEnabled(true);
+			homeButton.setEnabled(true);
+
+			upLevelButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					loadMetaMapTopic(topic.getParent());
+				}
+
+			});
+		}
 	}
 
-	public void load(Map metaMap) {
+	public void load(final Map metaMap) {
 		metaMapActivity.setContentView(R.layout.metamap);
 
-		loadMetaMapTopic(metaMap, metaMap.getRoot());
+		loadMetaMapTopic(metaMap.getRoot());
 
-		Button logout = (Button) metaMapActivity.findViewById(R.id.logout);
-		logout.setOnClickListener(new OnClickListener() {
+		Button logoutButton = (Button) metaMapActivity.findViewById(R.id.logoutButton);
+		logoutButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				metaMapActivity.logout();
 			}
+		});
+
+		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
+		homeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				loadMetaMapTopic(metaMap.getRoot());
+			}
+
 		});
 	}
 }

@@ -20,6 +20,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -42,6 +43,8 @@ public class Client {
 	final static public int LOGIN_REQUEST_CODE = 438134;
 
 	final static private char SALT_FLAG = '#';
+
+	final static private long MAX_TIMEOUT = 5;
 
 	// private variables
 	private String clientId = null;
@@ -169,7 +172,7 @@ public class Client {
 		data.add(new BasicNameValuePair("clientId", clientId));
 
 		clientSideLogout();
-		
+
 		try {
 			requestToServer(data);
 		} catch (LoginInterruptedException e) {
@@ -237,12 +240,16 @@ public class Client {
 		}
 
 		DefaultHttpClient client = new DefaultHttpClient();
-		
+
 		// add proxy if needed
 		if (Options.USE_PROXY) {
 			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, Options.PROXY_HOST);
 		}
-		
+
+		// set timeout
+		// client.getParams().setLongParameter(ConnManagerPNames.TIMEOUT,
+		// MAX_TIMEOUT);
+
 		HttpPost post = new HttpPost(Options.SERVER);
 
 		UrlEncodedFormEntity entity = null;
@@ -321,8 +328,8 @@ public class Client {
 	}
 
 	private void loginRequired(Activity context) throws LoginInterruptedException {
-		Log.d(Log.connectionTag, "login required action with login status: "+isLoggedIn());
-		
+		Log.d(Log.connectionTag, "login required action with login status: " + isLoggedIn());
+
 		if (!isLoggedIn()) {
 			loginInterrupted = false;
 			context.startActivityForResult(new Intent(LoginActivity.LOGIN_ACTIVITY_INTENT), LOGIN_REQUEST_CODE);
