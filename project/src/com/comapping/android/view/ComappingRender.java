@@ -150,14 +150,13 @@ public class ComappingRender extends MapRender {
 
 		if (y + itm.getHeight() < 0)
 			return false;
-		
+
 		if (x > width)
 			return false;
 
 		if (y > height)
 			return false;
 
-		
 		return true;
 	}
 
@@ -166,7 +165,6 @@ public class ComappingRender extends MapRender {
 
 		if (isOnScreen(baseX, baseY, itm, width, height))
 			itm.draw(baseX, baseY, c);
-
 
 		if (itm.isChildsVisible()) {
 			int dataLen = itm.getWidth();
@@ -233,12 +231,16 @@ public class ComappingRender extends MapRender {
 		int xStart = baseX;
 
 		if (itm.isOverButton(destX - xStart, destY - yStart)) {
-			scrollController.smoothScroll(xStart, yStart);
+
+			if (itm.isChildsVisible())
+				itm.hideChilds();
+			else
+				itm.showChilds();
+
 			itm.render.setSelected(true);
-			// if (itm.isChildsVisible())
-			// itm.hideChilds();
-			// else
-			// itm.showChilds();
+
+			scrollController.smoothScroll(baseX, itm.getOffset() + baseY);
+
 			return true;
 		}
 
