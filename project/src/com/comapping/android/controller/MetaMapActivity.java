@@ -11,6 +11,9 @@ package com.comapping.android.controller;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.comapping.android.Log;
 import com.comapping.android.Options;
@@ -49,6 +52,39 @@ public class MetaMapActivity extends Activity {
 		metaMapRefresh();
 	}
 
+	/* Creates the menu items */
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.metamap, menu);
+	    return true;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
+				|| (resultCode == Options.RESULT_CHAIN_CLOSE)) {
+			setResult(Options.RESULT_CHAIN_CLOSE);
+			Log.i(Log.metaMapControllerTag, "finish");
+			finish();
+		}
+	}
+
+	/* Handles item selections */
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case R.id.preferences:
+	    	preferences();
+	    	return true;
+	    case R.id.logout:
+	        logout();
+	        return true;
+	    }
+	    
+	    return false;
+	}
+	
 	private void metaMapRefresh() {
 		metaMapView = new MetaMapView(this);
 
@@ -89,8 +125,17 @@ public class MetaMapActivity extends Activity {
 		}.start();
 	}
 
+	public void loadMap(final String mapId, final ViewType viewType) {
+		Intent intent = new Intent(MapActivity.MAP_ACTIVITY_INTENT);
+		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
+		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
+
+		startActivityForResult(intent, MAP_REQUEST);
+	}
+	
 	public void logout() {
 		Storage.getInstance().set("key", "");
+		
 		try {
 			client.logout(this);
 		} catch (ConnectionException e) {
@@ -99,24 +144,8 @@ public class MetaMapActivity extends Activity {
 
 		metaMapRefresh();
 	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
-				|| (resultCode == Options.RESULT_CHAIN_CLOSE)) {
-			setResult(Options.RESULT_CHAIN_CLOSE);
-			Log.i(Log.metaMapControllerTag, "finish");
-			finish();
-		}
-	}
-
-	public void loadMap(final String mapId, final ViewType viewType) {
-		Intent intent = new Intent(MapActivity.MAP_ACTIVITY_INTENT);
-		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
-		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
-
-		startActivityForResult(intent, MAP_REQUEST);
+	
+	public void preferences() {
+		startActivity(new Intent(PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 }

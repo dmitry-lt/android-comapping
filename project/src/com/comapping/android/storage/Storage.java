@@ -8,13 +8,16 @@
 
 package com.comapping.android.storage;
 
+import com.comapping.android.Log;
 import com.comapping.android.controller.MetaMapActivity;
 
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
+import android.preference.PreferenceManager;
 
 public class Storage {
+	public static final String VIEW_TYPE_KEY = "viewType";
+
 	// Singleton
 	private Storage() {
 	}
@@ -26,17 +29,23 @@ public class Storage {
 	}
 
 	public void set(String key, String value) {
-		Editor edit = MetaMapActivity.getInstance().getPreferences(Context.MODE_PRIVATE).edit();
+		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
+
+		Editor edit = preferances.edit();
 
 		edit.putString(key, value);
 		edit.commit();
 
-		Log.i("Storage", "[" + key + "] = " + value);
+		Log.i(Log.storageTag, "[" + key + "] = " + value);
 	}
 
 	public String get(String key) {
-		Log.i("Storage", "get [" + key + "]");
+		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
 
-		return MetaMapActivity.getInstance().getPreferences(Context.MODE_PRIVATE).getString(key, "");
+		String value = preferances.getString(key, "");
+
+		Log.i(Log.storageTag, "get [" + key + "] = " + value);
+
+		return value;
 	}
 }

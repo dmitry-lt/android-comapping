@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <string name="app_name">Comapping</string>
+
+	<string name="app_name">Comapping</string>
+
+<string name="view_type_preference_key">viewType</string>
+<string name="view_type_preference_title">View type</string>
+
+<string name="explorer_view_value">Explorer view</string>
+<string name="tree_view_value">Tree view</string>
+
 </resources>

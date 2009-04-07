@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -21,6 +20,7 @@ import com.comapping.android.controller.R;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
 import com.comapping.android.model.TopicComparator;
+import com.comapping.android.storage.Storage;
 
 public class MetaMapView {
 	private MetaMapActivity metaMapActivity;
@@ -63,20 +63,12 @@ public class MetaMapView {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				// get viewType
-				ViewType viewType = null;
-
-				if (((RadioButton) metaMapActivity.findViewById(R.id.explorerViewRadioButton)).isChecked()) {
-					viewType = ViewType.EXPLORER_VIEW;
-				}
-
-				if (((RadioButton) metaMapActivity.findViewById(R.id.treeViewRadioButton)).isChecked()) {
-					viewType = ViewType.TREE_VIEW;
-				}
+				String viewType = Storage.getInstance().get(Storage.VIEW_TYPE_KEY);
 
 				if (children[position].isFolder()) {
 					loadMetaMapTopic(children[position]);
 				} else {
-					metaMapActivity.loadMap(children[position].getMapRef(), viewType);
+					metaMapActivity.loadMap(children[position].getMapRef(), ViewType.getViewTypeFromString(viewType));
 				}
 			}
 		});
@@ -109,14 +101,6 @@ public class MetaMapView {
 		metaMapActivity.setContentView(R.layout.metamap);
 
 		loadMetaMapTopic(metaMap.getRoot());
-
-		Button logoutButton = (Button) metaMapActivity.findViewById(R.id.logoutButton);
-		logoutButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				metaMapActivity.logout();
-			}
-		});
 
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 		homeButton.setOnClickListener(new OnClickListener() {

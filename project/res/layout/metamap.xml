@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
-    
-
-    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/metaMapButtons" android:orientation="horizontal"><ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/upLevelButton" android:src="@drawable/up_level_button"></ImageButton><ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/home_button" android:id="@+id/homeButton"></ImageButton>
-
-</LinearLayout><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/currentFolder" android:layout_below="@+id/metaMapButtons" android:text="Current folder"></TextView><ListView android:id="@+id/listView" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@+id/currentFolder">
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
 
 
+	<LinearLayout android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/metaMapButtons"
+		android:orientation="horizontal">
+		<ImageButton android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/upLevelButton"
+			android:src="@drawable/up_level_button"></ImageButton>
+		<ImageButton android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:src="@drawable/home_button"
+			android:id="@+id/homeButton"></ImageButton>
 
-</ListView>
+	</LinearLayout>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/currentFolder"
+		android:layout_below="@+id/metaMapButtons" android:text="Current folder"></TextView>
+	<ListView android:id="@+id/listView" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_below="@+id/currentFolder">
 
-	<LinearLayout android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/linearLayout" 
-        android:layout_alignParentBottom="true" android:orientation="horizontal">
-        
-		
-		
-	
-
-<RadioGroup android:id="@+id/RadioGroup01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:checkedButton="@+id/explorerViewRadioButton"><RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/explorerViewRadioButton" android:text="Explorer"></RadioButton>
-<RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tree" android:id="@+id/treeViewRadioButton" android:paddingRight="30px"></RadioButton>
-</RadioGroup>
-<Button android:layout_height="wrap_content" android:text="Log out" android:textSize="30px" android:layout_gravity="right" android:layout_width="fill_parent" android:gravity="center" android:id="@+id/logoutButton"></Button></LinearLayout>
-
-
-
+	</ListView>
 </RelativeLayout>
