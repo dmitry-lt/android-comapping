@@ -59,10 +59,9 @@ public class ComappingRender extends MapRender {
 					+ getUnderlineOffset(), new Paint());
 
 		}
-		
-		public boolean isOverButton(int x, int y)
-		{
-			return ((x>=0)&&(y>=0)&&(x<=getWidth())&&(y<=getHeight()));
+
+		public boolean isOverButton(int x, int y) {
+			return ((x >= 0) && (y >= 0) && (x <= getWidth()) && (y <= getHeight()));
 		}
 
 		public int getWidth() {
@@ -144,15 +143,37 @@ public class ComappingRender extends MapRender {
 		return res;
 	}
 
-	private void draw(int baseX, int baseY, Item itm, Canvas c) {
-		itm.draw(baseX, baseY, c);
+	private boolean isOnScreen(int x, int y, Item itm, int width, int height) {
+		y += itm.getOffset();
+		if (x + itm.getWidth() < 0)
+			return false;
+
+		if (y + itm.getHeight() < 0)
+			return false;
+		
+		if (x > width)
+			return false;
+
+		if (y > height)
+			return false;
+
+		
+		return true;
+	}
+
+	private void draw(int baseX, int baseY, Item itm, int width, int height,
+			Canvas c) {
+
+		if (isOnScreen(baseX, baseY, itm, width, height))
+			itm.draw(baseX, baseY, c);
+
 
 		if (itm.isChildsVisible()) {
 			int dataLen = itm.getWidth();
 
 			int vertOffset = 0;
 			for (Item i : itm.childs) {
-				draw(baseX + dataLen, baseY + vertOffset, i, c);
+				draw(baseX + dataLen, baseY + vertOffset, i, width, height, c);
 				vertOffset += i.getSubtreeHeight();
 			}
 
@@ -186,8 +207,9 @@ public class ComappingRender extends MapRender {
 	public int getHeight() {
 		return root.getSubtreeHeight();
 	}
-	
+
 	private int renderZoneHeight = 0;
+
 	private final int getVertOffset() {
 		if (getHeight() >= renderZoneHeight)
 			return 0;
@@ -198,9 +220,8 @@ public class ComappingRender extends MapRender {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		renderZoneHeight = height;
-		draw(-x, -y + getVertOffset(), root, c);
+		draw(-x, -y + getVertOffset(), root, width, height, c);
 	}
-	
 
 	@Override
 	public void onTouch(int x, int y) {
@@ -210,14 +231,14 @@ public class ComappingRender extends MapRender {
 	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY) {
 		int yStart = itm.getOffset() + baseY;
 		int xStart = baseX;
-		
+
 		if (itm.isOverButton(destX - xStart, destY - yStart)) {
 			scrollController.smoothScroll(xStart, yStart);
 			itm.render.setSelected(true);
-//			if (itm.isChildsVisible())
-//				itm.hideChilds();
-//			else
-//				itm.showChilds();
+			// if (itm.isChildsVisible())
+			// itm.hideChilds();
+			// else
+			// itm.showChilds();
 			return true;
 		}
 
@@ -226,7 +247,7 @@ public class ComappingRender extends MapRender {
 
 			int vertOffset = 0;
 			for (Item i : itm.childs) {
-				
+
 				if (onTouch(baseX + dataLen, baseY + vertOffset, i, destX,
 						destY))
 					return true;
