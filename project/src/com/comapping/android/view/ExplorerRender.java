@@ -12,7 +12,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class ExplorerRender extends Render {
+public class ExplorerRender extends MapRender {
 
 	private class TouchPoint {
 		public int x, y, index;
@@ -222,6 +222,12 @@ public class ExplorerRender extends Render {
 				toUpdate = true;
 			}
 		}
+	}
+
+	@Override
+	public void setScrollController(ScrollController scroll) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

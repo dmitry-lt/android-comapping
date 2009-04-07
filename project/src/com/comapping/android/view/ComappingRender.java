@@ -19,7 +19,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class ComappingRender extends Render {
+public class ComappingRender extends MapRender {
 
 	private class Item {
 		private static final int BORDER_SIZE = 10;
@@ -194,6 +194,7 @@ public class ComappingRender extends Render {
 		renderZoneHeight = height;
 		draw(-x, -y + getVertOffset(), root, c);
 	}
+	
 
 	@Override
 	public void onTouch(int x, int y) {
@@ -230,5 +231,11 @@ public class ComappingRender extends Render {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void setScrollController(ScrollController scroll) {
+		// TODO Auto-generated method stub
+		
 	}
 }

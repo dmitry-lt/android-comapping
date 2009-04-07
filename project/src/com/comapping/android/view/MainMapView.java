@@ -13,12 +13,36 @@ import android.widget.Scroller;
 
 public class MainMapView extends View {
 
-	Render mRender;
-	Scroller mScroller;
+	public Render mRender;
+	public Scroller mScroller;
+
+	ScrollController scrollController = new ScrollController() {
+
+		@Override
+		public void intermediateScroll(int destX, int destY) {
+
+			int vx = mScroller.getCurrX() - destX;
+			int vy = mScroller.getCurrY() - destY;
+
+			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
+					vx, vy, 0);
+
+		}
+
+		@Override
+		public void smoothScroll(int destX, int destY) {
+			int vx = mScroller.getCurrX() - destX;
+			int vy = mScroller.getCurrY() - destY;
+			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
+					vx, vy);
+		}
+
+	};
 
 	public MainMapView(Context context, Render render) {
 		super(context);
 		mRender = render;
+		
 		mScroller = new Scroller(context);
 	}
 
@@ -116,8 +140,9 @@ public class MainMapView extends View {
 
 			Log.i("Test", "Time:" + timeDelta + " Path len:" + pathLen);
 			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
-				mRender.onTouch(mScroller.getCurrX() + (int) ev.getX(), 
-						mScroller.getCurrY() + (int) ev.getY() - getVertOffset());
+				mRender.onTouch(mScroller.getCurrX() + (int) ev.getX(),
+						mScroller.getCurrY() + (int) ev.getY()
+								- getVertOffset());
 				Log.i("Test", "Touch!");
 			} else {
 				Log.i("Test", "Scroll!");
@@ -146,10 +171,10 @@ public class MainMapView extends View {
 
 	private final int getVertOffset() {
 		return 0;
-//		if (mRender.getHeight() >= this.getHeight())
-//			return 0;
-//		else
-//			return (this.getHeight() - mRender.getHeight()) / 2;
+		// if (mRender.getHeight() >= this.getHeight())
+		// return 0;
+		// else
+		// return (this.getHeight() - mRender.getHeight()) / 2;
 	}
 
 	private final int getScrollWidth() {
