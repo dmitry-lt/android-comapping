@@ -50,22 +50,54 @@ public class ComappingRender extends MapRender {
 			return childsVisible;
 		}
 
+		private static final int OUTER_SIZE = 15;
+		private static final int CIRCLE_WIDTH = 2;
+		private static final int PLUS_LENGTH = 7;
+		private static final int PLUS_WIDTH = 2;
+
+		Paint p = new Paint();
+
 		public void draw(int x, int y, Canvas c) {
 			int vertOffset = getOffset();
 
-			render.draw(x, vertOffset + y, render.getWidth(), render
+			// Rendering topic
+			render.draw(x, y + vertOffset, render.getWidth(), render
 					.getHeight(), c);
-			c.drawLine(x, y + getUnderlineOffset(), x + getWidth(), y
+
+			// Drawing lines
+			c.drawLine(x, y + getUnderlineOffset(), x + render.getWidth(), y
 					+ getUnderlineOffset(), new Paint());
 
+			if (topicData.getChildrenCount() != 0) {
+				// Draw +/- circle
+				drawCircle(x + render.getWidth() + OUTER_SIZE, y
+						+ getUnderlineOffset(), c);
+			}
+		}
+
+		private void drawCircle(int x, int y, Canvas c) {
+			c.drawCircle(x, y, OUTER_SIZE, p);
+			p.setColor(Color.WHITE);
+			c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
+			p.setColor(Color.GRAY);
+			c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
+					+ PLUS_WIDTH, p);
+
+			if (!this.isChildsVisible())
+				c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH, y
+						+ PLUS_LENGTH, p);
 		}
 
 		public boolean isOverButton(int x, int y) {
-			return ((x >= 0) && (y >= 0) && (x <= getWidth()) && (y <= getHeight()));
+			return ((x >= render.getWidth())
+					&& (y >= render.getLineOffset() - OUTER_SIZE)
+					&& (x <= render.getWidth() + OUTER_SIZE * 2) && (y <= render
+					.getLineOffset()
+					+ OUTER_SIZE));
 		}
 
 		public int getWidth() {
-			return render.getWidth();
+			return render.getWidth() + OUTER_SIZE * 2;
 		}
 
 		public int getHeight() {
@@ -163,8 +195,9 @@ public class ComappingRender extends MapRender {
 	private void draw(int baseX, int baseY, Item itm, int width, int height,
 			Canvas c) {
 
-		if (isOnScreen(baseX, baseY, itm, width, height))
+		if (isOnScreen(baseX, baseY, itm, width, height)) {
 			itm.draw(baseX, baseY, c);
+		}
 
 		if (itm.isChildsVisible()) {
 			int dataLen = itm.getWidth();
