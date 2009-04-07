@@ -59,6 +59,11 @@ public class ComappingRender extends MapRender {
 					+ getUnderlineOffset(), new Paint());
 
 		}
+		
+		public boolean isOverButton(int x, int y)
+		{
+			return ((x>=0)&&(y>=0)&&(x<=getWidth())&&(y<=getHeight()));
+		}
 
 		public int getWidth() {
 			return render.getWidth();
@@ -121,6 +126,7 @@ public class ComappingRender extends MapRender {
 	}
 
 	Item root;
+	ScrollController scrollController;
 
 	public ComappingRender(Context context, Topic map) {
 		root = buildTree(map, null);
@@ -203,17 +209,15 @@ public class ComappingRender extends MapRender {
 
 	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY) {
 		int yStart = itm.getOffset() + baseY;
-		int yEnd = yStart + itm.getHeight();
-
 		int xStart = baseX;
-		int xEnd = xStart + itm.getWidth();
-
-		if ((destX > xStart) & (destX < xEnd) & (destY > yStart)
-				& (destY < yEnd)) {
-			if (itm.isChildsVisible())
-				itm.hideChilds();
-			else
-				itm.showChilds();
+		
+		if (itm.isOverButton(destX - xStart, destY - yStart)) {
+			scrollController.smoothScroll(xStart, yStart);
+			itm.render.setSelected(true);
+//			if (itm.isChildsVisible())
+//				itm.hideChilds();
+//			else
+//				itm.showChilds();
 			return true;
 		}
 
@@ -235,7 +239,6 @@ public class ComappingRender extends MapRender {
 
 	@Override
 	public void setScrollController(ScrollController scroll) {
-		// TODO Auto-generated method stub
-		
+		scrollController = scroll;
 	}
 }

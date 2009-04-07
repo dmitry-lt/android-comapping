@@ -18,6 +18,7 @@ import com.comapping.android.model.StringToXMLConvertionException;
 import com.comapping.android.view.ComappingRender;
 import com.comapping.android.view.ExplorerRender;
 import com.comapping.android.view.MainMapView;
+import com.comapping.android.view.MapRender;
 import com.comapping.android.view.Render;
 
 public class MapActivity extends Activity {
@@ -76,7 +77,7 @@ public class MapActivity extends Activity {
 
 	public void loadMap(Map map, ViewType viewType) {
 		View view = null;
-		Render r = null;
+		MapRender r = null;
 		switch (viewType) {
 		case EXPLORER_VIEW:
 			r = new ExplorerRender(this, map);

@@ -13,7 +13,7 @@ import android.widget.Scroller;
 
 public class MainMapView extends View {
 
-	public Render mRender;
+	public MapRender mRender;
 	public Scroller mScroller;
 
 	ScrollController scrollController = new ScrollController() {
@@ -25,7 +25,7 @@ public class MainMapView extends View {
 			int vy = mScroller.getCurrY() - destY;
 
 			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
-					vx, vy, 0);
+					-vx, -vy, 0);
 
 		}
 
@@ -34,15 +34,15 @@ public class MainMapView extends View {
 			int vx = mScroller.getCurrX() - destX;
 			int vy = mScroller.getCurrY() - destY;
 			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
-					vx, vy);
+					-vx, -vy);
 		}
 
 	};
 
-	public MainMapView(Context context, Render render) {
+	public MainMapView(Context context, MapRender render) {
 		super(context);
 		mRender = render;
-		
+		mRender.setScrollController(scrollController);
 		mScroller = new Scroller(context);
 	}
 
