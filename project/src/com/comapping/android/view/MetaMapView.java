@@ -1,6 +1,8 @@
 package com.comapping.android.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import android.view.View;
@@ -18,6 +20,7 @@ import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
+import com.comapping.android.model.TopicComparator;
 
 public class MetaMapView {
 	private MetaMapActivity metaMapActivity;
@@ -36,42 +39,23 @@ public class MetaMapView {
 
 		ListView listView = (ListView) metaMapActivity.findViewById(R.id.listView);
 
+		final Topic[] children = topic.getChildTopics();
+		
+		Arrays.sort(children, new TopicComparator());
+		
 		List<String> topicNames = new ArrayList<String>();
-		List<Topic> topics = new ArrayList<Topic>();
-
-		// first - home folder
-		final boolean isHomeRowExist = !topic.isRoot();
-		if (isHomeRowExist) {
-			topicNames.add("Go to home folder");
-			topics.add(metaMap.getRoot());
-		}
-
-		// second - up
-		final boolean isUpRowExist = (!topic.isRoot()) && (!topic.getParent().isRoot());
-		if (isUpRowExist) {
-			topicNames.add("Go up");
-			topics.add(topic.getParent());
-		}
-
-		// third - folders
-		for (Topic child : topic.getChildTopics()) {
+		
+		for (Topic child : children) {
+			String name = child.getText();
+			
 			if (child.isFolder()) {
-				topicNames.add("[Folder] " + child.getText());
-				topics.add(child);
+				name = "[Folder] "+name;
 			}
+			
+			topicNames.add(name);
 		}
-
-		// fourth - maps
-		for (Topic child : topic.getChildTopics()) {
-			if (!child.isFolder()) {
-				topicNames.add(child.getText());
-				topics.add(child);
-			}
-		}
-
+		
 		listView.setAdapter(new ArrayAdapter<String>(metaMapActivity, R.layout.row, R.id.label, topicNames));
-
-		final List<Topic> finalTopics = topics;
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -87,12 +71,10 @@ public class MetaMapView {
 					viewType = ViewType.TREE_VIEW;
 				}
 
-				Topic current = finalTopics.get(position);
-
-				if (current.isFolder()) {
-					loadMetaMapTopic(metaMap, current);
+				if (children[position].isFolder()) {
+					loadMetaMapTopic(metaMap, children[position]);
 				} else {
-					metaMapActivity.loadMap(current.getMapRef(), viewType);
+					metaMapActivity.loadMap(children[position].getMapRef(), viewType);
 				}
 			}
 		});
