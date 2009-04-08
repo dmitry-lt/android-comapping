@@ -1,6 +1,7 @@
 package com.comapping.android.controller;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,13 +20,39 @@ import com.comapping.android.view.ComappingRender;
 import com.comapping.android.view.ExplorerRender;
 import com.comapping.android.view.MainMapView;
 import com.comapping.android.view.MapRender;
-import com.comapping.android.view.Render;
 
 public class MapActivity extends Activity {
 	public static final String MAP_ACTIVITY_INTENT = "com.comapping.android.intent.MAP";
 
 	public static final String EXT_VIEW_TYPE = "viewType";
 	public static final String EXT_MAP_ID = "mapId";
+
+	private ProgressDialog splash = null;
+
+	public void splashActivate(final String message) {
+		final Activity context = this;
+
+		runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash == null) {
+					splash = ProgressDialog.show(context, "Comapping", message);
+				} else {
+					splash.setMessage(message);
+				}
+			}
+		});
+	}
+
+	public void splashDeactivate() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash != null) {
+					splash.dismiss();
+					splash = null;
+				}
+			}
+		});
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +67,19 @@ public class MapActivity extends Activity {
 		final Activity current = this;
 
 		if (map == null) {
-			setContentView(R.layout.splash);
-			
 			new Thread() {
 				public void run() {
 					String result = "";
 					try {
+						splashActivate("Downloading map");
+
 						result = MetaMapActivity.client.getComap(mapId, current);
 
+						splashActivate("Loading map");
+
 						final Map buildedMap = MetaMapActivity.mapBuilder.buildMap(result);
+
+						splashDeactivate();
 
 						// add to chache
 						Cache.set(mapId, buildedMap);
@@ -102,5 +133,11 @@ public class MapActivity extends Activity {
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
+	protected void onDestroy() {
+		splashDeactivate();
+		super.onDestroy();
 	}
 }

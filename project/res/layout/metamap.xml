@@ -15,11 +15,9 @@
 			android:id="@+id/homeButton"></ImageButton>
 
 	</LinearLayout>
-	<TextView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/currentFolder"
-		android:layout_below="@+id/metaMapButtons" android:text="Current folder"></TextView>
+	
 	<ListView android:id="@+id/listView" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_below="@+id/currentFolder">
+		android:layout_height="fill_parent" android:layout_below="@+id/metaMapButtons">
 
 	</ListView>
 </RelativeLayout>

@@ -100,7 +100,7 @@ public class MetaMapActivity extends Activity {
 			finish();
 		}
 	}
-
+	
 	/* Handles item selections */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -140,15 +140,15 @@ public class MetaMapActivity extends Activity {
 
 	private void metaMapRefresh() {
 		metaMapView = new MetaMapView(this);
-
-		metaMapView.splash();
-
+		
 		final Activity context = this;
 
 		new Thread() {
 			public void run() {
 				String result = "";
 
+				metaMapView.splashActivate("Downloading map list");
+				
 				try {
 					result = client.getComap("meta", context);
 				} catch (ConnectionException e) {
@@ -157,6 +157,8 @@ public class MetaMapActivity extends Activity {
 					Log.e(Log.metaMapControllerTag, "login interrupted in metamap retrieving");
 				}
 
+				metaMapView.splashActivate("Loading map list");
+				
 				Map metaMap = null;
 				try {
 					metaMap = mapBuilder.buildMap(result);
@@ -166,6 +168,8 @@ public class MetaMapActivity extends Activity {
 					Log.e(Log.metaMapControllerTag, "map parsing exception");
 				}
 
+				metaMapView.splashDeactivate();
+				
 				final Map finalMetaMap = metaMap;
 
 				runOnUiThread(new Runnable() {
@@ -190,7 +194,7 @@ public class MetaMapActivity extends Activity {
 		Intent intent = new Intent(MapActivity.MAP_ACTIVITY_INTENT);
 		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
-
+		
 		startActivityForResult(intent, MAP_REQUEST);
 	}
 
@@ -208,5 +212,11 @@ public class MetaMapActivity extends Activity {
 
 	public void preferences() {
 		startActivity(new Intent(PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
+	}
+
+	@Override
+	protected void onDestroy() {
+		metaMapView.splashDeactivate();
+		super.onDestroy();
 	}
 }

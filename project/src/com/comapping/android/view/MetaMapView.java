@@ -1,11 +1,11 @@
 package com.comapping.android.view;
 
+import android.app.ProgressDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.comapping.android.ViewType;
@@ -17,19 +17,40 @@ import com.comapping.android.storage.Storage;
 
 public class MetaMapView {
 	private MetaMapActivity metaMapActivity;
+	private ProgressDialog splash;
 
 	public MetaMapView(MetaMapActivity metaMapActivity) {
 		this.metaMapActivity = metaMapActivity;
+
+		metaMapActivity.setContentView(R.layout.metamap);
+		metaMapActivity.setTitle("Comapping: My Maps");
 	}
 
-	public void splash() {
-		metaMapActivity.setContentView(R.layout.splash);
+	public void splashActivate(final String message) {
+		metaMapActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash == null) {
+					splash = ProgressDialog.show(metaMapActivity, "Comapping", message);
+				} else {
+					splash.setMessage(message);
+				}
+			}
+		});
+	}
+
+	public void splashDeactivate() {
+		metaMapActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash != null) {
+					splash.dismiss();
+					splash = null;
+				}
+			}
+		});
 	}
 
 	public void drawMetaMapTopic(final Topic topic, final Topic[] children) {
-		// current folder
-		TextView currentFolder = (TextView) metaMapActivity.findViewById(R.id.currentFolder);
-		currentFolder.setText("Current folder: " + topic.getText());
+		metaMapActivity.setTitle("Comapping: " + topic.getText());
 
 		// list view
 		ListView listView = (ListView) metaMapActivity.findViewById(R.id.listView);
@@ -74,8 +95,6 @@ public class MetaMapView {
 	}
 
 	public void load(final Map metaMap) {
-		metaMapActivity.setContentView(R.layout.metamap);
-
 		metaMapActivity.loadMetaMapTopic(metaMap.getRoot());
 
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);

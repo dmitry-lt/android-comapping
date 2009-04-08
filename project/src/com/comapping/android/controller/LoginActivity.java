@@ -9,8 +9,6 @@
 package com.comapping.android.controller;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.CheckBox;
 
@@ -23,41 +21,19 @@ import com.comapping.android.view.LoginView;
 
 public class LoginActivity extends Activity {
 	private static final int RESULT_LOGIN_SUCCESSFUL = 200;
-	private static final int AUTOLOGIN_ATTEMPT_DIALOG = 3542352;
 
 	public static final String LOGIN_ACTIVITY_INTENT = "com.comapping.android.intent.LOGIN";
 
 	// messages
-	private static final String AUTOLOGIN_ATTEMPT_MESSAGE = "Autologin attempt...";
-	private static final String AUTOLOGIN_ATTEMPT_FAILED_MESSAGE = "Autologin attempt failed";
+	private static final String LOGIN_ATTEMPT_MESSAGE = "Login attempt...";
+	private static final String AUTOLOGIN_ATTEMPT_FAILED_MESSAGE = "Auto login attempt failed";
 	private static final String CONNECTION_ERROR_MESSAGE = "Connection error";
-	private static final String LOADING_MESSAGE = "Loading...";
 	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "Email or password is incorrect";
 
 	private LoginView loginView;
 
 	// use server from MetaMapController
 	Client client = null;
-
-	// dialog
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		// DialogInterface.OnCancelListener autologinCancelled = new
-		// DialogInterface.OnCancelListener() {
-		// @Override
-		// public void onCancel(DialogInterface dialog) {
-		// finishLoginAttempt("Autologin canceled", true);
-		// }
-		// };
-
-		switch (id) {
-		case AUTOLOGIN_ATTEMPT_DIALOG:
-			return new AlertDialog.Builder(this).setMessage(AUTOLOGIN_ATTEMPT_MESSAGE).create();
-		}
-
-		// default
-		return null;
-	}
 
 	private void saveLoginAndPassword() {
 		try {
@@ -90,7 +66,7 @@ public class LoginActivity extends Activity {
 	}
 
 	public void loginClick(final String email, final String password) {
-		loginView.setErrorText(LOADING_MESSAGE);
+		loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
 
 		new Thread() {
 			public void run() {
@@ -108,6 +84,10 @@ public class LoginActivity extends Activity {
 				CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
 
 				finishLoginAttempt(errorMsg, remember.isChecked());
+
+				if (!client.isLoggedIn()) {
+					loginView.splashDeactivate();
+				}
 			}
 		}.start();
 	}
@@ -124,7 +104,7 @@ public class LoginActivity extends Activity {
 			loginView.setEmailText(Storage.getInstance().get("email"));
 			loginView.setPasswordText("******");
 
-			showDialog(AUTOLOGIN_ATTEMPT_DIALOG);
+			loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
 
 			new Thread() {
 				public void run() {
@@ -142,7 +122,7 @@ public class LoginActivity extends Activity {
 					finishLoginAttempt(errorMsg, true);
 
 					if (!client.isLoggedIn()) {
-						removeDialog(AUTOLOGIN_ATTEMPT_DIALOG);
+						loginView.splashDeactivate();
 					}
 				}
 			}.start();
@@ -153,6 +133,8 @@ public class LoginActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		loginView.splashDeactivate();
+
 		super.onDestroy();
 
 		if (!client.isLoggedIn()) {
