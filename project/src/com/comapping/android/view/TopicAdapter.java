@@ -1,7 +1,9 @@
 package com.comapping.android.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Topic;
 
@@ -14,17 +16,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 class TopicAdapter extends ArrayAdapter<String> {
-	Activity context;
+	private Activity context;
 
-	Topic[] topics;
-	List<String> names;
+	private Topic[] topics;
 
-	TopicAdapter(Activity context, Topic[] topics, List<String> names) {
-		super(context, R.layout.row, names);
+	private static List<String> getTopicsNames(Topic[] topics) {
+		List<String> names = new ArrayList<String>();
+
+		for (Topic topic : topics) {
+			names.add(topic.getText());
+		}
+
+		return names;
+	}
+
+	TopicAdapter(Activity context, Topic[] topics) {
+		super(context, R.layout.row, getTopicsNames(topics));
 
 		this.topics = topics;
-		this.names = names;
-
 		this.context = context;
 	}
 
@@ -33,7 +42,7 @@ class TopicAdapter extends ArrayAdapter<String> {
 		View row = inflater.inflate(R.layout.row, null);
 		TextView mapName = (TextView) row.findViewById(R.id.name);
 
-		mapName.setText(names.get(position));
+		mapName.setText(topics[position].getText());
 
 		// set up icon and description
 		ImageView icon = (ImageView) row.findViewById(R.id.icon);
@@ -41,13 +50,12 @@ class TopicAdapter extends ArrayAdapter<String> {
 
 		if (topics[position].isFolder()) {
 			icon.setImageResource(R.drawable.folder_icon);
-			description.setText("Folder");
+			description.setText(MetaMapActivity.FOLDER_DESCRIPTION);
 		} else {
 			icon.setImageResource(R.drawable.map_icon);
-			description.setText("Map");
+			description.setText(MetaMapActivity.MAP_DESCRIPTION);
 		}
 
 		return row;
 	}
-
 }
