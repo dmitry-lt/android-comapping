@@ -33,7 +33,7 @@ public class ComappingRender extends MapRender {
 
 		public Item(Topic topic) {
 			topicData = topic;
-			render = new TopicRender(topicData);
+			render = new TopicRender(topicData, context);
 		}
 
 		public void showChilds() {
@@ -158,8 +158,11 @@ public class ComappingRender extends MapRender {
 
 	Item root;
 	ScrollController scrollController;
+	
+	private Context context;
 
 	public ComappingRender(Context context, Topic map) {
+		this.context = context;
 		root = buildTree(map, null);
 	}
 

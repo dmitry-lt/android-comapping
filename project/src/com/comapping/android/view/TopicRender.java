@@ -3,6 +3,7 @@ package com.comapping.android.view;
 import com.comapping.android.Log;
 import com.comapping.android.model.Topic;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -27,7 +28,7 @@ public class TopicRender extends Render {
 	private int lineOffset;
 	private boolean selected;
 
-	public TopicRender(Topic topic) {
+	public TopicRender(Topic topic, Context context) {
 		if (topic != null) {
 			isEmpty = false;
 		} else {

@@ -37,6 +37,8 @@ public class ExplorerRender extends MapRender {
 	private MyTopic selectedTopic;
 	private ScrollController scroll;
 	private boolean toUpdate = true;
+	
+	private Context context;
 
 	private class MyTopic {
 		public Topic topic;
@@ -56,6 +58,7 @@ public class ExplorerRender extends MapRender {
 	private int screenWidth, screenHeight;
 
 	public ExplorerRender(Context context, Map map) {
+		this.context = context;
 		root = initTopic(map.getRoot(), null);
 		selectedTopic = root;
 	}
@@ -77,7 +80,7 @@ public class ExplorerRender extends MapRender {
 		MyTopic t = new MyTopic();
 		t.topic = topic;
 		t.open = true;
-		t.topicRender = new TopicRender(topic);
+		t.topicRender = new TopicRender(topic, context);
 		t.childs = new ArrayList<MyTopic>();
 		for (int i = 0; i < topic.getChildrenCount(); i++)
 			t.childs.add(initTopic(topic.getChildByIndex(i), t));
