@@ -15,12 +15,13 @@ import android.graphics.Rect;
 public class ExplorerRender extends MapRender {
 
 	private class TouchPoint {
-		public int x, y, index;
+		public int x, y;
+		public MyTopic topic;
 
-		public TouchPoint(int x, int y, int index) {
+		public TouchPoint(int x, int y, MyTopic topic) {
 			this.x = x;
 			this.y = y;
-			this.index = index;
+			this.topic = topic;
 		}
 	}
 
@@ -31,28 +32,32 @@ public class ExplorerRender extends MapRender {
 	private static final int PLUS_LENGTH = 7;
 	private static final int PLUS_WIDTH = 2;
 	private static final int BLOCK_SHIFT = 5;
-	private static final int FAKE_X = 100000000;
 
-	private Map map;
+	private MyTopic root;
+	private MyTopic selectedTopic;
+	private ScrollController scroll;
 	private boolean toUpdate = true;
 
-	private int size;
-	private ArrayList<Boolean> open = new ArrayList<Boolean>();
-	private ArrayList<TopicRender> topicRenders = new ArrayList<TopicRender>();
-	private ArrayList<Integer> topicX = new ArrayList<Integer>();
-	private ArrayList<Integer> topicY = new ArrayList<Integer>();
-	private ArrayList<ArrayList<Integer>> childs = new ArrayList<ArrayList<Integer>>();
+	private class MyTopic {
+		public Topic topic;
+		public boolean open;
+		public TopicRender topicRender;
+		public int topicX, topicY;
+		public ArrayList<MyTopic> childs;
+		public MyTopic up = null, down = null, left = null, right = null;
+	}
 
 	private ArrayList<TouchPoint> points = new ArrayList<TouchPoint>();
 	private ArrayList<Rect> lines = new ArrayList<Rect>();
+	private ArrayList<MyTopic> topics = new ArrayList<MyTopic>();
 
 	private int xPlus, yPlus;
 	private int height, width;
 	private int screenWidth, screenHeight;
 
 	public ExplorerRender(Context context, Map map) {
-		this.map = map;
-		initTopic(map.getRoot());
+		root = initTopic(map.getRoot(), null);
+		selectedTopic = root;
 	}
 
 	private boolean intersects(int a, int b, int c, int d) {
@@ -64,24 +69,31 @@ public class ExplorerRender extends MapRender {
 	}
 
 	private boolean onScreen(int x1, int y1, int x2, int y2) {
-		return intersects(0, screenWidth, x1, x2) && intersects(0, screenHeight, y1, y2);
+		return intersects(0, screenWidth, x1, x2)
+				&& intersects(0, screenHeight, y1, y2);
 	}
 
-	private int initTopic(Topic topic) {
-		open.add(true);
-		topicRenders.add(new TopicRender(topic));
-		topicX.add(0);
-		topicY.add(0);
-		childs.add(new ArrayList<Integer>());
-		int cur = size++;
-		ArrayList<Integer> temp = new ArrayList<Integer>();
+	private MyTopic initTopic(Topic topic, MyTopic parent) {
+		MyTopic t = new MyTopic();
+		t.topic = topic;
+		t.open = true;
+		t.topicRender = new TopicRender(topic);
+		t.childs = new ArrayList<MyTopic>();
 		for (int i = 0; i < topic.getChildrenCount(); i++)
-			temp.add(initTopic(topic.getChildByIndex(i)));
-		childs.set(cur, temp);
-		return cur;
+			t.childs.add(initTopic(topic.getChildByIndex(i), t));
+		t.left = parent;
+		if (topic.getChildrenCount() > 0)
+			t.right = t.childs.get(0);
+		for (int i = 0; i < topic.getChildrenCount(); i++) {
+			if (i > 0)
+				t.childs.get(i).up = t.childs.get(i - 1);
+			if (i + 1 < topic.getChildrenCount())
+				t.childs.get(i).down = t.childs.get(i + 1);
+		}
+		return t;
 	}
 
-	private void drawTopics(Canvas c) {
+	private void draw(Canvas c) {
 		Paint p = new Paint();
 
 		// draw lines
@@ -101,36 +113,58 @@ public class ExplorerRender extends MapRender {
 		for (TouchPoint point : points) {
 			int x = point.x + xPlus;
 			int y = point.y + yPlus;
-			int index = point.index;
-			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y + OUTER_SIZE)) {
+			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y
+					+ OUTER_SIZE)) {
 				c.drawCircle(x, y, OUTER_SIZE, p);
 				p.setColor(Color.WHITE);
 				c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
 				p.setColor(Color.GRAY);
-				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y + PLUS_WIDTH, p);
-				if (!open.get(index))
-					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH, y + PLUS_LENGTH, p);
+				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
+						+ PLUS_WIDTH, p);
+				if (!point.topic.open)
+					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH,
+							y + PLUS_LENGTH, p);
 			}
 		}
 		p.setAntiAlias(false);
 
 		// draw topics
-		for (int i = 0; i < size; i++) {
-			int x = topicX.get(i) + xPlus;
-			if (x == FAKE_X + xPlus)
-				continue;
-			int y = topicY.get(i) + yPlus;
-			TopicRender topicRender = topicRenders.get(i);
-			if (onScreen(x, y, x + topicRender.getWidth(), y + topicRender.getHeight()))
+		for (MyTopic topic : topics) {
+			int x = topic.topicX + xPlus;
+			int y = topic.topicY + yPlus;
+			TopicRender topicRender = topic.topicRender;
+			if (onScreen(x, y, x + topicRender.getWidth(), y
+					+ topicRender.getHeight()))
 				topicRender.draw(x, y, 0, 0, c);
 		}
 
 	}
 
-	private int[] updateTopic(Topic topic, int index, int x, int y) {
-		TopicRender topicRender = topicRenders.get(index);
+	private void FocusTopic(MyTopic topic) {
+		if (selectedTopic != null)
+			selectedTopic.topicRender.setSelected(false);
+		topic.topicRender.setSelected(true);
+		selectedTopic = topic;
+		int x1 = topic.topicX + xPlus;
+		int y1 = topic.topicY + yPlus;
+		int x2 = x1 + topic.topicRender.getWidth();
+		int y2 = y1 + topic.topicRender.getHeight();
+		int nx = -xPlus, ny = -yPlus;
+		if (x1 < 0)
+			nx = topic.topicX;
+		if (y1 < 0)
+			ny = topic.topicY;
+		if (x2 > screenWidth)
+			nx -= screenWidth - x2;
+		if (y2 > screenHeight)
+			ny -= screenHeight - y2;
+		scroll.smoothScroll(nx, ny);
+	}
+
+	private int[] updateTopic(MyTopic topic, int x, int y) {
+		TopicRender topicRender = topic.topicRender;
 		int height = topicRender.getHeight();
-		if (topic.getChildrenCount() > 0)
+		if (topic.childs.size() > 0)
 			height = Math.max(height, OUTER_SIZE * 2);
 		int[] ret = new int[3];
 		ret[0] = topicRender.getWidth() + BLOCK_SHIFT;
@@ -140,33 +174,34 @@ public class ExplorerRender extends MapRender {
 		x += OUTER_SIZE;
 		y += (height - topicRender.getHeight()) / 2;
 		x += X_SHIFT + BLOCK_SHIFT;
-		topicX.set(index, x);
-		topicY.set(index, y);
+		topic.topicX = x;
+		topic.topicY = y;
 		x -= X_SHIFT + BLOCK_SHIFT;
+		topics.add(topic);
 
 		// update circle and line
 		y = ret[1] + ret[2];
 		lines.add(new Rect(x, y, x + X_SHIFT, y));
-		if (topic.getChildrenCount() > 0) {
-			points.add(new TouchPoint(x, y, index));
+		if (topic.childs.size() > 0) {
+			points.add(new TouchPoint(x, y, topic));
 		}
 
 		// update subtopics
 		x += X_SHIFT;
 		y += ret[2];
-		if (topic.getChildrenCount() > 0 && open.get(index)) {
+		if (topic.childs.size() > 0 && topic.open) {
 			int py = y - ret[2];
 			int[] temp;
-			for (int i = 0; i < topic.getChildrenCount(); i++) {
+			for (int i = 0; i < topic.childs.size(); i++) {
 				y += Y_SHIFT;
-				temp = updateTopic(topic.getChildByIndex(i), childs.get(index).get(i), x - OUTER_SIZE, y);
+				temp = updateTopic(topic.childs.get(i), x - OUTER_SIZE, y);
 
 				int ny = y + temp[2];
-				if (topic.getChildByIndex(i).getChildrenCount() > 0)
+				if (topic.topic.getChildByIndex(i).getChildrenCount() > 0)
 					ny -= OUTER_SIZE;
 				lines.add(new Rect(x, py, x, ny));
 				py = y + temp[2];
-				if (topic.getChildByIndex(i).getChildrenCount() > 0)
+				if (topic.childs.get(i).childs.size() > 0)
 					py += OUTER_SIZE;
 
 				ret[0] = Math.max(ret[0], temp[0] - OUTER_SIZE);
@@ -191,19 +226,18 @@ public class ExplorerRender extends MapRender {
 		if (toUpdate) {
 			points.clear();
 			lines.clear();
-			for (int i = 0; i < size; i++)
-				topicX.set(i, FAKE_X);
-			int[] temp = updateTopic(map.getRoot(), 0, 0, 0);
+			topics.clear();
+			int[] temp = updateTopic(root, 0, 0);
 			this.width = temp[0];
 			this.height = temp[1];
 			toUpdate = false;
 		}
-		drawTopics(c);
+		draw(c);
 	}
 
 	@Override
 	public int getHeight() {
-		return Math.max(height, screenHeight);
+		return height;
 	}
 
 	@Override
@@ -214,31 +248,29 @@ public class ExplorerRender extends MapRender {
 	@Override
 	public void onTouch(int x, int y) {
 		for (TouchPoint point : points) {
-			Log.d(Log.explorerRenderTag, "Point : " + point.x + " " + point.y + " " + point.index);
 			if (Math.hypot(point.x - x, point.y - y) <= OUTER_SIZE) {
-				int index = point.index;
-				Log.d(Log.explorerRenderTag, "Touch : " + index);
-				open.set(index, !open.get(index));
+				point.topic.open = !point.topic.open;
 				toUpdate = true;
 			}
 		}
 		
-//		Log.d(Log.explorerRenderTag, "Touch: x=" + x + " y=" + y);
-		for (int i = 0; i < topicRenders.size(); i++) {
-			int height = topicRenders.get(i).getHeight();
-			int width = topicRenders.get(i).getWidth();
-			if (intersects(x, x, topicX.get(i), topicX.get(i) + width) &&
-					intersects(y, y, topicY.get(i), topicY.get(i) + height)) {
-				topicRenders.get(i).onTouch(x - topicX.get(i), y - topicY.get(i));
+		for (MyTopic topic : topics) {
+			int x1 = topic.topicX;
+			int y1 = topic.topicY;
+			int x2 = x1 + topic.topicRender.getWidth();
+			int y2 = y1 + topic.topicRender.getHeight();
+			if (x1 <= x && x <= x2 && y1 <= y && y <= y2)
+			{
+				topic.topicRender.onTouch(x - x1, y - y1);
+				FocusTopic(topic);
 			}
-//			Log.d(Log.explorerRenderTag, topicX.get(i) + " " + topicY.get(i));
 		}
+
 	}
 
 	@Override
 	public void setScrollController(ScrollController scroll) {
-		// TODO Auto-generated method stub
-		
+		this.scroll = scroll;
 	}
 
 }
