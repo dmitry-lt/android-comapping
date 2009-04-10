@@ -1,7 +1,9 @@
 package com.comapping.android.view;
 
 import com.comapping.android.Log;
+import com.comapping.android.controller.MapActivity;
 import com.comapping.android.model.Topic;
+
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
+
 
 public class TopicRender extends Render {
 
@@ -22,6 +25,7 @@ public class TopicRender extends Render {
 	private TextRender textRender;
 	private TaskRender taskRender;
 	private NoteRender noteRender;
+	private AttachmentRender attachmentRender;
 
 	private Topic topic;
 	private int width, height;
@@ -41,13 +45,14 @@ public class TopicRender extends Render {
 			iconRender = new IconRender(topic);
 			taskRender = new TaskRender(topic.getTask());
 			noteRender = new NoteRender(topic.getNote());
+			attachmentRender = new AttachmentRender(topic.getAttachment(), context);
 
 			lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
 
 			height = Math.max(iconRender.getHeight(), textRender.getHeight()) + taskRender.getHeight()
 					+ noteRender.getHeight();
 			width = Math.max(iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth(), Math.max(taskRender
-					.getWidth(), noteRender.getWidth()));
+					.getWidth(), noteRender.getWidth())) + attachmentRender.getWidth();
 			taskRender.setWidth(width);
 		} else {
 			height = 0;
@@ -78,6 +83,10 @@ public class TopicRender extends Render {
 
 			textRender.draw(curX, curY - textRender.getHeight() / 2, 0, 0, c);
 
+			// draw attachment
+			curX += HORISONTAL_MERGING + textRender.getWidth();
+			attachmentRender.draw(curX, curY - attachmentRender.getHeight() / 2, 0, 0, c);
+			
 			// draw task
 			curX = x;
 			curY = y + this.getLineOffset();
@@ -104,6 +113,7 @@ public class TopicRender extends Render {
 	}
 
 	public void setSelected(boolean selected) {
+		
 		this.selected = selected;
 	}
 
@@ -138,6 +148,11 @@ public class TopicRender extends Render {
 	@Override
 	public void onTouch(int x, int y) {
 		Log.d(Log.topicRenderTag, "Touch on " + topic);
+		if ((topic.getAttachment() != null) && 
+			(x >= iconRender.getWidth() + 2 * HORISONTAL_MERGING + textRender.getWidth()) &&
+			(y <= attachmentRender.getHeight())) {
+			attachmentRender.onTouch(0, 0);
+		}
 	}
 
 }
