@@ -222,6 +222,17 @@ public class ExplorerRender extends MapRender {
 				toUpdate = true;
 			}
 		}
+		
+//		Log.d(Log.explorerRenderTag, "Touch: x=" + x + " y=" + y);
+		for (int i = 0; i < topicRenders.size(); i++) {
+			int height = topicRenders.get(i).getHeight();
+			int width = topicRenders.get(i).getWidth();
+			if (intersects(x, x, topicX.get(i), topicX.get(i) + width) &&
+					intersects(y, y, topicY.get(i), topicY.get(i) + height)) {
+				topicRenders.get(i).onTouch(x - topicX.get(i), y - topicY.get(i));
+			}
+//			Log.d(Log.explorerRenderTag, topicX.get(i) + " " + topicY.get(i));
+		}
 	}
 
 	@Override
