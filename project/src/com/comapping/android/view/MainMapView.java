@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -41,6 +42,7 @@ public class MainMapView extends View {
 
 	public MainMapView(Context context, MapRender render) {
 		super(context);
+		setFocusable(true);
 		mRender = render;
 		mRender.setScrollController(scrollController);
 		mScroller = new Scroller(context);
@@ -169,6 +171,17 @@ public class MainMapView extends View {
 		return true;
 	}
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent msg) {
+
+    	Log.d("Test", "Press");
+    	
+    	mRender.onKeyDown(keyCode);
+    	
+    	return true;
+    }
+	
+	
 	private final int getVertOffset() {
 		return 0;
 		// if (mRender.getHeight() >= this.getHeight())

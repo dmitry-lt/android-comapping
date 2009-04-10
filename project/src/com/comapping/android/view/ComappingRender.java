@@ -300,4 +300,10 @@ public class ComappingRender extends MapRender {
 	public void setScrollController(ScrollController scroll) {
 		scrollController = scroll;
 	}
+
+	@Override
+	public void onKeyDown(int keyCode) {
+		// TODO Auto-generated method stub
+		
+	}
 }

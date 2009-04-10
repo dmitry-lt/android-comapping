@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.KeyEvent;
 
 public class ExplorerRender extends MapRender {
 
@@ -144,6 +145,8 @@ public class ExplorerRender extends MapRender {
 	}
 
 	private void FocusTopic(MyTopic topic) {
+		if (topic == null)
+			return;
 		if (selectedTopic != null)
 			selectedTopic.topicRender.setSelected(false);
 		topic.topicRender.setSelected(true);
@@ -153,14 +156,14 @@ public class ExplorerRender extends MapRender {
 		int x2 = x1 + topic.topicRender.getWidth();
 		int y2 = y1 + topic.topicRender.getHeight();
 		int nx = -xPlus, ny = -yPlus;
-		if (x1 < 0)
-			nx = topic.topicX;
-		if (y1 < 0)
-			ny = topic.topicY;
 		if (x2 > screenWidth)
 			nx -= screenWidth - x2;
 		if (y2 > screenHeight)
 			ny -= screenHeight - y2;
+		if (x1 < 0)
+			nx = topic.topicX;
+		if (y1 < 0)
+			ny = topic.topicY;
 		scroll.smoothScroll(nx, ny);
 	}
 
@@ -218,6 +221,16 @@ public class ExplorerRender extends MapRender {
 		return ret;
 	}
 
+	private void update() {
+		points.clear();
+		lines.clear();
+		topics.clear();
+		int[] temp = updateTopic(root, 0, 0);
+		this.width = temp[0];
+		this.height = temp[1];
+		toUpdate = false;
+	}
+
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		x = -x;
@@ -227,13 +240,7 @@ public class ExplorerRender extends MapRender {
 		screenWidth = width;
 		screenHeight = height;
 		if (toUpdate) {
-			points.clear();
-			lines.clear();
-			topics.clear();
-			int[] temp = updateTopic(root, 0, 0);
-			this.width = temp[0];
-			this.height = temp[1];
-			toUpdate = false;
+			update();
 		}
 		draw(c);
 	}
@@ -256,14 +263,13 @@ public class ExplorerRender extends MapRender {
 				toUpdate = true;
 			}
 		}
-		
+
 		for (MyTopic topic : topics) {
 			int x1 = topic.topicX;
 			int y1 = topic.topicY;
 			int x2 = x1 + topic.topicRender.getWidth();
 			int y2 = y1 + topic.topicRender.getHeight();
-			if (x1 <= x && x <= x2 && y1 <= y && y <= y2)
-			{
+			if (x1 <= x && x <= x2 && y1 <= y && y <= y2) {
 				topic.topicRender.onTouch(x - x1, y - y1);
 				FocusTopic(topic);
 			}
@@ -276,4 +282,31 @@ public class ExplorerRender extends MapRender {
 		this.scroll = scroll;
 	}
 
+	@Override
+	public void onKeyDown(int keyCode) {
+		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+			FocusTopic(selectedTopic.left);
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+			FocusTopic(selectedTopic.up);
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+			FocusTopic(selectedTopic.down);
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+			if (selectedTopic.childs.size() > 0) {
+				if (!selectedTopic.open) {
+					selectedTopic.open = true;
+					update();
+				}
+				FocusTopic(selectedTopic.right);
+			}
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+			if (selectedTopic.childs.size() > 0) {
+				selectedTopic.open = !selectedTopic.open;
+				update();
+			}
+		}
+	}
 }
