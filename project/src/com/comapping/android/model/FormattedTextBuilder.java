@@ -32,15 +32,15 @@ public class FormattedTextBuilder {
 		} else {
 			xmlString = "<TEXT><P><FONT>" + xmlString;
 		}
-		
+
 		if (xmlString.endsWith("P>")) {
 			xmlString = xmlString + "</TEXT>";
 		} else if (xmlString.endsWith("FONT>")) {
 			xmlString = xmlString + "</P></TEXT>";
 		} else {
 			xmlString = xmlString + "</FONT></P></TEXT>";
-		}		
-			
+		}
+
 		Log.d(Log.modelTag, "parsing text: " + xmlString);
 
 		Document document = DocumentBuilder.buildDocument(xmlString);
