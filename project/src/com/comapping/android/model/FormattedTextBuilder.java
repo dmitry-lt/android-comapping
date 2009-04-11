@@ -25,7 +25,22 @@ public class FormattedTextBuilder {
 	private static final TextFormat defFormat = getDefFormat();
 
 	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {
-		xmlString = "<TEXT><P><FONT>" + xmlString + "</FONT></P></TEXT>";
+		if (xmlString.startsWith("<P")) {
+			xmlString = "<TEXT>" + xmlString;
+		} else if (xmlString.startsWith("<FONT")) {
+			xmlString = "<TEXT><P>" + xmlString;
+		} else {
+			xmlString = "<TEXT><P><FONT>" + xmlString;
+		}
+		
+		if (xmlString.endsWith("P>")) {
+			xmlString = xmlString + "</TEXT>";
+		} else if (xmlString.endsWith("FONT>")) {
+			xmlString = xmlString + "</P></TEXT>";
+		} else {
+			xmlString = xmlString + "</FONT></P></TEXT>";
+		}		
+			
 		Log.d(Log.modelTag, "parsing text: " + xmlString);
 
 		Document document = DocumentBuilder.buildDocument(xmlString);
