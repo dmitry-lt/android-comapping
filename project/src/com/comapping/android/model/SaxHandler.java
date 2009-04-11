@@ -24,11 +24,11 @@ class SaxHandler extends DefaultHandler {
 	private boolean isOwnerIDTag = false;
 	private boolean isOwnerNameTag = false;
 	private boolean isOwnerEmailTag = false;
-	private boolean isTopicTag = false;
 	private boolean isTextTag = false;
 
-	private int MapId = 0;
-	private String MapName = null;
+	private int mapId = 0;
+	private String mapName = null;
+
 	private int ownerId;
 	private String ownerName;
 	private String ownerEmail;
@@ -36,7 +36,6 @@ class SaxHandler extends DefaultHandler {
 	private Map map;
 	private String topicText;
 	private Topic currentTopic = null;
-	private Topic parent = null;
 	private long startTime;
 
 	public void startDocument() {
@@ -44,34 +43,26 @@ class SaxHandler extends DefaultHandler {
 		Log.i(Log.modelTag, "SAX parsing started... \n");
 	}
 
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		try {
-			int length = attributes.getLength();
 			if (localName.equals(MapBuilder.METADATA_TAG)) {
 				isMetaDataTag = true;
-			} else if (localName.equals(MapBuilder.MAP_ID_TAG) && MapId == 0) {
+			} else if (localName.equals(MapBuilder.MAP_ID_TAG) && mapId == 0) {
 				isMapIDTag = true;
-			} else if (localName.equals(MapBuilder.MAP_NAME_TAG)
-					&& MapName == null) {
+			} else if (localName.equals(MapBuilder.MAP_NAME_TAG) && mapName == null) {
 				isMapNameTag = true;
 			} else if (localName.equals(MapBuilder.MAP_OWNER_TAG)) {
 				isOwnerTag = true;
 			} else if (localName.equals(MapBuilder.OWNER_ID_TAG) && isOwnerTag) {
 				isOwnerIDTag = true;
-			} else if (localName.equals(MapBuilder.OWNER_NAME_TAG)
-					&& isOwnerTag) {
+			} else if (localName.equals(MapBuilder.OWNER_NAME_TAG) && isOwnerTag) {
 				isOwnerNameTag = true;
-			} else if (localName.equals(MapBuilder.OWNER_EMAIL_TAG)
-					&& isOwnerTag) {
+			} else if (localName.equals(MapBuilder.OWNER_EMAIL_TAG) && isOwnerTag) {
 				isOwnerEmailTag = true;
 			} else if (localName.equals(MapBuilder.TOPIC_TAG)) {
-				isTopicTag = true;
-				currentTopic = new Topic(parent);
-				parent = currentTopic.getParent();
+				currentTopic = new Topic(currentTopic);
 				getTopicAttributes(attributes);
-				if (parent == null) {
-					parent = currentTopic;
+				if (currentTopic.isRoot()) {
 					map.setRoot(currentTopic);
 				} else {
 					currentTopic.getParent().addChild(currentTopic);
@@ -85,31 +76,18 @@ class SaxHandler extends DefaultHandler {
 				String note = attributes.getValue(MapBuilder.NOTE_TEXT_TAG);
 				currentTopic.setNote(note);
 
-			} else if (localName.equals(MapBuilder.TOPIC_TASK_TAG)) {
-				String start = attributes.getValue(MapBuilder.TASK_START_TAG);
-				String deadline = attributes
-						.getValue(MapBuilder.TASK_DEADLINE_TAG);
-				String responsible = attributes
-						.getValue(MapBuilder.TASK_RESPONSIBLE_TAG);
-				Task task = new Task(start, deadline, responsible);
 			} else if (qName.equals(MapBuilder.TOPIC_TASK_TAG)) {
 				String start = attributes.getValue(MapBuilder.TASK_START_TAG);
-				String deadline = attributes
-						.getValue(MapBuilder.TASK_DEADLINE_TAG);
-				String responsible = attributes
-						.getValue(MapBuilder.TASK_RESPONSIBLE_TAG);
+				String deadline = attributes.getValue(MapBuilder.TASK_DEADLINE_TAG);
+				String responsible = attributes.getValue(MapBuilder.TASK_RESPONSIBLE_TAG);
 				Task task = new Task(start, deadline, responsible);
 				currentTopic.setTask(task);
 			} else if (localName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
-				float fDate = Float.parseFloat(attributes
-						.getValue(MapBuilder.ATTACHMENT_DATE_TAG));
-				String filename = attributes
-						.getValue(MapBuilder.ATTACHMENT_FILENAME_TAG);
+				float fDate = Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG));
+				String filename = attributes.getValue(MapBuilder.ATTACHMENT_FILENAME_TAG);
 				String key = attributes.getValue(MapBuilder.ATTACHMENT_KEY_TAG);
-				int size = Integer.parseInt(attributes
-						.getValue(MapBuilder.ATTACHMENT_SIZE_TAG));
-				Attachment attachment = new Attachment(new Date(), filename,
-						key, size);
+				int size = Integer.parseInt(attributes.getValue(MapBuilder.ATTACHMENT_SIZE_TAG));
+				Attachment attachment = new Attachment(new Date(), filename, key, size);
 				currentTopic.setAttachment(attachment);
 			}
 		} catch (NullPointerException e) {
@@ -131,14 +109,11 @@ class SaxHandler extends DefaultHandler {
 		try {
 			int length = attributes.getLength();
 			for (int i = 0; i < length; i++) {
-				String qName = attributes.getQName(i);
+				String qName = attributes.getLocalName(i);
+
 				if (qName.equals(MapBuilder.TOPIC_ID_TAG)) {
-					currentTopic
-							.setId(Integer.parseInt(attributes.getValue(i)));
-					int id = Integer.parseInt(attributes.getValue(i));
-					Log.d("Map Builder", "parsing node with id=" + id);
-				} else if (qName
-						.equals(MapBuilder.TOPIC_LAST_MODIFICATION_DATE_TAG)) {
+					currentTopic.setId(Integer.parseInt(attributes.getValue(i)));
+				} else if (qName.equals(MapBuilder.TOPIC_LAST_MODIFICATION_DATE_TAG)) {
 					String strDate = attributes.getValue(i);
 					SimpleDateFormat dateFormat = new SimpleDateFormat();
 					dateFormat.applyPattern("yyyy-MM-dd HH:mm:ss");
@@ -150,21 +125,21 @@ class SaxHandler extends DefaultHandler {
 					}
 					currentTopic.setLastModificationDate(date);
 				} else if (qName.equals(MapBuilder.TOPIC_BGCOLOR_TAG)) {
-					currentTopic.setBgColor(Integer.parseInt(attributes
-							.getValue(i)));
+					currentTopic.setBgColor(Integer.parseInt(attributes.getValue(i)));
 				} else if (qName.equals(MapBuilder.TOPIC_FLAG_TAG)) {
 					String strFlag = attributes.getValue(i);
 					currentTopic.setFlag(Flag.parse(strFlag));
 				} else if (qName.equals(MapBuilder.TOPIC_PRIORITY_TAG)) {
-					currentTopic.setPriority(Integer.parseInt(attributes
-							.getValue(i)));
+					currentTopic.setPriority(Integer.parseInt(attributes.getValue(i)));
 				} else if (qName.equals(MapBuilder.TOPIC_SMILEY_TAG)) {
 					String strSmiley = attributes.getValue(i);
 					currentTopic.setSmiley(Smiley.parse(strSmiley));
 				} else if (qName.equals(MapBuilder.TOPIC_TASK_COMPLETION_TAG)) {
 					String strTaskCompletion = attributes.getValue(i);
-					currentTopic.setTaskCompletion(TaskCompletion
-							.parse(strTaskCompletion));
+					currentTopic.setTaskCompletion(TaskCompletion.parse(strTaskCompletion));
+				} else if (qName.equals(MapBuilder.TOPIC_MAP_REF_TAG)) {
+					String mapRef = attributes.getValue(i);
+					currentTopic.setMapRef(mapRef);
 				} else if (qName.equals(MapBuilder.TOPIC_MAP_REF_TAG)) {
 					String mapRef = attributes.getValue(i);
 					currentTopic.setMapRef(mapRef);
@@ -185,10 +160,10 @@ class SaxHandler extends DefaultHandler {
 	public void characters(char[] ch, int start, int len) throws SAXException {
 		String string = new String(ch, start, len);
 		if (isMapIDTag) {
-			MapId = Integer.parseInt(string);
+			mapId = Integer.parseInt(string);
 			isMapIDTag = false;
 		} else if (isMapNameTag) {
-			MapName = string;
+			mapName = string;
 			isMapNameTag = false;
 		} else if (isOwnerIDTag) {
 			ownerId = Integer.parseInt(string);
@@ -199,23 +174,20 @@ class SaxHandler extends DefaultHandler {
 		} else if (isOwnerEmailTag) {
 			ownerEmail = string;
 			isOwnerEmailTag = false;
-		} else if (isTopicTag) {
-
 		} else if (isTextTag) {
 			topicText = string;
 			isTextTag = false;
 		}
 	}
 
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
+	public void endElement(String uri, String localName, String qName) throws SAXException {
 		try {
 			if (localName.equals(MapBuilder.MAP_OWNER_TAG)) {
 				owner = new User(ownerId, ownerName, ownerEmail);
 				isOwnerTag = false;
 			} else if (localName.equals(MapBuilder.METADATA_TAG)) {
-				map = new Map(MapId);
-				map.setName(MapName);
+				map = new Map(mapId);
+				map.setName(mapName);
 				map.setOwner(owner);
 				isMetaDataTag = false;
 			} else if (localName.equals(MapBuilder.TOPIC_TAG)) {
@@ -232,18 +204,12 @@ class SaxHandler extends DefaultHandler {
 		}
 	}
 
-	public void setMap(Map newmap) {
-		map = newmap;
-	}
-
 	public Map getMap() {
 		return map;
 	}
 
 	public void endDocument() {
-		setMap(map);
 		long parsingTime = System.currentTimeMillis() - startTime;
-		Log.w(Log.modelTag, "map was built successfully, parsing time: "
-				+ parsingTime);
+		Log.w(Log.modelTag, "map was built successfully, parsing time: " + parsingTime);
 	}
 }
