@@ -115,9 +115,10 @@ class SaxHandler extends DefaultHandler {
 				String note = attributes.getValue(MapBuilder.NOTE_TEXT_TAG);
 				currentTopic.setNote(note);
 			} else if (qName.equals(MapBuilder.TOPIC_TASK_TAG)) {
+				String start = attributes.getValue(MapBuilder.TASK_START_TAG);
 				String deadline = attributes.getValue(MapBuilder.TASK_DEADLINE_TAG);
 				String responsible = attributes.getValue(MapBuilder.TASK_RESPONSIBLE_TAG);
-				Task task = new Task(deadline, responsible);
+				Task task = new Task(start, deadline, responsible);
 				currentTopic.setTask(task);
 			} else if (qName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
 				float fDate = Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG));

@@ -1,12 +1,22 @@
 package com.comapping.android.model;
 
 public class Task {
+	private String start;
 	private String deadline;
 	private String responsible;
 
-	public Task(String deadline, String responsible) {
+	public Task(String start, String deadline, String responsible) {
+		setStart(start);
 		setDeadline(deadline);
 		setResponsible(responsible);
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
+	public String getStart() {
+		return start;
 	}
 
 	public String getDeadline() {

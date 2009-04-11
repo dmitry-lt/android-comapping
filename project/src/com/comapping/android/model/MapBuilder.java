@@ -23,6 +23,7 @@ abstract public class MapBuilder {
 	static final String TOPIC_NOTE_TAG = "note";
 	static final String NOTE_TEXT_TAG = "text";
 	static final String TOPIC_TASK_TAG = "task";
+	static final String TASK_START_TAG = "start";
 	static final String TASK_DEADLINE_TAG = "deadline";
 	static final String TASK_RESPONSIBLE_TAG = "responsible";
 	static final String TOPIC_ATTACHMENT_TAG = "attachment";
