@@ -15,7 +15,14 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.comapping.android.Log;
 
 class SaxHandler extends DefaultHandler {
-
+	private static Integer TOPIC_ID_TAG_HASHCODE = MapBuilder.TOPIC_ID_TAG.hashCode();
+	private static Integer TOPIC_BGCOLOR_TAG_HASHCODE = MapBuilder.TOPIC_BGCOLOR_TAG .hashCode();
+	private static Integer TOPIC_FLAG_TAG_HASHCODE = MapBuilder.TOPIC_FLAG_TAG.hashCode();
+	private static Integer TOPIC_PRIORITY_TAG_HASHCODE = MapBuilder.TOPIC_PRIORITY_TAG.hashCode();
+	private static Integer TOPIC_SMILEY_TAG_HASHCODE = MapBuilder.TOPIC_SMILEY_TAG.hashCode();
+	private static Integer TOPIC_TASK_COMPLETION_TAG_HASHCODE = MapBuilder.TOPIC_TASK_COMPLETION_TAG.hashCode();
+	private static Integer TOPIC_MAP_REF_TAG_HASHCODE = MapBuilder.TOPIC_MAP_REF_TAG.hashCode();
+	
 	private boolean isMetaDataTag = false;
 	private boolean isMapIDTag = false;
 	private boolean isMapNameTag = false;
@@ -41,6 +48,7 @@ class SaxHandler extends DefaultHandler {
 
 	public void startDocument() {
 		startTime = System.currentTimeMillis();
+		
 		Log.i(Log.modelTag, "SAX parsing started... \n");
 	}
 
@@ -111,44 +119,44 @@ class SaxHandler extends DefaultHandler {
 	
 	private void getTopicAttributes(Attributes attributes) throws SAXException {
 		try {
-			HashMap<String, String> attributesMap = new HashMap<String, String>();
+			HashMap<Integer, String> attributesMap = new HashMap<Integer, String>();
 			
 			int length = attributes.getLength();
 			for (int i = 0; i < length; i++) {
-				attributesMap.put(attributes.getLocalName(i), attributes.getValue(i));
+				attributesMap.put(attributes.getLocalName(i).hashCode(), attributes.getValue(i));
 			}
 			
-			String topicId = attributesMap.get(MapBuilder.TOPIC_ID_TAG);
+			String topicId = attributesMap.get(TOPIC_ID_TAG_HASHCODE);
 			if (topicId != null) {
 				currentTopic.setId(Integer.parseInt(topicId));
 			}
 			
-			String topicBgcolor = attributesMap.get(MapBuilder.TOPIC_BGCOLOR_TAG);
+			String topicBgcolor = attributesMap.get(TOPIC_BGCOLOR_TAG_HASHCODE);
 			if (topicBgcolor != null) {
 				currentTopic.setBgColor(Integer.parseInt(topicBgcolor));
 			}
 			
-			String topicFlag = attributesMap.get(MapBuilder.TOPIC_FLAG_TAG);
+			String topicFlag = attributesMap.get(TOPIC_FLAG_TAG_HASHCODE);
 			if (topicFlag != null) {
 				currentTopic.setFlag(Flag.parse(topicFlag));
 			}
 			
-			String topicPriority = attributesMap.get(MapBuilder.TOPIC_PRIORITY_TAG);
+			String topicPriority = attributesMap.get(TOPIC_PRIORITY_TAG_HASHCODE);
 			if (topicPriority != null) {
 				currentTopic.setPriority(Integer.parseInt(topicPriority));
 			}
 			
-			String topicSmiley = attributesMap.get(MapBuilder.TOPIC_SMILEY_TAG);
+			String topicSmiley = attributesMap.get(TOPIC_SMILEY_TAG_HASHCODE);
 			if (topicSmiley != null) {
 				currentTopic.setSmiley(Smiley.parse(topicSmiley));
 			}
 			
-			String topicTaskCompletion = attributesMap.get(MapBuilder.TOPIC_TASK_COMPLETION_TAG);
+			String topicTaskCompletion = attributesMap.get(TOPIC_TASK_COMPLETION_TAG_HASHCODE);
 			if (topicTaskCompletion != null) {
 				currentTopic.setTaskCompletion(TaskCompletion.parse(topicTaskCompletion));
 			}
 			
-			String topicMapRef = attributesMap.get(MapBuilder.TOPIC_MAP_REF_TAG);
+			String topicMapRef = attributesMap.get(TOPIC_MAP_REF_TAG_HASHCODE);
 			if (topicMapRef != null) {
 				currentTopic.setMapRef(topicMapRef);
 			}
