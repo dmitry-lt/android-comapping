@@ -6,6 +6,7 @@
 package com.comapping.android.model;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -107,28 +108,42 @@ class SaxHandler extends DefaultHandler {
 			throw new SAXException();
 		}
 	}
-
-	public void getTopicAttributes(Attributes attributes) throws SAXException {
+	
+	private void getTopicAttributes(Attributes attributes) throws SAXException {
 		try {
-			int length = attributes.getLength();
-			for (int i = 0; i < length; i++) {
-				String qName = attributes.getLocalName(i);
-
-				if (qName.equals(MapBuilder.TOPIC_ID_TAG)) {
-					currentTopic.setId(Integer.parseInt(attributes.getValue(i)));
-				} else if (qName.equals(MapBuilder.TOPIC_BGCOLOR_TAG)) {
-					currentTopic.setBgColor(Integer.parseInt(attributes.getValue(i)));
-				} else if (qName.equals(MapBuilder.TOPIC_FLAG_TAG)) {
-					currentTopic.setFlag(Flag.parse(attributes.getValue(i)));
-				} else if (qName.equals(MapBuilder.TOPIC_PRIORITY_TAG)) {
-					currentTopic.setPriority(Integer.parseInt(attributes.getValue(i)));
-				} else if (qName.equals(MapBuilder.TOPIC_SMILEY_TAG)) {
-					currentTopic.setSmiley(Smiley.parse(attributes.getValue(i)));
-				} else if (qName.equals(MapBuilder.TOPIC_TASK_COMPLETION_TAG)) {
-					currentTopic.setTaskCompletion(TaskCompletion.parse(attributes.getValue(i)));
-				} else if (qName.equals(MapBuilder.TOPIC_MAP_REF_TAG)) {
-					currentTopic.setMapRef(attributes.getValue(i));
-				}
+			String topicId = attributes.getValue("", MapBuilder.TOPIC_ID_TAG);
+			if (topicId != null) {
+				currentTopic.setId(Integer.parseInt(topicId));
+			}
+			
+			String topicBgcolor = attributes.getValue("", MapBuilder.TOPIC_BGCOLOR_TAG);
+			if (topicBgcolor != null) {
+				currentTopic.setBgColor(Integer.parseInt(topicBgcolor));
+			}
+			
+			String topicFlag = attributes.getValue("", MapBuilder.TOPIC_FLAG_TAG);
+			if (topicFlag != null) {
+				currentTopic.setFlag(Flag.parse(topicFlag));
+			}
+			
+			String topicPriority = attributes.getValue("", MapBuilder.TOPIC_PRIORITY_TAG);
+			if (topicPriority != null) {
+				currentTopic.setPriority(Integer.parseInt(topicPriority));
+			}
+			
+			String topicSmiley = attributes.getValue("", MapBuilder.TOPIC_SMILEY_TAG);
+			if (topicSmiley != null) {
+				currentTopic.setSmiley(Smiley.parse(topicSmiley));
+			}
+			
+			String topicTaskCompletion = attributes.getValue("", MapBuilder.TOPIC_TASK_COMPLETION_TAG);
+			if (topicTaskCompletion != null) {
+				currentTopic.setTaskCompletion(TaskCompletion.parse(topicTaskCompletion));
+			}
+			
+			String topicMapRef = attributes.getValue("", MapBuilder.TOPIC_MAP_REF_TAG);
+			if (topicMapRef != null) {
+				currentTopic.setMapRef(topicMapRef);
 			}
 		} catch (EnumParsingException e) {
 			e.printStackTrace();
