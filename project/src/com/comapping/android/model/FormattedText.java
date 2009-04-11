@@ -1,5 +1,6 @@
 package com.comapping.android.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ public class FormattedText {
 
 	private List<TextParagraph> textParagraphs;
 	private String simpleText;
+
+	public FormattedText() {
+		this(new ArrayList<TextParagraph>());
+	}
 
 	public FormattedText(List<TextParagraph> textParagraphs) {
 		this.textParagraphs = textParagraphs;

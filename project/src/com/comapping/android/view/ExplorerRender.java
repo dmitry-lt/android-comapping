@@ -38,7 +38,7 @@ public class ExplorerRender extends MapRender {
 	private MyTopic selectedTopic;
 	private ScrollController scroll;
 	private boolean toUpdate = true;
-	
+
 	private Context context;
 
 	private class MyTopic {
@@ -73,8 +73,7 @@ public class ExplorerRender extends MapRender {
 	}
 
 	private boolean onScreen(int x1, int y1, int x2, int y2) {
-		return intersects(0, screenWidth, x1, x2)
-				&& intersects(0, screenHeight, y1, y2);
+		return intersects(0, screenWidth, x1, x2) && intersects(0, screenHeight, y1, y2);
 	}
 
 	private MyTopic initTopic(Topic topic, MyTopic parent) {
@@ -117,17 +116,14 @@ public class ExplorerRender extends MapRender {
 		for (TouchPoint point : points) {
 			int x = point.x + xPlus;
 			int y = point.y + yPlus;
-			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y
-					+ OUTER_SIZE)) {
+			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y + OUTER_SIZE)) {
 				c.drawCircle(x, y, OUTER_SIZE, p);
 				p.setColor(Color.WHITE);
 				c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
 				p.setColor(Color.GRAY);
-				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
-						+ PLUS_WIDTH, p);
+				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y + PLUS_WIDTH, p);
 				if (!point.topic.open)
-					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH,
-							y + PLUS_LENGTH, p);
+					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH, y + PLUS_LENGTH, p);
 			}
 		}
 		p.setAntiAlias(false);
@@ -137,8 +133,7 @@ public class ExplorerRender extends MapRender {
 			int x = topic.topicX + xPlus;
 			int y = topic.topicY + yPlus;
 			TopicRender topicRender = topic.topicRender;
-			if (onScreen(x, y, x + topicRender.getWidth(), y
-					+ topicRender.getHeight()))
+			if (onScreen(x, y, x + topicRender.getWidth(), y + topicRender.getHeight()))
 				topicRender.draw(x, y, 0, 0, c);
 		}
 
@@ -169,6 +164,7 @@ public class ExplorerRender extends MapRender {
 
 	private int[] updateTopic(MyTopic topic, int x, int y) {
 		TopicRender topicRender = topic.topicRender;
+		topicRender.setMaxWidth(screenWidth);
 		int height = topicRender.getHeight();
 		if (topic.childs.size() > 0)
 			height = Math.max(height, OUTER_SIZE * 2);

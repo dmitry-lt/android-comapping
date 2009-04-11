@@ -58,10 +58,8 @@ public class FormattedTextBuilder {
 	private static List<TextBlock> buildTextBlocks(Node node, TextFormat curFormat) {
 		List<TextBlock> result = new ArrayList<TextBlock>();
 
-		Log.d(Log.modelTag, "nodeName: " + node.getNodeName());
 		if (node.getNodeType() == Node.TEXT_NODE) {
 			String text = node.getNodeValue();
-			Log.d(Log.modelTag, "nodeValue: " + text);
 			result.add(new TextBlock(text, curFormat));
 
 		} else {

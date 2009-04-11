@@ -1,7 +1,6 @@
 package com.comapping.android.view;
 
 import com.comapping.android.Log;
-import com.comapping.android.controller.MapActivity;
 import com.comapping.android.model.Topic;
 
 import android.content.Context;
@@ -14,7 +13,7 @@ import android.graphics.Paint.Style;
 
 public class TopicRender extends Render {
 
-	private static final int HORISONTAL_MERGING = 5;
+	private static final int HORISONTAL_MERGING = 0;
 	private static final int SELECTION_COLOR = Color.argb(255, 127, 191, 255);
 	private static final int SELECTION_WIDTH = 3;
 	private static final int SELECTION_EDGES_RADIUS = 4;
@@ -159,6 +158,12 @@ public class TopicRender extends Render {
 				noteRender.onTouch(touchPoint.x, touchPoint.y);
 			}
 		}
+	}
+
+	public void setMaxWidth(int maxWidth) {
+		int textMaxWidth = maxWidth - iconRender.getWidth() - attachmentRender.getWidth();
+		textRender.setMaxWidth(textMaxWidth);
+		RecalcDrawingData();
 	}
 
 	private boolean pointLiesOnRect(Point p, Point corner, int width, int height) {

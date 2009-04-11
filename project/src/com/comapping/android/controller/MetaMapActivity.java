@@ -31,6 +31,7 @@ import com.comapping.android.model.Map;
 import com.comapping.android.model.DomMapBuilder;
 import com.comapping.android.model.MapBuilder;
 import com.comapping.android.model.MapParsingException;
+import com.comapping.android.model.SaxMapBuilder;
 import com.comapping.android.model.StringToXMLConvertionException;
 import com.comapping.android.model.Topic;
 import com.comapping.android.model.TopicComparator;
@@ -53,7 +54,7 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public static Client client = new Client();
-	public static MapBuilder mapBuilder = new DomMapBuilder();
+	public static MapBuilder mapBuilder = new SaxMapBuilder();
 
 	public Map currentMap;
 
@@ -100,7 +101,7 @@ public class MetaMapActivity extends Activity {
 			finish();
 		}
 	}
-	
+
 	/* Handles item selections */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -140,7 +141,7 @@ public class MetaMapActivity extends Activity {
 
 	private void metaMapRefresh() {
 		metaMapView = new MetaMapView(this);
-		
+
 		final Activity context = this;
 
 		new Thread() {
@@ -148,7 +149,7 @@ public class MetaMapActivity extends Activity {
 				String result = "";
 
 				metaMapView.splashActivate("Downloading map list");
-				
+
 				try {
 					result = client.getComap("meta", context);
 				} catch (ConnectionException e) {
@@ -158,7 +159,7 @@ public class MetaMapActivity extends Activity {
 				}
 
 				metaMapView.splashActivate("Loading map list");
-				
+
 				Map metaMap = null;
 				try {
 					metaMap = mapBuilder.buildMap(result);
@@ -169,7 +170,7 @@ public class MetaMapActivity extends Activity {
 				}
 
 				metaMapView.splashDeactivate();
-				
+
 				final Map finalMetaMap = metaMap;
 
 				runOnUiThread(new Runnable() {
@@ -194,7 +195,7 @@ public class MetaMapActivity extends Activity {
 		Intent intent = new Intent(MapActivity.MAP_ACTIVITY_INTENT);
 		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
-		
+
 		startActivityForResult(intent, MAP_REQUEST);
 	}
 

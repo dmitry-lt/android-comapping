@@ -3,9 +3,6 @@ package com.comapping.android.view;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Attachment;
-import com.comapping.android.model.Icon;
-import com.comapping.android.model.Topic;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

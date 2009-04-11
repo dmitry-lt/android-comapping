@@ -8,6 +8,10 @@ public class TextParagraph {
 	private int maxFontSize;
 	private String simpleText;
 
+	public TextParagraph() {
+		this(new ArrayList<TextBlock>());
+	}
+
 	public TextParagraph(String text, TextFormat format) {
 		this.textBlocks = new ArrayList<TextBlock>();
 		add(new TextBlock(text, format));

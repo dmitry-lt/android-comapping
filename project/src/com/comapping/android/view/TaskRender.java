@@ -49,7 +49,7 @@ public class TaskRender extends Render {
 	}
 
 	public void setWidth(int width) {
-		if (this.width < width) {
+		if (!isEmpty && this.width < width) {
 			this.width = width;
 		}
 	}

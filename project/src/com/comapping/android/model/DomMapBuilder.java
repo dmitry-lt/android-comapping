@@ -94,7 +94,7 @@ public class DomMapBuilder extends MapBuilder {
 		}
 
 		long parsingTime = System.currentTimeMillis() - startTime;
-		Log.w(Log.modelTag, "map was built successfully, parsing time: " + parsingTime);
+		Log.w(Log.modelTag, "map was built with DOM successfully, parsing time: " + parsingTime);
 
 		return map;
 	}

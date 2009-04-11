@@ -16,17 +16,19 @@ import com.comapping.android.Log;
 
 class SaxHandler extends DefaultHandler {
 	private static int base = 1000;
-	
+
 	private static int TOPIC_ID_TAG_HASHCODE = mod(MapBuilder.TOPIC_ID_TAG.hashCode());
-	private static int TOPIC_BGCOLOR_TAG_HASHCODE = mod(MapBuilder.TOPIC_BGCOLOR_TAG .hashCode());
+	private static int TOPIC_BGCOLOR_TAG_HASHCODE = mod(MapBuilder.TOPIC_BGCOLOR_TAG.hashCode());
 	private static int TOPIC_FLAG_TAG_HASHCODE = mod(MapBuilder.TOPIC_FLAG_TAG.hashCode());
 	private static int TOPIC_PRIORITY_TAG_HASHCODE = mod(MapBuilder.TOPIC_PRIORITY_TAG.hashCode());
 	private static int TOPIC_SMILEY_TAG_HASHCODE = mod(MapBuilder.TOPIC_SMILEY_TAG.hashCode());
 	private static int TOPIC_TASK_COMPLETION_TAG_HASHCODE = mod(MapBuilder.TOPIC_TASK_COMPLETION_TAG.hashCode());
 	private static int TOPIC_MAP_REF_TAG_HASHCODE = mod(MapBuilder.TOPIC_MAP_REF_TAG.hashCode());
-	
-	private String[] attributesMap = new String[base]; // make it global for memory and time saving
-	
+
+	private String[] attributesMap = new String[base]; // make it global for
+														// memory and time
+														// saving
+
 	private boolean isMetaDataTag = false;
 	private boolean isMapIDTag = false;
 	private boolean isMapNameTag = false;
@@ -35,7 +37,7 @@ class SaxHandler extends DefaultHandler {
 	private boolean isOwnerNameTag = false;
 	private boolean isOwnerEmailTag = false;
 	private boolean isTextTag = false;
-	
+
 	private boolean hasMeta = false;
 
 	private int mapId = 0;
@@ -52,18 +54,19 @@ class SaxHandler extends DefaultHandler {
 
 	/**
 	 * Method for getting module on base, with always positive result
+	 * 
 	 * @param value
 	 * @return value mod base
 	 */
 	private static int mod(int value) {
-		int tmp = value%base;
-		
-		return (tmp >= 0) ? tmp : tmp+base;
+		int tmp = value % base;
+
+		return (tmp >= 0) ? tmp : tmp + base;
 	}
-	
+
 	public void startDocument() {
 		startTime = System.currentTimeMillis();
-		
+
 		Log.i(Log.modelTag, "SAX parsing started... \n");
 	}
 
@@ -79,7 +82,7 @@ class SaxHandler extends DefaultHandler {
 				} else {
 					currentTopic.getParent().addChild(currentTopic);
 				}
-			}  else if (localName.equals(MapBuilder.TOPIC_ICON_TAG)) {
+			} else if (localName.equals(MapBuilder.TOPIC_ICON_TAG)) {
 				String iconName = attributes.getValue(MapBuilder.ICON_NAME_TAG);
 				currentTopic.addIcon(Icon.parse(iconName));
 			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
@@ -116,7 +119,7 @@ class SaxHandler extends DefaultHandler {
 					isOwnerEmailTag = true;
 				}
 			}
-			
+
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			Log.e(Log.modelTag, e.toString());
@@ -131,44 +134,44 @@ class SaxHandler extends DefaultHandler {
 			throw new SAXException();
 		}
 	}
-	
+
 	private void getTopicAttributes(Attributes attributes) throws SAXException {
-		try {		
+		try {
 			int length = attributes.getLength();
 			for (int i = 0; i < length; i++) {
 				attributesMap[mod(attributes.getLocalName(i).hashCode())] = attributes.getValue(i);
 			}
-			
+
 			if (attributesMap[TOPIC_ID_TAG_HASHCODE] != null) {
 				currentTopic.setId(Integer.parseInt(attributesMap[TOPIC_ID_TAG_HASHCODE]));
 				attributesMap[TOPIC_ID_TAG_HASHCODE] = null;
 			}
-			
+
 			if (attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE] != null) {
 				currentTopic.setBgColor(Integer.parseInt(attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE]));
 				attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE] = null;
 			}
-			
+
 			if (attributesMap[TOPIC_FLAG_TAG_HASHCODE] != null) {
 				currentTopic.setFlag(Flag.parse(attributesMap[TOPIC_FLAG_TAG_HASHCODE]));
 				attributesMap[TOPIC_FLAG_TAG_HASHCODE] = null;
 			}
-			
+
 			if (attributesMap[TOPIC_FLAG_TAG_HASHCODE] != null) {
 				currentTopic.setPriority(Integer.parseInt(attributesMap[TOPIC_FLAG_TAG_HASHCODE]));
 				attributesMap[TOPIC_PRIORITY_TAG_HASHCODE] = null;
 			}
-			
+
 			if (attributesMap[TOPIC_SMILEY_TAG_HASHCODE] != null) {
 				currentTopic.setSmiley(Smiley.parse(attributesMap[TOPIC_SMILEY_TAG_HASHCODE]));
 				attributesMap[TOPIC_SMILEY_TAG_HASHCODE] = null;
 			}
-			
+
 			if (attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE] != null) {
 				currentTopic.setTaskCompletion(TaskCompletion.parse(attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE]));
 				attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE] = null;
 			}
-			
+
 			if (attributesMap[TOPIC_MAP_REF_TAG_HASHCODE] != null) {
 				currentTopic.setMapRef(attributesMap[TOPIC_MAP_REF_TAG_HASHCODE]);
 				attributesMap[TOPIC_MAP_REF_TAG_HASHCODE] = null;
@@ -223,7 +226,7 @@ class SaxHandler extends DefaultHandler {
 					map.setName(mapName);
 					map.setOwner(owner);
 					isMetaDataTag = false;
-					
+
 					hasMeta = true;
 				}
 			}
@@ -240,6 +243,6 @@ class SaxHandler extends DefaultHandler {
 
 	public void endDocument() {
 		long parsingTime = System.currentTimeMillis() - startTime;
-		Log.w(Log.modelTag, "map was built successfully, parsing time: " + parsingTime);
+		Log.w(Log.modelTag, "map was built with SAX successfully, parsing time: " + parsingTime);
 	}
 }
