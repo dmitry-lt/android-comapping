@@ -15,7 +15,7 @@ import com.comapping.android.Log;
 
 public class SaxMapBuilder extends MapBuilder {
 
-	private SaxHandler handler;
+	SaxHandler handler;
 
 	@Override
 	public Map buildMap(String xmlDocument) throws StringToXMLConvertionException, MapParsingException {
