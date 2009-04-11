@@ -111,37 +111,44 @@ class SaxHandler extends DefaultHandler {
 	
 	private void getTopicAttributes(Attributes attributes) throws SAXException {
 		try {
-			String topicId = attributes.getValue("", MapBuilder.TOPIC_ID_TAG);
+			HashMap<String, String> attributesMap = new HashMap<String, String>();
+			
+			int length = attributes.getLength();
+			for (int i = 0; i < length; i++) {
+				attributesMap.put(attributes.getLocalName(i), attributes.getValue(i));
+			}
+			
+			String topicId = attributesMap.get(MapBuilder.TOPIC_ID_TAG);
 			if (topicId != null) {
 				currentTopic.setId(Integer.parseInt(topicId));
 			}
 			
-			String topicBgcolor = attributes.getValue("", MapBuilder.TOPIC_BGCOLOR_TAG);
+			String topicBgcolor = attributesMap.get(MapBuilder.TOPIC_BGCOLOR_TAG);
 			if (topicBgcolor != null) {
 				currentTopic.setBgColor(Integer.parseInt(topicBgcolor));
 			}
 			
-			String topicFlag = attributes.getValue("", MapBuilder.TOPIC_FLAG_TAG);
+			String topicFlag = attributesMap.get(MapBuilder.TOPIC_FLAG_TAG);
 			if (topicFlag != null) {
 				currentTopic.setFlag(Flag.parse(topicFlag));
 			}
 			
-			String topicPriority = attributes.getValue("", MapBuilder.TOPIC_PRIORITY_TAG);
+			String topicPriority = attributesMap.get(MapBuilder.TOPIC_PRIORITY_TAG);
 			if (topicPriority != null) {
 				currentTopic.setPriority(Integer.parseInt(topicPriority));
 			}
 			
-			String topicSmiley = attributes.getValue("", MapBuilder.TOPIC_SMILEY_TAG);
+			String topicSmiley = attributesMap.get(MapBuilder.TOPIC_SMILEY_TAG);
 			if (topicSmiley != null) {
 				currentTopic.setSmiley(Smiley.parse(topicSmiley));
 			}
 			
-			String topicTaskCompletion = attributes.getValue("", MapBuilder.TOPIC_TASK_COMPLETION_TAG);
+			String topicTaskCompletion = attributesMap.get(MapBuilder.TOPIC_TASK_COMPLETION_TAG);
 			if (topicTaskCompletion != null) {
 				currentTopic.setTaskCompletion(TaskCompletion.parse(topicTaskCompletion));
 			}
 			
-			String topicMapRef = attributes.getValue("", MapBuilder.TOPIC_MAP_REF_TAG);
+			String topicMapRef = attributesMap.get(MapBuilder.TOPIC_MAP_REF_TAG);
 			if (topicMapRef != null) {
 				currentTopic.setMapRef(topicMapRef);
 			}
