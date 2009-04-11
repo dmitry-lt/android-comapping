@@ -4,20 +4,20 @@ import com.comapping.android.Log;
 import com.comapping.android.controller.MapActivity;
 import com.comapping.android.model.Topic;
 
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
-
 
 public class TopicRender extends Render {
 
 	private static final int HORISONTAL_MERGING = 5;
 	private static final int SELECTION_COLOR = Color.argb(255, 127, 191, 255);
 	private static final int SELECTION_WIDTH = 3;
+	private static final int SELECTION_EDGES_RADIUS = 4;
 
 	private boolean isEmpty;
 
@@ -26,6 +26,13 @@ public class TopicRender extends Render {
 	private TaskRender taskRender;
 	private NoteRender noteRender;
 	private AttachmentRender attachmentRender;
+
+	// relative coordinates of upper left corner of renders
+	private Point iconCoords = new Point();
+	private Point textCoords = new Point();
+	private Point taskCoords = new Point();
+	private Point noteCoords = new Point();
+	private Point attachmentCoords = new Point();
 
 	private Topic topic;
 	private int width, height;
@@ -47,13 +54,7 @@ public class TopicRender extends Render {
 			noteRender = new NoteRender(topic.getNote());
 			attachmentRender = new AttachmentRender(topic.getAttachment(), context);
 
-			lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
-
-			height = Math.max(iconRender.getHeight(), textRender.getHeight()) + taskRender.getHeight()
-					+ noteRender.getHeight();
-			width = Math.max(iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth(), Math.max(taskRender
-					.getWidth(), noteRender.getWidth())) + attachmentRender.getWidth();
-			taskRender.setWidth(width);
+			RecalcDrawingData();
 		} else {
 			height = 0;
 			width = 0;
@@ -65,37 +66,20 @@ public class TopicRender extends Render {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
+			iconRender.draw(x + iconCoords.x, y + iconCoords.y, 0, 0, c);
+			// draw text background
 			Paint p = new Paint();
-			int curX = x, curY = y;
-
-			curY += this.getLineOffset() / 2;
-
-			// draw icons
-			iconRender.draw(curX, curY - iconRender.getHeight() / 2, 0, 0, c);
-			curX += iconRender.getWidth();
-
-			// draw text
-			curX += HORISONTAL_MERGING;
 			p.setColor(topic.getBgColor());
 			p.setAlpha(255);
-			c.drawRect(curX, curY - textRender.getHeight() / 2, curX + textRender.getWidth(), curY
-					+ textRender.getHeight() / 2, p);
+			c.drawRect(x + textCoords.x, y + textCoords.y, x + textCoords.x + textRender.getWidth(), y + textCoords.y
+					+ textRender.getHeight(), p);
 
-			textRender.draw(curX, curY - textRender.getHeight() / 2, 0, 0, c);
+			textRender.draw(x + textCoords.x, y + textCoords.y, 0, 0, c);
+			attachmentRender.draw(x + attachmentCoords.x, y + attachmentCoords.y, 0, 0, c);
 
-			// draw attachment
-			curX += HORISONTAL_MERGING + textRender.getWidth();
-			attachmentRender.draw(curX, curY - attachmentRender.getHeight() / 2, 0, 0, c);
-			
-			// draw task
-			curX = x;
-			curY = y + this.getLineOffset();
-			taskRender.draw(curX, curY, width, height, c);
+			taskRender.draw(x + taskCoords.x, y + taskCoords.y, 0, 0, c);
 
-			// draw note
-			curX = x;
-			curY += taskRender.getHeight();
-			noteRender.draw(curX, curY, width, height, c);
+			noteRender.draw(x + noteCoords.x, y + noteCoords.y, 0, 0, c);
 
 			// draw selection
 			if (isSelected()) {
@@ -104,7 +88,8 @@ public class TopicRender extends Render {
 				p.setAntiAlias(true);
 				p.setStyle(Style.STROKE);
 				p.setStrokeWidth(SELECTION_WIDTH);
-				c.drawRoundRect(new RectF(x, y, x + getWidth(), y + getHeight()), 4, 4, p);
+				c.drawRoundRect(new RectF(x, y, x + getWidth(), y + getHeight()), SELECTION_EDGES_RADIUS,
+						SELECTION_EDGES_RADIUS, p);
 			}
 
 		} else {
@@ -113,7 +98,7 @@ public class TopicRender extends Render {
 	}
 
 	public void setSelected(boolean selected) {
-		
+
 		this.selected = selected;
 	}
 
@@ -148,11 +133,67 @@ public class TopicRender extends Render {
 	@Override
 	public void onTouch(int x, int y) {
 		Log.d(Log.topicRenderTag, "Touch on " + topic);
-		if ((topic.getAttachment() != null) && 
-			(x >= iconRender.getWidth() + 2 * HORISONTAL_MERGING + textRender.getWidth()) &&
-			(y <= attachmentRender.getHeight())) {
-			attachmentRender.onTouch(0, 0);
+
+		if (!isEmpty && selected) {
+			Point touchPoint = new Point(x, y);
+
+			if (pointLiesOnRect(touchPoint, iconCoords, iconRender.getWidth(), iconRender.getHeight())) {
+				touchPoint.offset(-iconCoords.x, -iconCoords.y);
+				iconRender.onTouch(touchPoint.x, touchPoint.y);
+
+			} else if (pointLiesOnRect(touchPoint, textCoords, textRender.getWidth(), textRender.getHeight())) {
+				touchPoint.offset(-textCoords.x, -textCoords.y);
+				textRender.onTouch(touchPoint.x, touchPoint.y);
+
+			} else if (pointLiesOnRect(touchPoint, attachmentCoords, attachmentRender.getWidth(), attachmentRender
+					.getHeight())) {
+				touchPoint.offset(-attachmentCoords.x, -attachmentCoords.y);
+				attachmentRender.onTouch(touchPoint.x, touchPoint.y);
+
+			} else if (pointLiesOnRect(touchPoint, taskCoords, taskRender.getWidth(), taskRender.getHeight())) {
+				touchPoint.offset(-taskCoords.x, -taskCoords.y);
+				taskRender.onTouch(touchPoint.x, touchPoint.y);
+
+			} else if (pointLiesOnRect(touchPoint, noteCoords, noteRender.getWidth(), noteRender.getHeight())) {
+				touchPoint.offset(-noteCoords.x, -noteCoords.y);
+				noteRender.onTouch(touchPoint.x, touchPoint.y);
+			}
 		}
 	}
 
+	private boolean pointLiesOnRect(Point p, Point corner, int width, int height) {
+		if (corner.x <= p.x && p.x <= corner.x + width && corner.y <= p.y && p.y <= corner.y + height) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void RecalcDrawingData() {
+		// recalc size
+		lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
+
+		height = Math.max(iconRender.getHeight(), textRender.getHeight()) + taskRender.getHeight()
+				+ noteRender.getHeight();
+		width = Math.max(iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth(), Math.max(taskRender
+				.getWidth(), noteRender.getWidth()))
+				+ attachmentRender.getWidth();
+		taskRender.setWidth(width);
+
+		// recalc coords
+		iconCoords.x = 0;
+		iconCoords.y = (getLineOffset() - iconRender.getHeight()) / 2;
+
+		textCoords.x = iconRender.getWidth() + HORISONTAL_MERGING;
+		textCoords.y = (getLineOffset() - textRender.getHeight()) / 2;
+
+		attachmentCoords.x = iconRender.getWidth() + textRender.getWidth() + HORISONTAL_MERGING * 2;
+		attachmentCoords.y = (getLineOffset() - attachmentRender.getHeight()) / 2;
+
+		taskCoords.x = 0;
+		taskCoords.y = getLineOffset();
+
+		noteCoords.x = 0;
+		noteCoords.y = getLineOffset() + taskRender.getHeight();
+	}
 }
