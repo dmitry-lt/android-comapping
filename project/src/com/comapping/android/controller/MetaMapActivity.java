@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.comapping.android.Cache;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
@@ -28,7 +29,6 @@ import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
 import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.model.Map;
-import com.comapping.android.model.DomMapBuilder;
 import com.comapping.android.model.MapBuilder;
 import com.comapping.android.model.MapParsingException;
 import com.comapping.android.model.SaxMapBuilder;
@@ -110,6 +110,13 @@ public class MetaMapActivity extends Activity {
 			return true;
 		case R.id.logout:
 			logout();
+			return true;
+		case R.id.reloadMetamap:
+			// TODO: clear metamap in cache
+			metaMapRefresh();
+			return true;
+		case R.id.clearCache:
+			Cache.clear();
 			return true;
 		}
 
