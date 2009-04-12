@@ -3,6 +3,7 @@ package com.comapping.android.view;
 import com.comapping.android.Log;
 import com.comapping.android.model.FormattedText;
 import com.comapping.android.model.TextBlock;
+import com.comapping.android.model.TextFormat;
 import com.comapping.android.model.TextParagraph;
 
 import android.graphics.Canvas;
@@ -12,7 +13,9 @@ import android.graphics.Rect;
 
 public class TextRender extends Render {
 	private static final int BORDER = 4;
-	private static final int MAX_LETTER_WIDTH = calcMaxLetterWidth();
+	private static final int MAX_LETTER_WIDTH = calcWidth(new TextBlock("ù", new TextFormat(22, 0, "", false)));
+	private static final TextBlock THREE_DOTS = new TextBlock("...", new TextFormat());
+	private static final int THREE_DOTS_WIDTH = calcWidth(THREE_DOTS);
 
 	private boolean isEmpty;
 
@@ -56,6 +59,38 @@ public class TextRender extends Render {
 			height = 0;
 		}
 
+	}
+
+	public void setOneLineView(int maxWidth) {
+		Log.v(Log.topicRenderTag, "setting OneLineView with maxWidth=" + maxWidth + " in " + this);
+
+		maxWidth -= THREE_DOTS_WIDTH;
+		TextParagraph parToDraw = new TextParagraph();
+		int curWidth = 0;
+		boolean isFull = false;
+		for (TextParagraph paragraph : text.getTextParagraphs()) {
+			for (TextBlock block : paragraph.getTextBlocks()) {
+				paint.setTextScaleX(block.getFormat().getFontSize());
+				float width = paint.measureText(block.getText());
+				if (curWidth + width <= maxWidth) {
+					curWidth += width;
+					parToDraw.add(block);
+				} else {
+					int fitInCount = paint.breakText(block.getText(), true, maxWidth - curWidth, null);
+					parToDraw.add(block.split(fitInCount)[0]);
+					parToDraw.add(THREE_DOTS);
+					isFull = true;
+					break;
+				}
+			}
+			if (isFull)
+				break;
+		}
+
+		textToDraw = new FormattedText();
+		textToDraw.add(parToDraw);
+
+		recalcDrawingData();
 	}
 
 	public void setMaxWidth(int maxWidth) {
@@ -194,12 +229,9 @@ public class TextRender extends Render {
 		height += BORDER * 2;
 	}
 
-	private static int calcMaxLetterWidth() {
+	private static int calcWidth(TextBlock block) {
 		Paint p = new Paint();
-		Rect r = new Rect();
-		p.setTextSize(22);
-		p.getTextBounds("ù", 0, 1, r);
-		return r.width();
+		p.setTextSize(block.getFormat().getFontSize());
+		return (int) p.measureText(block.getText());
 	}
-
 }

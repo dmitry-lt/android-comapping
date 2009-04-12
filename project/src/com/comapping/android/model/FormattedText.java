@@ -21,6 +21,11 @@ public class FormattedText {
 		this(new ArrayList<TextParagraph>());
 	}
 
+	public FormattedText(String text, TextFormat format) {
+		this();
+		add(new TextParagraph(text, format));
+	}
+
 	public FormattedText(List<TextParagraph> textParagraphs) {
 		this.textParagraphs = textParagraphs;
 		update();

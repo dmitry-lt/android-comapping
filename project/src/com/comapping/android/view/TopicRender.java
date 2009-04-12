@@ -35,6 +35,7 @@ public class TopicRender extends Render {
 
 	private Topic topic;
 	private int width, height;
+	private int lastMaxWidth;
 	private int lineOffset;
 	private boolean selected;
 
@@ -170,13 +171,18 @@ public class TopicRender extends Render {
 	}
 
 	public void setMaxWidth(int maxWidth) {
-		if (maxWidth < width) {
+		if (maxWidth != lastMaxWidth) {
 			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
 
-			int iconMaxWidth = (int) (iconPart * (maxWidth - attachmentRender.getWidth()));
-			int textMaxWidth = (int) (textPart * (maxWidth - attachmentRender.getWidth()));
+			lastMaxWidth = maxWidth;
+			maxWidth -= attachmentRender.getWidth();
+			int iconMaxWidth = (int) (iconPart * maxWidth);
+			int textMaxWidth = (int) (textPart * maxWidth);
 			iconRender.setMaxWidth(iconMaxWidth);
 			textRender.setMaxWidth(textMaxWidth);
+			maxWidth = iconRender.getWidth() + textRender.getWidth();
+			taskRender.setWidth(maxWidth);
+			noteRender.setMaxWidth(maxWidth);
 
 			recalcDrawingData();
 		}
@@ -199,7 +205,6 @@ public class TopicRender extends Render {
 		width = Math.max(iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth(), Math.max(taskRender
 				.getWidth(), noteRender.getWidth()))
 				+ attachmentRender.getWidth();
-		taskRender.setWidth(width);
 
 		// recalc coords
 		iconCoords.x = 0;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+import com.comapping.android.Log;
 import com.comapping.android.model.FormattedText;
 import com.comapping.android.model.TextFormat;
 import com.comapping.android.model.TextParagraph;
@@ -24,18 +25,9 @@ public class NoteRender extends Render {
 		}
 
 		if (!isEmpty) {
-			TextFormat format = new TextFormat();
-			format.setFontSize(10);
-			format.setFontColor(Color.GRAY);
-			format.setUnderlined(false);
-
-			FormattedText text = new FormattedText(new ArrayList<TextParagraph>());
-			text.add(new TextParagraph(note, format));
-
+			FormattedText text = new FormattedText(note, new TextFormat(10, Color.GRAY, "", false));
 			textRender = new TextRender(text);
-
-			width = textRender.getWidth();
-			height = textRender.getHeight();
+			recalcDrawingData();
 		} else {
 
 		}
@@ -66,6 +58,14 @@ public class NoteRender extends Render {
 
 	}
 
+	public void setMaxWidth(int maxWidth) {
+		if (!isEmpty) {
+			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+			textRender.setMaxWidth(maxWidth);
+			recalcDrawingData();
+		}
+	}
+
 	@Override
 	public String toString() {
 		if (!isEmpty) {
@@ -74,5 +74,10 @@ public class NoteRender extends Render {
 		} else {
 			return "[NoteRender: EMPTY]";
 		}
+	}
+
+	private void recalcDrawingData() {
+		width = textRender.getWidth();
+		height = textRender.getHeight();
 	}
 }

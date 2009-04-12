@@ -9,6 +9,16 @@ public class TextFormat implements Cloneable {
 	private String hRef = "";
 	private boolean underlined = false;
 
+	public TextFormat() {
+	}
+
+	public TextFormat(int fontSize, int fontColor, String hRef, boolean underlined) {
+		this.fontSize = fontSize;
+		this.fontColor = fontColor;
+		this.hRef = hRef;
+		this.underlined = underlined;
+	}
+
 	public int getFontSize() {
 		return fontSize;
 	}
