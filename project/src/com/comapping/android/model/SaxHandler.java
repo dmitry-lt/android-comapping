@@ -5,6 +5,8 @@
  */
 package com.comapping.android.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -70,6 +72,25 @@ class SaxHandler extends DefaultHandler {
 		Log.i(Log.modelTag, "SAX parsing started... \n");
 	}
 
+	/**
+	 * @param stringDate
+	 * 			date in comapping format
+	 * @return date as an object of class Date 
+	 * @throws DateParsingException
+	 * 			when cannot parse string with date
+	 */
+	private Date dateParsing(String stringDate) throws DateParsingException{
+		SimpleDateFormat dateFormat = new SimpleDateFormat();
+		dateFormat.applyPattern("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = dateFormat.parse(stringDate);
+		} catch (ParseException e) {
+			throw new DateParsingException();
+		}
+		return date;
+	}
+	
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		try {
 			if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
@@ -91,7 +112,17 @@ class SaxHandler extends DefaultHandler {
 
 			} else if (localName.equals(MapBuilder.TOPIC_TASK_TAG)) {
 				String start = attributes.getValue(MapBuilder.TASK_START_TAG);
-				String deadline = attributes.getValue(MapBuilder.TASK_DEADLINE_TAG);
+				Date deadline;
+				
+				try {
+					deadline = dateParsing(attributes.getValue(MapBuilder.TASK_DEADLINE_TAG));
+				}
+				catch (DateParsingException e) {
+					e.printStackTrace();
+					Log.e(Log.modelTag, e.toString());
+					throw new SAXException();					
+				}
+				
 				String responsible = attributes.getValue(MapBuilder.TASK_RESPONSIBLE_TAG);
 				Task task = new Task(start, deadline, responsible);
 				currentTopic.setTask(task);
