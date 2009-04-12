@@ -1,18 +1,17 @@
 package com.comapping.android.view;
 
+import com.comapping.android.Log;
 import com.comapping.android.model.FormattedText;
 import com.comapping.android.model.TextBlock;
 import com.comapping.android.model.TextParagraph;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 
 public class TextRender extends Render {
-
-	private static final int VERTICAL_MERGING = 3;
 	private static final int BORDER = 4;
-
 	private static final int MAX_LETTER_WIDTH = calcMaxLetterWidth();
 
 	private boolean isEmpty;
@@ -22,8 +21,9 @@ public class TextRender extends Render {
 	private Paint paint;
 	private int width, height;
 	private int maxWidth;
+
 	private int[] parsWidth;
-	private int[] parsHeight;
+	private Point[][] blocksCoord;
 
 	public TextRender(FormattedText text) {
 		if (text != null && !text.getSimpleText().equals("")) {
@@ -59,18 +59,25 @@ public class TextRender extends Render {
 	}
 
 	public void setMaxWidth(int maxWidth) {
+		Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+
 		if (maxWidth < MAX_LETTER_WIDTH) {
 			// too small width
 			return;
 		}
+		int sumLinesCount = 0;
 		this.maxWidth = 0;
 		for (int i = 0; i < text.getTextParagraphs().size(); i++) {
 			int approxLinesCount = parsWidth[i] / maxWidth;
 			int parWidthWithAdding = parsWidth[i] + approxLinesCount * MAX_LETTER_WIDTH;
 			int linesCount = parWidthWithAdding / maxWidth + 1;
+			sumLinesCount += linesCount;
 			int optimalWidth = parWidthWithAdding / linesCount;
 			this.maxWidth = Math.max(this.maxWidth, optimalWidth);
 		}
+
+		Log.d(Log.topicRenderTag, "optimal maxWidth=" + this.maxWidth);
+		Log.d(Log.topicRenderTag, "optimal lines count=" + sumLinesCount);
 
 		textToDraw = new FormattedText();
 		for (int i = 0; i < text.getTextParagraphs().size(); i++) {
@@ -79,6 +86,7 @@ public class TextRender extends Render {
 			int curLineWidth = 0;
 			for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 				TextBlock block = paragraph.getTextBlocks().get(j);
+				paint.setTextSize(block.getFormat().getFontSize());
 				while (true) {
 					float blockWidth = paint.measureText(block.getText());
 					if (curLineWidth + blockWidth <= this.maxWidth) {
@@ -86,12 +94,16 @@ public class TextRender extends Render {
 						curLineWidth += blockWidth;
 						break;
 					} else {
-						int fitInCount;
-						do {
-							float fitInPart = (this.maxWidth - curLineWidth) / blockWidth;
-							fitInCount = (int) (block.getText().length() * fitInPart) - 1;
-							blockWidth = paint.measureText(block.getText(), 0, fitInCount);
-						} while (curLineWidth + blockWidth > this.maxWidth);
+						// int fitInCount = block.getText().length();
+						// do {
+						// float fitInPart = (this.maxWidth - curLineWidth) /
+						// blockWidth;
+						// fitInCount = (int) (fitInCount * fitInPart);
+						// blockWidth = paint.measureText(block.getText(), 0,
+						// fitInCount);
+						// } while (curLineWidth + blockWidth > this.maxWidth);
+
+						int fitInCount = paint.breakText(block.getText(), true, this.maxWidth - curLineWidth, null);
 						TextBlock[] blocks = block.split(fitInCount);
 						curParagraph.add(blocks[0]);
 						textToDraw.add(curParagraph);
@@ -112,18 +124,15 @@ public class TextRender extends Render {
 			x += BORDER;
 			y += BORDER;
 
-			int curY = y;
 			for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
 				TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
-				int curX = x;
-				curY += parsHeight[i];
-				for (TextBlock block : paragraph.getTextBlocks()) {
+				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
+					TextBlock block = paragraph.getTextBlocks().get(j);
 					paint.setTextSize(block.getFormat().getFontSize());
 					paint.setColor(block.getFormat().getFontColor());
-					c.drawText(block.getText(), curX, curY, paint);
-					curX += paint.measureText(block.getText());
+					paint.setUnderlineText(block.getFormat().isUnderlined());
+					c.drawText(block.getText(), x + blocksCoord[i][j].x, y + blocksCoord[i][j].y, paint);
 				}
-				curY += VERTICAL_MERGING;
 			}
 		} else {
 			// nothing to draw
@@ -163,31 +172,23 @@ public class TextRender extends Render {
 	private void recalcDrawingData() {
 		width = 0;
 		height = 0;
-		parsHeight = new int[textToDraw.getTextParagraphs().size()];
-		Rect r = new Rect();
+		blocksCoord = new Point[textToDraw.getTextParagraphs().size()][];
 		for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
 			TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
-			int parHeight = 0;
-			int parWidth = 0;
-
+			blocksCoord[i] = new Point[paragraph.getTextBlocks().size()];
+			int curWidth = 0;
 			paint.setTextSize(paragraph.getMaxFontSize());
-			paint.getTextBounds("1", 0, 1, r);
-			parHeight = Math.max(parHeight, r.height());
-
-			for (TextBlock block : paragraph.getTextBlocks()) {
+			height += -paint.ascent();
+			for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
+				TextBlock block = paragraph.getTextBlocks().get(j);
+				blocksCoord[i][j] = new Point(curWidth, height);
 				paint.setTextSize(block.getFormat().getFontSize());
-				// paint.getTextBounds(block.getText(), 0,
-				// block.getText().length(), r);
-				parWidth += paint.measureText(block.getText());
+				curWidth += paint.measureText(block.getText());
 			}
-			parsHeight[i] = parHeight;
-			// parWidth += HORISONTAL_MERGING *
-			// (paragraph.getTextBlocks().size() - 1);
-
-			width = Math.max(width, parWidth);
-			height += parHeight;
+			width = Math.max(width, curWidth);
+			paint.setTextSize(paragraph.getMaxFontSize());
+			height += paint.descent();
 		}
-		height += VERTICAL_MERGING * (textToDraw.getTextParagraphs().size() - 1);
 
 		width += BORDER * 2;
 		height += BORDER * 2;

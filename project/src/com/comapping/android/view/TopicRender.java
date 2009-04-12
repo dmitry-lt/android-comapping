@@ -53,7 +53,7 @@ public class TopicRender extends Render {
 			noteRender = new NoteRender(topic.getNote());
 			attachmentRender = new AttachmentRender(topic.getAttachment(), context);
 
-			RecalcDrawingData();
+			recalcDrawingData();
 		} else {
 			height = 0;
 			width = 0;
@@ -131,7 +131,7 @@ public class TopicRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		Log.d(Log.topicRenderTag, "Touch on " + topic);
+		Log.d(Log.topicRenderTag, "Touch on " + this);
 
 		if (!isEmpty && selected) {
 			Point touchPoint = new Point(x, y);
@@ -161,9 +161,11 @@ public class TopicRender extends Render {
 	}
 
 	public void setMaxWidth(int maxWidth) {
+		Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+		
 		int textMaxWidth = maxWidth - iconRender.getWidth() - attachmentRender.getWidth();
 		textRender.setMaxWidth(textMaxWidth);
-		RecalcDrawingData();
+		recalcDrawingData();
 	}
 
 	private boolean pointLiesOnRect(Point p, Point corner, int width, int height) {
@@ -174,7 +176,7 @@ public class TopicRender extends Render {
 		}
 	}
 
-	private void RecalcDrawingData() {
+	private void recalcDrawingData() {
 		// recalc size
 		lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
 
