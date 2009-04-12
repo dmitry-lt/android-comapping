@@ -47,7 +47,7 @@ public class ExplorerRender extends MapRender {
 		public TopicRender topicRender;
 		public int topicX, topicY;
 		public ArrayList<MyTopic> childs;
-		public MyTopic up = null, down = null, left = null, right = null;
+		public MyTopic up, down, left, right;
 	}
 
 	private ArrayList<TouchPoint> points = new ArrayList<TouchPoint>();
@@ -61,7 +61,7 @@ public class ExplorerRender extends MapRender {
 	public ExplorerRender(Context context, Map map) {
 		this.context = context;
 		root = initTopic(map.getRoot(), null);
-		selectedTopic = root;
+		selectedTopic = null;
 	}
 
 	private boolean intersects(int a, int b, int c, int d) {
@@ -73,7 +73,8 @@ public class ExplorerRender extends MapRender {
 	}
 
 	private boolean onScreen(int x1, int y1, int x2, int y2) {
-		return intersects(0, screenWidth, x1, x2) && intersects(0, screenHeight, y1, y2);
+		return intersects(0, screenWidth, x1, x2)
+				&& intersects(0, screenHeight, y1, y2);
 	}
 
 	private MyTopic initTopic(Topic topic, MyTopic parent) {
@@ -87,12 +88,8 @@ public class ExplorerRender extends MapRender {
 		t.left = parent;
 		if (topic.getChildrenCount() > 0)
 			t.right = t.childs.get(0);
-		for (int i = 0; i < topic.getChildrenCount(); i++) {
-			if (i > 0)
-				t.childs.get(i).up = t.childs.get(i - 1);
-			if (i + 1 < topic.getChildrenCount())
-				t.childs.get(i).down = t.childs.get(i + 1);
-		}
+		else
+			t.right = null;
 		return t;
 	}
 
@@ -116,14 +113,17 @@ public class ExplorerRender extends MapRender {
 		for (TouchPoint point : points) {
 			int x = point.x + xPlus;
 			int y = point.y + yPlus;
-			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y + OUTER_SIZE)) {
+			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y
+					+ OUTER_SIZE)) {
 				c.drawCircle(x, y, OUTER_SIZE, p);
 				p.setColor(Color.WHITE);
 				c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
 				p.setColor(Color.GRAY);
-				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y + PLUS_WIDTH, p);
+				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
+						+ PLUS_WIDTH, p);
 				if (!point.topic.open)
-					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH, y + PLUS_LENGTH, p);
+					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH,
+							y + PLUS_LENGTH, p);
 			}
 		}
 		p.setAntiAlias(false);
@@ -133,13 +133,14 @@ public class ExplorerRender extends MapRender {
 			int x = topic.topicX + xPlus;
 			int y = topic.topicY + yPlus;
 			TopicRender topicRender = topic.topicRender;
-			if (onScreen(x, y, x + topicRender.getWidth(), y + topicRender.getHeight()))
+			if (onScreen(x, y, x + topicRender.getWidth(), y
+					+ topicRender.getHeight()))
 				topicRender.draw(x, y, 0, 0, c);
 		}
 
 	}
 
-	private void FocusTopic(MyTopic topic) {
+	private void focusTopic(MyTopic topic) {
 		if (topic == null)
 			return;
 		if (selectedTopic != null)
@@ -150,15 +151,16 @@ public class ExplorerRender extends MapRender {
 		int y1 = topic.topicY + yPlus;
 		int x2 = x1 + topic.topicRender.getWidth();
 		int y2 = y1 + topic.topicRender.getHeight();
+		x1 -= X_SHIFT + BLOCK_SHIFT + OUTER_SIZE;
 		int nx = -xPlus, ny = -yPlus;
 		if (x2 > screenWidth)
 			nx -= screenWidth - x2;
 		if (y2 > screenHeight)
 			ny -= screenHeight - y2;
 		if (x1 < 0)
-			nx = topic.topicX;
+			nx = x1 - xPlus;
 		if (y1 < 0)
-			ny = topic.topicY;
+			ny = y1 - yPlus;
 		scroll.smoothScroll(nx, ny);
 	}
 
@@ -225,6 +227,16 @@ public class ExplorerRender extends MapRender {
 		this.width = temp[0];
 		this.height = temp[1];
 		toUpdate = false;
+		for (int i = 0; i < topics.size(); i++) {
+			if (i > 0)
+				topics.get(i).up = topics.get(i - 1);
+			else
+				topics.get(i).up = null;
+			if (i + 1 < topics.size())
+				topics.get(i).down = topics.get(i + 1);
+			else
+				topics.get(i).down = null;
+		}
 	}
 
 	@Override
@@ -267,7 +279,7 @@ public class ExplorerRender extends MapRender {
 			int y2 = y1 + topic.topicRender.getHeight();
 			if (x1 <= x && x <= x2 && y1 <= y && y <= y2) {
 				topic.topicRender.onTouch(x - x1, y - y1);
-				FocusTopic(topic);
+				focusTopic(topic);
 			}
 		}
 
@@ -280,22 +292,28 @@ public class ExplorerRender extends MapRender {
 
 	@Override
 	public void onKeyDown(int keyCode) {
+		if (selectedTopic == null)
+			return;
 		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-			FocusTopic(selectedTopic.left);
+			if (selectedTopic.childs.size() == 0 || !selectedTopic.open)
+				focusTopic(selectedTopic.left);
+			else {
+				selectedTopic.open = false;
+				update();
+			}
 		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-			FocusTopic(selectedTopic.up);
+			focusTopic(selectedTopic.up);
 		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-			FocusTopic(selectedTopic.down);
+			focusTopic(selectedTopic.down);
 		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-			if (selectedTopic.childs.size() > 0) {
-				if (!selectedTopic.open) {
-					selectedTopic.open = true;
-					update();
-				}
-				FocusTopic(selectedTopic.right);
+			if (selectedTopic.childs.size() == 0 || selectedTopic.open)
+				focusTopic(selectedTopic.right);
+			else {
+				selectedTopic.open = true;
+				update();
 			}
 		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
