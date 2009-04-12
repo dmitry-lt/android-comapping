@@ -45,7 +45,7 @@ abstract public class MapBuilder {
 	 * @throws DateParsingException
 	 * 			when cannot parse string with date
 	 */
-	protected Date parseDate(String stringDate) throws DateParsingException{
+	 static Date parseDate(String stringDate) throws DateParsingException{
 		SimpleDateFormat dateFormat = new SimpleDateFormat();
 		dateFormat.applyPattern("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
