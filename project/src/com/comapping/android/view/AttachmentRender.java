@@ -1,8 +1,14 @@
 package com.comapping.android.view;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Attachment;
+import com.comapping.android.Options;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,7 +42,32 @@ public class AttachmentRender extends Render {
 		Resources r = MetaMapActivity.getInstance().getResources();
 		iconsAttachment = getBitmap(r.getDrawable(R.drawable.attachment));
 	}
-
+	
+	private String fileSizeFormating(int size) {
+		String res = "";
+		if (size > 1024 * 1024 * 1024) {
+			res += size / (1024 * 1024 * 1024) + " GB\n";
+			size = size % (1024 * 1024 * 1024); 
+		}
+		if (size > 1024 * 1024) {
+			res += size / (1024 * 1024) + " MB\n";
+			size = size % (1024 * 1024);
+		}
+		if (size > 1024) {
+			res += size / 1024 + " KB\n";
+			size = size % 1024;
+		}
+		if (size > 0) {
+			res += size + " bytes";
+		}
+		return res;
+	}
+	
+	private String dateFormating(Date date) {
+		DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss dd.MM.yyyy");
+		return dateFormat.format(date);
+	}
+	
 	public AttachmentRender(Attachment attachment, Context context) {
 		if (!iconsLoaded) {
 			loadIcons();
@@ -54,9 +85,8 @@ public class AttachmentRender extends Render {
 			infDialog = (new AlertDialog.Builder(context)
 			.setTitle("Save attachment?")
 			.setMessage("File: " + attachment.getFilename() + "\n" +
-					"Last modify: " + attachment.getDate().toString() + "\n" +
-					"Size: " + attachment.getSize() + "KB\n" +						
-					"http://upload.comapping.com/" + attachment.getKey() + "\n")
+					"Upload date: " + dateFormating(attachment.getDate()) + "\n" +
+					"Size: " + fileSizeFormating(attachment.getSize()) + "\n")
 			.setNegativeButton("No", new DialogInterface.OnClickListener () {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {

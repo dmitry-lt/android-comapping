@@ -130,17 +130,10 @@ public class DomMapBuilder extends MapBuilder {
 				hasId = true;
 
 			} else if (curAttr.getNodeName().equals(TOPIC_LAST_MODIFICATION_DATE_TAG)) {
-				String strDate = curAttr.getNodeValue();
-				SimpleDateFormat dateFormat = new SimpleDateFormat();
-				dateFormat.applyPattern("yyyy-MM-dd HH:mm:ss");
-				Date date = new Date();
-				try {
-					date = dateFormat.parse(strDate);
-				} catch (ParseException e) {
-					throw new DateParsingException();
-				}
+				String stringDate = curAttr.getNodeValue();
+				Date date = parseDate(stringDate);
 				topic.setLastModificationDate(date);
-
+				
 			} else if (curAttr.getNodeName().equals(TOPIC_BGCOLOR_TAG)) {
 				topic.setBgColor(Integer.parseInt(curAttr.getNodeValue()));
 
@@ -188,7 +181,7 @@ public class DomMapBuilder extends MapBuilder {
 
 			} else if (childNode.getNodeName().equals(TOPIC_TASK_TAG)) {
 				String start = childNode.getAttributes().getNamedItem(TASK_START_TAG).getNodeValue();
-				String deadline = childNode.getAttributes().getNamedItem(TASK_DEADLINE_TAG).getNodeValue();
+				Date deadline = dateParsing(childNode.getAttributes().getNamedItem(TASK_DEADLINE_TAG).getNodeValue());
 				String responsible = childNode.getAttributes().getNamedItem(TASK_RESPONSIBLE_TAG).getNodeValue();
 				Task task = new Task(start, deadline, responsible);
 				topic.setTask(task);

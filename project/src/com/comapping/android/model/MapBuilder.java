@@ -1,5 +1,9 @@
 package com.comapping.android.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 abstract public class MapBuilder {
 	static final String METADATA_TAG = "metadata";
 	static final String MAP_ID_TAG = "id";
@@ -35,6 +39,25 @@ abstract public class MapBuilder {
 	static final String TOPIC_MAP_REF_TAG = "map_ref";
 
 	/**
+	 * @param stringDate
+	 * 			date in comapping format
+	 * @return date as an object of class Date 
+	 * @throws DateParsingException
+	 * 			when cannot parse string with date
+	 */
+	protected Date parseDate(String stringDate) throws DateParsingException{
+		SimpleDateFormat dateFormat = new SimpleDateFormat();
+		dateFormat.applyPattern("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = dateFormat.parse(stringDate);
+		} catch (ParseException e) {
+			throw new DateParsingException();
+		}
+		return date;
+	}
+	
+	/**
 	 * Method that builds Map from comap XML file.
 	 * 
 	 * @param xmlDocument
@@ -46,4 +69,5 @@ abstract public class MapBuilder {
 	 *             when given XML document has wrong format
 	 */
 	abstract public Map buildMap(String xmlDocument) throws StringToXMLConvertionException, MapParsingException;
+	
 }

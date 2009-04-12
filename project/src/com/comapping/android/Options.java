@@ -15,5 +15,8 @@ public class Options {
 
 	// Proxy server options
 	final public static boolean USE_PROXY = false;
-	final public static HttpHost PROXY_HOST = new HttpHost("217.197.3.157", 8080, "http");
+	final public static HttpHost PROXY_HOST = new HttpHost("169.254.198.123", 8080, "http");
+	
+	// Address to downloading attachment files
+	final public static String DOWNLOAD_SERVER = "http://upload.comapping.com/";
 }

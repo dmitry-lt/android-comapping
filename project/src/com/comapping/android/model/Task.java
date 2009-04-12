@@ -1,11 +1,13 @@
 package com.comapping.android.model;
 
+import java.util.Date;
+
 public class Task {
 	private String start;
-	private String deadline;
+	private Date deadline;
 	private String responsible;
 
-	public Task(String start, String deadline, String responsible) {
+	public Task(String start, Date deadline, String responsible) {
 		setStart(start);
 		setDeadline(deadline);
 		setResponsible(responsible);
@@ -19,12 +21,12 @@ public class Task {
 		return start;
 	}
 
-	public String getDeadline() {
+	public Date getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(String deadline) {
-		this.deadline = (deadline != null) ? deadline : "";
+	public void setDeadline(Date deadline) {
+		this.deadline = deadline;
 	}
 
 	public String getResponsible() {
