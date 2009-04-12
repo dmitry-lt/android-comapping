@@ -8,8 +8,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
+
+import static com.comapping.android.view.RenderHelper.pointLiesOnRect;
 
 public class TopicRender extends Render {
 
@@ -27,11 +30,11 @@ public class TopicRender extends Render {
 	private AttachmentRender attachmentRender;
 
 	// relative coordinates of upper left corner of renders
-	private Point iconCoords = new Point();
-	private Point textCoords = new Point();
-	private Point taskCoords = new Point();
-	private Point noteCoords = new Point();
-	private Point attachmentCoords = new Point();
+	private Rect iconRect = new Rect();
+	private Rect textRect = new Rect();
+	private Rect taskRect = new Rect();
+	private Rect noteRect = new Rect();
+	private Rect attachmentRect = new Rect();
 
 	private Topic topic;
 	private int width, height;
@@ -51,10 +54,10 @@ public class TopicRender extends Render {
 
 		if (!isEmpty) {
 			this.topic = topic;
-			textRender = new TextRender(topic.getFormattedText());
+			textRender = new TextRender(topic.getFormattedText(), context);
 			iconRender = new IconRender(topic);
-			taskRender = new TaskRender(topic.getTask());
-			noteRender = new NoteRender(topic.getNote());
+			taskRender = new TaskRender(topic.getTask(), context);
+			noteRender = new NoteRender(topic.getNote(), context);
 			attachmentRender = new AttachmentRender(topic.getAttachment(), context);
 
 			float iconSquare = iconRender.getWidth() * iconRender.getHeight();
@@ -75,20 +78,19 @@ public class TopicRender extends Render {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
-			iconRender.draw(x + iconCoords.x, y + iconCoords.y, 0, 0, c);
+			iconRender.draw(x + iconRect.left, y + iconRect.top, 0, 0, c);
 			// draw text background
 			Paint p = new Paint();
 			p.setColor(topic.getBgColor());
 			p.setAlpha(255);
-			c.drawRect(x + textCoords.x, y + textCoords.y, x + textCoords.x + textRender.getWidth(), y + textCoords.y
-					+ textRender.getHeight(), p);
+			c.drawRect(x + textRect.left, y + textRect.top, x + textRect.right, y + textRect.bottom, p);
 
-			textRender.draw(x + textCoords.x, y + textCoords.y, 0, 0, c);
-			attachmentRender.draw(x + attachmentCoords.x, y + attachmentCoords.y, 0, 0, c);
+			textRender.draw(x + textRect.left, y + textRect.top, 0, 0, c);
+			attachmentRender.draw(x + attachmentRect.left, y + attachmentRect.top, 0, 0, c);
 
-			taskRender.draw(x + taskCoords.x, y + taskCoords.y, 0, 0, c);
+			taskRender.draw(x + taskRect.left, y + taskRect.top, 0, 0, c);
 
-			noteRender.draw(x + noteCoords.x, y + noteCoords.y, 0, 0, c);
+			noteRender.draw(x + noteRect.left, y + noteRect.top, 0, 0, c);
 
 			// draw selection
 			if (isSelected()) {
@@ -146,25 +148,24 @@ public class TopicRender extends Render {
 		if (!isEmpty && selected) {
 			Point touchPoint = new Point(x, y);
 
-			if (pointLiesOnRect(touchPoint, iconCoords, iconRender.getWidth(), iconRender.getHeight())) {
-				touchPoint.offset(-iconCoords.x, -iconCoords.y);
+			if (pointLiesOnRect(touchPoint, iconRect)) {
+				touchPoint.offset(-iconRect.left, -iconRect.top);
 				iconRender.onTouch(touchPoint.x, touchPoint.y);
 
-			} else if (pointLiesOnRect(touchPoint, textCoords, textRender.getWidth(), textRender.getHeight())) {
-				touchPoint.offset(-textCoords.x, -textCoords.y);
+			} else if (pointLiesOnRect(touchPoint, textRect)) {
+				touchPoint.offset(-textRect.left, -textRect.top);
 				textRender.onTouch(touchPoint.x, touchPoint.y);
 
-			} else if (pointLiesOnRect(touchPoint, attachmentCoords, attachmentRender.getWidth(), attachmentRender
-					.getHeight())) {
-				touchPoint.offset(-attachmentCoords.x, -attachmentCoords.y);
+			} else if (pointLiesOnRect(touchPoint, attachmentRect)) {
+				touchPoint.offset(-attachmentRect.left, -attachmentRect.top);
 				attachmentRender.onTouch(touchPoint.x, touchPoint.y);
 
-			} else if (pointLiesOnRect(touchPoint, taskCoords, taskRender.getWidth(), taskRender.getHeight())) {
-				touchPoint.offset(-taskCoords.x, -taskCoords.y);
+			} else if (pointLiesOnRect(touchPoint, taskRect)) {
+				touchPoint.offset(-taskRect.left, -taskRect.top);
 				taskRender.onTouch(touchPoint.x, touchPoint.y);
 
-			} else if (pointLiesOnRect(touchPoint, noteCoords, noteRender.getWidth(), noteRender.getHeight())) {
-				touchPoint.offset(-noteCoords.x, -noteCoords.y);
+			} else if (pointLiesOnRect(touchPoint, noteRect)) {
+				touchPoint.offset(-noteRect.left, -noteRect.top);
 				noteRender.onTouch(touchPoint.x, touchPoint.y);
 			}
 		}
@@ -188,14 +189,6 @@ public class TopicRender extends Render {
 		}
 	}
 
-	private boolean pointLiesOnRect(Point p, Point corner, int width, int height) {
-		if (corner.x <= p.x && p.x <= corner.x + width && corner.y <= p.y && p.y <= corner.y + height) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	private void recalcDrawingData() {
 		// recalc size
 		lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
@@ -207,19 +200,29 @@ public class TopicRender extends Render {
 				+ attachmentRender.getWidth();
 
 		// recalc coords
-		iconCoords.x = 0;
-		iconCoords.y = (getLineOffset() - iconRender.getHeight()) / 2;
+		iconRect.left = 0;
+		iconRect.top = (getLineOffset() - iconRender.getHeight()) / 2;
+		iconRect.right = iconRect.left + iconRender.getWidth();
+		iconRect.bottom = iconRect.top + iconRender.getHeight();
 
-		textCoords.x = iconRender.getWidth() + HORISONTAL_MERGING;
-		textCoords.y = (getLineOffset() - textRender.getHeight()) / 2;
+		textRect.left = iconRender.getWidth() + HORISONTAL_MERGING;
+		textRect.top = (getLineOffset() - textRender.getHeight()) / 2;
+		textRect.right = textRect.left + textRender.getWidth();
+		textRect.bottom = textRect.top + textRender.getHeight();
 
-		attachmentCoords.x = iconRender.getWidth() + textRender.getWidth() + HORISONTAL_MERGING * 2;
-		attachmentCoords.y = (getLineOffset() - attachmentRender.getHeight()) / 2;
+		attachmentRect.left = iconRender.getWidth() + textRender.getWidth() + HORISONTAL_MERGING * 2;
+		attachmentRect.top = (getLineOffset() - attachmentRender.getHeight()) / 2;
+		attachmentRect.right = attachmentRect.left + attachmentRender.getWidth();
+		attachmentRect.bottom = attachmentRect.top + attachmentRender.getHeight();
 
-		taskCoords.x = 0;
-		taskCoords.y = getLineOffset();
+		taskRect.left = 0;
+		taskRect.top = getLineOffset();
+		taskRect.right = taskRect.left + taskRender.getWidth();
+		taskRect.bottom = taskRect.top + taskRender.getHeight();
 
-		noteCoords.x = 0;
-		noteCoords.y = getLineOffset() + taskRender.getHeight();
+		noteRect.left = 0;
+		noteRect.top = getLineOffset() + taskRender.getHeight();
+		noteRect.right = noteRect.left + noteRender.getWidth();
+		noteRect.bottom = noteRect.top + noteRender.getHeight();
 	}
 }

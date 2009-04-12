@@ -2,6 +2,9 @@ package com.comapping.android.view;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
@@ -16,8 +19,9 @@ public class NoteRender extends Render {
 	private TextRender textRender;
 
 	private int width, height;
+	private AlertDialog infDialog;
 
-	public NoteRender(String note) {
+	public NoteRender(String note, Context context) {
 		if (note != null && !note.equals("")) {
 			isEmpty = false;
 		} else {
@@ -26,8 +30,14 @@ public class NoteRender extends Render {
 
 		if (!isEmpty) {
 			FormattedText text = new FormattedText(note, new TextFormat(10, Color.GRAY, "", false));
-			textRender = new TextRender(text);
+			textRender = new TextRender(text, context);
 			recalcDrawingData();
+
+			infDialog = (new AlertDialog.Builder(context)
+			.setTitle("Note")
+			.setMessage(note)
+			.setNeutralButton("Ok", null)
+			).create();
 		} else {
 
 		}
@@ -54,8 +64,7 @@ public class NoteRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		// TODO Auto-generated method stub
-
+		infDialog.show();
 	}
 
 	public void setMaxWidth(int maxWidth) {

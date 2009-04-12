@@ -6,10 +6,17 @@ import com.comapping.android.model.TextBlock;
 import com.comapping.android.model.TextFormat;
 import com.comapping.android.model.TextParagraph;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
+
+import static com.comapping.android.view.RenderHelper.pointLiesOnRect;
+
+;
 
 public class TextRender extends Render {
 	private static final int BORDER = 4;
@@ -26,9 +33,12 @@ public class TextRender extends Render {
 	private int maxWidth;
 
 	private int[] parsWidth;
-	private Point[][] blocksCoord;
+	private Point[][] blocksDrawCoord;
+	private Rect[][] blocksRect;
 
-	public TextRender(FormattedText text) {
+	private Context context;
+
+	public TextRender(FormattedText text, Context context) {
 		if (text != null && !text.getSimpleText().equals("")) {
 			isEmpty = false;
 		} else {
@@ -37,6 +47,7 @@ public class TextRender extends Render {
 
 		if (!isEmpty) {
 			this.text = text;
+			this.context = context;
 
 			paint = new Paint();
 			paint.setAntiAlias(true);
@@ -166,7 +177,7 @@ public class TextRender extends Render {
 					paint.setTextSize(block.getFormat().getFontSize());
 					paint.setColor(block.getFormat().getFontColor());
 					paint.setUnderlineText(block.getFormat().isUnderlined());
-					c.drawText(block.getText(), x + blocksCoord[i][j].x, y + blocksCoord[i][j].y, paint);
+					c.drawText(block.getText(), x + blocksDrawCoord[i][j].x, y + blocksDrawCoord[i][j].y, paint);
 				}
 			}
 		} else {
@@ -200,29 +211,46 @@ public class TextRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		// TODO Auto-generated method stub
-
+		Point touchPoint = new Point(x, y);
+		Log.d(Log.topicRenderTag, "Touch on " + touchPoint + " " + this);
+		for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
+			TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
+			for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
+				if (pointLiesOnRect(touchPoint, blocksRect[i][j])) {
+					Log.d(Log.topicRenderTag, "Touch on " + paragraph.getTextBlocks().get(j));
+					String url = paragraph.getTextBlocks().get(j).getFormat().getHRef();
+					if (!url.equals("")) {
+						context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+					}
+					return;
+				}
+			}
+		}
 	}
 
 	private void recalcDrawingData() {
 		width = 0;
 		height = 0;
-		blocksCoord = new Point[textToDraw.getTextParagraphs().size()][];
+		blocksDrawCoord = new Point[textToDraw.getTextParagraphs().size()][];
+		blocksRect = new Rect[textToDraw.getTextParagraphs().size()][];
 		for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
 			TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
-			blocksCoord[i] = new Point[paragraph.getTextBlocks().size()];
+			blocksDrawCoord[i] = new Point[paragraph.getTextBlocks().size()];
+			blocksRect[i] = new Rect[paragraph.getTextBlocks().size()];
 			int curWidth = 0;
 			paint.setTextSize(paragraph.getMaxFontSize());
-			height += -paint.ascent();
+			int baseline = height + (int) (-paint.ascent());
+			int parHeight = (int) (-paint.ascent() + paint.descent());
 			for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 				TextBlock block = paragraph.getTextBlocks().get(j);
-				blocksCoord[i][j] = new Point(curWidth, height);
+				blocksDrawCoord[i][j] = new Point(curWidth, baseline);
 				paint.setTextSize(block.getFormat().getFontSize());
-				curWidth += paint.measureText(block.getText());
+				int blockWidth = (int) paint.measureText(block.getText());
+				blocksRect[i][j] = new Rect(curWidth, height, curWidth + blockWidth, height + parHeight);
+				curWidth += blockWidth;
 			}
 			width = Math.max(width, curWidth);
-			paint.setTextSize(paragraph.getMaxFontSize());
-			height += paint.descent();
+			height += parHeight;
 		}
 
 		width += BORDER * 2;

@@ -8,6 +8,8 @@ import com.comapping.android.model.Task;
 import com.comapping.android.model.TextFormat;
 import com.comapping.android.model.TextParagraph;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -29,7 +31,9 @@ public class TaskRender extends Render {
 	private int merging = MIN_MERGING;
 	private int linesCount = 1;
 
-	public TaskRender(Task task) {
+	private AlertDialog infDialog;
+
+	public TaskRender(Task task, Context context) {
 		if (task != null) {
 			isEmpty = false;
 		} else {
@@ -40,15 +44,21 @@ public class TaskRender extends Render {
 			TextFormat format = new TextFormat(10, Color.GRAY, "", false);
 
 			FormattedText responsible = new FormattedText(task.getResponsible(), format);
-			responsibleRender = new TextRender(responsible);
+			responsibleRender = new TextRender(responsible, context);
 
 			FormattedText start = new FormattedText("Start: " + task.getStart(), format);
-			startRender = new TextRender(start);
+			startRender = new TextRender(start, context);
 
 			FormattedText deadline = new FormattedText("Deadline: " + task.getDeadline(), format);
-			deadlineRender = new TextRender(deadline);
+			deadlineRender = new TextRender(deadline, context);
 
 			recalcDrawingData();
+
+			infDialog = (new AlertDialog.Builder(context)
+			.setTitle("Task")
+			.setMessage(task.getResponsible() + "\n" + "Start: " + task.getStart() + "\n" + "Deadline: " + task.getDeadline())
+			.setNeutralButton("Ok", null)
+			).create();
 		} else {
 			height = 0;
 			width = 0;
@@ -109,8 +119,7 @@ public class TaskRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		// TODO Auto-generated method stub
-
+		infDialog.show();
 	}
 
 	private void recalcDrawingData() {
