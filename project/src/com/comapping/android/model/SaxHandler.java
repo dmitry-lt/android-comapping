@@ -89,7 +89,7 @@ class SaxHandler extends DefaultHandler {
 				String note = attributes.getValue(MapBuilder.NOTE_TEXT_TAG);
 				currentTopic.setNote(note);
 
-			} else if (qName.equals(MapBuilder.TOPIC_TASK_TAG)) {
+			} else if (localName.equals(MapBuilder.TOPIC_TASK_TAG)) {
 				String start = attributes.getValue(MapBuilder.TASK_START_TAG);
 				String deadline = attributes.getValue(MapBuilder.TASK_DEADLINE_TAG);
 				String responsible = attributes.getValue(MapBuilder.TASK_RESPONSIBLE_TAG);
