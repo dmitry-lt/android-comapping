@@ -38,6 +38,9 @@ public class TopicRender extends Render {
 	private int lineOffset;
 	private boolean selected;
 
+	private float iconPart;
+	private float textPart;
+
 	public TopicRender(Topic topic, Context context) {
 		if (topic != null) {
 			isEmpty = false;
@@ -52,6 +55,12 @@ public class TopicRender extends Render {
 			taskRender = new TaskRender(topic.getTask());
 			noteRender = new NoteRender(topic.getNote());
 			attachmentRender = new AttachmentRender(topic.getAttachment(), context);
+
+			float iconSquare = iconRender.getWidth() * iconRender.getHeight();
+			float textSquare = textRender.getWidth() * textRender.getHeight();
+
+			iconPart = iconSquare / (iconSquare + textSquare);
+			textPart = 1 - iconPart;
 
 			recalcDrawingData();
 		} else {
@@ -161,11 +170,16 @@ public class TopicRender extends Render {
 	}
 
 	public void setMaxWidth(int maxWidth) {
-		Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
-		
-		int textMaxWidth = maxWidth - iconRender.getWidth() - attachmentRender.getWidth();
-		textRender.setMaxWidth(textMaxWidth);
-		recalcDrawingData();
+		if (maxWidth < width) {
+			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+
+			int iconMaxWidth = (int) (iconPart * (maxWidth - attachmentRender.getWidth()));
+			int textMaxWidth = (int) (textPart * (maxWidth - attachmentRender.getWidth()));
+			iconRender.setMaxWidth(iconMaxWidth);
+			textRender.setMaxWidth(textMaxWidth);
+
+			recalcDrawingData();
+		}
 	}
 
 	private boolean pointLiesOnRect(Point p, Point corner, int width, int height) {
