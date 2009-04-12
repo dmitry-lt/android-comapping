@@ -7,7 +7,6 @@
 package com.comapping.android.model;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.w3c.dom.DOMException;

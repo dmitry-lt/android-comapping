@@ -1,13 +1,9 @@
 package com.comapping.android.view;
 
-import java.util.ArrayList;
-
 import com.comapping.android.Log;
 import com.comapping.android.model.FormattedText;
 import com.comapping.android.model.Task;
 import com.comapping.android.model.TextFormat;
-import com.comapping.android.model.TextParagraph;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Canvas;

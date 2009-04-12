@@ -1,17 +1,13 @@
 package com.comapping.android.view;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
 import com.comapping.android.model.FormattedText;
 import com.comapping.android.model.TextFormat;
-import com.comapping.android.model.TextParagraph;
 
 public class NoteRender extends Render {
 	private boolean isEmpty;

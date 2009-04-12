@@ -7,8 +7,6 @@ import java.util.Date;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Attachment;
-import com.comapping.android.Options;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
