@@ -17,6 +17,8 @@ import android.preference.PreferenceManager;
 
 public class Storage {
 	public static final String VIEW_TYPE_KEY = "viewType";
+	public static final String AUTOLOGIN_KEY = "autologin";
+	public static final String EMAIL_KEY = "email";	
 
 	// Singleton
 	private Storage() {

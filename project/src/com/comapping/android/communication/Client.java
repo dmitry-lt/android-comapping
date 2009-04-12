@@ -32,6 +32,7 @@ import com.comapping.android.Cache;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.controller.LoginActivity;
+import com.comapping.android.storage.Storage;
 
 public class Client {
 	// constants
@@ -50,7 +51,6 @@ public class Client {
 	private String clientId = null;
 
 	private String email = null;
-	private String autoLoginKey = null;
 
 	private boolean loginInterrupted = false;
 
@@ -63,24 +63,30 @@ public class Client {
 	 * @throws ConnectionException
 	 * @throws LoginInterruptedException
 	 */
-	public void login(String email, String password) throws ConnectionException, LoginInterruptedException {
+	public void login(String email, String password, boolean remember) throws ConnectionException,
+			LoginInterruptedException, InvalidCredentialsException {
 		// if you try to log in, previous user logged out
-		setClientId(null);
+		clientSideLogout();
+
+		// anyway save email
+		Storage.getInstance().set(Storage.EMAIL_KEY, email);
 
 		String passwordHash = md5Encode(password);
 		String loginResponse = loginRequest(email, passwordHash, SIMPLE_LOGIN_METHOD);
 
+		String autoLoginKey = null;
+
 		if (loginResponse.length() > 0) {
 			// response from server is valid
-			String clientId;
+			String clientId = null;
 
 			if (loginResponse.charAt(0) == SALT_FLAG) {
 				// account with salt
 				String salt = loginResponse.substring(1);
 
-				autoLoginKey = SALT_FLAG + md5Encode(password + salt);
+				autoLoginKey = md5Encode(password + salt);
 
-				clientId = loginRequest(email, autoLoginKey.substring(1), WITH_SALT_LOGIN_METHOD);
+				clientId = loginRequest(email, autoLoginKey, WITH_SALT_LOGIN_METHOD);
 			} else {
 				// account without salt
 				autoLoginKey = passwordHash;
@@ -89,13 +95,27 @@ public class Client {
 			}
 
 			setClientId(clientId);
+
+			if (isLoggedIn() && remember) {
+				// save autologin key
+				Storage.getInstance().set(Storage.AUTOLOGIN_KEY, autoLoginKey);
+			}
 		} else {
-			// login failed
+			throw new InvalidCredentialsException();
 		}
 	}
 
+	
 	/**
-	 * Method for automatic login with AutoLogin key
+	 * Method for check autologin possibility
+	 * @return autologin possibility
+	 */
+	public boolean isAutologinPossible() {
+		return !Storage.getInstance().get(Storage.AUTOLOGIN_KEY).equals("");
+	}
+	
+	/**
+	 * Method for automatic login
 	 * 
 	 * @param email
 	 *            Email for login
@@ -104,42 +124,23 @@ public class Client {
 	 * @throws ConnectionException
 	 * @throws LoginInterruptedException
 	 */
-	public void autoLogin(String email, String key) throws ConnectionException, LoginInterruptedException {
-		autoLoginKey = key;
+	public void autologin() throws ConnectionException, InvalidCredentialsException,
+			LoginInterruptedException {
+		String email = Storage.getInstance().get(Storage.EMAIL_KEY);
+		String autologinKey = Storage.getInstance().get(Storage.AUTOLOGIN_KEY);
+		
+		clientSideLogout();
 
-		if ((key.length() > 0) && (key.charAt(0) == SALT_FLAG)) {
-			// account with salt
-			setClientId(loginRequest(email, key.substring(1), COOKIE_LOGIN_METHOD));
+		setClientId(loginRequest(email, autologinKey, COOKIE_LOGIN_METHOD));
+
+		if (!isLoggedIn()) {
+			throw new InvalidCredentialsException();
 		} else {
-			// account without salt
-			setClientId(loginRequest(email, key, SIMPLE_LOGIN_METHOD));
+			// reSet autologin key
+			Storage.getInstance().set(Storage.AUTOLOGIN_KEY, autologinKey);
 		}
 	}
-
-	/**
-	 * Method for AutoLogin key getting
-	 * 
-	 * @return AutoLogin key
-	 * @throws LoginInterruptedException
-	 */
-	public String getAutoLoginKey(Activity context) throws LoginInterruptedException {
-		loginRequired(context);
-
-		return autoLoginKey;
-	}
-
-	/**
-	 * Method for user email getting
-	 * 
-	 * @return User email
-	 * @throws LoginInterruptedException
-	 */
-	public String getEmail(Activity context) throws LoginInterruptedException {
-		loginRequired(context);
-
-		return email;
-	}
-
+	
 	/**
 	 * Method for check user login status
 	 * 
@@ -155,6 +156,9 @@ public class Client {
 	public void clientSideLogout() {
 		clientId = null;
 		Cache.clear();
+		
+		// clear AUTOLOGIN_KEY anyway
+		Storage.getInstance().set(Storage.AUTOLOGIN_KEY, "");
 	}
 
 	/**
@@ -333,7 +337,7 @@ public class Client {
 		if (!isLoggedIn()) {
 			loginInterrupted = false;
 			context.startActivityForResult(new Intent(LoginActivity.LOGIN_ACTIVITY_INTENT), LOGIN_REQUEST_CODE);
-
+			
 			while (!isLoggedIn() && (!loginInterrupted)) {
 				try {
 					Thread.sleep(SLEEP_TIME);

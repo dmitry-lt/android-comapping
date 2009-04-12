@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import com.comapping.android.Log;
 import com.comapping.android.communication.Client;
 import com.comapping.android.communication.ConnectionException;
+import com.comapping.android.communication.InvalidCredentialsException;
 import com.comapping.android.communication.LoginInterruptedException;
 import com.comapping.android.storage.Storage;
 import com.comapping.android.view.LoginView;
@@ -29,32 +30,18 @@ public class LoginActivity extends Activity {
 	private static final String AUTOLOGIN_ATTEMPT_FAILED_MESSAGE = "Auto login attempt failed";
 	private static final String CONNECTION_ERROR_MESSAGE = "Connection error";
 	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "Email or password is incorrect";
+	private static final String UNKNOWN_RESULT_MESSAGE = "Unknow result";
 
 	private LoginView loginView;
 
 	// use server from MetaMapController
 	Client client = null;
 
-	private void saveLoginAndPassword() {
-		try {
-			Storage.instance.set("email", client.getEmail(this));
-			Storage.instance.set("key", client.getAutoLoginKey(this));
-		} catch (LoginInterruptedException e) {
-			Log.e(Log.loginTag, "login interrupted");
-		}
-	}
-
-	private void finishLoginAttempt(final String errorMsg, final boolean remember) {
+	private void finishLoginAttempt(final String errorMsg) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if (client.isLoggedIn()) {
-					if (remember) {
-						saveLoginAndPassword();
-					} else {
-						Storage.instance.set("key", "");
-					}
-
 					setResult(RESULT_LOGIN_SUCCESSFUL);
 					finish();
 				} else {
@@ -70,20 +57,23 @@ public class LoginActivity extends Activity {
 
 		new Thread() {
 			public void run() {
-				String errorMsg = EMAIL_OR_PASSWORD_INCORRECT_MESSAGE;
+				String errorMsg = UNKNOWN_RESULT_MESSAGE;
+
+				CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
 
 				try {
-					client.login(email, password);
+					client.login(email, password, remember.isChecked());
 				} catch (ConnectionException e) {
 					Log.e(Log.loginTag, "connection exception");
 					errorMsg = CONNECTION_ERROR_MESSAGE;
 				} catch (LoginInterruptedException e) {
 					Log.e(Log.loginTag, "login interrupted");
+				} catch (InvalidCredentialsException e) {
+					Log.e(Log.loginTag, "invalid credentails");
+					errorMsg = EMAIL_OR_PASSWORD_INCORRECT_MESSAGE;
 				}
 
-				CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
-
-				finishLoginAttempt(errorMsg, remember.isChecked());
+				finishLoginAttempt(errorMsg);
 
 				if (!client.isLoggedIn()) {
 					loginView.splashDeactivate();
@@ -99,9 +89,9 @@ public class LoginActivity extends Activity {
 		loginView = new LoginView(this);
 		loginView.load();
 
-		if (!Storage.getInstance().get("key").equals("")) {
+		if (client.isAutologinPossible()) {
 			// autologin attempt
-			loginView.setEmailText(Storage.getInstance().get("email"));
+			loginView.setEmailText(Storage.getInstance().get(Storage.EMAIL_KEY));
 			loginView.setPasswordText("******");
 
 			loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
@@ -111,15 +101,17 @@ public class LoginActivity extends Activity {
 					String errorMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
 
 					try {
-						client.autoLogin(Storage.instance.get("email"), Storage.instance.get("key"));
+						client.autologin();
 					} catch (ConnectionException e) {
 						Log.e(Log.loginTag, "connection exception");
 						errorMsg = CONNECTION_ERROR_MESSAGE;
 					} catch (LoginInterruptedException e) {
 						Log.e(Log.loginTag, "login interrupted");
+					} catch (InvalidCredentialsException e) {
+						Log.e(Log.loginTag, "invalid credentails");
 					}
 
-					finishLoginAttempt(errorMsg, true);
+					finishLoginAttempt(errorMsg);
 
 					if (!client.isLoggedIn()) {
 						loginView.splashDeactivate();
