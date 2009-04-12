@@ -181,7 +181,7 @@ public class DomMapBuilder extends MapBuilder {
 
 			} else if (childNode.getNodeName().equals(TOPIC_TASK_TAG)) {
 				String start = childNode.getAttributes().getNamedItem(TASK_START_TAG).getNodeValue();
-				Date deadline = dateParsing(childNode.getAttributes().getNamedItem(TASK_DEADLINE_TAG).getNodeValue());
+				Date deadline = parseDate(childNode.getAttributes().getNamedItem(TASK_DEADLINE_TAG).getNodeValue());
 				String responsible = childNode.getAttributes().getNamedItem(TASK_RESPONSIBLE_TAG).getNodeValue();
 				Task task = new Task(start, deadline, responsible);
 				topic.setTask(task);
