@@ -151,11 +151,7 @@ public class IconRender extends Render {
 	}
 
 	private static Bitmap getBitmap(Drawable image) {
-		Bitmap bitmap = Bitmap.createBitmap(ICON_SIZE, ICON_SIZE, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(bitmap);
-		image.setBounds(0, 0, ICON_SIZE, ICON_SIZE);
-		image.draw(canvas);
-		return bitmap;
+		return RenderHelper.getBitmap(image, ICON_SIZE);
 	}
 
 	private void loadIcons() {

@@ -192,9 +192,11 @@ public class TopicRender extends Render {
 	private void recalcDrawingData() {
 		// recalc size
 		lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
+		lineOffset = Math.max(lineOffset, attachmentRender.getHeight());
 
 		height = Math.max(iconRender.getHeight(), textRender.getHeight()) + taskRender.getHeight()
 				+ noteRender.getHeight();
+		height = Math.max(height, attachmentRender.getHeight());
 		width = Math.max(iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth(), Math.max(taskRender
 				.getWidth(), noteRender.getWidth()))
 				+ attachmentRender.getWidth();

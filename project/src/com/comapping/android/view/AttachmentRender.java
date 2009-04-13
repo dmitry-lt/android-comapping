@@ -14,38 +14,39 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
+import static com.comapping.android.view.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {
 
 	private static final int ICON_SIZE = 36;
-	private static final int HORISONTAL_MERGING = 5;
 
-	private Attachment attachment;
-	private AlertDialog infDialog;
+	private static boolean iconLoaded = false;
+	private static Bitmap attachmentIcon;
+
+	private boolean isEmpty;
+
+	private AlertDialog dialog;
 	private int width, height;
 
-	private static boolean iconsLoaded = false;
-	private static Bitmap iconsAttachment;
-
 	public AttachmentRender(Attachment attachment, Context context) {
-		if (!iconsLoaded) {
-			loadIcons();
-			iconsLoaded = true;
+		if (attachment != null) {
+			isEmpty = false;
+		} else {
+			isEmpty = true;
 		}
 
-		this.attachment = attachment;
-
-		int iconsCount = 0;
-
-		if (this.attachment != null) {
-			iconsCount++;
+		if (!isEmpty) {
+			if (!iconLoaded) {
+				loadIcons();
+				iconLoaded = true;
+			}
 
 			final Context fContext = context;
 			final String url = "http://upload.comapping.com/" + attachment.getKey();
 			// Alert Dialog is created here
-			infDialog = (new AlertDialog.Builder(context)
+			dialog = (new AlertDialog.Builder(context)
 			.setTitle("Save attachment?")
 			.setMessage("File: " + attachment.getFilename() + "\n" +
 					"Upload date: " + dateFormating(attachment.getDate()) + "\n" +
@@ -63,10 +64,8 @@ public class AttachmentRender extends Render {
 				}
 			})
 			).create();
-		}
 
-		if (iconsCount > 0) {
-			width = ICON_SIZE * iconsCount + HORISONTAL_MERGING * (iconsCount - 1);
+			width = ICON_SIZE;
 			height = ICON_SIZE;
 		} else {
 			width = 0;
@@ -76,15 +75,16 @@ public class AttachmentRender extends Render {
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		if (attachment != null) {
-			c.drawBitmap(iconsAttachment, x, y, null);
-			x += ICON_SIZE + HORISONTAL_MERGING;
+		if (!isEmpty) {
+			c.drawBitmap(attachmentIcon, x, y, null);
+		} else {
+			// nothing to draw
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "[IconRender: width=" + getWidth() + " height=" + getHeight() + "]";
+		return "[AttachmentRender: width=" + getWidth() + " height=" + getHeight() + "]";
 	}
 
 	@Override
@@ -99,20 +99,12 @@ public class AttachmentRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		infDialog.show();
-	}
-
-	private static Bitmap getBitmap(Drawable image) {
-		Bitmap bitmap = Bitmap.createBitmap(ICON_SIZE, ICON_SIZE, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(bitmap);
-		image.setBounds(0, 0, ICON_SIZE, ICON_SIZE);
-		image.draw(canvas);
-		return bitmap;
+		dialog.show();
 	}
 
 	private void loadIcons() {
 		Resources r = MetaMapActivity.getInstance().getResources();
-		iconsAttachment = getBitmap(r.getDrawable(R.drawable.attachment));
+		attachmentIcon = getBitmap(r.getDrawable(R.drawable.attachment), ICON_SIZE);
 	}
 
 	private String fileSizeFormating(int size) {
