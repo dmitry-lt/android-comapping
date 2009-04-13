@@ -1,5 +1,7 @@
 package com.comapping.android.model;
 
+import com.comapping.android.model.exceptions.EnumParsingException;
+
 public enum Icon {
 	QUESTION_MARK, EXCLAMATION_MARK, BOMB, THUMBS_UP, THUMBS_DOWN, MAGNIFIER, DOLLAR, HEART, CLOCK;
 

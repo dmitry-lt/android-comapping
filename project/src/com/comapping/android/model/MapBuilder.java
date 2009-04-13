@@ -4,6 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.comapping.android.model.exceptions.DateParsingException;
+import com.comapping.android.model.exceptions.MapParsingException;
+import com.comapping.android.model.exceptions.StringToXMLConvertionException;
+
 abstract public class MapBuilder {
 	static final String METADATA_TAG = "metadata";
 	static final String MAP_ID_TAG = "id";

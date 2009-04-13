@@ -17,6 +17,9 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
+import com.comapping.android.communication.exceptions.MD5NotSupportedError;
+import com.comapping.android.communication.exceptions.UTF8NotSupportedError;
+
 public class ClientHelper {
 	/**
 	 * Method for encoding string by MD5

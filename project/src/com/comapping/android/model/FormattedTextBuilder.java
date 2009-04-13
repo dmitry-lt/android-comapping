@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
 public class FormattedTextBuilder {
 	private static final String PARAGRAPH_TAG = "P";

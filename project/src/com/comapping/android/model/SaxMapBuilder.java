@@ -12,6 +12,9 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.exceptions.DocumentBuilderCreatingError;
+import com.comapping.android.model.exceptions.MapParsingException;
+import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
 public class SaxMapBuilder extends MapBuilder {
 

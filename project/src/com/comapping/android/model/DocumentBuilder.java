@@ -12,6 +12,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.exceptions.DocumentBuilderCreatingError;
+import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
 public class DocumentBuilder {
 	public static Document buildDocument(String xmlText) throws StringToXMLConvertionException {

@@ -4,11 +4,13 @@
  * @author Abishev Timur
  * @version 1.0
  */
-package com.comapping.android.communication;
+package com.comapping.android.communication.exceptions;
 
 import com.comapping.android.Log;
 
 public class UTF8NotSupportedError extends Error {
+	private static final long serialVersionUID = 3638173584258947120L;
+
 	public UTF8NotSupportedError() {
 		Log.e(Log.connectionTag, "Communication: UTF-8 encoding not supported");
 	}

@@ -16,6 +16,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.exceptions.DateParsingException;
+import com.comapping.android.model.exceptions.EnumParsingException;
+import com.comapping.android.model.exceptions.MapParsingException;
+import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
 public class DomMapBuilder extends MapBuilder {
 	/**

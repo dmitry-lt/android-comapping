@@ -1,5 +1,7 @@
 package com.comapping.android.model;
 
+import com.comapping.android.model.exceptions.EnumParsingException;
+
 public enum Smiley {
 	HAPPY, NEUTRAL, SAD, FURIOUS;
 

@@ -8,6 +8,7 @@ import java.util.List;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
 /**
  * @author Passichenko Victor and Yuri Zemlyanskiy

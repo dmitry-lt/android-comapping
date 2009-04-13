@@ -1,5 +1,7 @@
 package com.comapping.android.model;
 
+import com.comapping.android.model.exceptions.EnumParsingException;
+
 public enum TaskCompletion {
 	TO_DO, TWENTY_FIVE, FIFTY, SEVENTY_FIVE, COMPLETE;
 

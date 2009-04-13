@@ -14,9 +14,9 @@ import android.widget.CheckBox;
 
 import com.comapping.android.Log;
 import com.comapping.android.communication.Client;
-import com.comapping.android.communication.ConnectionException;
-import com.comapping.android.communication.InvalidCredentialsException;
-import com.comapping.android.communication.LoginInterruptedException;
+import com.comapping.android.communication.exceptions.ConnectionException;
+import com.comapping.android.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.storage.Storage;
 import com.comapping.android.view.LoginView;
 

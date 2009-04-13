@@ -15,6 +15,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.exceptions.DateParsingException;
+import com.comapping.android.model.exceptions.EnumParsingException;
+import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
 class SaxHandler extends DefaultHandler {
 	private static int base = 1000;

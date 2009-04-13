@@ -31,6 +31,9 @@ import android.content.Intent;
 import com.comapping.android.Cache;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
+import com.comapping.android.communication.exceptions.ConnectionException;
+import com.comapping.android.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.storage.Storage;
 
