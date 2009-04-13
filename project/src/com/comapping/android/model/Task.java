@@ -4,10 +4,10 @@ import java.util.Date;
 
 public class Task {
 	private String start;
-	private Date deadline;
+	private String deadline;
 	private String responsible;
 
-	public Task(String start, Date deadline, String responsible) {
+	public Task(String start, String deadline, String responsible) {
 		setStart(start);
 		setDeadline(deadline);
 		setResponsible(responsible);
@@ -21,11 +21,11 @@ public class Task {
 		return start;
 	}
 
-	public Date getDeadline() {
+	public String getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(Date deadline) {
+	public void setDeadline(String deadline) {
 		this.deadline = deadline;
 	}
 

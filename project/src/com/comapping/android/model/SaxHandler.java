@@ -96,17 +96,7 @@ class SaxHandler extends DefaultHandler {
 
 			} else if (localName.equals(MapBuilder.TOPIC_TASK_TAG)) {
 				String start = attributes.getValue(MapBuilder.TASK_START_TAG);
-				Date deadline;
-				
-				try {
-					deadline = MapBuilder.parseDate(attributes.getValue(MapBuilder.TASK_DEADLINE_TAG));
-				}
-				catch (DateParsingException e) {
-					e.printStackTrace();
-					Log.e(Log.modelTag, e.toString());
-					throw new SAXException();					
-				}
-				
+				String deadline = attributes.getValue(MapBuilder.TASK_DEADLINE_TAG);
 				String responsible = attributes.getValue(MapBuilder.TASK_RESPONSIBLE_TAG);
 				Task task = new Task(start, deadline, responsible);
 				currentTopic.setTask(task);
