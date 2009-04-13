@@ -108,27 +108,22 @@ public class AttachmentRender extends Render {
 	}
 
 	private String fileSizeFormating(int size) {
+		float fSize = size;
 		String res = "";
 		if (size > 1024 * 1024 * 1024) {
-			res += size / (1024 * 1024 * 1024) + " GB\n";
-			size = size % (1024 * 1024 * 1024);
-		}
-		if (size > 1024 * 1024) {
-			res += size / (1024 * 1024) + " MB\n";
-			size = size % (1024 * 1024);
-		}
-		if (size > 1024) {
-			res += size / 1024 + " KB\n";
-			size = size % 1024;
-		}
-		if (size > 0) {
-			res += size + " bytes";
+			res = String.format("%.2f", fSize / (1024 * 1024 * 1024)) + " GB";			
+		} else if (size > 1024 * 1024) {
+			res = String.format("%.2f", fSize / (1024 * 1024)) + " MB";
+		} else if (size > 1024) {
+			res = String.format("%.2f", fSize / 1024) + " KB";
+		} else if (size > 0) {
+			res = fSize + " bytes";
 		}
 		return res;
 	}
 
 	private String dateFormating(Date date) {
-		DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss dd.MM.yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		return dateFormat.format(date);
 	}
 }
