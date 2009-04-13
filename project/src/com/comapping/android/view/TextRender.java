@@ -105,63 +105,68 @@ public class TextRender extends Render {
 	}
 
 	public void setMaxWidth(int maxWidth) {
-		Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+		if (!isEmpty) {
+			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
 
-		if (maxWidth < MAX_LETTER_WIDTH) {
-			// too small width
-			return;
-		}
-		int sumLinesCount = 0;
-		this.maxWidth = 0;
-		for (int i = 0; i < text.getTextParagraphs().size(); i++) {
-			int approxLinesCount = parsWidth[i] / maxWidth;
-			int parWidthWithAdding = parsWidth[i] + approxLinesCount * MAX_LETTER_WIDTH;
-			int linesCount = parWidthWithAdding / maxWidth + 1;
-			sumLinesCount += linesCount;
-			int optimalWidth = parWidthWithAdding / linesCount;
-			this.maxWidth = Math.max(this.maxWidth, optimalWidth);
-		}
+			if (maxWidth < MAX_LETTER_WIDTH) {
+				// too small width
+				return;
+			}
+			int sumLinesCount = 0;
+			this.maxWidth = 0;
+			for (int i = 0; i < text.getTextParagraphs().size(); i++) {
+				int approxLinesCount = parsWidth[i] / maxWidth;
+				int parWidthWithAdding = parsWidth[i] + approxLinesCount * MAX_LETTER_WIDTH;
+				int linesCount = parWidthWithAdding / maxWidth + 1;
+				sumLinesCount += linesCount;
+				int optimalWidth = parWidthWithAdding / linesCount;
+				this.maxWidth = Math.max(this.maxWidth, optimalWidth);
+			}
 
-		Log.d(Log.topicRenderTag, "optimal maxWidth=" + this.maxWidth);
-		Log.d(Log.topicRenderTag, "optimal lines count=" + sumLinesCount);
+			Log.d(Log.topicRenderTag, "optimal maxWidth=" + this.maxWidth);
+			Log.d(Log.topicRenderTag, "optimal lines count=" + sumLinesCount);
 
-		textToDraw = new FormattedText();
-		for (int i = 0; i < text.getTextParagraphs().size(); i++) {
-			TextParagraph paragraph = text.getTextParagraphs().get(i);
-			TextParagraph curParagraph = new TextParagraph();
-			int curLineWidth = 0;
-			for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
-				TextBlock block = paragraph.getTextBlocks().get(j);
-				paint.setTextSize(block.getFormat().getFontSize());
-				while (true) {
-					float blockWidth = paint.measureText(block.getText());
-					if (curLineWidth + blockWidth <= this.maxWidth) {
-						curParagraph.add(block);
-						curLineWidth += blockWidth;
-						break;
-					} else {
-						// int fitInCount = block.getText().length();
-						// do {
-						// float fitInPart = (this.maxWidth - curLineWidth) /
-						// blockWidth;
-						// fitInCount = (int) (fitInCount * fitInPart);
-						// blockWidth = paint.measureText(block.getText(), 0,
-						// fitInCount);
-						// } while (curLineWidth + blockWidth > this.maxWidth);
+			textToDraw = new FormattedText();
+			for (int i = 0; i < text.getTextParagraphs().size(); i++) {
+				TextParagraph paragraph = text.getTextParagraphs().get(i);
+				TextParagraph curParagraph = new TextParagraph();
+				int curLineWidth = 0;
+				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
+					TextBlock block = paragraph.getTextBlocks().get(j);
+					paint.setTextSize(block.getFormat().getFontSize());
+					while (true) {
+						float blockWidth = paint.measureText(block.getText());
+						if (curLineWidth + blockWidth <= this.maxWidth) {
+							curParagraph.add(block);
+							curLineWidth += blockWidth;
+							break;
+						} else {
+							// int fitInCount = block.getText().length();
+							// do {
+							// float fitInPart = (this.maxWidth - curLineWidth)
+							// /
+							// blockWidth;
+							// fitInCount = (int) (fitInCount * fitInPart);
+							// blockWidth = paint.measureText(block.getText(),
+							// 0,
+							// fitInCount);
+							// } while (curLineWidth + blockWidth >
+							// this.maxWidth);
 
-						int fitInCount = paint.breakText(block.getText(), true, this.maxWidth - curLineWidth, null);
-						TextBlock[] blocks = block.split(fitInCount);
-						curParagraph.add(blocks[0]);
-						textToDraw.add(curParagraph);
-						curParagraph = new TextParagraph();
-						block = blocks[1];
+							int fitInCount = paint.breakText(block.getText(), true, this.maxWidth - curLineWidth, null);
+							TextBlock[] blocks = block.split(fitInCount);
+							curParagraph.add(blocks[0]);
+							textToDraw.add(curParagraph);
+							curParagraph = new TextParagraph();
+							block = blocks[1];
+						}
 					}
 				}
+				textToDraw.add(curParagraph);
 			}
-			textToDraw.add(curParagraph);
-		}
 
-		recalcDrawingData();
+			recalcDrawingData();
+		}
 	}
 
 	@Override
@@ -211,18 +216,20 @@ public class TextRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		Point touchPoint = new Point(x, y);
-		Log.d(Log.topicRenderTag, "Touch on " + touchPoint + " " + this);
-		for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
-			TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
-			for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
-				if (pointLiesOnRect(touchPoint, blocksRect[i][j])) {
-					Log.d(Log.topicRenderTag, "Touch on " + paragraph.getTextBlocks().get(j));
-					String url = paragraph.getTextBlocks().get(j).getFormat().getHRef();
-					if (!url.equals("")) {
-						context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+		if (!isEmpty) {
+			Point touchPoint = new Point(x, y);
+			Log.d(Log.topicRenderTag, "Touch on " + touchPoint + " " + this);
+			for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
+				TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
+				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
+					if (pointLiesOnRect(touchPoint, blocksRect[i][j])) {
+						Log.d(Log.topicRenderTag, "Touch on " + paragraph.getTextBlocks().get(j));
+						String url = paragraph.getTextBlocks().get(j).getFormat().getHRef();
+						if (!url.equals("")) {
+							context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+						}
+						return;
 					}
-					return;
 				}
 			}
 		}
