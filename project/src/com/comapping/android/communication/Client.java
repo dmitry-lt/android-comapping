@@ -236,6 +236,7 @@ public class Client {
 		}
 
 		Log.d(Log.connectionTag, "fake response: " + response);
+		Log.d(Log.connectionTag, "response check sum: " + getBytesSum(response));
 		return response;
 	}
 
@@ -282,9 +283,10 @@ public class Client {
 		} catch (IOException e) {
 			Log.d(Log.connectionTag, "IO exception");
 			throw new ConnectionException();
-		}
-
+		}		
+		
 		Log.i(Log.connectionTag, "response from server: " + responseText);
+		Log.d(Log.connectionTag, "response check sum: " + getBytesSum(responseText));
 		Log.d(Log.connectionTag, "response status code: " + responseStatus);
 
 		if (loginInterrupted) {

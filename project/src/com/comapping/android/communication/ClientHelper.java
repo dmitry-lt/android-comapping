@@ -98,4 +98,18 @@ public class ClientHelper {
 			return "";
 		}
 	}
+	
+	public static long getBytesSum(String string) {
+		byte[] bytes;
+		try {
+			bytes = string.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new UTF8NotSupportedError();
+		}
+		long sum = 0;
+		for (byte b : bytes) {
+			sum += b;
+		}
+		return sum;
+	}
 }
