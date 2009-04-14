@@ -9,14 +9,13 @@ import com.comapping.android.model.TextParagraph;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 
 import static com.comapping.android.view.RenderHelper.pointLiesOnRect;
-
-;
 
 public class TextRender extends Render {
 	private static final int BORDER = 4;
@@ -28,17 +27,23 @@ public class TextRender extends Render {
 
 	private FormattedText text;
 	private FormattedText textToDraw;
+	private int bgColor;
 	private Paint paint;
 	private int width, height;
 	private int maxWidth;
 
 	private int[] parsWidth;
-	private Point[][] blocksDrawCoord;
+	private Point[][] blocksDrawCoord; // y is a baseline of text, it is'n
+	// upper-left corner
 	private Rect[][] blocksRect;
 
 	private Context context;
 
 	public TextRender(FormattedText text, Context context) {
+		this(text, Color.TRANSPARENT, context);
+	}
+
+	public TextRender(FormattedText text, int bgColor, Context context) {
 		if (text != null && !text.getSimpleText().equals("")) {
 			isEmpty = false;
 		} else {
@@ -47,6 +52,7 @@ public class TextRender extends Render {
 
 		if (!isEmpty) {
 			this.text = text;
+			this.bgColor = bgColor;
 			this.context = context;
 
 			paint = new Paint();
@@ -81,7 +87,7 @@ public class TextRender extends Render {
 		boolean isFull = false;
 		for (TextParagraph paragraph : text.getTextParagraphs()) {
 			for (TextBlock block : paragraph.getTextBlocks()) {
-				paint.setTextScaleX(block.getFormat().getFontSize());
+				paint.setTextSize(block.getFormat().getFontSize());
 				float width = paint.measureText(block.getText());
 				if (curWidth + width <= maxWidth) {
 					curWidth += width;
@@ -172,6 +178,12 @@ public class TextRender extends Render {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
+			if (bgColor != 0) {
+				paint.setColor(bgColor);
+				paint.setAlpha(255);
+				c.drawRect(x, y, x + getWidth(), y + getHeight(), paint);
+			}
+
 			x += BORDER;
 			y += BORDER;
 
@@ -218,16 +230,20 @@ public class TextRender extends Render {
 	public void onTouch(int x, int y) {
 		if (!isEmpty) {
 			Point touchPoint = new Point(x, y);
-			Log.d(Log.topicRenderTag, "Touch on " + touchPoint + " " + this);
+
+			Log.d(Log.topicRenderTag, "Touch " + touchPoint + " on " + this);
+
 			for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
 				TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
 				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 					if (pointLiesOnRect(touchPoint, blocksRect[i][j])) {
 						Log.d(Log.topicRenderTag, "Touch on " + paragraph.getTextBlocks().get(j));
+
 						String url = paragraph.getTextBlocks().get(j).getFormat().getHRef();
 						if (!url.equals("")) {
 							context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 						}
+
 						return;
 					}
 				}
@@ -238,24 +254,33 @@ public class TextRender extends Render {
 	private void recalcDrawingData() {
 		width = 0;
 		height = 0;
+
 		blocksDrawCoord = new Point[textToDraw.getTextParagraphs().size()][];
 		blocksRect = new Rect[textToDraw.getTextParagraphs().size()][];
+
 		for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
 			TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
+
 			blocksDrawCoord[i] = new Point[paragraph.getTextBlocks().size()];
 			blocksRect[i] = new Rect[paragraph.getTextBlocks().size()];
-			int curWidth = 0;
+
 			paint.setTextSize(paragraph.getMaxFontSize());
 			int baseline = height + (int) (-paint.ascent());
 			int parHeight = (int) (-paint.ascent() + paint.descent());
+
+			int curWidth = 0;
 			for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 				TextBlock block = paragraph.getTextBlocks().get(j);
+
 				blocksDrawCoord[i][j] = new Point(curWidth, baseline);
+
 				paint.setTextSize(block.getFormat().getFontSize());
 				int blockWidth = (int) paint.measureText(block.getText());
 				blocksRect[i][j] = new Rect(curWidth, height, curWidth + blockWidth, height + parHeight);
+
 				curWidth += blockWidth;
 			}
+
 			width = Math.max(width, curWidth);
 			height += parHeight;
 		}

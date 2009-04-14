@@ -16,7 +16,7 @@ import static com.comapping.android.view.RenderHelper.pointLiesOnRect;
 
 public class TopicRender extends Render {
 
-	private static final int HORISONTAL_MERGING = 0;
+	// private static final int HORISONTAL_MERGING = 0;
 	private static final int SELECTION_COLOR = Color.argb(255, 127, 191, 255);
 	private static final int SELECTION_WIDTH = 3;
 	private static final int SELECTION_EDGES_RADIUS = 4;
@@ -25,18 +25,16 @@ public class TopicRender extends Render {
 
 	private IconRender iconRender;
 	private TextRender textRender;
+	private AttachmentRender attachmentRender;
 	private TaskRender taskRender;
 	private NoteRender noteRender;
-	private AttachmentRender attachmentRender;
 
-	// relative coordinates of upper left corner of renders
 	private Rect iconRect = new Rect();
 	private Rect textRect = new Rect();
+	private Rect attachmentRect = new Rect();
 	private Rect taskRect = new Rect();
 	private Rect noteRect = new Rect();
-	private Rect attachmentRect = new Rect();
 
-	private Topic topic;
 	private int width, height;
 	private int lastMaxWidth;
 	private int lineOffset;
@@ -53,16 +51,15 @@ public class TopicRender extends Render {
 		}
 
 		if (!isEmpty) {
-			this.topic = topic;
-			textRender = new TextRender(topic.getFormattedText(), context);
+			textRender = new TextRender(topic.getFormattedText(), topic.getBgColor(), context);
 			iconRender = new IconRender(topic);
 			taskRender = new TaskRender(topic.getTask(), context);
 			noteRender = new NoteRender(topic.getNote(), context);
 			attachmentRender = new AttachmentRender(topic.getAttachment(), context);
 
+			// calc approximately icon and text parts to recal width
 			float iconSquare = iconRender.getWidth() * iconRender.getHeight();
 			float textSquare = textRender.getWidth() * textRender.getHeight();
-
 			iconPart = iconSquare / (iconSquare + textSquare);
 			textPart = 1 - iconPart;
 
@@ -79,30 +76,22 @@ public class TopicRender extends Render {
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			iconRender.draw(x + iconRect.left, y + iconRect.top, 0, 0, c);
-			// draw text background
-			Paint p = new Paint();
-			p.setColor(topic.getBgColor());
-			p.setAlpha(255);
-			c.drawRect(x + textRect.left, y + textRect.top, x + textRect.right, y + textRect.bottom, p);
-
 			textRender.draw(x + textRect.left, y + textRect.top, 0, 0, c);
 			attachmentRender.draw(x + attachmentRect.left, y + attachmentRect.top, 0, 0, c);
-
 			taskRender.draw(x + taskRect.left, y + taskRect.top, 0, 0, c);
-
 			noteRender.draw(x + noteRect.left, y + noteRect.top, 0, 0, c);
 
 			// draw selection
+			Paint p = new Paint();
 			if (isSelected()) {
 				p.setColor(SELECTION_COLOR);
 				p.setAlpha(255);
 				p.setAntiAlias(true);
 				p.setStyle(Style.STROKE);
 				p.setStrokeWidth(SELECTION_WIDTH);
-				c.drawRoundRect(new RectF(x, y, x + getWidth(), y + getHeight()), SELECTION_EDGES_RADIUS,
-						SELECTION_EDGES_RADIUS, p);
+				RectF rect = new RectF(x, y, x + getWidth(), y + getHeight());
+				c.drawRoundRect(rect, SELECTION_EDGES_RADIUS, SELECTION_EDGES_RADIUS, p);
 			}
-
 		} else {
 			// nothing to draw
 		}
@@ -122,13 +111,8 @@ public class TopicRender extends Render {
 	}
 
 	@Override
-	public String toString() {
-		if (!isEmpty) {
-			return "[TopicRender: width=" + getWidth() + " height=" + getHeight() + "\n" + iconRender + "\n"
-					+ textRender + "\n" + taskRender + "\n" + noteRender + "]";
-		} else {
-			return "[TopicRender: EMPTY]";
-		}
+	public int getWidth() {
+		return width;
 	}
 
 	@Override
@@ -137,8 +121,13 @@ public class TopicRender extends Render {
 	}
 
 	@Override
-	public int getWidth() {
-		return width;
+	public String toString() {
+		if (!isEmpty) {
+			return "[TopicRender: width=" + getWidth() + " height=" + getHeight() + "\n" + iconRender + "\n"
+					+ textRender + "\n" + taskRender + "\n" + noteRender + "]";
+		} else {
+			return "[TopicRender: EMPTY]";
+		}
 	}
 
 	@Override
@@ -194,12 +183,10 @@ public class TopicRender extends Render {
 		lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
 		lineOffset = Math.max(lineOffset, attachmentRender.getHeight());
 
-		height = Math.max(iconRender.getHeight(), textRender.getHeight()) + taskRender.getHeight()
-				+ noteRender.getHeight();
-		height = Math.max(height, attachmentRender.getHeight());
-		width = Math.max(iconRender.getWidth() + HORISONTAL_MERGING + textRender.getWidth(), Math.max(taskRender
-				.getWidth(), noteRender.getWidth()))
-				+ attachmentRender.getWidth();
+		width = Math.max(iconRender.getWidth() + textRender.getWidth(), taskRender.getWidth());
+		width = Math.max(width, noteRender.getWidth());
+		width += attachmentRender.getWidth();
+		height = lineOffset + taskRender.getHeight() + noteRender.getHeight();
 
 		// recalc coords
 		iconRect.left = 0;
@@ -207,12 +194,12 @@ public class TopicRender extends Render {
 		iconRect.right = iconRect.left + iconRender.getWidth();
 		iconRect.bottom = iconRect.top + iconRender.getHeight();
 
-		textRect.left = iconRender.getWidth() + HORISONTAL_MERGING;
+		textRect.left = iconRender.getWidth();
 		textRect.top = (getLineOffset() - textRender.getHeight()) / 2;
 		textRect.right = textRect.left + textRender.getWidth();
 		textRect.bottom = textRect.top + textRender.getHeight();
 
-		attachmentRect.left = iconRender.getWidth() + textRender.getWidth() + HORISONTAL_MERGING * 2;
+		attachmentRect.left = iconRender.getWidth() + textRender.getWidth();
 		attachmentRect.top = (getLineOffset() - attachmentRender.getHeight()) / 2;
 		attachmentRect.right = attachmentRect.left + attachmentRender.getWidth();
 		attachmentRect.bottom = attachmentRect.top + attachmentRender.getHeight();

@@ -20,7 +20,7 @@ import static com.comapping.android.view.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {
 
-	private static final int ICON_SIZE = 36;
+	private static final int ICON_SIZE = 28;
 
 	private static boolean iconLoaded = false;
 	private static Bitmap attachmentIcon;
@@ -45,6 +45,7 @@ public class AttachmentRender extends Render {
 
 			final Context fContext = context;
 			final String url = "http://upload.comapping.com/" + attachment.getKey();
+//			final String url = "http://stg243.ifolder.ru/download/?11604085&ah58bG1OECiK7Yk6SpaLmw%3D%3D";
 			// Alert Dialog is created here
 			dialog = (new AlertDialog.Builder(context)
 			.setTitle("Save attachment?")
