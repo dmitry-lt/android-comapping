@@ -20,7 +20,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -37,6 +36,8 @@ import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.storage.Storage;
 
+//import org.apache.http.conn.params.ConnManagerPNames;
+
 public class Client {
 	// constants
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
@@ -48,7 +49,7 @@ public class Client {
 
 	final static private char SALT_FLAG = '#';
 
-	final static private long MAX_TIMEOUT = 5;
+	// final static private long MAX_TIMEOUT = 5;
 
 	// private variables
 	private String clientId = null;
@@ -108,15 +109,15 @@ public class Client {
 		}
 	}
 
-	
 	/**
 	 * Method for check autologin possibility
+	 * 
 	 * @return autologin possibility
 	 */
 	public boolean isAutologinPossible() {
 		return !Storage.getInstance().get(Storage.AUTOLOGIN_KEY).equals("");
 	}
-	
+
 	/**
 	 * Method for automatic login
 	 * 
@@ -127,11 +128,10 @@ public class Client {
 	 * @throws ConnectionException
 	 * @throws LoginInterruptedException
 	 */
-	public void autologin() throws ConnectionException, InvalidCredentialsException,
-			LoginInterruptedException {
+	public void autologin() throws ConnectionException, InvalidCredentialsException, LoginInterruptedException {
 		String email = Storage.getInstance().get(Storage.EMAIL_KEY);
 		String autologinKey = Storage.getInstance().get(Storage.AUTOLOGIN_KEY);
-		
+
 		clientSideLogout();
 
 		setClientId(loginRequest(email, autologinKey, COOKIE_LOGIN_METHOD));
@@ -143,7 +143,7 @@ public class Client {
 			Storage.getInstance().set(Storage.AUTOLOGIN_KEY, autologinKey);
 		}
 	}
-	
+
 	/**
 	 * Method for check user login status
 	 * 
@@ -159,7 +159,7 @@ public class Client {
 	public void clientSideLogout() {
 		clientId = null;
 		Cache.clear();
-		
+
 		// clear AUTOLOGIN_KEY anyway
 		Storage.getInstance().set(Storage.AUTOLOGIN_KEY, "");
 	}
@@ -340,7 +340,7 @@ public class Client {
 		if (!isLoggedIn()) {
 			loginInterrupted = false;
 			context.startActivityForResult(new Intent(LoginActivity.LOGIN_ACTIVITY_INTENT), LOGIN_REQUEST_CODE);
-			
+
 			while (!isLoggedIn() && (!loginInterrupted)) {
 				try {
 					Thread.sleep(SLEEP_TIME);

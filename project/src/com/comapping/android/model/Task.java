@@ -1,7 +1,5 @@
 package com.comapping.android.model;
 
-import java.util.Date;
-
 public class Task {
 	private String start;
 	private String deadline;

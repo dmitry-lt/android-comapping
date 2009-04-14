@@ -25,6 +25,7 @@ abstract public class MapBuilder {
 	static final String TOPIC_PRIORITY_TAG = "priority";
 	static final String TOPIC_SMILEY_TAG = "smiley";
 	static final String TOPIC_TASK_COMPLETION_TAG = "taskCompletion";
+	static final String TOPIC_MAP_REF_TAG = "map_ref";
 	static final String TOPIC_TEXT_TAG = "text";
 	static final String TOPIC_ICON_TAG = "icon";
 	static final String ICON_NAME_TAG = "name";
@@ -39,8 +40,6 @@ abstract public class MapBuilder {
 	static final String ATTACHMENT_FILENAME_TAG = "filename";
 	static final String ATTACHMENT_KEY_TAG = "key";
 	static final String ATTACHMENT_SIZE_TAG = "size";
-
-	static final String TOPIC_MAP_REF_TAG = "map_ref";
 
 	/**
 	 * @param stringDate

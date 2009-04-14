@@ -5,17 +5,13 @@
  */
 package com.comapping.android.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.comapping.android.Log;
-import com.comapping.android.model.exceptions.DateParsingException;
 import com.comapping.android.model.exceptions.EnumParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
@@ -31,10 +27,9 @@ class SaxHandler extends DefaultHandler {
 	private static int TOPIC_MAP_REF_TAG_HASHCODE = mod(MapBuilder.TOPIC_MAP_REF_TAG.hashCode());
 
 	private String[] attributesMap = new String[base]; // make it global for
-														// memory and time
-														// saving
+	// memory and time
+	// saving
 
-	private boolean isMetaDataTag = false;
 	private boolean isMapIDTag = false;
 	private boolean isMapNameTag = false;
 	private boolean isOwnerTag = false;
@@ -74,7 +69,7 @@ class SaxHandler extends DefaultHandler {
 
 		Log.i(Log.modelTag, "SAX parsing started... \n");
 	}
-	
+
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		try {
 			if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
@@ -101,7 +96,8 @@ class SaxHandler extends DefaultHandler {
 				Task task = new Task(start, deadline, responsible);
 				currentTopic.setTask(task);
 			} else if (localName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
-				float Date = Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG));
+				// float Date =
+				// Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG));
 				String filename = attributes.getValue(MapBuilder.ATTACHMENT_FILENAME_TAG);
 				String key = attributes.getValue(MapBuilder.ATTACHMENT_KEY_TAG);
 				int size = Integer.parseInt(attributes.getValue(MapBuilder.ATTACHMENT_SIZE_TAG));
@@ -109,7 +105,6 @@ class SaxHandler extends DefaultHandler {
 				currentTopic.setAttachment(attachment);
 			} else if (!hasMeta) {
 				if (localName.equals(MapBuilder.METADATA_TAG)) {
-					isMetaDataTag = true;
 				} else if (localName.equals(MapBuilder.MAP_ID_TAG) && mapId == 0) {
 					isMapIDTag = true;
 				} else if (localName.equals(MapBuilder.MAP_NAME_TAG) && mapName == null) {
@@ -230,7 +225,6 @@ class SaxHandler extends DefaultHandler {
 					map = new Map(mapId);
 					map.setName(mapName);
 					map.setOwner(owner);
-					isMetaDataTag = false;
 
 					hasMeta = true;
 				}
