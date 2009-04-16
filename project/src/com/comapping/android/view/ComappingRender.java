@@ -13,9 +13,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
+import android.view.KeyEvent;
 
 public class ComappingRender extends MapRender {
 
+	private static final String DEBUG_TAG = "ComappingRender"; 
+	
 	private class Item {
 		private static final int BORDER_SIZE = 10;
 		public Item[] childs;
@@ -91,6 +95,12 @@ public class ComappingRender extends MapRender {
 					+ OUTER_SIZE));
 		}
 
+		public boolean isOverTopic(int x, int y) {
+			return (!isOverButton(x, y))
+					&& ((x >= 0) && (y >= 0) && (x <= render.getWidth()) && (y <= render
+							.getLineOffset()));
+		}
+
 		public int getWidth() {
 			return render.getWidth() + OUTER_SIZE * 2;
 		}
@@ -101,7 +111,7 @@ public class ComappingRender extends MapRender {
 
 		private int lazyOffset = -1;
 
-		private int getOffset() {
+		public int getOffset() {
 			if (lazyOffset == -1) {
 				lazyOffset = (getSubtreeHeight() - getHeight()) / 2;
 			}
@@ -141,19 +151,89 @@ public class ComappingRender extends MapRender {
 			return lazySubtreeWidth;
 		}
 
+		// TODO: Must to do it in parent Item. Work time - O(n^2). Must be O(n).
+		private void calcAbsPositions() {
+			if (parent == null) {
+				lazyAbsoluteX = 0;
+				lazyAbsoluteY = 0;
+				return;
+			}
+
+			int baseX = this.parent.getAbsoluteX();
+			int baseY = this.parent.getAbsoluteY();
+			int dataLen = this.parent.getWidth();
+			int vertOffset = 0;
+			for (Item i : this.parent.childs) {
+
+				if (i == this) {
+					lazyAbsoluteX = baseX + dataLen;
+					lazyAbsoluteY = baseY + vertOffset;
+					return;
+				}
+
+				vertOffset += i.getSubtreeHeight();
+			}
+		}
+
+		private int lazyAbsoluteX = -1;
+
+		public int getAbsoluteX() {
+			if (lazyAbsoluteX == -1) {
+				calcAbsPositions();
+			}
+			return lazyAbsoluteX;
+		}
+
+		private int lazyAbsoluteY = -1;
+
+		public int getAbsoluteY() {
+			if (lazyAbsoluteY == -1) {
+				calcAbsPositions();
+			}
+			return lazyAbsoluteY;
+		}
+
+		public void clearLazyAbsPosBuffers()
+		{
+			lazyAbsoluteY = -1;
+			lazyAbsoluteX = -1;
+			for(int i = 0; i < childs.length; i++)
+				childs[i].clearLazyAbsPosBuffers();
+		}
 		private void clearLazyBuffers() {
 			if (parent != null)
 				parent.clearLazyBuffers();
-
+			
+		
+			lazyAbsoluteY = -1;
+			lazyAbsoluteX = -1;
+			
 			lazyOffset = -1;
 			lazySubtreeHeight = -1;
 			lazySubtreeWidth = -1;
 		}
+		
+		public int getIndex()
+		{
+			// May be I should add buffering?
+			int index = -1;
+			ComappingRender.Item[] parentChilds = parent.childs;
+			for (int i = 0; i < parentChilds.length; i++) {
+				if (parentChilds[i] == selected)
+				{
+					index = i;
+					break;
+				}
+			}
+			return index;
+		}
 	}
 
+	
+	int xOffset = 0, yOffset = 0;
 	Item root;
 	ScrollController scrollController;
-	
+
 	private Context context;
 
 	public ComappingRender(Context context, Topic map) {
@@ -194,7 +274,9 @@ public class ComappingRender extends MapRender {
 			Canvas c) {
 
 		if (isOnScreen(baseX, baseY, itm, width, height)) {
-			itm.draw(baseX, baseY, c);
+
+			itm.draw(itm.getAbsoluteX() - xOffset,
+					itm.getAbsoluteY() - yOffset, c);
 		}
 
 		if (itm.isChildsVisible()) {
@@ -249,6 +331,8 @@ public class ComappingRender extends MapRender {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		renderZoneHeight = height;
+		xOffset = x;
+		yOffset = y - getVertOffset();
 		draw(-x, -y + getVertOffset(), root, width, height, c);
 	}
 
@@ -263,16 +347,11 @@ public class ComappingRender extends MapRender {
 
 		if (itm.isOverButton(destX - xStart, destY - yStart)) {
 
-			if (itm.isChildsVisible())
-				itm.hideChilds();
-			else
-				itm.showChilds();
-
-			itm.render.setSelected(true);
-
-			scrollController.smoothScroll(baseX, itm.getOffset() + baseY);
-
+			changeChildVisibleStatus(itm);
+			
 			return true;
+		} else if (itm.isOverTopic(destX - xStart, destY - yStart)) {
+			focusTopic(itm);
 		}
 
 		if (itm.isChildsVisible()) {
@@ -296,9 +375,153 @@ public class ComappingRender extends MapRender {
 		scrollController = scroll;
 	}
 
+	Item selected = null;
+
+	private final void changeChildVisibleStatus(Item topic)
+	{
+		int oldAbsPosX = topic.getAbsoluteX();
+		int oldAbsPosY = topic.getAbsoluteY() + topic.getOffset();
+		
+		if (topic.isChildsVisible())
+			topic.hideChilds();
+		else
+			topic.showChilds();
+		
+//		int newAbsPosX = topic.getAbsoluteX();
+//		int newAbsPosY = topic.getAbsoluteY() + topic.getOffset();
+//
+//		scrollController.intermediateScroll(newAbsPosX, newAbsPosY);
+		root.clearLazyAbsPosBuffers();
+		focusTopic(topic);
+	}
+	
+	private final void focusTopic(Item topic) {
+		if (selected != null)
+			selected.render.setSelected(false);
+
+		topic.render.setSelected(true);
+		selected = topic;
+
+		scrollController.smoothScroll(topic.getAbsoluteX(), topic.getOffset()
+				+ topic.getAbsoluteY());
+	}
+
+	private final void moveLeft() {
+		if (selected == null) {
+			focusTopic(root);
+			return;
+		}
+
+		if (selected.parent == null) {
+			focusTopic(selected);
+			return;
+		}
+
+		focusTopic(selected.parent);
+	}
+	
+	private final void moveUp() {
+		if (selected == null) {
+			focusTopic(root);
+			return;
+		}
+		if (selected.parent == null) {
+			focusTopic(selected);
+			return;
+		}
+		
+		int index = selected.getIndex();
+
+		if (index == -1)
+		{
+			Log.e(DEBUG_TAG, "Denger! Seems to be broken tree!");
+			return;
+		}
+		
+		if (index > 0) //Is not highest child
+		{
+			focusTopic(selected.parent.childs[index - 1]);
+		}
+		else
+		{
+			//TODO: Focusing when itm is highest child
+		}
+	}
+	
+	private final void moveDown() {
+		if (selected == null) {
+			focusTopic(root);
+			return;
+		}
+		if (selected.parent == null) {
+			focusTopic(selected);
+			return;
+		}
+		
+		int index = selected.getIndex();;
+		ComappingRender.Item[] parentChilds = selected.parent.childs;
+		
+		
+		if (index == -1)
+		{
+			Log.e(DEBUG_TAG, "Denger! Seems to be broken tree!");
+			return;
+		}
+		
+		if (index < parentChilds.length - 1) //Is not lowest child
+		{
+			focusTopic(parentChilds[index + 1]);
+		}
+		else
+		{
+			//TODO: Focusing when itm is lowest child
+		}
+	}
+
+	private final void moveRight() {
+		if (selected == null) {
+			focusTopic(root);
+			return;
+		}
+		if (!selected.isChildsVisible()) {
+			focusTopic(selected);
+			return;
+		}
+		for (int i = 0; i < selected.childs.length; i++) {
+			if (selected.childs[i].getAbsoluteY()
+					+ selected.childs[i].getOffset() > selected.getAbsoluteY()
+					+ selected.getOffset()) {
+				if (i == 0)
+					focusTopic(selected.childs[i]);
+				else
+					focusTopic(selected.childs[i - 1]);
+
+				return;
+			}
+		}
+
+		if (selected.childs.length > 0)
+			focusTopic(selected.childs[0]);
+	}
+
 	@Override
 	public void onKeyDown(int keyCode) {
-		// TODO Auto-generated method stub
-		
+		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+			moveLeft();
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+			moveUp();
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+			moveDown();
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+			moveRight();
+		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+			if (selected != null) {
+				changeChildVisibleStatus(selected);
+			}
+		}
 	}
 }
