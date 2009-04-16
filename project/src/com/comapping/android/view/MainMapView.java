@@ -26,7 +26,7 @@ public class MainMapView extends View {
 
 			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
 					-vx, -vy, 0);
-
+			mScroller.computeScrollOffset();
 		}
 
 		@Override
