@@ -79,82 +79,11 @@ public class TextRender extends Render {
 
 	}
 
-	public void setOneLineView(int maxWidth) {
-		Log.v(Log.topicRenderTag, "setting OneLineView with maxWidth=" + maxWidth + " in " + this);
-
-		maxWidth -= THREE_DOTS_WIDTH;
-		TextParagraph parToDraw = new TextParagraph();
-		int curWidth = 0;
-		boolean isFull = false;
-		for (TextParagraph paragraph : text.getTextParagraphs()) {
-			for (TextBlock block : paragraph.getTextBlocks()) {
-				paint.setTextSize(block.getFormat().getFontSize());
-				float width = paint.measureText(block.getText());
-				if (curWidth + width <= maxWidth) {
-					curWidth += width;
-					parToDraw.add(block);
-				} else {
-					int fitInCount = paint.breakText(block.getText(), true, maxWidth - curWidth, null);
-					parToDraw.add(block.split(fitInCount)[0]);
-					parToDraw.add(THREE_DOTS);
-					isFull = true;
-					break;
-				}
-			}
-			if (isFull)
-				break;
-		}
-
-		textToDraw = new FormattedText();
-		textToDraw.add(parToDraw);
-
-		recalcDrawingData();
-	}
-
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty) {
 			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
 
 			setMaxWidthAndLinesCount(maxWidth, Integer.MAX_VALUE);
-			/*
-			 * if (maxWidth < MIN_MAX_WIDTH) { // too small width return; } int
-			 * sumLinesCount = 0; this.maxWidth = 0; for (int i = 0; i <
-			 * text.getTextParagraphs().size(); i++) { int approxLinesCount =
-			 * parsWidth[i] / maxWidth; int parWidthWithAdding = parsWidth[i] +
-			 * approxLinesCount * MIN_MAX_WIDTH; int linesCount =
-			 * parWidthWithAdding / maxWidth + 1; sumLinesCount += linesCount;
-			 * int optimalWidth = parWidthWithAdding / linesCount; this.maxWidth
-			 * = Math.max(this.maxWidth, optimalWidth); }
-			 * 
-			 * Log.d(Log.topicRenderTag, "optimal maxWidth=" + this.maxWidth);
-			 * Log.d(Log.topicRenderTag, "optimal lines count=" +
-			 * sumLinesCount);
-			 * 
-			 * textToDraw = new FormattedText(); for (int i = 0; i <
-			 * text.getTextParagraphs().size(); i++) { TextParagraph paragraph =
-			 * text.getTextParagraphs().get(i); TextParagraph curParagraph = new
-			 * TextParagraph(); int curLineWidth = 0; for (int j = 0; j <
-			 * paragraph.getTextBlocks().size(); j++) { TextBlock block =
-			 * paragraph.getTextBlocks().get(j);
-			 * paint.setTextSize(block.getFormat().getFontSize()); while (true)
-			 * { float blockWidth = paint.measureText(block.getText()); if
-			 * (curLineWidth + blockWidth <= this.maxWidth) {
-			 * curParagraph.add(block); curLineWidth += blockWidth; break; }
-			 * else { // int fitInCount = block.getText().length(); // do { //
-			 * float fitInPart = (this.maxWidth - curLineWidth) // / //
-			 * blockWidth; // fitInCount = (int) (fitInCount * fitInPart); //
-			 * blockWidth = paint.measureText(block.getText(), // 0, //
-			 * fitInCount); // } while (curLineWidth + blockWidth > //
-			 * this.maxWidth);
-			 * 
-			 * int fitInCount = paint.breakText(block.getText(), true,
-			 * this.maxWidth - curLineWidth, null); TextBlock[] blocks =
-			 * block.split(fitInCount); curParagraph.add(blocks[0]);
-			 * textToDraw.add(curParagraph); curParagraph = new TextParagraph();
-			 * block = blocks[1]; } } } textToDraw.add(curParagraph); }
-			 * 
-			 * recalcDrawingData();
-			 */
 		}
 	}
 
@@ -162,17 +91,20 @@ public class TextRender extends Render {
 		TextBlock[] blocks;
 
 		int fitInCount = paint.breakText(block.getText(), true, width, null);
-		int splitCount = fitInCount;
+		int splitCount;
 		if (block.getText().charAt(fitInCount) == ' ') {
 			blocks = new TextBlock[2];
 			blocks[0] = block.split(fitInCount)[0];
-			while (splitCount < block.getText().length() && block.getText().charAt(splitCount) == ' ')
+			splitCount = fitInCount;
+			while (splitCount < block.getText().length() && block.getText().charAt(splitCount) == ' ') {
 				splitCount++;
+			}
 			blocks[1] = block.split(splitCount)[1];
 		} else {
 			splitCount = block.getText().lastIndexOf(' ', fitInCount);
-			if (splitCount == -1)
+			if (splitCount == -1) {
 				splitCount = fitInCount;
+			}
 			blocks = block.split(splitCount);
 		}
 

@@ -1,5 +1,7 @@
 package com.comapping.android.model;
 
+import com.comapping.android.Log;
+
 public class TextBlock {
 	private String text;
 	private TextFormat format;
@@ -36,15 +38,19 @@ public class TextBlock {
 		TextBlock[] blocks = new TextBlock[2];
 
 		if (count > 0) {
-			blocks[0] = new TextBlock(getText().substring(0, count - 1), getFormat().clone());
+			blocks[0] = new TextBlock(getText().substring(0, count), getFormat().clone());
 		} else {
 			blocks[0] = new TextBlock("", getFormat().clone());
 		}
 
 		if (count < getText().length()) {
-			blocks[1] = new TextBlock(getText().substring(count, getText().length() - 1), getFormat().clone());
+			blocks[1] = new TextBlock(getText().substring(count, getText().length()), getFormat().clone());
 		} else {
 			blocks[1] = new TextBlock("", getFormat().clone());
+		}
+		if (!getText().equals(blocks[0].getText() + blocks[1].getText())) {
+			Log.w(Log.modelTag, "TextBlock: wrong split, count=" + count + ", all text=" + getText() + "\n text[0]="
+					+ blocks[0].getText() + "\n text[1]=" + blocks[1].getText());
 		}
 
 		return blocks;
