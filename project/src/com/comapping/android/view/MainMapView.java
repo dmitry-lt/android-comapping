@@ -173,6 +173,10 @@ public class MainMapView extends View {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent msg) {
 
+    	// Back button fix
+    	if (keyCode == KeyEvent.KEYCODE_BACK)
+    		return false;
+    	
     	Log.d("Test", "Press");
     	
     	mRender.onKeyDown(keyCode);
