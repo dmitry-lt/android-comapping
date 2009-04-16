@@ -242,6 +242,6 @@ class SaxHandler extends DefaultHandler {
 
 	public void endDocument() {
 		long parsingTime = System.currentTimeMillis() - startTime;
-		Log.w(Log.modelTag, "map was built with SAX successfully, parsing time: " + parsingTime);
+		Log.i(Log.modelTag, "map was built with SAX successfully, parsing time: " + parsingTime);
 	}
 }
