@@ -4,6 +4,32 @@
  * Autor: Korshakov Stepan
  * 
  * Render of map in comapping.com style
+ * 
+ * Some comments:
+ * 
+ * WTF is render zone?
+ * 
+ * Look at the acii-picture:
+ * 
+ *          |--------|
+ *          |        |-<Child1> 
+ *          |        |
+ * <Topic> -|        |-<Child2>
+ *          |        |
+ *          |<Topic2>|
+ *          |        |  .......
+ *          |        |
+ *          |        |
+ *          |        |-<Childn>
+ *          |--------|
+ *              |
+ *             /|\
+ *              |
+ * This rectangle is render zone.
+ * Left upper corner is (0,0)
+ * 
+ * Render zone width is Item.getRenderZoneWidth(), but must be changed
+ * Render zone height is Item.getRenderZoneHeight()
  */
 package com.comapping.android.view;
 
@@ -21,53 +47,98 @@ public class ComappingRender extends MapRender {
 	private static final String DEBUG_TAG = "ComappingRender";
 	private static final int LINE_COLOR = Color.GRAY;
 
+	/**
+	 * Container for Topic's whith some helpful functions for drawing,
+	 * calculating positions, working with childs
+	 * 
+	 * @author Korshakov Stepan
+	 * 
+	 */
 	private class Item {
 
-		private static final int BORDER_SIZE = 10;
+		private static final int HORIZONTAL_BORDER_SIZE = 10;
+
+		/* ---------- Tree data ---------- */
 		
-		public Item[] childs;
+		public Item[] children;
 		public Item parent = null;
+
+		/* ----- Comapping tree data ----- */
 		public Topic topicData;
 
-		private boolean childsVisible = true;
+		/* --------- Item state ---------- */
+		private boolean childrenVisible = true;
 
+		/* ------ Rendering helpers ------ */
 		private TopicRender render;
 		private PlusMinusIcon plusMinusIcon;
 
+		private Paint p = new Paint();
+
+		/* ---------- Lazy buffers ---------- */
+
+		private int lazyOffset = -1;
+		private int lazyTreeWidth = -1;
+		private int lazyRenderZoneHeight = -1;
+		private int lazyAbsoluteX = -1;
+		private int lazyAbsoluteY = -1;
+
+		/**
+		 * Constructor of Render Item
+		 * 
+		 * @param topic
+		 *            Topic for container
+		 */
 		public Item(Topic topic) {
 			topicData = topic;
 			render = new TopicRender(topicData, context);
 			render.setMaxWidth(300);
-			plusMinusIcon = new PlusMinusIcon(!childsVisible);
+			plusMinusIcon = new PlusMinusIcon(!childrenVisible);
+
+			p.setColor(LINE_COLOR);
 		}
 
-		public void setChildsVisible(boolean isVisible)
-		{
-			childsVisible = isVisible;
-			plusMinusIcon.isPlus = !childsVisible;
+		/* ---------- Children code ---------- */
+
+		/**
+		 * Shows/Hides children
+		 * 
+		 * @param isVisible
+		 *            true - show children, false - hide children
+		 */
+		public void setChildrenVisible(boolean isVisible) {
+			childrenVisible = isVisible;
+			plusMinusIcon.isPlus = !childrenVisible;
 			clearLazyBuffers();
 		}
 
-		public void hideChilds() {
-			childsVisible = false;
-			plusMinusIcon.isPlus = !childsVisible;
-			clearLazyBuffers();
-		}
-
+		/**
+		 * Returns if children is visible
+		 * 
+		 * @return Visible state
+		 */
 		public boolean isChildsVisible() {
-			return childsVisible;
+			return childrenVisible;
 		}
 
-		Paint p = new Paint();
+		/* ---------- Draw code ---------- */
 
+		/**
+		 * Drawing function
+		 * 
+		 * @param x
+		 *            x-coord for drawing
+		 * @param y
+		 *            y-coord for drawing
+		 * @param c
+		 *            Canvas for drawing
+		 */
 		public void draw(int x, int y, Canvas c) {
-			int vertOffset = getOffset();
+			int vertOffset = getTopicOffset();
 
 			// Rendering topic
 			render.draw(x, y + vertOffset, render.getWidth(), render
 					.getHeight(), c);
-			
-			p.setColor(LINE_COLOR);
 
 			// Drawing lines
 			c.drawLine(x, y + getUnderlineOffset(), x + render.getWidth(), y
@@ -75,14 +146,25 @@ public class ComappingRender extends MapRender {
 
 			if (topicData.getChildrenCount() != 0) {
 				// Draw +/- circle
-				
+
 				plusMinusIcon.draw(x + render.getWidth(), y
-						+ getUnderlineOffset() - PlusMinusIcon.RADIUS, 
+						+ getUnderlineOffset() - PlusMinusIcon.RADIUS,
 						PlusMinusIcon.WIDTH, PlusMinusIcon.HEIGHT, c);
-				
+
 			}
 		}
 
+		/* ---------- Input code ---------- */
+
+		/**
+		 * Checks if point is over button
+		 * 
+		 * @param x
+		 *            x-coord of point in Item coordinate system
+		 * @param y
+		 *            y-coord of point in Item coordinate system
+		 * @return if point is over button
+		 */
 		public boolean isOverButton(int x, int y) {
 			return ((x >= render.getWidth())
 					&& (y >= render.getLineOffset() - PlusMinusIcon.RADIUS)
@@ -91,64 +173,119 @@ public class ComappingRender extends MapRender {
 					+ PlusMinusIcon.RADIUS));
 		}
 
+		/**
+		 * Checks if point is over topic
+		 * 
+		 * @param x
+		 *            x-coord of point in Item coordinate system
+		 * @param y
+		 *            y-coord of point in Item coordinate system
+		 * @return if point is over topic
+		 */
 		public boolean isOverTopic(int x, int y) {
 			return (!isOverButton(x, y))
 					&& ((x >= 0) && (y >= 0) && (x <= render.getWidth()) && (y <= render
 							.getLineOffset()));
 		}
 
-		public int getWidth() {
+		/* -- Topic sizes and positions code -- */
+
+		/**
+		 * Return width of topic (without children)
+		 * 
+		 * @return Width of a rendering topic
+		 */
+		public int getTopicWidth() {
 			return render.getWidth() + PlusMinusIcon.WIDTH;
 		}
 
-		public int getHeight() {
-			return render.getHeight() + BORDER_SIZE;
+		/**
+		 * Return height of topic (without children)
+		 * 
+		 * @return Height of a rendering topic
+		 */
+		public int getTopicHeight() {
+			return render.getHeight() + HORIZONTAL_BORDER_SIZE;
 		}
 
-		private int lazyOffset = -1;
-
-		public int getOffset() {
+		/**
+		 * Returns vertical offset from (0,0) (in Item coord system) to draw
+		 * topic centered in render zone
+		 * 
+		 * @return
+		 */
+		public int getTopicOffset() {
 			if (lazyOffset == -1) {
-				lazyOffset = (getSubtreeHeight() - getHeight()) / 2;
+				lazyOffset = (getRenderZoneHeight() - getTopicHeight()) / 2;
 			}
 
 			return lazyOffset;
 		}
 
+		/**
+		 * Returns offset for underline in render zone coord system
+		 * 
+		 * @return offset to line from (0,0) of render zone
+		 */
 		public int getUnderlineOffset() {
-			return getOffset() + render.getLineOffset();
+			return getTopicOffset() + render.getLineOffset();
 		}
 
-		private int lazySubtreeHeight = -1;
+		/* ---------- Tree and zone sizes code ---------- */
 
-		public int getSubtreeHeight() {
-			if (lazySubtreeHeight == -1) {
+		/**
+		 * Returns render zone width
+		 * 
+		 * @return Width of the zone
+		 */
+		public int getRenderZoneWidth() {
+			return this.getTopicWidth();
+		}
+
+		/**
+		 * Returns render zone height
+		 * 
+		 * @return Height of the zone
+		 */
+		public int getRenderZoneHeight() {
+			if (lazyRenderZoneHeight == -1) {
 				int w = 0;
-				if (childsVisible)
-					for (Item i : childs) {
-						w += i.getSubtreeHeight();
+				if (childrenVisible)
+					for (Item i : children) {
+						w += i.getRenderZoneHeight();
 					}
-				lazySubtreeHeight = Math.max(w, getHeight());
+				lazyRenderZoneHeight = Math.max(w, getTopicHeight());
 			}
-			return lazySubtreeHeight;
+			return lazyRenderZoneHeight;
 		}
 
-		private int lazySubtreeWidth = -1;
-
-		public int getSubtreeWidth() {
-			if (lazySubtreeWidth == -1) {
+		/**
+		 * Calculates width of a whole tree
+		 * 
+		 * @return width in pixels
+		 */
+		public int getTreeWidth() {
+			if (lazyTreeWidth == -1) {
 				int w = 0;
-				if (childsVisible)
-					for (Item i : childs) {
-						w = Math.max(i.getSubtreeWidth(), w);
+				if (childrenVisible)
+					for (Item i : children) {
+						w = Math.max(i.getTreeWidth(), w);
 					}
-				lazySubtreeWidth = this.getWidth() + w;
+				lazyTreeWidth = this.getRenderZoneWidth() + w;
 			}
-			return lazySubtreeWidth;
+			return lazyTreeWidth;
 		}
 
-		// TODO: Must to do it in parent Item. Work time - O(n^2). Must be O(n).
+		/* ---------- Global positions code ---------- */
+
+		/**
+		 * Calculates absolute positions of Item
+		 */
 		private void calcAbsPositions() {
+
+			// TODO: Must to do it in parent Item. Work time - O(n^2). Must be
+			// O(n).
+
 			if (parent == null) {
 				lazyAbsoluteX = 0;
 				lazyAbsoluteY = 0;
@@ -157,9 +294,9 @@ public class ComappingRender extends MapRender {
 
 			int baseX = this.parent.getAbsoluteX();
 			int baseY = this.parent.getAbsoluteY();
-			int dataLen = this.parent.getWidth();
+			int dataLen = this.parent.getTopicWidth();
 			int vertOffset = 0;
-			for (Item i : this.parent.childs) {
+			for (Item i : this.parent.children) {
 
 				if (i == this) {
 					lazyAbsoluteX = baseX + dataLen;
@@ -167,12 +304,15 @@ public class ComappingRender extends MapRender {
 					return;
 				}
 
-				vertOffset += i.getSubtreeHeight();
+				vertOffset += i.getRenderZoneHeight();
 			}
 		}
 
-		private int lazyAbsoluteX = -1;
-
+		/**
+		 * Calculates absolute X-coordinate of render zone
+		 * 
+		 * @return X-coord for render zone
+		 */
 		public int getAbsoluteX() {
 			if (lazyAbsoluteX == -1) {
 				calcAbsPositions();
@@ -180,8 +320,11 @@ public class ComappingRender extends MapRender {
 			return lazyAbsoluteX;
 		}
 
-		private int lazyAbsoluteY = -1;
-
+		/**
+		 * Calculates absolute Y-coordinate of render zone
+		 * 
+		 * @return Y-coord for render zone
+		 */
 		public int getAbsoluteY() {
 			if (lazyAbsoluteY == -1) {
 				calcAbsPositions();
@@ -189,13 +332,21 @@ public class ComappingRender extends MapRender {
 			return lazyAbsoluteY;
 		}
 
+		/* ---------- Clear buffers code ---------- */
+
+		/**
+		 * Clears buffers for absolute coodinates
+		 */
 		public void clearLazyAbsPosBuffers() {
 			lazyAbsoluteY = -1;
 			lazyAbsoluteX = -1;
-			for (int i = 0; i < childs.length; i++)
-				childs[i].clearLazyAbsPosBuffers();
+			for (int i = 0; i < children.length; i++)
+				children[i].clearLazyAbsPosBuffers();
 		}
 
+		/**
+		 * Clears all buffers
+		 */
 		private void clearLazyBuffers() {
 			if (parent != null)
 				parent.clearLazyBuffers();
@@ -204,16 +355,23 @@ public class ComappingRender extends MapRender {
 			lazyAbsoluteX = -1;
 
 			lazyOffset = -1;
-			lazySubtreeHeight = -1;
-			lazySubtreeWidth = -1;
+			lazyRenderZoneHeight = -1;
+			lazyTreeWidth = -1;
 		}
 
+		/* ---------- Misc code ---------- */
+
+		/**
+		 * Returns index in parent.children array of this Item
+		 * 
+		 * @return index in parent.children array
+		 */
 		public int getIndex() {
 			// May be I should add buffering?
 			int index = -1;
-			ComappingRender.Item[] parentChilds = parent.childs;
-			for (int i = 0; i < parentChilds.length; i++) {
-				if (parentChilds[i] == selected) {
+			ComappingRender.Item[] parentChildren = parent.children;
+			for (int i = 0; i < parentChildren.length; i++) {
+				if (parentChildren[i] == selected) {
 					index = i;
 					break;
 				}
@@ -221,17 +379,35 @@ public class ComappingRender extends MapRender {
 			return index;
 		}
 	}
-	
-	/*
-	 * Variables
-	 */
 
+	/* ------------------------------
+	 * Variables
+	 * ------------------------------
+	 */
+	
+	//Offsets to render
 	private int xOffset = 0, yOffset = 0;
+	
+	//Tree root
 	private Item root = null;
+	
+	//Selected Item
 	private Item selected = null;
+	
+	//Controller of scrolling
 	private ScrollController scrollController = null;
+	
+	//Execution context
 	private Context context;
 
+	/**
+	 * Render constructor
+	 * 
+	 * @param context
+	 *            Execution context
+	 * @param map
+	 *            Root element
+	 */
 	public ComappingRender(Context context, Topic map) {
 		this.context = context;
 		root = buildTree(map, null);
@@ -239,37 +415,46 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Building custom tree with some helpful information
-	 * @param itm Root item for (sub)tree
-	 * @param parent Parent item (null for root elements)
+	 * 
+	 * @param itm
+	 *            Root item for (sub)tree
+	 * @param parent
+	 *            Parent item (null for root elements)
 	 * @return Tree or subtree
 	 */
 	private Item buildTree(Topic itm, Item parent) {
 		Item res = new Item(itm);
-		res.childs = new Item[itm.getChildrenCount()];
+		res.children = new Item[itm.getChildrenCount()];
 		res.parent = parent;
 
 		int index = 0;
 		for (Topic i : itm) {
-			res.childs[index++] = buildTree(i, res);
+			res.children[index++] = buildTree(i, res);
 		}
 		return res;
 	}
 
 	/**
 	 * Checks is Item is on screen. (MUST BE CHANGED FOR BETTER DESIGN)
-	 * @param x Offset to x0 (Remove this)
-	 * @param y Offset to y0 (Remove this)
-	 * @param itm Item for checking
-	 * @param width Screen width (Remove this)
-	 * @param height Screen height (Remove this)
+	 * 
+	 * @param x
+	 *            Offset to x0 (Remove this)
+	 * @param y
+	 *            Offset to y0 (Remove this)
+	 * @param itm
+	 *            Item for checking
+	 * @param width
+	 *            Screen width (Remove this)
+	 * @param height
+	 *            Screen height (Remove this)
 	 * @return
 	 */
 	private boolean isOnScreen(int x, int y, Item itm, int width, int height) {
-		y += itm.getOffset();
-		if (x + itm.getWidth() < 0)
+		y += itm.getTopicOffset();
+		if (x + itm.getTopicWidth() < 0)
 			return false;
 
-		if (y + itm.getHeight() < 0)
+		if (y + itm.getTopicHeight() < 0)
 			return false;
 
 		if (x > width)
@@ -282,13 +467,20 @@ public class ComappingRender extends MapRender {
 	}
 
 	/**
-	 * Draws Item and it's childs (MUST BE CHANGED FOR BETTER DESIGN)
-	 * @param baseX basic x-offset for drawing
-	 * @param baseY basic y-offset for drawing
-	 * @param itm Item to draw 
-	 * @param width Screen width (Remove this)
-	 * @param height Screen height (Remove this)
-	 * @param c Canvas to drawing
+	 * Draws Item and it's children (MUST BE CHANGED FOR BETTER DESIGN)
+	 * 
+	 * @param baseX
+	 *            basic x-offset for drawing
+	 * @param baseY
+	 *            basic y-offset for drawing
+	 * @param itm
+	 *            Item to draw
+	 * @param width
+	 *            Screen width (Remove this)
+	 * @param height
+	 *            Screen height (Remove this)
+	 * @param c
+	 *            Canvas to drawing
 	 */
 	private void draw(int baseX, int baseY, Item itm, int width, int height,
 			Canvas c) {
@@ -300,23 +492,23 @@ public class ComappingRender extends MapRender {
 		}
 
 		if (itm.isChildsVisible()) {
-			int dataLen = itm.getWidth();
+			int dataLen = itm.getTopicWidth();
 
 			int vertOffset = 0;
-			for (Item i : itm.childs) {
+			for (Item i : itm.children) {
 				draw(baseX + dataLen, baseY + vertOffset, i, width, height, c);
-				vertOffset += i.getSubtreeHeight();
+				vertOffset += i.getRenderZoneHeight();
 			}
 
-			if (itm.childs.length != 0) {
+			if (itm.children.length != 0) {
 				Paint p = new Paint();
 				p.setColor(LINE_COLOR);
 
-				Item first = itm.childs[0];
-				Item last = itm.childs[itm.childs.length - 1];
+				Item first = itm.children[0];
+				Item last = itm.children[itm.children.length - 1];
 
 				// Calculating offset for last child
-				vertOffset -= last.getSubtreeHeight();
+				vertOffset -= last.getRenderZoneHeight();
 
 				// Connecting childs
 				c.drawLine(baseX + dataLen, baseY + first.getUnderlineOffset(),
@@ -330,19 +522,22 @@ public class ComappingRender extends MapRender {
 			}
 		}
 	}
+
 	
 	public int getWidth() {
-		return root.getSubtreeWidth();
+		return root.getTreeWidth();
 	}
 
 	public int getHeight() {
-		return root.getSubtreeHeight();
+		return root.getRenderZoneHeight();
 	}
+
 
 	private int renderZoneHeight = 0;
 
 	/**
 	 * Returns offset for centering small o collapsed maps
+	 * 
 	 * @return Offset for drawing
 	 */
 	private final int getVertOffset() {
@@ -351,6 +546,7 @@ public class ComappingRender extends MapRender {
 		else
 			return (renderZoneHeight - getHeight()) / 2;
 	}
+
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
@@ -365,8 +561,18 @@ public class ComappingRender extends MapRender {
 		onTouch(0, getVertOffset(), root, x, y);
 	}
 
+
+	/**
+	 * Recursive processing Touch events
+	 * @param baseX basic x-offset (remove it)
+	 * @param baseY basic y-offset (remove it)
+	 * @param itm Item to check
+	 * @param destX destination x-coord
+	 * @param destY destination y-coord
+	 * @return if captured
+	 */
 	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY) {
-		int yStart = itm.getOffset() + baseY;
+		int yStart = itm.getTopicOffset() + baseY;
 		int xStart = baseX;
 
 		if (itm.isOverButton(destX - xStart, destY - yStart)) {
@@ -379,16 +585,16 @@ public class ComappingRender extends MapRender {
 		}
 
 		if (itm.isChildsVisible()) {
-			int dataLen = itm.getWidth();
+			int dataLen = itm.getTopicWidth();
 
 			int vertOffset = 0;
-			for (Item i : itm.childs) {
+			for (Item i : itm.children) {
 
 				if (onTouch(baseX + dataLen, baseY + vertOffset, i, destX,
 						destY))
 					return true;
 
-				vertOffset += i.getSubtreeHeight();
+				vertOffset += i.getRenderZoneHeight();
 			}
 		}
 		return false;
@@ -403,6 +609,7 @@ public class ComappingRender extends MapRender {
 	 * Some helper functions
 	 */
 
+
 	private final void focusTopic(Item topic) {
 		if (selected != null)
 			selected.render.setSelected(false);
@@ -410,23 +617,25 @@ public class ComappingRender extends MapRender {
 		topic.render.setSelected(true);
 		selected = topic;
 
-		scrollController.smoothScroll(topic.getAbsoluteX(), topic.getOffset()
+		scrollController.smoothScroll(topic.getAbsoluteX(), topic
+				.getTopicOffset()
 				+ topic.getAbsoluteY());
 	}
 
 	private final void changeChildVisibleStatus(Item topic) {
 		int oldAbsPosX = topic.getAbsoluteX();
-		int oldAbsPosY = topic.getAbsoluteY() + topic.getOffset();
+		int oldAbsPosY = topic.getAbsoluteY() + topic.getTopicOffset();
 
-		topic.setChildsVisible(!topic.isChildsVisible());
-		
+		topic.setChildrenVisible(!topic.isChildsVisible());
+
 		root.clearLazyAbsPosBuffers();
 
 		int newAbsPosX = topic.getAbsoluteX();
-		int newAbsPosY = topic.getAbsoluteY() + topic.getOffset();
-		
-		scrollController.intermediateScroll((oldAbsPosX - xOffset) + newAbsPosX, (oldAbsPosY - yOffset) + newAbsPosY);
-		
+		int newAbsPosY = topic.getAbsoluteY() + topic.getTopicOffset();
+
+		scrollController.intermediateScroll(
+				(oldAbsPosX - xOffset) + newAbsPosX, (oldAbsPosY - yOffset)
+						+ newAbsPosY);
 
 		focusTopic(topic);
 	}
@@ -468,7 +677,7 @@ public class ComappingRender extends MapRender {
 
 		if (index > 0) // Is not highest child
 		{
-			focusTopic(selected.parent.childs[index - 1]);
+			focusTopic(selected.parent.children[index - 1]);
 		} else {
 			// TODO: Focusing when itm is highest child
 		}
@@ -486,7 +695,7 @@ public class ComappingRender extends MapRender {
 
 		int index = selected.getIndex();
 		;
-		ComappingRender.Item[] parentChilds = selected.parent.childs;
+		ComappingRender.Item[] parentChilds = selected.parent.children;
 
 		if (index == -1) {
 			Log.e(DEBUG_TAG, "Denger! Seems to be broken tree!");
@@ -510,21 +719,22 @@ public class ComappingRender extends MapRender {
 			focusTopic(selected);
 			return;
 		}
-		for (int i = 0; i < selected.childs.length; i++) {
-			if (selected.childs[i].getAbsoluteY()
-					+ selected.childs[i].getOffset() > selected.getAbsoluteY()
-					+ selected.getOffset()) {
+		for (int i = 0; i < selected.children.length; i++) {
+			if (selected.children[i].getAbsoluteY()
+					+ selected.children[i].getTopicOffset() > selected
+					.getAbsoluteY()
+					+ selected.getTopicOffset()) {
 				if (i == 0)
-					focusTopic(selected.childs[i]);
+					focusTopic(selected.children[i]);
 				else
-					focusTopic(selected.childs[i - 1]);
+					focusTopic(selected.children[i - 1]);
 
 				return;
 			}
 		}
 
-		if (selected.childs.length > 0)
-			focusTopic(selected.childs[0]);
+		if (selected.children.length > 0)
+			focusTopic(selected.children[0]);
 	}
 
 	@Override
