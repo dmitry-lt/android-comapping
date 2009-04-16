@@ -123,8 +123,8 @@ public class TopicRender extends Render {
 	@Override
 	public String toString() {
 		if (!isEmpty) {
-			return "[TopicRender: width=" + getWidth() + " height=" + getHeight() + "\n" + iconRender + "\n"
-					+ textRender + "\n" + taskRender + "\n" + noteRender + "]";
+			return "[TopicRender: width=" + getWidth() + " height=" + getHeight() + "\n\t" + iconRender + "\n\t"
+					+ textRender + "\n\t" + attachmentRender + "\n\t" + taskRender + "\n\t" + noteRender + "]\n";
 		} else {
 			return "[TopicRender: EMPTY]";
 		}
@@ -161,7 +161,7 @@ public class TopicRender extends Render {
 	}
 
 	public void setMaxWidth(int maxWidth) {
-		if (maxWidth != lastMaxWidth) {
+		if (!isEmpty && maxWidth != lastMaxWidth) {
 			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
 
 			lastMaxWidth = maxWidth;
@@ -183,9 +183,9 @@ public class TopicRender extends Render {
 		lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
 		lineOffset = Math.max(lineOffset, attachmentRender.getHeight());
 
-		width = Math.max(iconRender.getWidth() + textRender.getWidth(), taskRender.getWidth());
-		width = Math.max(width, noteRender.getWidth());
-		width += attachmentRender.getWidth();
+		int widthWithoutAttach = Math.max(iconRender.getWidth() + textRender.getWidth(), taskRender.getWidth());
+		widthWithoutAttach = Math.max(widthWithoutAttach, noteRender.getWidth());
+		width = widthWithoutAttach + attachmentRender.getWidth();
 		height = lineOffset + taskRender.getHeight() + noteRender.getHeight();
 
 		// recalc coords
@@ -199,7 +199,7 @@ public class TopicRender extends Render {
 		textRect.right = textRect.left + textRender.getWidth();
 		textRect.bottom = textRect.top + textRender.getHeight();
 
-		attachmentRect.left = iconRender.getWidth() + textRender.getWidth();
+		attachmentRect.left = widthWithoutAttach;
 		attachmentRect.top = (getLineOffset() - attachmentRender.getHeight()) / 2;
 		attachmentRect.right = attachmentRect.left + attachmentRender.getWidth();
 		attachmentRect.bottom = attachmentRect.top + attachmentRender.getHeight();

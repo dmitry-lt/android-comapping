@@ -11,7 +11,9 @@ import android.graphics.Color;
 import android.graphics.Point;
 
 public class TaskRender extends Render {
+	private static TextFormat FORMAT = new TextFormat(10, Color.GRAY, "", false);
 	private static final int MIN_MERGING = 5;
+	private static final int MIN_MAX_WIDTH = 100;
 
 	private boolean isEmpty;
 
@@ -37,24 +39,22 @@ public class TaskRender extends Render {
 		}
 
 		if (!isEmpty) {
-			TextFormat format = new TextFormat(10, Color.GRAY, "", false);
-
-			FormattedText responsible = new FormattedText(task.getResponsible(), format);
+			FormattedText responsible = new FormattedText(task.getResponsible(), FORMAT);
 			responsibleRender = new TextRender(responsible, context);
 
-			FormattedText start = new FormattedText("Start: " + task.getStart(), format);
+			FormattedText start = !task.getStart().equals("") ? new FormattedText("Start: " + task.getStart(), FORMAT)
+					: null;
 			startRender = new TextRender(start, context);
 
-			FormattedText deadline = new FormattedText("Deadline: " + task.getDeadline(), format);
+			FormattedText deadline = !task.getDeadline().equals("") ? new FormattedText("Deadline: "
+					+ task.getDeadline(), FORMAT) : null;
 			deadlineRender = new TextRender(deadline, context);
 
 			recalcDrawingData();
 
-			infDialog = (new AlertDialog.Builder(context)
-			.setTitle("Task")
-			.setMessage(task.getResponsible() + "\n" + "Start: " + task.getStart() + "\n" + "Deadline: " + task.getDeadline())
-			.setNeutralButton("Ok", null)
-			).create();
+			infDialog = (new AlertDialog.Builder(context).setTitle("Task").setMessage(
+					task.getResponsible() + "\n" + "Start: " + task.getStart() + "\n" + "Deadline: "
+							+ task.getDeadline()).setNeutralButton("Ok", null)).create();
 		} else {
 			height = 0;
 			width = 0;
@@ -65,19 +65,24 @@ public class TaskRender extends Render {
 		if (!isEmpty) {
 			Log.d(Log.topicRenderTag, "setting width=" + width + " in " + this);
 
-			responsibleRender.setMaxWidth(width);
-			startRender.setMaxWidth(width);
-			deadlineRender.setMaxWidth(width);
+			width = Math.max(width, MIN_MAX_WIDTH);
+
+			responsibleRender.setMaxWidthAndLinesCount(width, 1);
+			startRender.setMaxWidthAndLinesCount(width, 1);
+			deadlineRender.setMaxWidthAndLinesCount(width, 1);
+
 			int sumWidth = responsibleRender.getWidth() + startRender.getWidth() + deadlineRender.getWidth();
-			if (sumWidth + MIN_MERGING * 2 <= width) {
+			if (!responsibleRender.isEmpty() && sumWidth + MIN_MERGING * 2 <= width) {
 				linesCount = 1;
 				merging = (width - sumWidth) / 2;
-			} else if (startRender.getWidth() + deadlineRender.getWidth() + MIN_MERGING <= width) {
+			} else if (!startRender.isEmpty()
+					&& startRender.getWidth() + deadlineRender.getWidth() + MIN_MERGING <= width) {
 				linesCount = 2;
 				merging = width - startRender.getWidth() + deadlineRender.getWidth();
 			} else {
 				linesCount = 3;
 			}
+
 			recalcDrawingData();
 		}
 	}
@@ -96,8 +101,9 @@ public class TaskRender extends Render {
 	@Override
 	public String toString() {
 		if (!isEmpty) {
-			return "[TaskRender: width=" + getWidth() + " height=" + getHeight() + " responsible=" + responsibleRender
-					+ " start=" + startRender + " deadline=" + deadlineRender + "]";
+			return "[TaskRender: width=" + getWidth() + " height=" + getHeight() + " linesCount=" + linesCount
+					+ "\n\t responsible=" + responsibleRender + "\n\t start=" + startRender + "\n\t deadline="
+					+ deadlineRender + "]\n";
 		} else {
 			return "[TaskRender: EMPTY]";
 		}
@@ -121,7 +127,8 @@ public class TaskRender extends Render {
 	private void recalcDrawingData() {
 		switch (linesCount) {
 		case 1: // 1: resp start deadline
-			height = responsibleRender.getHeight();
+			height = Math.max(responsibleRender.getHeight(), startRender.getHeight());
+			height = Math.max(height, deadlineRender.getHeight());
 			width = responsibleRender.getWidth() + startRender.getWidth() + deadlineRender.getWidth() + merging * 2;
 
 			responsibleCoords = new Point(0, 0);
@@ -129,7 +136,7 @@ public class TaskRender extends Render {
 			deadlineCoords = new Point(width - deadlineRender.getWidth(), 0);
 			break;
 		case 2: // 1: resp 2: start deadline
-			height = responsibleRender.getHeight() + startRender.getHeight();
+			height = responsibleRender.getHeight() + Math.max(startRender.getHeight(), deadlineRender.getHeight());
 			width = Math
 					.max(responsibleRender.getWidth(), startRender.getWidth() + deadlineRender.getWidth() + merging);
 
@@ -147,6 +154,5 @@ public class TaskRender extends Render {
 			deadlineCoords = new Point(0, responsibleRender.getHeight() + startRender.getHeight());
 			break;
 		}
-
 	}
 }

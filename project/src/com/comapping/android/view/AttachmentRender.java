@@ -45,7 +45,8 @@ public class AttachmentRender extends Render {
 
 			final Context fContext = context;
 			final String url = "http://upload.comapping.com/" + attachment.getKey();
-//			final String url = "http://stg243.ifolder.ru/download/?11604085&ah58bG1OECiK7Yk6SpaLmw%3D%3D";
+			// final String url =
+			// "http://stg243.ifolder.ru/download/?11604085&ah58bG1OECiK7Yk6SpaLmw%3D%3D";
 			// Alert Dialog is created here
 			dialog = (new AlertDialog.Builder(context)
 			.setTitle("Save attachment?")
@@ -85,7 +86,11 @@ public class AttachmentRender extends Render {
 
 	@Override
 	public String toString() {
-		return "[AttachmentRender: width=" + getWidth() + " height=" + getHeight() + "]";
+		if (!isEmpty) {
+			return "[AttachmentRender: width=" + getWidth() + " height=" + getHeight() + "]";
+		} else {
+			return "[AttachmentRender: EMPTY]";
+		}
 	}
 
 	@Override
@@ -112,7 +117,7 @@ public class AttachmentRender extends Render {
 		float fSize = size;
 		String res = "";
 		if (size > 1024 * 1024 * 1024) {
-			res = String.format("%.2f", fSize / (1024 * 1024 * 1024)) + " GB";			
+			res = String.format("%.2f", fSize / (1024 * 1024 * 1024)) + " GB";
 		} else if (size > 1024 * 1024) {
 			res = String.format("%.2f", fSize / (1024 * 1024)) + " MB";
 		} else if (size > 1024) {

@@ -10,6 +10,10 @@ import com.comapping.android.model.FormattedText;
 import com.comapping.android.model.TextFormat;
 
 public class NoteRender extends Render {
+	private static final TextFormat FORMAT = new TextFormat(10, Color.GRAY, "", false);
+	private static final int MIN_MAX_WIDTH = 100;
+	private static final int MAX_LINES_COUNT = 2;
+
 	private boolean isEmpty;
 
 	private TextRender textRender;
@@ -25,7 +29,7 @@ public class NoteRender extends Render {
 		}
 
 		if (!isEmpty) {
-			FormattedText text = new FormattedText(note, new TextFormat(10, Color.GRAY, "", false));
+			FormattedText text = new FormattedText(note, FORMAT);
 			textRender = new TextRender(text, context);
 			recalcDrawingData();
 
@@ -66,7 +70,7 @@ public class NoteRender extends Render {
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty) {
 			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
-			textRender.setMaxWidth(maxWidth);
+			textRender.setMaxWidthAndLinesCount(Math.max(maxWidth, MIN_MAX_WIDTH), MAX_LINES_COUNT);
 			recalcDrawingData();
 		}
 	}
@@ -74,8 +78,8 @@ public class NoteRender extends Render {
 	@Override
 	public String toString() {
 		if (!isEmpty) {
-			return "[NoteRender: note=\"" + textRender.getText() + "\" width=" + getWidth() + " height=" + getHeight()
-					+ "]";
+			return "[NoteRender: note=\"" + textRender.getSimpleText() + "\" width=" + getWidth() + " height="
+					+ getHeight() + "]";
 		} else {
 			return "[NoteRender: EMPTY]";
 		}

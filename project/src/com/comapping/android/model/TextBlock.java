@@ -25,10 +25,28 @@ public class TextBlock {
 		return format;
 	}
 
-	public TextBlock[] split(int position) {
+	/**
+	 * @param count
+	 *            of chars in first part
+	 * @return array of two TextBlocks, which have format of current TextBlock
+	 *         and text of first TextBlock is substring of current TextBlock
+	 *         from 0 to count-1 and second from count to the end respectively
+	 */
+	public TextBlock[] split(int count) {
 		TextBlock[] blocks = new TextBlock[2];
-		blocks[0] = new TextBlock(getText().substring(0, position - 1), getFormat().clone());
-		blocks[1] = new TextBlock(getText().substring(position, getText().length() - 1), getFormat().clone());
+
+		if (count > 0) {
+			blocks[0] = new TextBlock(getText().substring(0, count - 1), getFormat().clone());
+		} else {
+			blocks[0] = new TextBlock("", getFormat().clone());
+		}
+
+		if (count < getText().length()) {
+			blocks[1] = new TextBlock(getText().substring(count, getText().length() - 1), getFormat().clone());
+		} else {
+			blocks[1] = new TextBlock("", getFormat().clone());
+		}
+
 		return blocks;
 	}
 }

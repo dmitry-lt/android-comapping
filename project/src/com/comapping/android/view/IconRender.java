@@ -19,6 +19,8 @@ public class IconRender extends Render {
 
 	private static boolean iconsLoaded = false;
 
+	private boolean isEmpty;
+
 	private static Bitmap[] priorityIcons;
 	private static Bitmap[] smileyIcons;
 	private static Bitmap[] taskCompletionIcons;
@@ -53,6 +55,12 @@ public class IconRender extends Render {
 		iconsCount += topic.getIconCount();
 
 		if (iconsCount > 0) {
+			isEmpty = false;
+		} else {
+			isEmpty = true;
+		}
+
+		if (!isEmpty) {
 			width = ICON_SIZE * iconsCount + HORISONTAL_MERGING * (iconsCount - 1);
 			height = ICON_SIZE;
 		} else {
@@ -63,58 +71,64 @@ public class IconRender extends Render {
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		int curX = x;
-		int curY = y;
+		if (!isEmpty) {
+			int curX = x;
+			int curY = y;
 
-		if (topic.getPriority() >= 1 && topic.getPriority() <= 9) {
-			c.drawBitmap(priorityIcons[topic.getPriority()], curX, curY, null);
-			curX += ICON_SIZE + HORISONTAL_MERGING;
-		}
+			if (topic.getPriority() >= 1 && topic.getPriority() <= 9) {
+				c.drawBitmap(priorityIcons[topic.getPriority()], curX, curY, null);
+				curX += ICON_SIZE + HORISONTAL_MERGING;
+			}
 
-		if (curX - x + ICON_SIZE > this.width) {
-			curX = x;
-			curY += ICON_SIZE + VERTICAL_MERGING;
-		}
-
-		if (topic.getSmiley() != null) {
-			c.drawBitmap(smileyIcons[topic.getSmiley().ordinal()], curX, curY, null);
-			curX += ICON_SIZE + HORISONTAL_MERGING;
-		}
-
-		if (curX - x + ICON_SIZE > this.width) {
-			curX = x;
-			curY += ICON_SIZE + VERTICAL_MERGING;
-		}
-
-		if (topic.getTaskCompletion() != null) {
-			c.drawBitmap(taskCompletionIcons[topic.getTaskCompletion().ordinal()], curX, curY, null);
-			curX += ICON_SIZE + HORISONTAL_MERGING;
-		}
-
-		if (curX - x + ICON_SIZE > this.width) {
-			curX = x;
-			curY += ICON_SIZE + VERTICAL_MERGING;
-		}
-
-		if (topic.getFlag() != null) {
-			c.drawBitmap(flagIcons[topic.getFlag().ordinal()], curX, curY, null);
-			curX += ICON_SIZE + HORISONTAL_MERGING;
-		}
-
-		for (Icon icon : topic.getIcons()) {
 			if (curX - x + ICON_SIZE > this.width) {
 				curX = x;
 				curY += ICON_SIZE + VERTICAL_MERGING;
 			}
 
-			c.drawBitmap(icons[icon.ordinal()], curX, curY, null);
-			curX += ICON_SIZE + HORISONTAL_MERGING;
+			if (topic.getSmiley() != null) {
+				c.drawBitmap(smileyIcons[topic.getSmiley().ordinal()], curX, curY, null);
+				curX += ICON_SIZE + HORISONTAL_MERGING;
+			}
+
+			if (curX - x + ICON_SIZE > this.width) {
+				curX = x;
+				curY += ICON_SIZE + VERTICAL_MERGING;
+			}
+
+			if (topic.getTaskCompletion() != null) {
+				c.drawBitmap(taskCompletionIcons[topic.getTaskCompletion().ordinal()], curX, curY, null);
+				curX += ICON_SIZE + HORISONTAL_MERGING;
+			}
+
+			if (curX - x + ICON_SIZE > this.width) {
+				curX = x;
+				curY += ICON_SIZE + VERTICAL_MERGING;
+			}
+
+			if (topic.getFlag() != null) {
+				c.drawBitmap(flagIcons[topic.getFlag().ordinal()], curX, curY, null);
+				curX += ICON_SIZE + HORISONTAL_MERGING;
+			}
+
+			for (Icon icon : topic.getIcons()) {
+				if (curX - x + ICON_SIZE > this.width) {
+					curX = x;
+					curY += ICON_SIZE + VERTICAL_MERGING;
+				}
+
+				c.drawBitmap(icons[icon.ordinal()], curX, curY, null);
+				curX += ICON_SIZE + HORISONTAL_MERGING;
+			}
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "[IconRender: width=" + getWidth() + " height=" + getHeight() + "]";
+		if (!isEmpty) {
+			return "[IconRender: width=" + getWidth() + " height=" + getHeight() + "]";
+		} else {
+			return "[IconRender: EMPTY]";
+		}
 	}
 
 	@Override
@@ -134,9 +148,9 @@ public class IconRender extends Render {
 	}
 
 	public void setMaxWidth(int maxWidth) {
-		Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+		if (!isEmpty && maxWidth >= ICON_SIZE) {
+			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
 
-		if (maxWidth >= ICON_SIZE) {
 			int iconsInLineCount = (maxWidth + HORISONTAL_MERGING) / (ICON_SIZE + HORISONTAL_MERGING);
 
 			int linesCount = iconsCount / iconsInLineCount;
