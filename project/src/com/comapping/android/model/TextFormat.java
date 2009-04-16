@@ -52,13 +52,6 @@ public class TextFormat implements Cloneable {
 	}
 
 	public TextFormat clone() {
-		TextFormat format = new TextFormat();
-
-		format.fontColor = this.fontColor;
-		format.fontSize = this.fontSize;
-		format.hRef = this.hRef;
-		format.underlined = this.underlined;
-
-		return format;
+		return new TextFormat(this.fontSize, this.fontColor, this.hRef, this.underlined);
 	}
 }
