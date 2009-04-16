@@ -19,9 +19,12 @@ import android.view.KeyEvent;
 public class ComappingRender extends MapRender {
 
 	private static final String DEBUG_TAG = "ComappingRender";
+	private static final int LINE_COLOR = Color.GRAY;
 
 	private class Item {
+
 		private static final int BORDER_SIZE = 10;
+		
 		public Item[] childs;
 		public Item parent = null;
 		public Topic topicData;
@@ -34,11 +37,13 @@ public class ComappingRender extends MapRender {
 		public Item(Topic topic) {
 			topicData = topic;
 			render = new TopicRender(topicData, context);
+			render.setMaxWidth(300);
 			plusMinusIcon = new PlusMinusIcon(!childsVisible);
 		}
 
-		public void showChilds() {
-			childsVisible = true;
+		public void setChildsVisible(boolean isVisible)
+		{
+			childsVisible = isVisible;
 			plusMinusIcon.isPlus = !childsVisible;
 			clearLazyBuffers();
 		}
@@ -61,10 +66,12 @@ public class ComappingRender extends MapRender {
 			// Rendering topic
 			render.draw(x, y + vertOffset, render.getWidth(), render
 					.getHeight(), c);
+			
+			p.setColor(LINE_COLOR);
 
 			// Drawing lines
 			c.drawLine(x, y + getUnderlineOffset(), x + render.getWidth(), y
-					+ getUnderlineOffset(), new Paint());
+					+ getUnderlineOffset(), p);
 
 			if (topicData.getChildrenCount() != 0) {
 				// Draw +/- circle
@@ -303,7 +310,7 @@ public class ComappingRender extends MapRender {
 
 			if (itm.childs.length != 0) {
 				Paint p = new Paint();
-				p.setColor(Color.BLACK);
+				p.setColor(LINE_COLOR);
 
 				Item first = itm.childs[0];
 				Item last = itm.childs[itm.childs.length - 1];
@@ -411,10 +418,7 @@ public class ComappingRender extends MapRender {
 		int oldAbsPosX = topic.getAbsoluteX();
 		int oldAbsPosY = topic.getAbsoluteY() + topic.getOffset();
 
-		if (topic.isChildsVisible())
-			topic.hideChilds();
-		else
-			topic.showChilds();
+		topic.setChildsVisible(!topic.isChildsVisible());
 		
 		root.clearLazyAbsPosBuffers();
 
