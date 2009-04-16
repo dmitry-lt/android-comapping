@@ -34,7 +34,7 @@ public class DomMapBuilder extends MapBuilder {
 	 *             when given XML document has wrong format
 	 */
 	public Map buildMap(String xmlDocument) throws StringToXMLConvertionException, MapParsingException {
-		Log.i(Log.modelTag, "parsing xml document: \n" + xmlDocument);
+		Log.d(Log.modelTag, "parsing xml document: \n" + xmlDocument);
 
 		long startTime = System.currentTimeMillis();
 

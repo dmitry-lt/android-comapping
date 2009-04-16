@@ -30,7 +30,7 @@ public class SaxMapBuilder extends MapBuilder {
 			handler = new SaxHandler();
 
 			parser.parse(stream, handler);
-			Log.i(Log.modelTag, "parsing xml document: \n" + xmlDocument);
+			Log.d(Log.modelTag, "parsing xml document: \n" + xmlDocument);
 		} catch (FactoryConfigurationError e) {
 			Log.e("SAX Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
