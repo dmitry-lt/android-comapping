@@ -4,12 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.Scroller;
+import android.widget.ZoomControls;
 
 public class MainMapView extends View {
 
@@ -38,7 +40,19 @@ public class MainMapView extends View {
 		}
 
 	};
-
+	
+	public MainMapView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		setFocusable(true);
+		mScroller = new Scroller(context);
+	}
+	
+	public void setRender(MapRender render)
+	{
+		mRender = render;
+		mRender.setScrollController(scrollController);
+	}
+	
 	public MainMapView(Context context, MapRender render) {
 		super(context);
 		setFocusable(true);

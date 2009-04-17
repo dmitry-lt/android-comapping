@@ -60,7 +60,8 @@ public class MapActivity extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 
-		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
+		final ViewType viewType = ViewType.getViewTypeFromString(extras
+				.getString(EXT_VIEW_TYPE));
 		final String mapId = extras.getString(EXT_MAP_ID);
 
 		Map map = (Map) Cache.get(mapId);
@@ -73,11 +74,13 @@ public class MapActivity extends Activity {
 					try {
 						splashActivate("Downloading map");
 
-						result = MetaMapActivity.client.getComap(mapId, current);
+						result = MetaMapActivity.client
+								.getComap(mapId, current);
 
 						splashActivate("Loading map");
 
-						final Map buildedMap = MetaMapActivity.mapBuilder.buildMap(result);
+						final Map buildedMap = MetaMapActivity.mapBuilder
+								.buildMap(result);
 
 						splashDeactivate();
 
@@ -107,7 +110,7 @@ public class MapActivity extends Activity {
 	}
 
 	public void loadMap(Map map, ViewType viewType) {
-		View view = null;
+		// View view = null;
 		MapRender r = null;
 		switch (viewType) {
 		case EXPLORER_VIEW:
@@ -117,10 +120,15 @@ public class MapActivity extends Activity {
 			r = new ComappingRender(this, map.getRoot());
 			break;
 		}
-		view = new MainMapView(this, r);
-		if (view != null) {
-			this.setContentView(view);
-		}
+
+		this.setContentView(R.layout.map);
+		MainMapView tt = (MainMapView) findViewById(R.id.MapView);
+		tt.setRender(r);
+
+		// view = new MainMapView(this, r);
+		// if (view != null) {
+		// this.setContentView(view);
+		// }
 	}
 
 	@Override

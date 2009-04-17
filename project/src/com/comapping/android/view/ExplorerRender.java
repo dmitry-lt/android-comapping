@@ -166,6 +166,8 @@ public class ExplorerRender extends MapRender {
 	private int[] updateTopic(MyTopic topic, int x, int y) {
 		TopicRender topicRender = topic.topicRender;
 		topicRender.setMaxWidth(screenWidth);
+		// topicRender.setMaxWidth(screenWidth - OUTER_SIZE - X_SHIFT
+		// - BLOCK_SHIFT);
 		int height = topicRender.getHeight();
 		if (topic.childs.size() > 0)
 			height = Math.max(height, OUTER_SIZE * 2);
@@ -293,27 +295,21 @@ public class ExplorerRender extends MapRender {
 	public void onKeyDown(int keyCode) {
 		if (selectedTopic == null)
 			return;
-		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-			if (selectedTopic.childs.size() == 0 || !selectedTopic.open)
-				focusTopic(selectedTopic.left);
-			else {
-				selectedTopic.open = false;
-				update();
-			}
-		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
 			focusTopic(selectedTopic.up);
 		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
 			focusTopic(selectedTopic.down);
 		}
+		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+			focusTopic(selectedTopic.left);
+		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-			if (selectedTopic.childs.size() == 0 || selectedTopic.open)
-				focusTopic(selectedTopic.right);
-			else {
+			if (selectedTopic.childs.size() > 0 && !selectedTopic.open) {
 				selectedTopic.open = true;
 				update();
 			}
+			focusTopic(selectedTopic.right);
 		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
 			if (selectedTopic.childs.size() > 0) {

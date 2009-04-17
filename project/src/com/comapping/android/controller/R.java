@@ -62,6 +62,7 @@ public final class R {
     }
     public static final class id {
         public static final int CheckBox01=0x7f070009;
+        public static final int MapView=0x7f07000c;
         public static final int RelativeLayout01=0x7f070008;
         public static final int TableLayout01=0x7f070001;
         public static final int TableRow01=0x7f070002;
@@ -69,30 +70,32 @@ public final class R {
         public static final int TextView01=0x7f070003;
         public static final int TextView02=0x7f070006;
         public static final int TextView03=0x7f070000;
-        public static final int clearCache=0x7f070018;
-        public static final int description=0x7f070012;
+        public static final int ZoomControls01=0x7f070011;
+        public static final int clearCache=0x7f07001a;
+        public static final int description=0x7f070014;
         public static final int email=0x7f070004;
         public static final int error=0x7f07000b;
-        public static final int homeButton=0x7f07000e;
-        public static final int icon=0x7f070010;
-        public static final int listView=0x7f07000f;
+        public static final int homeButton=0x7f07000f;
+        public static final int icon=0x7f070012;
+        public static final int listView=0x7f070010;
         public static final int login=0x7f07000a;
-        public static final int logout=0x7f070017;
-        public static final int metaMapButtons=0x7f07000c;
-        public static final int name=0x7f070011;
-        public static final int openFolder=0x7f070013;
-        public static final int openWithExplorerView=0x7f070014;
-        public static final int openWithTreeView=0x7f070015;
+        public static final int logout=0x7f070019;
+        public static final int metaMapButtons=0x7f07000d;
+        public static final int name=0x7f070013;
+        public static final int openFolder=0x7f070015;
+        public static final int openWithExplorerView=0x7f070016;
+        public static final int openWithTreeView=0x7f070017;
         public static final int password=0x7f070007;
-        public static final int preferences=0x7f070016;
-        public static final int reloadMetamap=0x7f070019;
-        public static final int upLevelButton=0x7f07000d;
+        public static final int preferences=0x7f070018;
+        public static final int reloadMetamap=0x7f07001b;
+        public static final int upLevelButton=0x7f07000e;
     }
     public static final class layout {
         public static final int login=0x7f030000;
-        public static final int metamap=0x7f030001;
-        public static final int preferences=0x7f030002;
-        public static final int row=0x7f030003;
+        public static final int map=0x7f030001;
+        public static final int metamap=0x7f030002;
+        public static final int preferences=0x7f030003;
+        public static final int row=0x7f030004;
     }
     public static final class menu {
         public static final int metamap_folder_context=0x7f060000;
