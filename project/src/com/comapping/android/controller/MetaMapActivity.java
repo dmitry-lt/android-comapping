@@ -175,8 +175,12 @@ public class MetaMapActivity extends Activity {
 				} catch (MapParsingException e) {
 					Log.e(Log.metaMapControllerTag, "map parsing exception");
 				}
-
+				
 				metaMapView.splashDeactivate();
+				
+				//Simple fix
+				if (metaMap == null)
+					return;
 
 				final Map finalMetaMap = metaMap;
 
