@@ -59,7 +59,7 @@ public class ComappingRender extends MapRender {
 		private static final int HORIZONTAL_BORDER_SIZE = 10;
 
 		/* ---------- Tree data ---------- */
-		
+
 		public Item[] children;
 		public Item parent = null;
 
@@ -281,7 +281,7 @@ public class ComappingRender extends MapRender {
 		/**
 		 * Calculates absolute positions of Item
 		 */
-		private void calcAbsPositions() {
+		private void calcRenderZonePositions() {
 
 			// TODO: Must to do it in parent Item. Work time - O(n^2). Must be
 			// O(n).
@@ -292,9 +292,9 @@ public class ComappingRender extends MapRender {
 				return;
 			}
 
-			int baseX = this.parent.getAbsoluteX();
-			int baseY = this.parent.getAbsoluteY();
-			int dataLen = this.parent.getTopicWidth();
+			int baseX = this.parent.getRenderZoneX();
+			int baseY = this.parent.getRenderZoneY();
+			int dataLen = this.parent.getRenderZoneWidth();
 			int vertOffset = 0;
 			for (Item i : this.parent.children) {
 
@@ -313,9 +313,9 @@ public class ComappingRender extends MapRender {
 		 * 
 		 * @return X-coord for render zone
 		 */
-		public int getAbsoluteX() {
+		public int getRenderZoneX() {
 			if (lazyAbsoluteX == -1) {
-				calcAbsPositions();
+				calcRenderZonePositions();
 			}
 			return lazyAbsoluteX;
 		}
@@ -325,9 +325,9 @@ public class ComappingRender extends MapRender {
 		 * 
 		 * @return Y-coord for render zone
 		 */
-		public int getAbsoluteY() {
+		public int getRenderZoneY() {
 			if (lazyAbsoluteY == -1) {
-				calcAbsPositions();
+				calcRenderZonePositions();
 			}
 			return lazyAbsoluteY;
 		}
@@ -380,24 +380,23 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
-	/* ------------------------------
-	 * Variables
-	 * ------------------------------
+	/*
+	 * ------------------------------ Variables ------------------------------
 	 */
-	
-	//Offsets to render
+
+	// Offsets to render
 	private int xOffset = 0, yOffset = 0;
-	
-	//Tree root
+
+	// Tree root
 	private Item root = null;
-	
-	//Selected Item
+
+	// Selected Item
 	private Item selected = null;
-	
-	//Controller of scrolling
+
+	// Controller of scrolling
 	private ScrollController scrollController = null;
-	
-	//Execution context
+
+	// Execution context
 	private Context context;
 
 	/**
@@ -487,8 +486,8 @@ public class ComappingRender extends MapRender {
 
 		if (isOnScreen(baseX, baseY, itm, width, height)) {
 
-			itm.draw(itm.getAbsoluteX() - xOffset,
-					itm.getAbsoluteY() - yOffset, c);
+			itm.draw(itm.getRenderZoneX() - xOffset, itm.getRenderZoneY()
+					- yOffset, c);
 		}
 
 		if (itm.isChildsVisible()) {
@@ -523,7 +522,6 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
-	
 	public int getWidth() {
 		return root.getTreeWidth();
 	}
@@ -531,7 +529,6 @@ public class ComappingRender extends MapRender {
 	public int getHeight() {
 		return root.getRenderZoneHeight();
 	}
-
 
 	private int renderZoneHeight = 0;
 
@@ -547,7 +544,6 @@ public class ComappingRender extends MapRender {
 			return (renderZoneHeight - getHeight()) / 2;
 	}
 
-
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		renderZoneHeight = height;
@@ -561,14 +557,19 @@ public class ComappingRender extends MapRender {
 		onTouch(0, getVertOffset(), root, x, y);
 	}
 
-
 	/**
 	 * Recursive processing Touch events
-	 * @param baseX basic x-offset (remove it)
-	 * @param baseY basic y-offset (remove it)
-	 * @param itm Item to check
-	 * @param destX destination x-coord
-	 * @param destY destination y-coord
+	 * 
+	 * @param baseX
+	 *            basic x-offset (remove it)
+	 * @param baseY
+	 *            basic y-offset (remove it)
+	 * @param itm
+	 *            Item to check
+	 * @param destX
+	 *            destination x-coord
+	 * @param destY
+	 *            destination y-coord
 	 * @return if captured
 	 */
 	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY) {
@@ -609,7 +610,12 @@ public class ComappingRender extends MapRender {
 	 * Some helper functions
 	 */
 
-
+	/**
+	 * Focusing on topic
+	 * 
+	 * @param topic
+	 *            Item to focus on
+	 */
 	private final void focusTopic(Item topic) {
 		if (selected != null)
 			selected.render.setSelected(false);
@@ -617,21 +623,27 @@ public class ComappingRender extends MapRender {
 		topic.render.setSelected(true);
 		selected = topic;
 
-		scrollController.smoothScroll(topic.getAbsoluteX(), topic
-				.getTopicOffset()
-				+ topic.getAbsoluteY());
+		// scrollController.smoothScroll(topic.getAbsoluteX(), topic
+		// .getTopicOffset()
+		// + topic.getAbsoluteY());
 	}
 
+	/**
+	 * Show/Hide chldren
+	 * 
+	 * @param topic
+	 *            Parent Item
+	 */
 	private final void changeChildVisibleStatus(Item topic) {
-		int oldAbsPosX = topic.getAbsoluteX();
-		int oldAbsPosY = topic.getAbsoluteY() + topic.getTopicOffset();
+		int oldAbsPosX = topic.getRenderZoneX();
+		int oldAbsPosY = topic.getRenderZoneY() + topic.getTopicOffset();
 
 		topic.setChildrenVisible(!topic.isChildsVisible());
 
 		root.clearLazyAbsPosBuffers();
 
-		int newAbsPosX = topic.getAbsoluteX();
-		int newAbsPosY = topic.getAbsoluteY() + topic.getTopicOffset();
+		int newAbsPosX = topic.getRenderZoneX();
+		int newAbsPosY = topic.getRenderZoneY() + topic.getTopicOffset();
 
 		scrollController.intermediateScroll(
 				(oldAbsPosX - xOffset) + newAbsPosX, (oldAbsPosY - yOffset)
@@ -644,6 +656,9 @@ public class ComappingRender extends MapRender {
 	 * D-Pad functions.
 	 */
 
+	/**
+	 * Moves selection left
+	 */
 	private final void moveLeft() {
 		if (selected == null) {
 			focusTopic(root);
@@ -658,6 +673,9 @@ public class ComappingRender extends MapRender {
 		focusTopic(selected.parent);
 	}
 
+	/**
+	 * Moves selection up
+	 */
 	private final void moveUp() {
 		if (selected == null) {
 			focusTopic(root);
@@ -683,6 +701,9 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
+	/**
+	 * Moves selection down
+	 */
 	private final void moveDown() {
 		if (selected == null) {
 			focusTopic(root);
@@ -710,6 +731,9 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
+	/**
+	 * Moves selection right
+	 */
 	private final void moveRight() {
 		if (selected == null) {
 			focusTopic(root);
@@ -720,9 +744,9 @@ public class ComappingRender extends MapRender {
 			return;
 		}
 		for (int i = 0; i < selected.children.length; i++) {
-			if (selected.children[i].getAbsoluteY()
+			if (selected.children[i].getRenderZoneY()
 					+ selected.children[i].getTopicOffset() > selected
-					.getAbsoluteY()
+					.getRenderZoneY()
 					+ selected.getTopicOffset()) {
 				if (i == 0)
 					focusTopic(selected.children[i]);
