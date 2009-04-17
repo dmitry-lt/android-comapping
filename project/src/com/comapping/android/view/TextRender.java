@@ -17,7 +17,7 @@ import android.net.Uri;
 import static com.comapping.android.view.RenderHelper.pointLiesOnRect;
 
 public class TextRender extends Render {
-	private static final int BORDER = 4;
+	public static final int DEFAULT_BORDER = 4;
 	private static final TextBlock THREE_DOTS = new TextBlock("...", new TextFormat());
 	private static final int THREE_DOTS_WIDTH = calcWidth(THREE_DOTS);
 	private static final int MIN_MAX_WIDTH = THREE_DOTS_WIDTH;
@@ -33,10 +33,18 @@ public class TextRender extends Render {
 	private int bgColor;
 	private Paint paint;
 	private int width, height;
-	private int[] parsWidth;
+
+	private int leftBorder;
+	private int topBorder;
+	private int rightBorder;
+	private int bottomBorder;
+
 	private Point[][] blocksDrawCoord; // y is a baseline of text, it is'n
 	// upper-left corner
 	private Rect[][] blocksRect;
+
+	// for precalc
+	private int[] parsWidth;
 
 	private Context context;
 
@@ -71,12 +79,24 @@ public class TextRender extends Render {
 			}
 
 			textToDraw = text;
+			setBorder(DEFAULT_BORDER, DEFAULT_BORDER, DEFAULT_BORDER, DEFAULT_BORDER);
 			recalcDrawingData();
 		} else {
 			width = 0;
 			height = 0;
 		}
 
+	}
+
+	public void setBorder(int leftBorder, int topBorder, int rightBorder, int bottomBorder) {
+		if (!isEmpty) {
+			this.leftBorder = leftBorder;
+			this.topBorder = topBorder;
+			this.rightBorder = rightBorder;
+			this.bottomBorder = bottomBorder;
+
+			recalcDrawingData();
+		}
 	}
 
 	public void setMaxWidth(int maxWidth) {
@@ -255,8 +275,8 @@ public class TextRender extends Render {
 				c.drawRect(x, y, x + getWidth(), y + getHeight(), paint);
 			}
 
-			x += BORDER;
-			y += BORDER;
+			x += leftBorder;
+			y += topBorder;
 
 			for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
 				TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
@@ -360,8 +380,8 @@ public class TextRender extends Render {
 			height += parHeight;
 		}
 
-		width += BORDER * 2;
-		height += BORDER * 2;
+		width += leftBorder + rightBorder;
+		height += topBorder + bottomBorder;
 	}
 
 	private static int calcWidth(TextBlock block) {

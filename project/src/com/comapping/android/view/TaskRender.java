@@ -136,6 +136,12 @@ public class TaskRender extends Render {
 			deadlineCoords = new Point(width - deadlineRender.getWidth(), 0);
 			break;
 		case 2: // 1: resp 2: start deadline
+			responsibleRender.setBorder(TextRender.DEFAULT_BORDER, TextRender.DEFAULT_BORDER,
+					TextRender.DEFAULT_BORDER, 0);
+			startRender.setBorder(TextRender.DEFAULT_BORDER, 0, TextRender.DEFAULT_BORDER, TextRender.DEFAULT_BORDER);
+			deadlineRender
+					.setBorder(TextRender.DEFAULT_BORDER, 0, TextRender.DEFAULT_BORDER, TextRender.DEFAULT_BORDER);
+
 			height = responsibleRender.getHeight() + Math.max(startRender.getHeight(), deadlineRender.getHeight());
 			width = Math
 					.max(responsibleRender.getWidth(), startRender.getWidth() + deadlineRender.getWidth() + merging);
@@ -145,6 +151,12 @@ public class TaskRender extends Render {
 			deadlineCoords = new Point(width - deadlineRender.getWidth(), responsibleRender.getHeight());
 			break;
 		case 3: // 1: resp 2: start 3: deadline
+			responsibleRender.setBorder(TextRender.DEFAULT_BORDER, TextRender.DEFAULT_BORDER,
+					TextRender.DEFAULT_BORDER, 0);
+			startRender.setBorder(TextRender.DEFAULT_BORDER, 0, TextRender.DEFAULT_BORDER, 0);
+			deadlineRender
+					.setBorder(TextRender.DEFAULT_BORDER, 0, TextRender.DEFAULT_BORDER, TextRender.DEFAULT_BORDER);
+
 			height = responsibleRender.getHeight() + startRender.getHeight() + deadlineRender.getHeight();
 			width = Math.max(responsibleRender.getWidth(), startRender.getWidth());
 			width = Math.max(width, deadlineRender.getWidth());
