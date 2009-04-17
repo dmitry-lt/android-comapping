@@ -46,8 +46,13 @@ public class FormattedText {
 
 	private void update() {
 		StringBuilder text = new StringBuilder();
-		for (TextParagraph cur : textParagraphs) {
-			text.append(cur.getSimpleText());
+		for (int i = 0; i < textParagraphs.size(); i++) {
+			TextParagraph cur = textParagraphs.get(i);
+			if (i < textParagraphs.size() - 1) {
+				text.append(cur.getSimpleText() + "\n");
+			} else {
+				text.append(cur.getSimpleText());
+			}
 		}
 		this.simpleText = text.toString();
 	}

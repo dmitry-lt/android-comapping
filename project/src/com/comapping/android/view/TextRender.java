@@ -87,25 +87,48 @@ public class TextRender extends Render {
 		}
 	}
 
-	public TextBlock[] splitTextBlockByWidth(TextBlock block, int width) {
+	private boolean substrConsistOf(String s, int start, int end, char c) {
+		for (int i = start; i < end; i++) {
+			if (s.charAt(i) != c) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private TextBlock[] splitDeletingSpaces(TextBlock block, int splitCount) {
+		TextBlock[] blocks = new TextBlock[2];
+
+		int leftSplitCount = splitCount;
+		while (leftSplitCount > 0 && block.getText().charAt(leftSplitCount - 1) == ' ') {
+			leftSplitCount--;
+		}
+		blocks[0] = block.split(leftSplitCount)[0];
+
+		int rightSplitCount = splitCount;
+		while (rightSplitCount < block.getText().length() && block.getText().charAt(rightSplitCount) == ' ') {
+			rightSplitCount++;
+		}
+		blocks[1] = block.split(rightSplitCount)[1];
+
+		return blocks;
+	}
+
+	private TextBlock[] splitTextBlockByWidth(TextBlock block, int width) {
 		TextBlock[] blocks;
 
 		int fitInCount = paint.breakText(block.getText(), true, width, null);
-		int splitCount;
-		if (block.getText().charAt(fitInCount) == ' ') {
-			blocks = new TextBlock[2];
-			blocks[0] = block.split(fitInCount)[0];
-			splitCount = fitInCount;
-			while (splitCount < block.getText().length() && block.getText().charAt(splitCount) == ' ') {
-				splitCount++;
-			}
-			blocks[1] = block.split(splitCount)[1];
+		if (block.getText().charAt(fitInCount) == ' ' || fitInCount == 0
+				|| block.getText().charAt(fitInCount - 1) == ' ') {
+			blocks = splitDeletingSpaces(block, fitInCount);
 		} else {
-			splitCount = block.getText().lastIndexOf(' ', fitInCount);
-			if (splitCount == -1) {
-				splitCount = fitInCount;
+			int splitCount;
+			splitCount = block.getText().lastIndexOf(' ', fitInCount - 1);
+			if (splitCount == -1 || substrConsistOf(block.getText(), 0, splitCount, ' ')) {
+				blocks = block.split(fitInCount);
+			} else {
+				blocks = splitDeletingSpaces(block, splitCount);
 			}
-			blocks = block.split(splitCount);
 		}
 
 		return blocks;
@@ -152,7 +175,8 @@ public class TextRender extends Render {
 			if (sumLinesCount <= linesCount) {
 				for (int i = 0; i < text.getTextParagraphs().size(); i++) {
 					int parWidthWithAdding = parsWidth[i] + parLinesCount[i] * ADD_WIDTH;
-					curMaxWidth = Math.max(curMaxWidth, parWidthWithAdding / parLinesCount[i]);
+					int curParMaxWidth = Math.min(maxWidth, parWidthWithAdding / parLinesCount[i]);
+					curMaxWidth = Math.max(curMaxWidth, curParMaxWidth);
 				}
 				fitIn = true;
 			} else {
@@ -160,6 +184,8 @@ public class TextRender extends Render {
 				fitIn = false;
 			}
 			curMaxWidth = Math.max(curMaxWidth, MIN_MAX_WIDTH);
+
+			Log.d(Log.topicRenderTag, "curMaxWidth=" + curMaxWidth + " sumLinesCount=" + sumLinesCount);
 
 			// construct textToDraw
 			textToDraw = new FormattedText();
