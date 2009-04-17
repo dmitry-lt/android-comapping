@@ -132,11 +132,6 @@ public class DomMapBuilder extends MapBuilder {
 				topic.setId(Integer.parseInt(curAttr.getNodeValue()));
 				hasId = true;
 
-			} else if (curAttr.getNodeName().equals(TOPIC_LAST_MODIFICATION_DATE_TAG)) {
-				String stringDate = curAttr.getNodeValue();
-				Date date = MapBuilder.parseDate(stringDate);
-				topic.setLastModificationDate(date);
-
 			} else if (curAttr.getNodeName().equals(TOPIC_BGCOLOR_TAG)) {
 				topic.setBgColor(Integer.parseInt(curAttr.getNodeValue()));
 
@@ -190,7 +185,8 @@ public class DomMapBuilder extends MapBuilder {
 				topic.setTask(task);
 
 			} else if (childNode.getNodeName().equals(TOPIC_ATTACHMENT_TAG)) {
-				// float fDate = Float.parseFloat(childNode.getAttributes().getNamedItem(ATTACHMENT_DATE_TAG).getNodeValue());
+				// float fDate =
+				// Float.parseFloat(childNode.getAttributes().getNamedItem(ATTACHMENT_DATE_TAG).getNodeValue());
 				String filename = childNode.getAttributes().getNamedItem(ATTACHMENT_FILENAME_TAG).getNodeValue();
 				String key = childNode.getAttributes().getNamedItem(ATTACHMENT_KEY_TAG).getNodeValue();
 				int size = Integer.parseInt(childNode.getAttributes().getNamedItem(ATTACHMENT_SIZE_TAG).getNodeValue());
