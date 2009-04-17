@@ -18,9 +18,7 @@ import static com.comapping.android.view.RenderHelper.pointLiesOnRect;
 
 public class TextRender extends Render {
 	public static final int DEFAULT_BORDER = 4;
-	private static final TextBlock THREE_DOTS = new TextBlock("...", new TextFormat());
-	private static final int THREE_DOTS_WIDTH = calcWidth(THREE_DOTS);
-	private static final int MIN_MAX_WIDTH = THREE_DOTS_WIDTH;
+	private static final int MIN_MAX_WIDTH = 100;
 	// private static final int MIN_MAX_WIDTH = calcWidth(new TextBlock("ù", new
 	// TextFormat(22, 0, "", false)));
 
@@ -204,6 +202,8 @@ public class TextRender extends Render {
 				fitIn = false;
 			}
 			curMaxWidth = Math.max(curMaxWidth, MIN_MAX_WIDTH);
+			int curMaxWidthBackup = curMaxWidth;
+			TextBlock threeDots = new TextBlock("...", new TextFormat());
 
 			Log.d(Log.topicRenderTag, "curMaxWidth=" + curMaxWidth + " sumLinesCount=" + sumLinesCount);
 
@@ -232,7 +232,9 @@ public class TextRender extends Render {
 						}
 
 						if (!fitIn && curLineNumber == linesCount) {
-							curMaxWidth -= THREE_DOTS_WIDTH;
+							threeDots.setFormat(block.getFormat());
+							paint.setTextSize(threeDots.getFormat().getFontSize());
+							curMaxWidth = (int) (curMaxWidthBackup - paint.measureText(threeDots.getText()));
 						}
 
 						float blockWidth = paint.measureText(block.getText());
@@ -246,7 +248,7 @@ public class TextRender extends Render {
 							block = blocks[1];
 
 							if (!fitIn && curLineNumber == linesCount) {
-								paragraphToDraw.add(THREE_DOTS);
+								paragraphToDraw.add(threeDots);
 							}
 
 							textToDraw.add(paragraphToDraw);
@@ -384,9 +386,9 @@ public class TextRender extends Render {
 		height += topBorder + bottomBorder;
 	}
 
-	private static int calcWidth(TextBlock block) {
-		Paint p = new Paint();
-		p.setTextSize(block.getFormat().getFontSize());
-		return (int) p.measureText(block.getText());
-	}
+	// private static int calcWidth(TextBlock block) {
+	// Paint p = new Paint();
+	// p.setTextSize(block.getFormat().getFontSize());
+	// return (int) p.measureText(block.getText());
+	// }
 }
