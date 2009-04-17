@@ -13,7 +13,7 @@ import android.graphics.drawable.Drawable;
 
 public class IconRender extends Render {
 
-	private static final int ICON_SIZE = 28;
+	private static final int ICON_SIZE = 30;
 	private static final int HORISONTAL_MERGING = 5;
 	private static final int VERTICAL_MERGING = 5;
 

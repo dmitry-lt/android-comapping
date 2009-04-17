@@ -20,7 +20,7 @@ import static com.comapping.android.view.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {
 
-	private static final int ICON_SIZE = 28;
+	private static final int ICON_SIZE = 30;
 
 	private static boolean iconLoaded = false;
 	private static Bitmap attachmentIcon;
