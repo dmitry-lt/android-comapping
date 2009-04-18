@@ -95,24 +95,58 @@ public class ExplorerRender extends MapRender {
 
 	private void draw(Canvas c) {
 		Paint p = new Paint();
+		int lo, hi;
 
 		// draw lines
+		lo = -1;
+		hi = lines.size() - 1;
+		while (lo < hi) {
+			int mid = (lo + hi + 1) / 2;
+			if (lines.get(mid).bottom + yPlus < 0) {
+				lo = mid;
+			} else {
+				hi = mid - 1;
+			}
+		}
+		lo++;
 		p.setColor(Color.GRAY);
-		for (Rect line : lines) {
+
+		// TODO Sort lines
+
+		for (int i = lo; i < lines.size(); i++) {
+			Rect line = lines.get(i);
 			int x1 = line.left + xPlus;
 			int y1 = line.top + yPlus;
 			int x2 = line.right + xPlus;
 			int y2 = line.bottom + yPlus;
+			// if (y1 > screenHeight) {
+			// break;
+			// }
 			if (onScreen(x1, y1, x2, y2)) {
 				c.drawLine(x1, y1, x2, y2, p);
 			}
 		}
 
 		// draw circles
+		lo = -1;
+		hi = points.size() - 1;
+		while (lo < hi) {
+			int mid = (lo + hi + 1) / 2;
+			if (points.get(mid).y + OUTER_SIZE + yPlus < 0) {
+				lo = mid;
+			} else {
+				hi = mid - 1;
+			}
+		}
+		lo++;
 		p.setAntiAlias(true);
-		for (TouchPoint point : points) {
+		for (int i = lo; i < points.size(); i++) {
+			TouchPoint point = points.get(i);
 			int x = point.x + xPlus;
 			int y = point.y + yPlus;
+			if (y - OUTER_SIZE > screenHeight) {
+				break;
+			}
 			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y
 					+ OUTER_SIZE)) {
 				c.drawCircle(x, y, OUTER_SIZE, p);
@@ -129,13 +163,30 @@ public class ExplorerRender extends MapRender {
 		p.setAntiAlias(false);
 
 		// draw topics
-		for (MyTopic topic : topics) {
+		lo = -1;
+		hi = topics.size() - 1;
+		while (lo < hi) {
+			int mid = (lo + hi + 1) / 2;
+			if (topics.get(mid).topicY
+					+ topics.get(mid).topicRender.getHeight() + yPlus < 0) {
+				lo = mid;
+			} else {
+				hi = mid - 1;
+			}
+		}
+		lo++;
+		for (int i = lo; i < topics.size(); i++) {
+			MyTopic topic = topics.get(i);
 			int x = topic.topicX + xPlus;
 			int y = topic.topicY + yPlus;
+			if (y > screenHeight) {
+				break;
+			}
 			TopicRender topicRender = topic.topicRender;
 			if (onScreen(x, y, x + topicRender.getWidth(), y
-					+ topicRender.getHeight()))
+					+ topicRender.getHeight())) {
 				topicRender.draw(x, y, 0, 0, c);
+			}
 		}
 
 	}
