@@ -12,9 +12,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,8 +44,10 @@ public class Client {
 
 	final static private char SALT_FLAG = '#';
 
-	final static private int MAX_READ_TIMEOUT = 30*1000; //30 seconds in milliseconds
-	final static private int MAX_CONNECT_TIMEOUT = 30*1000; //30 seconds in milliseconds
+	final static private int MAX_READ_TIMEOUT = 30 * 1000; // 30 seconds in
+															// milliseconds
+	final static private int MAX_CONNECT_TIMEOUT = 30 * 1000; // 30 seconds in
+																// milliseconds
 
 	// private variables
 	private String clientId = null;
@@ -76,32 +78,27 @@ public class Client {
 
 		String autoLoginKey = null;
 
-		if (loginResponse.length() > 0) {
-			// response from server is valid
-			String clientId = null;
+		String clientId = null;
 
-			if (loginResponse.charAt(0) == SALT_FLAG) {
-				// account with salt
-				String salt = loginResponse.substring(1);
+		if (loginResponse.charAt(0) == SALT_FLAG) {
+			// account with salt
+			String salt = loginResponse.substring(1);
 
-				autoLoginKey = md5Encode(password + salt);
+			autoLoginKey = md5Encode(password + salt);
 
-				clientId = loginRequest(email, autoLoginKey, WITH_SALT_LOGIN_METHOD);
-			} else {
-				// account without salt
-				autoLoginKey = passwordHash;
-
-				clientId = loginResponse;
-			}
-
-			setClientId(clientId);
-
-			if (isLoggedIn() && remember) {
-				// save autologin key
-				Storage.getInstance().set(Storage.AUTOLOGIN_KEY, autoLoginKey);
-			}
+			clientId = loginRequest(email, autoLoginKey, WITH_SALT_LOGIN_METHOD);
 		} else {
-			throw new InvalidCredentialsException();
+			// account without salt
+			autoLoginKey = passwordHash;
+
+			clientId = loginResponse;
+		}
+
+		setClientId(clientId);
+
+		if (isLoggedIn() && remember) {
+			// save autologin key
+			Storage.getInstance().set(Storage.AUTOLOGIN_KEY, autoLoginKey);
 		}
 	}
 
@@ -133,7 +130,7 @@ public class Client {
 		setClientId(loginRequest(email, autologinKey, COOKIE_LOGIN_METHOD));
 
 		if (!isLoggedIn()) {
-			throw new InvalidCredentialsException();
+			throw new InvalidCredentialsException(); // TODO: ???
 		} else {
 			// reSet autologin key
 			Storage.getInstance().set(Storage.AUTOLOGIN_KEY, autologinKey);
@@ -180,6 +177,8 @@ public class Client {
 			requestToServer(data);
 		} catch (LoginInterruptedException e) {
 			Log.e(Log.connectionTag, "login interrupted in logout");
+		} catch (InvalidCredentialsException e) {
+			Log.e(Log.connectionTag, "invalid credentails in logout");
 		}
 	}
 
@@ -191,8 +190,10 @@ public class Client {
 	 * @return Comap in String format
 	 * @throws ConnectionException
 	 * @throws LoginInterruptedException
+	 * @throws InvalidCredentialsException
 	 */
-	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException {
+	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException,
+			InvalidCredentialsException {
 		Log.d(Log.connectionTag, "getting " + mapId + " comap");
 
 		loginRequired(context);
@@ -236,7 +237,8 @@ public class Client {
 		return response;
 	}
 
-	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException, LoginInterruptedException {
+	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException,
+			LoginInterruptedException, InvalidCredentialsException {
 		Log.d(Log.connectionTag, "request to server " + Arrays.toString(data.toArray()));
 
 		if (Options.FAKE_SERVER) {
@@ -245,39 +247,44 @@ public class Client {
 
 		URL url = null;
 		String responseText = null;
-		String code = null;
+		int code = 200; // all ok
 
 		try {
 			url = new URL(Options.SERVER);
 		} catch (MalformedURLException e1) {
 			Log.e(Log.connectionTag, "Malformed URL Exception!!!");
 			throw new ConnectionException();
-		}		
-		
+		}
+
 		try {
-			URLConnection connection = url.openConnection();
-			
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
 			connection.setReadTimeout(MAX_READ_TIMEOUT);
 			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
-			
+
 			connection.setDoOutput(true);
-			
+
 			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 			writer.write(getPostParameters(data));
-            writer.flush();
-            
+			writer.flush();
+
+			code = connection.getResponseCode();
+
 			responseText = getTextFromInputStream(connection.getInputStream());
-			
+
 			writer.close();
-            
-			code = connection.getHeaderFields().toString();
 		} catch (IOException e) {
-			throw new ConnectionException();
+			if (code == 403) {
+				throw new InvalidCredentialsException();
+			} else {
+				throw new ConnectionException();
+			}
 		}
-		
+
 		// Log result
 		Log.i(Log.connectionTag, "New server response = " + responseText);
-		Log.d(Log.connectionTag, "New server checksum = " + getBytesSum(responseText));
+		// Log.d(Log.connectionTag, "New server checksum = " +
+		// getBytesSum(responseText));
 		Log.d(Log.connectionTag, "New server response code = " + code);
 
 		// DefaultHttpClient client = new DefaultHttpClient();
@@ -332,7 +339,7 @@ public class Client {
 	}
 
 	private String loginRequest(String email, String password, String loginMethod) throws ConnectionException,
-			LoginInterruptedException {
+			LoginInterruptedException, InvalidCredentialsException {
 		this.email = email;
 
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();

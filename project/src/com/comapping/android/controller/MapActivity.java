@@ -14,6 +14,7 @@ import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 import com.comapping.android.communication.Client;
 import com.comapping.android.communication.exceptions.ConnectionException;
+import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.exceptions.MapParsingException;
@@ -76,8 +77,12 @@ public class MapActivity extends Activity {
 					try {
 						splashActivate("Downloading map");
 
-						result = MetaMapActivity.client
-								.getComap(mapId, current);
+						try {
+							result = MetaMapActivity.client.getComap(mapId, current);
+						} catch (InvalidCredentialsException e) {
+							Log.e(Log.mapControllerTag, "invalid credentials while map getting");
+							//TODO: ???
+						}
 
 						splashActivate("Loading map");
 
