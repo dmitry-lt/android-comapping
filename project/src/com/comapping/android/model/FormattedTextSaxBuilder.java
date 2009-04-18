@@ -65,7 +65,7 @@ public class FormattedTextSaxBuilder {
 
 		long parsingTime = System.currentTimeMillis() - startTime;
 		
-		Log.w(Log.modelTag, "Formatted Text was built with SAX successfully, parsing time: " + parsingTime);
+		Log.i(Log.modelTag, "Formatted Text was built with SAX successfully, parsing time: " + parsingTime);
 		
 		return handler.getFormattedText();
 	}
