@@ -44,7 +44,8 @@ public class Client {
 
 	final static private char SALT_FLAG = '#';
 
-	// final static private long MAX_TIMEOUT = 5;
+	final static private int MAX_READ_TIMEOUT = 30*1000; //30 seconds in milliseconds
+	final static private int MAX_CONNECT_TIMEOUT = 30*1000; //30 seconds in milliseconds
 
 	// private variables
 	private String clientId = null;
@@ -255,6 +256,10 @@ public class Client {
 		
 		try {
 			URLConnection connection = url.openConnection();
+			
+			connection.setReadTimeout(MAX_READ_TIMEOUT);
+			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
+			
 			connection.setDoOutput(true);
 			
 			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
