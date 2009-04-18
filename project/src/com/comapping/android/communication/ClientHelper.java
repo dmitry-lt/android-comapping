@@ -65,7 +65,15 @@ public class ClientHelper {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         
         String line = null;
+        boolean first = true;
+        
         while ((line = reader.readLine()) != null) {
+        	if (!first) {
+        		content.append(System.getProperty("line.separator"));
+        	} else {
+        		first = false;
+        	}
+        	
         	content.append(line);
         }
         
