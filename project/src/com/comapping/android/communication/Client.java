@@ -257,8 +257,14 @@ public class Client {
 		}
 
 		try {
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
+			HttpURLConnection connection = null;
+			
+			if (Options.USE_PROXY) {
+				connection = (HttpURLConnection) url.openConnection(Options.proxy);
+			} else {
+				connection = (HttpURLConnection) url.openConnection();
+			}
+			
 			connection.setReadTimeout(MAX_READ_TIMEOUT);
 			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
 

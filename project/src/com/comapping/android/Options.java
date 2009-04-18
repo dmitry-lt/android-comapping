@@ -1,6 +1,7 @@
 package com.comapping.android;
 
-import org.apache.http.HttpHost;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 
 public class Options {
 	final public static String SERVER = "http://go.comapping.com/cgi-bin/comapping.n";
@@ -15,7 +16,7 @@ public class Options {
 
 	// Proxy server options
 	final public static boolean USE_PROXY = false;
-	final public static HttpHost PROXY_HOST = new HttpHost("169.254.198.123", 8080, "http");
+	final public static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress( "217.197.3.157", 8089));
 	
 	// Address to downloading attachment files
 	final public static String DOWNLOAD_SERVER = "http://upload.comapping.com/";
