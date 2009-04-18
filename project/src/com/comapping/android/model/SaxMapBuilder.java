@@ -29,8 +29,9 @@ public class SaxMapBuilder extends MapBuilder {
 			InputStream stream = new ByteArrayInputStream(xmlDocument.getBytes("UTF-8"));
 			handler = new SaxHandler();
 
-			parser.parse(stream, handler);
 			Log.d(Log.modelTag, "parsing xml document: \n" + xmlDocument);
+			
+			parser.parse(stream, handler);			
 		} catch (FactoryConfigurationError e) {
 			Log.e("SAX Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
