@@ -44,6 +44,9 @@ public class MetaMapActivity extends Activity {
 	public static final String MAP_DESCRIPTION = "Map";
 	public static final String FOLDER_DESCRIPTION = "Folder";
 
+	private static Topic currentTopic = null;
+	private static Map currentMap = null;
+		
 	private MetaMapView metaMapView;
 	private static MetaMapActivity instance;
 
@@ -56,14 +59,18 @@ public class MetaMapActivity extends Activity {
 	public static Client client = new Client();
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
 
-	public Map currentMap;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		instance = this;
-		metaMapRefresh();
+		
+		if (currentTopic == null) {
+			metaMapRefresh();
+		} else {
+			metaMapView = new MetaMapView(this, currentMap, currentTopic);
+			loadMetaMapTopic(currentTopic);
+		}
 	}
 
 	/* Creates the menu items */
@@ -112,7 +119,6 @@ public class MetaMapActivity extends Activity {
 			logout();
 			return true;
 		case R.id.reloadMetamap:
-			// TODO: clear metamap in cache
 			metaMapRefresh();
 			return true;
 		case R.id.clearCache:
@@ -179,15 +185,18 @@ public class MetaMapActivity extends Activity {
 				metaMapView.splashDeactivate();
 				
 				//Simple fix
-				if (metaMap == null)
+				if (metaMap == null) {
 					return;
-
+				}
+				
+				currentMap = metaMap;
+				
 				final Map finalMetaMap = metaMap;
 
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						metaMapView.load(finalMetaMap);
+						metaMapView.loadMetaMap(finalMetaMap);
 					}
 				});
 			}
@@ -195,6 +204,8 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public void loadMetaMapTopic(final Topic topic) {
+		currentTopic = topic;
+		
 		currentTopicChildren = topic.getChildTopics();
 
 		Arrays.sort(currentTopicChildren, new TopicComparator());

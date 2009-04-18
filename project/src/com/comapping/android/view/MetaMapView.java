@@ -17,15 +17,31 @@ import com.comapping.android.storage.Storage;
 
 public class MetaMapView {
 	private MetaMapActivity metaMapActivity;
-	private ProgressDialog splash;
-
-	public MetaMapView(MetaMapActivity metaMapActivity) {
+	private ProgressDialog splash;	
+	
+	private void metaMapViewInit(MetaMapActivity metaMapActivity, String folderName) {
 		this.metaMapActivity = metaMapActivity;
-
+		
 		metaMapActivity.setContentView(R.layout.metamap);
-		metaMapActivity.setTitle("Comapping: My Maps");
-	}
+		metaMapActivity.setTitle("Comapping: "+folderName);
+		
+		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
+		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 
+		upLevelButton.setEnabled(false);
+		homeButton.setEnabled(false);
+	}
+	
+	public MetaMapView(MetaMapActivity metaMapActivity) {
+		metaMapViewInit(metaMapActivity, "My Maps");
+	}
+	
+	public MetaMapView(final MetaMapActivity metaMapActivity, Map map, Topic topic) {
+		metaMapViewInit(metaMapActivity, topic.getText());
+		
+		bindHomeButton(map);
+	}
+	
 	public void splashActivate(final String message) {
 		metaMapActivity.runOnUiThread(new Runnable() {
 			public void run() {
@@ -48,7 +64,7 @@ public class MetaMapView {
 			}
 		});
 	}
-
+	
 	public void drawMetaMapTopic(final Topic topic, final Topic[] children) {
 		metaMapActivity.setTitle("Comapping: " + topic.getText());
 
@@ -94,17 +110,20 @@ public class MetaMapView {
 		}
 	}
 
-	public void load(final Map metaMap) {
-		metaMapActivity.loadMetaMapTopic(metaMap.getRoot());
-
+	private void bindHomeButton(final Map map) {
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 		homeButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				metaMapActivity.loadMetaMapTopic(metaMap.getRoot());
+				metaMapActivity.loadMetaMapTopic(map.getRoot());
 			}
 
 		});
+	}
+	
+	public void loadMetaMap(final Map map) {
+		bindHomeButton(map);
+		metaMapActivity.loadMetaMapTopic(map.getRoot());
 	}
 }
