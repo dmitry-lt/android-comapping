@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.comapping.android.Log;
+import com.comapping.android.Options;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Attachment;
@@ -22,50 +24,26 @@ public class AttachmentRender extends Render {
 
 	private static final int ICON_SIZE = 30;
 
-	private static boolean iconLoaded = false;
 	private static Bitmap attachmentIcon;
 
 	private boolean isEmpty;
 
 	private AlertDialog dialog;
 	private int width, height;
-
+	private Context context;
+	private Attachment attachment;
+	
 	public AttachmentRender(Attachment attachment, Context context) {
-		if (attachment != null) {
-			isEmpty = false;
-		} else {
-			isEmpty = true;
-		}
+		
+		isEmpty = (attachment == null);
 
 		if (!isEmpty) {
-			if (!iconLoaded) {
-				loadIcons();
-				iconLoaded = true;
+			if (attachmentIcon == null) {
+				loadIcon();
 			}
 
-			final Context fContext = context;
-			final String url = "http://upload.comapping.com/" + attachment.getKey();
-			// final String url =
-			// "http://stg243.ifolder.ru/download/?11604085&ah58bG1OECiK7Yk6SpaLmw%3D%3D";
-			// Alert Dialog is created here
-			dialog = (new AlertDialog.Builder(context)
-			.setTitle("Save attachment?")
-			.setMessage("File: " + attachment.getFilename() + "\n" +
-					"Upload date: " + dateFormating(attachment.getDate()) + "\n" +
-					"Size: " + fileSizeFormating(attachment.getSize()) + "\n")
-			.setNegativeButton("No", new DialogInterface.OnClickListener () {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-
-				}
-			})
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener () {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					fContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-				}
-			})
-			).create();
+			this.context = context;
+			this.attachment = attachment;
 
 			width = ICON_SIZE;
 			height = ICON_SIZE;
@@ -105,15 +83,41 @@ public class AttachmentRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
+		
+		if (dialog == null) {
+			final String url = Options.DOWNLOAD_SERVER + attachment.getKey();
+			// final String url =
+			// "http://stg243.ifolder.ru/download/?11604085&ah58bG1OECiK7Yk6SpaLmw%3D%3D";
+			// Alert Dialog is created here
+			dialog = (new AlertDialog.Builder(context)
+			.setTitle("Save attachment?")
+			.setMessage("File: " + attachment.getFilename() + "\n" +
+					"Upload date: " + formatDate(attachment.getDate()) + "\n" +
+					"Size: " + formatFileSize(attachment.getSize()) + "\n")
+			.setNegativeButton("No", new DialogInterface.OnClickListener () {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			})
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener () {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+				}
+			})
+			).create();
+		}
+		
 		dialog.show();
 	}
 
-	private void loadIcons() {
+	private void loadIcon() {
 		Resources r = MetaMapActivity.getInstance().getResources();
 		attachmentIcon = getBitmap(r.getDrawable(R.drawable.attachment), ICON_SIZE);
 	}
 
-	private String fileSizeFormating(int size) {
+	private String formatFileSize(int size) {
 		float fSize = size;
 		String res = "";
 		if (size > 1024 * 1024 * 1024) {
@@ -128,7 +132,7 @@ public class AttachmentRender extends Render {
 		return res;
 	}
 
-	private String dateFormating(Date date) {
+	private String formatDate(Date date) {
 		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		return dateFormat.format(date);
 	}
