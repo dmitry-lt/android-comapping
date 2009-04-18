@@ -16,24 +16,24 @@ public class NoteRender extends Render {
 
 	private boolean isEmpty;
 
+	private String note;
+	private Context context;
+
 	private TextRender textRender;
 
 	private int width, height;
-	private AlertDialog infDialog;
+	private AlertDialog dialog;
 
 	public NoteRender(String note, Context context) {
 		isEmpty = (note == null || note.equals(""));
 
 		if (!isEmpty) {
+			this.note = note;
+			this.context = context;
+			
 			FormattedText text = new FormattedText(note, FORMAT);
 			textRender = new TextRender(text, context);
 			recalcDrawingData();
-
-			infDialog = (new AlertDialog.Builder(context)
-			.setTitle("Note")
-			.setMessage(note)
-			.setNeutralButton("Ok", null)
-			).create();
 		} else {
 
 		}
@@ -60,7 +60,17 @@ public class NoteRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		infDialog.show();
+		if (!isEmpty) {
+			if (dialog == null) {
+				dialog = (new AlertDialog.Builder(context)
+				.setTitle("Note")
+				.setMessage(note)
+				.setNeutralButton("Ok", null)
+				).create();
+			}
+
+			dialog.show();
+		}
 	}
 
 	public void setMaxWidth(int maxWidth) {

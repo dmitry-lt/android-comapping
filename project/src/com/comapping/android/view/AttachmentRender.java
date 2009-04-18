@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
@@ -33,8 +32,7 @@ public class AttachmentRender extends Render {
 	private Context context;
 	private Attachment attachment;
 	
-	public AttachmentRender(Attachment attachment, Context context) {
-		
+	public AttachmentRender(Attachment attachment, Context context) {		
 		isEmpty = (attachment == null);
 
 		if (!isEmpty) {

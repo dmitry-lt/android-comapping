@@ -17,6 +17,9 @@ public class TaskRender extends Render {
 
 	private boolean isEmpty;
 
+	private Task task;
+	private Context context;
+
 	private TextRender responsibleRender;
 	private TextRender startRender;
 	private TextRender deadlineRender;
@@ -29,12 +32,15 @@ public class TaskRender extends Render {
 	private int merging = MIN_MERGING;
 	private int linesCount = 1;
 
-	private AlertDialog infDialog;
+	private AlertDialog dialog;
 
 	public TaskRender(Task task, Context context) {
 		isEmpty = (task == null);
 
 		if (!isEmpty) {
+			this.task = task;
+			this.context = context;
+
 			FormattedText responsible = new FormattedText(task.getResponsible(), FORMAT);
 			responsibleRender = new TextRender(responsible, context);
 
@@ -47,10 +53,6 @@ public class TaskRender extends Render {
 			deadlineRender = new TextRender(deadline, context);
 
 			recalcDrawingData();
-
-			infDialog = (new AlertDialog.Builder(context).setTitle("Task").setMessage(
-					task.getResponsible() + "\n" + "Start: " + task.getStart() + "\n" + "Deadline: "
-							+ task.getDeadline()).setNeutralButton("Ok", null)).create();
 		} else {
 			height = 0;
 			width = 0;
@@ -117,7 +119,15 @@ public class TaskRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		infDialog.show();
+		if (!isEmpty) {
+			if (dialog == null) {
+				dialog = (new AlertDialog.Builder(context).setTitle("Task").setMessage(
+						"Responsible: " + task.getResponsible() + "\n" + "Start date: " + task.getStart() + "\n" + "Deadline: "
+								+ task.getDeadline()).setNeutralButton("Ok", null)).create();
+			}
+
+			dialog.show();
+		}
 	}
 
 	private void recalcDrawingData() {
