@@ -96,12 +96,11 @@ class SaxHandler extends DefaultHandler {
 				Task task = new Task(start, deadline, responsible);
 				currentTopic.setTask(task);
 			} else if (localName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
-				// float Date =
-				// Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG));
+				Date date = new Date((long)Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG)));
 				String filename = attributes.getValue(MapBuilder.ATTACHMENT_FILENAME_TAG);
 				String key = attributes.getValue(MapBuilder.ATTACHMENT_KEY_TAG);
 				int size = Integer.parseInt(attributes.getValue(MapBuilder.ATTACHMENT_SIZE_TAG));
-				Attachment attachment = new Attachment(new Date(), filename, key, size);
+				Attachment attachment = new Attachment(date, filename, key, size);
 				currentTopic.setAttachment(attachment);
 			} else if (!hasMeta) {
 				if (localName.equals(MapBuilder.METADATA_TAG)) {
