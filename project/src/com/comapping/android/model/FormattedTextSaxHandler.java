@@ -76,7 +76,7 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 				}
 				
 				if (attributes.getValue(FormattedTextSaxBuilder.FONT_ATTR_COLOR_TAG) != null) {
-					int fontColor = Integer.parseInt(attributes.getValue(FormattedTextSaxBuilder.FONT_ATTR_COLOR_TAG));
+					int fontColor = Color.parseColor(attributes.getValue(FormattedTextSaxBuilder.FONT_ATTR_COLOR_TAG));
 					currentTextFormat.setFontColor(fontColor);
 				}
 				
