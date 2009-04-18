@@ -22,11 +22,7 @@ public class NoteRender extends Render {
 	private AlertDialog infDialog;
 
 	public NoteRender(String note, Context context) {
-		if (note != null && !note.equals("")) {
-			isEmpty = false;
-		} else {
-			isEmpty = true;
-		}
+		isEmpty = (note == null || note.equals(""));
 
 		if (!isEmpty) {
 			FormattedText text = new FormattedText(note, FORMAT);

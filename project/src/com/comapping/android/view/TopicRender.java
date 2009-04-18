@@ -44,11 +44,7 @@ public class TopicRender extends Render {
 	private float textPart;
 
 	public TopicRender(Topic topic, Context context) {
-		if (topic != null) {
-			isEmpty = false;
-		} else {
-			isEmpty = true;
-		}
+		isEmpty = (topic == null);
 
 		if (!isEmpty) {
 			textRender = new TextRender(topic.getFormattedText(), topic.getBgColor(), context);

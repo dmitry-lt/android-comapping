@@ -51,11 +51,7 @@ public class TextRender extends Render {
 	}
 
 	public TextRender(FormattedText text, int bgColor, Context context) {
-		if (text != null && !text.getSimpleText().equals("")) {
-			isEmpty = false;
-		} else {
-			isEmpty = true;
-		}
+		isEmpty = (text == null || text.getSimpleText().equals(""));
 
 		if (!isEmpty) {
 			this.text = text;

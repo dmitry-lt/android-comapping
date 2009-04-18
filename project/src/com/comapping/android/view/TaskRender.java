@@ -32,11 +32,7 @@ public class TaskRender extends Render {
 	private AlertDialog infDialog;
 
 	public TaskRender(Task task, Context context) {
-		if (task != null) {
-			isEmpty = false;
-		} else {
-			isEmpty = true;
-		}
+		isEmpty = (task == null);
 
 		if (!isEmpty) {
 			FormattedText responsible = new FormattedText(task.getResponsible(), FORMAT);
