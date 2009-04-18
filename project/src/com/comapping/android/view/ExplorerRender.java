@@ -37,6 +37,7 @@ public class ExplorerRender extends MapRender {
 	private MyTopic selectedTopic;
 	private ScrollController scroll;
 	private boolean toUpdate = true;
+	private boolean toFocusRoot = true;
 
 	private Context context;
 
@@ -220,6 +221,7 @@ public class ExplorerRender extends MapRender {
 		return ret;
 	}
 
+	@Override
 	public void update() {
 		points.clear();
 		lines.clear();
@@ -237,6 +239,10 @@ public class ExplorerRender extends MapRender {
 				topics.get(i).down = topics.get(i + 1);
 			else
 				topics.get(i).down = null;
+		}
+		if (toFocusRoot) {
+			focusTopic(root);
+			toFocusRoot = false;
 		}
 	}
 
