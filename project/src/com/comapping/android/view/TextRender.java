@@ -128,7 +128,7 @@ public class TextRender extends Render {
 		return blocks;
 	}
 
-	private TextBlock[] splitTextBlockByWidth(TextBlock block, int width) {
+	private TextBlock[] splitTextBlockByWidth(TextBlock block, int width, boolean isFirst) {
 		TextBlock[] blocks;
 
 		int fitInCount = paint.breakText(block.getText(), true, width, null);
@@ -138,10 +138,10 @@ public class TextRender extends Render {
 		} else {
 			int splitCount;
 			splitCount = block.getText().lastIndexOf(' ', fitInCount - 1);
-			if (splitCount == -1 || substrConsistOf(block.getText(), 0, splitCount, ' ')) {
+			if (isFirst && (splitCount == -1 || substrConsistOf(block.getText(), 0, splitCount, ' '))) {
 				blocks = block.split(fitInCount);
 			} else {
-				blocks = splitDeletingSpaces(block, splitCount);
+				blocks = splitDeletingSpaces(block, splitCount + 1);
 			}
 		}
 
@@ -162,20 +162,24 @@ public class TextRender extends Render {
 				parLinesCount[i] = 1;
 
 				int curLineWidth = 0;
+				boolean curBlockIsFirst = true;
 				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
-					TextBlock block = paragraph.getTextBlocks().get(j);
+					TextBlock block = paragraph.getTextBlocks().get(j);					
 					paint.setTextSize(block.getFormat().getFontSize());
 					while (true) {
 						float blockWidth = paint.measureText(block.getText());
 						if (curLineWidth + blockWidth <= maxWidth) {
 							curLineWidth += blockWidth;
+							curBlockIsFirst = false;
 							break;
 						} else {
-							TextBlock[] blocks = splitTextBlockByWidth(block, maxWidth - curLineWidth);
+							TextBlock[] blocks = splitTextBlockByWidth(block, maxWidth - curLineWidth, curBlockIsFirst);
 							block = blocks[1];
+							curBlockIsFirst = true;
 
 							curLineWidth = 0;
-							parLinesCount[i]++;
+							curBlockIsFirst = true;
+							parLinesCount[i]++;							
 						}
 					}
 				}
@@ -213,13 +217,14 @@ public class TextRender extends Render {
 				}
 				TextParagraph paragraph = text.getTextParagraphs().get(i);
 				TextParagraph paragraphToDraw = new TextParagraph();
+				boolean curBlockIsFirst = true;
 				int curParLineNumber = 1;
 				int curLineWidth = 0;
 				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 					if (finish) {
 						break;
 					}
-					TextBlock block = paragraph.getTextBlocks().get(j);
+					TextBlock block = paragraph.getTextBlocks().get(j);					
 					paint.setTextSize(block.getFormat().getFontSize());
 					while (true) {
 						if (curLineNumber > linesCount) {
@@ -237,9 +242,10 @@ public class TextRender extends Render {
 						if (curLineWidth + blockWidth <= curMaxWidth) {
 							curLineWidth += blockWidth;
 							paragraphToDraw.add(block);
+							curBlockIsFirst = false;							
 							break;
 						} else {
-							TextBlock[] blocks = splitTextBlockByWidth(block, curMaxWidth - curLineWidth);
+							TextBlock[] blocks = splitTextBlockByWidth(block, curMaxWidth - curLineWidth, curBlockIsFirst);
 							paragraphToDraw.add(blocks[0]);
 							block = blocks[1];
 
@@ -249,6 +255,7 @@ public class TextRender extends Render {
 
 							textToDraw.add(paragraphToDraw);
 							paragraphToDraw = new TextParagraph();
+							curBlockIsFirst = true;							
 							curLineWidth = 0;
 							curLineNumber++;
 							curParLineNumber++;
