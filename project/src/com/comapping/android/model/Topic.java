@@ -77,7 +77,7 @@ public class Topic implements Iterable<Topic> {
 	}
 
 	public void setText(String text) throws StringToXMLConvertionException {
-		setFormattedText(FormattedTextBuilder.buildFormattedText(text));
+		setFormattedText(FormattedTextSaxBuilder.buildFormattedText(text));
 		String unescText = getFormattedText().getSimpleText();
 
 		Log.d(Log.modelTag, "set text=\"" + unescText + "\" in " + this);
