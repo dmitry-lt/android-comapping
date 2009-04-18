@@ -11,11 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.comapping.android.communication.exceptions.MD5NotSupportedError;
 import com.comapping.android.communication.exceptions.UTF8NotSupportedError;
@@ -44,7 +45,7 @@ public class ClientHelper {
 
 		bytes = md5.digest(bytes);
 
-		StringBuffer output = new StringBuffer();
+		StringBuilder output = new StringBuilder();
 		for (byte b : bytes) {
 			output.append(String.format("%02x", b));
 		}
@@ -59,46 +60,26 @@ public class ClientHelper {
 	 * @throws IOException
 	 */
 	public static String getTextFromInputStream(InputStream input) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));		
+		StringBuffer content = new StringBuffer();
+        
+		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+        	content.append(line);
+            content.append(System.getProperty("line.separator"));
+        }
+        
+        reader.close();
 		
-		String line = reader.readLine();
-		
-		StringBuilder text;
-
-		if (line != null) {
-			text = new StringBuilder(line);
-		} else {
-			// not exist first line
-			return "";
-		}
-
-		line = reader.readLine();
-		while (line != null) {
-			text.append("\n").append(line);
-			line = reader.readLine();
-		}
-
-		reader.close();
-
-		return text.toString();
-	}
-
-	/**
-	 * Method for getting text from HttpResponse
-	 * @param response HttpResponse
-	 * @return Text Text from InputStream
-	 * @throws IOException
-	 */
-	public static String getTextFromResponse(HttpResponse response) throws IOException {
-		HttpEntity entity = response.getEntity();
-
-		if (entity != null) {
-			return getTextFromInputStream(entity.getContent());
-		} else {
-			return "";
-		}
+		return content.toString();
 	}
 	
+	/**
+	 * Method for getting sum string bytes
+	 * @param string String
+	 * @return Sum of bytes
+	 */
 	public static long getBytesSum(String string) {
 		byte[] bytes;
 		try {
@@ -111,5 +92,19 @@ public class ClientHelper {
 			sum += b;
 		}
 		return sum;
+	}
+	
+	public static String getPostParameters(List<BasicNameValuePair> data) {
+		StringBuilder parameters = new StringBuilder();
+		
+		for (int i = 0; i < data.size(); i++) {
+			if (i != 0) {
+				parameters.append("&");
+			}
+			
+			parameters.append(URLEncoder.encode(data.get(i).getName())+"="+URLEncoder.encode(data.get(i).getValue()));
+		}
+		
+		return parameters.toString();
 	}
 }

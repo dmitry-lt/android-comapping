@@ -11,17 +11,14 @@ import static com.comapping.android.communication.ClientHelper.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
@@ -35,8 +32,6 @@ import com.comapping.android.communication.exceptions.InvalidCredentialsExceptio
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.storage.Storage;
-
-//import org.apache.http.conn.params.ConnManagerPNames;
 
 public class Client {
 	// constants
@@ -247,47 +242,82 @@ public class Client {
 			return fakeRequestToServer(data);
 		}
 
-		DefaultHttpClient client = new DefaultHttpClient();
-
-		// add proxy if needed
-		if (Options.USE_PROXY) {
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, Options.PROXY_HOST);
-		}
-
-		// set timeout
-		// client.getParams().setLongParameter(ConnManagerPNames.TIMEOUT,
-		// MAX_TIMEOUT);
-
-		HttpPost post = new HttpPost(Options.SERVER);
-
-		UrlEncodedFormEntity entity = null;
-		try {
-			entity = new UrlEncodedFormEntity(data);
-		} catch (UnsupportedEncodingException e1) {
-			Log.e(Log.connectionTag, "unsupported encoding for data in request");
-		}
-
-		post.setEntity(entity);
-
-		String responseText = "";
-		int responseStatus = 0;
+		URL url = null;
+		String responseText = null;
+		String code = null;
 
 		try {
-			HttpResponse response = client.execute(post);
-
-			responseText = getTextFromResponse(response);
-			responseStatus = response.getStatusLine().getStatusCode();
-		} catch (ClientProtocolException e) {
-			Log.d(Log.connectionTag, "client protocol exception");
-			throw new ConnectionException();
-		} catch (IOException e) {
-			Log.d(Log.connectionTag, "IO exception");
+			url = new URL(Options.SERVER);
+		} catch (MalformedURLException e1) {
+			Log.e(Log.connectionTag, "Malformed URL Exception!!!");
 			throw new ConnectionException();
 		}		
 		
-		Log.i(Log.connectionTag, "response from server: " + responseText);
-		Log.d(Log.connectionTag, "response check sum: " + getBytesSum(responseText));
-		Log.d(Log.connectionTag, "response status code: " + responseStatus);
+		try {
+			URLConnection connection = url.openConnection();
+			connection.setDoOutput(true);
+			
+			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+			writer.write(getPostParameters(data));
+            writer.flush();
+            
+			responseText = getTextFromInputStream(connection.getInputStream());
+			
+			writer.close();
+            
+			code = connection.getHeaderFields().toString();
+		} catch (IOException e) {
+			throw new ConnectionException();
+		}
+		
+		// Log result
+		Log.i(Log.connectionTag, "New server response = " + responseText);
+		Log.d(Log.connectionTag, "New server checksum = " + getBytesSum(responseText));
+		Log.d(Log.connectionTag, "New server response code = " + code);
+
+		// DefaultHttpClient client = new DefaultHttpClient();
+		//
+		// // add proxy if needed
+		// if (Options.USE_PROXY) {
+		// client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
+		// Options.PROXY_HOST);
+		// }
+		//
+		// // set timeout
+		// // client.getParams().setLongParameter(ConnManagerPNames.TIMEOUT,
+		// // MAX_TIMEOUT);
+		//
+		// HttpPost post = new HttpPost(Options.SERVER);
+		//
+		// UrlEncodedFormEntity entity = null;
+		// try {
+		// entity = new UrlEncodedFormEntity(data);
+		// } catch (UnsupportedEncodingException e1) {
+		// Log.e(Log.connectionTag, "unsupported encoding for data in request");
+		// }
+		//
+		// post.setEntity(entity);
+		//
+		// String responseText = "";
+		// int responseStatus = 0;
+		//
+		// try {
+		// HttpResponse response = client.execute(post);
+		//
+		// responseText = getTextFromResponse(response);
+		// responseStatus = response.getStatusLine().getStatusCode();
+		// } catch (ClientProtocolException e) {
+		// Log.d(Log.connectionTag, "client protocol exception");
+		// throw new ConnectionException();
+		// } catch (IOException e) {
+		// Log.d(Log.connectionTag, "IO exception");
+		// throw new ConnectionException();
+		// }
+		//		
+		// Log.i(Log.connectionTag, "response from server: " + responseText);
+		// Log.i(Log.connectionTag, "response check sum: " +
+		// getBytesSum(responseText));
+		// Log.i(Log.connectionTag, "response status code: " + responseStatus);
 
 		if (loginInterrupted) {
 			throw new LoginInterruptedException();
