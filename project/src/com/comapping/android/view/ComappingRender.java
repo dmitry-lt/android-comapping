@@ -781,4 +781,10 @@ public class ComappingRender extends MapRender {
 			}
 		}
 	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
 }

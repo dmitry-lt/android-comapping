@@ -165,9 +165,9 @@ public class ExplorerRender extends MapRender {
 
 	private int[] updateTopic(MyTopic topic, int x, int y) {
 		TopicRender topicRender = topic.topicRender;
-		topicRender.setMaxWidth(screenWidth);
-		// topicRender.setMaxWidth(screenWidth - OUTER_SIZE - X_SHIFT
-		// - BLOCK_SHIFT);
+		// topicRender.setMaxWidth(screenWidth);
+		topicRender.setMaxWidth(screenWidth - OUTER_SIZE - X_SHIFT
+				- BLOCK_SHIFT);
 		int height = topicRender.getHeight();
 		if (topic.childs.size() > 0)
 			height = Math.max(height, OUTER_SIZE * 2);
@@ -220,7 +220,7 @@ public class ExplorerRender extends MapRender {
 		return ret;
 	}
 
-	private void update() {
+	public void update() {
 		points.clear();
 		lines.clear();
 		topics.clear();

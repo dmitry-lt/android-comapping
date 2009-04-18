@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.Scroller;
-import android.widget.ZoomControls;
 
 public class MainMapView extends View {
 
@@ -40,19 +39,18 @@ public class MainMapView extends View {
 		}
 
 	};
-	
+
 	public MainMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setFocusable(true);
 		mScroller = new Scroller(context);
 	}
-	
-	public void setRender(MapRender render)
-	{
+
+	public void setRender(MapRender render) {
 		mRender = render;
 		mRender.setScrollController(scrollController);
 	}
-	
+
 	public MainMapView(Context context, MapRender render) {
 		super(context);
 		setFocusable(true);
@@ -64,6 +62,20 @@ public class MainMapView extends View {
 	int frameCount = 0;
 	long fps = 0;
 	long lastFPSCalcTime = System.currentTimeMillis();
+	private float scale = 0.5f;
+
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		if (scale > 1f)
+			scale = 1f;
+		if (scale < 0.5f)
+			scale = 0.5f;
+		this.scale = scale;
+		mRender.update();
+	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -72,14 +84,19 @@ public class MainMapView extends View {
 		Paint p = new Paint();
 		canvas.drawARGB(255, 255, 255, 255);
 
+		canvas.scale(scale, scale);
+
 		mRender.draw(mScroller.getCurrX(), -getVertOffset()
-				+ mScroller.getCurrY(), this.getWidth(), this.getHeight(),
-				canvas);
+				+ mScroller.getCurrY(), (int) (this.getWidth() / scale),
+				(int) (this.getHeight() / scale), canvas);
+
+		canvas.scale(1 / scale, 1 / scale);
 
 		p.setColor(Color.BLACK);
 		canvas.drawText("FPS: " + fps, 20, 30, p);
 		canvas.drawText("Width: " + mRender.getWidth(), 20, 50, p);
 		canvas.drawText("Height: " + mRender.getHeight(), 20, 70, p);
+
 		if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
 			fps = (1000 * frameCount)
 					/ (System.currentTimeMillis() - lastFPSCalcTime);
@@ -155,9 +172,9 @@ public class MainMapView extends View {
 
 			Log.i("Test", "Time:" + timeDelta + " Path len:" + pathLen);
 			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
-				mRender.onTouch(mScroller.getCurrX() + (int) ev.getX(),
-						mScroller.getCurrY() + (int) ev.getY()
-								- getVertOffset());
+				mRender.onTouch(mScroller.getCurrX()
+						+ (int) (ev.getX() / scale), mScroller.getCurrY()
+						+ (int) (ev.getY() / scale) - getVertOffset());
 				Log.i("Test", "Touch!");
 			} else {
 				Log.i("Test", "Scroll!");
@@ -184,21 +201,20 @@ public class MainMapView extends View {
 		return true;
 	}
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent msg) {
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent msg) {
 
-    	// Back button fix
-    	if (keyCode == KeyEvent.KEYCODE_BACK)
-    		return false;
-    	
-    	Log.d("Test", "Press");
-    	
-    	mRender.onKeyDown(keyCode);
-    	
-    	return true;
-    }
-	
-	
+		// Back button fix
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+			return false;
+
+		Log.d("Test", "Press");
+
+		mRender.onKeyDown(keyCode);
+
+		return false;
+	}
+
 	private final int getVertOffset() {
 		return 0;
 		// if (mRender.getHeight() >= this.getHeight())
@@ -208,10 +224,11 @@ public class MainMapView extends View {
 	}
 
 	private final int getScrollWidth() {
-		return mRender.getWidth() - this.getWidth();
+		return mRender.getWidth() - (int) (this.getWidth() / scale);
 	}
 
 	private final int getScrollHeight() {
-		return mRender.getHeight() - this.getHeight() - getVertOffset();
+		return mRender.getHeight() - (int) (this.getHeight() / scale)
+				- getVertOffset();
 	}
 }

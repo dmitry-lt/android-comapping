@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.style.ClickableSpan;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ZoomControls;
 
 import com.comapping.android.Cache;
 import com.comapping.android.Log;
@@ -110,7 +113,6 @@ public class MapActivity extends Activity {
 	}
 
 	public void loadMap(Map map, ViewType viewType) {
-		// View view = null;
 		MapRender r = null;
 		switch (viewType) {
 		case EXPLORER_VIEW:
@@ -122,13 +124,24 @@ public class MapActivity extends Activity {
 		}
 
 		this.setContentView(R.layout.map);
-		MainMapView tt = (MainMapView) findViewById(R.id.MapView);
-		tt.setRender(r);
+		MainMapView view = (MainMapView) findViewById(R.id.MapView);
+		view.setRender(r);
+		ZoomControls zoom = (ZoomControls) findViewById(R.id.Zoom);
+		zoom.setOnZoomInClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MainMapView view = (MainMapView) findViewById(R.id.MapView);
+				view.setScale(view.getScale() + 0.1f);
+			}
+		});
+		zoom.setOnZoomOutClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MainMapView view = (MainMapView) findViewById(R.id.MapView);
+				view.setScale(view.getScale() - 0.1f);
+			}
+		});		
 
-		// view = new MainMapView(this, r);
-		// if (view != null) {
-		// this.setContentView(view);
-		// }
 	}
 
 	@Override
