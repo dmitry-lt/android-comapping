@@ -8,8 +8,6 @@ package com.comapping.android.communication;
 
 import static com.comapping.android.communication.ClientHelper.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -33,7 +31,7 @@ import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.storage.Storage;
 
-public class Client {
+public class Client implements MapProvider {
 	// constants
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
 	final static private String COOKIE_LOGIN_METHOD = "flashCookie";
@@ -211,39 +209,9 @@ public class Client {
 		loginInterrupted = true;
 	}
 
-	// private methods
-	private String fakeRequestToServer(List<BasicNameValuePair> data) throws ConnectionException {
-		String response = "";
-
-		if (data.get(0).getValue().equals("download")) {
-			// "get comap" request
-			String mapId = data.get(3).getValue();
-			try {
-				response = getTextFromInputStream(new FileInputStream(Options.COMAP_FILE_SERVER + mapId + ".comap"));
-			} catch (FileNotFoundException e) {
-				Log.e(Log.connectionTag, "XML File Server not found");
-				throw new ConnectionException();
-			} catch (IOException e) {
-				Log.e(Log.connectionTag, "XML File IO exception");
-				throw new ConnectionException();
-			}
-		} else {
-			// for successful login
-			response = "12345";
-		}
-
-		Log.d(Log.connectionTag, "fake response: " + response);
-		Log.d(Log.connectionTag, "response check sum: " + getBytesSum(response));
-		return response;
-	}
-
 	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException,
 			LoginInterruptedException, InvalidCredentialsException {
 		Log.d(Log.connectionTag, "request to server " + Arrays.toString(data.toArray()));
-
-		if (Options.FAKE_SERVER) {
-			return fakeRequestToServer(data);
-		}
 
 		URL url = null;
 		String responseText = null;

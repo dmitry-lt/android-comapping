@@ -63,8 +63,7 @@ public class MapActivity extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 
-		final ViewType viewType = ViewType.getViewTypeFromString(extras
-				.getString(EXT_VIEW_TYPE));
+		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
 		final String mapId = extras.getString(EXT_MAP_ID);
 
 		Map map = (Map) Cache.get(mapId);
@@ -78,16 +77,15 @@ public class MapActivity extends Activity {
 						splashActivate("Downloading map");
 
 						try {
-							result = MetaMapActivity.client.getComap(mapId, current);
+							result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
 						} catch (InvalidCredentialsException e) {
 							Log.e(Log.mapControllerTag, "invalid credentials while map getting");
-							//TODO: ???
+							// TODO: ???
 						}
 
 						splashActivate("Loading map");
 
-						final Map buildedMap = MetaMapActivity.mapBuilder
-								.buildMap(result);
+						final Map buildedMap = MetaMapActivity.mapBuilder.buildMap(result);
 
 						splashDeactivate();
 
@@ -144,7 +142,7 @@ public class MapActivity extends Activity {
 				MainMapView view = (MainMapView) findViewById(R.id.MapView);
 				view.setScale(view.getScale() - 0.1f);
 			}
-		});		
+		});
 
 	}
 

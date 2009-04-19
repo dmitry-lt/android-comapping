@@ -227,6 +227,10 @@ public class Topic implements Iterable<Topic> {
 		children.remove(index);
 	}
 
+	public void removeAllChildTopics() {
+		children = new ArrayList<Topic>();
+	}
+	
 	@Override
 	public String toString() {
 		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText() + "\"]";

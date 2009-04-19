@@ -1,6 +1,5 @@
 package com.comapping.android.view;
 
-import android.app.ProgressDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -8,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.comapping.android.MetaMapViewType;
 import com.comapping.android.ViewType;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
@@ -17,62 +17,26 @@ import com.comapping.android.storage.Storage;
 
 public class MetaMapView {
 	private MetaMapActivity metaMapActivity;
-	private ProgressDialog splash;	
 	
-	private void metaMapViewInit(MetaMapActivity metaMapActivity, String folderName) {
-		this.metaMapActivity = metaMapActivity;
+	private Map map;
+	private Topic currentTopic;
+	
+	public MetaMapView(Map _map) {
+		map = _map;
+		currentTopic = map.getRoot();
+	}
+	
+	public void drawMetaMapTopic(final Topic topic, final Topic[] childTopics) {
+		currentTopic = topic;
 		
-		metaMapActivity.setContentView(R.layout.metamap);
-		metaMapActivity.setTitle("Comapping: "+folderName);
+		// title
+		metaMapActivity.setTitle("Comapping: "+currentTopic.getText());
 		
-		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
-		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
-
-		upLevelButton.setEnabled(false);
-		homeButton.setEnabled(false);
-	}
-	
-	public MetaMapView(MetaMapActivity metaMapActivity) {
-		metaMapViewInit(metaMapActivity, "My Maps");
-	}
-	
-	public MetaMapView(final MetaMapActivity metaMapActivity, Map map, Topic topic) {
-		metaMapViewInit(metaMapActivity, topic.getText());
-		
-		bindHomeButton(map);
-	}
-	
-	public void splashActivate(final String message) {
-		metaMapActivity.runOnUiThread(new Runnable() {
-			public void run() {
-				if (splash == null) {
-					splash = ProgressDialog.show(metaMapActivity, "Comapping", message);
-				} else {
-					splash.setMessage(message);
-				}
-			}
-		});
-	}
-
-	public void splashDeactivate() {
-		metaMapActivity.runOnUiThread(new Runnable() {
-			public void run() {
-				if (splash != null) {
-					splash.dismiss();
-					splash = null;
-				}
-			}
-		});
-	}
-	
-	public void drawMetaMapTopic(final Topic topic, final Topic[] children) {
-		metaMapActivity.setTitle("Comapping: " + topic.getText());
-
 		// list view
 		ListView listView = (ListView) metaMapActivity.findViewById(R.id.listView);
 		metaMapActivity.registerForContextMenu(listView);
 
-		listView.setAdapter(new TopicAdapter(metaMapActivity, children));
+		listView.setAdapter(new TopicAdapter(metaMapActivity, childTopics));
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -80,37 +44,30 @@ public class MetaMapView {
 				// get viewType
 				String viewType = Storage.getInstance().get(Storage.VIEW_TYPE_KEY);
 
-				if (children[position].isFolder()) {
-					metaMapActivity.loadMetaMapTopic(children[position]);
+				if (childTopics[position].isFolder()) {
+					metaMapActivity.loadMetaMapTopic(childTopics[position]);
 				} else {
-					metaMapActivity.loadMap(children[position].getMapRef(), ViewType.getViewTypeFromString(viewType));
+					metaMapActivity.loadMap(childTopics[position].getMapRef(), ViewType.getViewTypeFromString(viewType));
 				}
 			}
 		});
 
-		// up button
-		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
-		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
-
+		
 		if (topic.isRoot()) {
-			// deactivate buttons
-			upLevelButton.setEnabled(false);
-			homeButton.setEnabled(false);
+			setButtonsDisabled();
 		} else {
-			// activate buttons
-			upLevelButton.setEnabled(true);
-			homeButton.setEnabled(true);
-
-			upLevelButton.setOnClickListener(new OnClickListener() {
+			metaMapActivity.findViewById(R.id.upLevelButton).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					metaMapActivity.loadMetaMapTopic(topic.getParent());
 				}
 			});
+			
+			setButtonsEnabled();
 		}
 	}
 
-	private void bindHomeButton(final Map map) {
+	private void bindHomeButton() {
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 		homeButton.setOnClickListener(new OnClickListener() {
 
@@ -122,8 +79,58 @@ public class MetaMapView {
 		});
 	}
 	
-	public void loadMetaMap(final Map map) {
-		bindHomeButton(map);
-		metaMapActivity.loadMetaMapTopic(map.getRoot());
+	private void setButtonsEnabled() {
+		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
+		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
+
+		upLevelButton.setEnabled(true);
+		homeButton.setEnabled(true);
+
+		upLevelButton.setImageResource(R.drawable.up_level_button);
+		homeButton.setImageResource(R.drawable.home_button);
+	}
+	
+	private void setButtonsDisabled() {
+		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
+		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
+
+		upLevelButton.setEnabled(false);
+		homeButton.setEnabled(false);
+
+		upLevelButton.setImageResource(R.drawable.up_level_button_grey);
+		homeButton.setImageResource(R.drawable.home_button_grey);
+	}
+	
+	private void bindSwitchViewButton() {
+		ImageButton switchButton = (ImageButton) metaMapActivity.findViewById(R.id.viewSwitcher);
+		
+		if (metaMapActivity.getCurrentView() == MetaMapViewType.SDCARD_VIEW) {
+			switchButton.setImageResource(R.drawable.internet_icon);
+		}
+		
+		switchButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				metaMapActivity.switchView();
+			}
+		});
+	}
+	
+	public void activate(MetaMapActivity _metaMapActivity) {
+		metaMapActivity = _metaMapActivity;
+		
+		metaMapActivity.setContentView(R.layout.metamap);
+		
+		metaMapActivity.setTitle("Comapping: "+currentTopic.getText());
+		
+		if (currentTopic.isRoot()) {
+			setButtonsDisabled();
+		} else {
+			setButtonsEnabled();
+		}
+		
+		bindHomeButton();
+		bindSwitchViewButton();
+		
+		metaMapActivity.loadMetaMapTopic(currentTopic);
 	}
 }

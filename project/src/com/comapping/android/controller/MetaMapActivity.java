@@ -8,9 +8,11 @@
 
 package com.comapping.android.controller;
 
+import java.io.File;
 import java.util.Arrays;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -23,9 +25,12 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.comapping.android.Cache;
 import com.comapping.android.Log;
+import com.comapping.android.MetaMapViewType;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 import com.comapping.android.communication.Client;
+import com.comapping.android.communication.FileMapProvider;
+import com.comapping.android.communication.MapProvider;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
@@ -45,11 +50,14 @@ public class MetaMapActivity extends Activity {
 	public static final String MAP_DESCRIPTION = "Map";
 	public static final String FOLDER_DESCRIPTION = "Folder";
 
-	private static Topic currentTopic = null;
-	private static Map currentMap = null;
-		
-	private MetaMapView metaMapView;
+	private static MetaMapView internetView = null;
+	private static MetaMapView sdcardView = null;
+
+	private static MetaMapViewType currentView = MetaMapViewType.INTERNET_VIEW;
+
 	private static MetaMapActivity instance;
+
+	private ProgressDialog splash = null;
 
 	private Topic[] currentTopicChildren;
 
@@ -57,20 +65,66 @@ public class MetaMapActivity extends Activity {
 		return instance;
 	}
 
-	public static Client client = new Client();
-	public static MapBuilder mapBuilder = new SaxMapBuilder();
+	public MetaMapViewType getCurrentView() {
+		return currentView;
+	}
 
+	public void switchView() {
+		if (currentView == MetaMapViewType.INTERNET_VIEW) {
+			currentView = MetaMapViewType.SDCARD_VIEW;
+			sdcardView.activate(this);
+		} else {
+			currentView = MetaMapViewType.INTERNET_VIEW;
+			internetView.activate(this);
+		}
+	}
+
+	public static Client client = new Client();
+	public static FileMapProvider fileMapProvider = new FileMapProvider();
+	
+	public static MapProvider getCurrentMapProvider() {
+		return (currentView == MetaMapViewType.INTERNET_VIEW) ? client : fileMapProvider;
+	}
+	
+	public static MapBuilder mapBuilder = new SaxMapBuilder();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		instance = this;
-		
-		if (currentTopic == null) {
+
+		// init sdcardView if needed
+		if (sdcardView == null) {
+			Map sdMap = new Map(0);
+			Topic root = new Topic(0, null);
+
+			try {
+				root.setText("sdcard");
+			} catch (StringToXMLConvertionException e) {
+				// unreachable code
+				Log.e(Log.metaMapControllerTag, "error while parsing 'sdcard'");
+			}
+
+			root.setNote("/sdcard");
+
+			sdMap.setRoot(root);
+
+			sdcardView = new MetaMapView(sdMap);
+		}
+
+		// init internetView if needed
+		if (internetView == null) {
 			metaMapRefresh();
 		} else {
-			metaMapView = new MetaMapView(this, currentMap, currentTopic);
-			loadMetaMapTopic(currentTopic);
+			if (currentView == MetaMapViewType.INTERNET_VIEW) {
+				internetView.activate(this);
+			}
+		}
+
+		// activate sdcardView if needed
+		if (currentView == MetaMapViewType.SDCARD_VIEW) {
+			sdcardView.activate(this);
 		}
 	}
 
@@ -153,16 +207,39 @@ public class MetaMapActivity extends Activity {
 		return true;
 	}
 
-	private void metaMapRefresh() {
-		metaMapView = new MetaMapView(this);
-
+	public void splashActivate(final String message) {
 		final Activity context = this;
+
+		runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash == null) {
+					splash = ProgressDialog.show(context, "Comapping", message);
+				} else {
+					splash.setMessage(message);
+				}
+			}
+		});
+	}
+
+	public void splashDeactivate() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash != null) {
+					splash.dismiss();
+					splash = null;
+				}
+			}
+		});
+	}
+
+	private void metaMapRefresh() {
+		final MetaMapActivity context = this;
 
 		new Thread() {
 			public void run() {
 				String result = "";
 
-				metaMapView.splashActivate("Downloading map list");
+				splashActivate("Downloading map list");
 
 				try {
 					result = client.getComap("meta", context);
@@ -174,7 +251,7 @@ public class MetaMapActivity extends Activity {
 					Log.e(Log.metaMapControllerTag, "invalid credentails while getting comap oO");
 				}
 
-				metaMapView.splashActivate("Loading map list");
+				splashActivate("Loading map list");
 
 				Map metaMap = null;
 				try {
@@ -184,22 +261,15 @@ public class MetaMapActivity extends Activity {
 				} catch (MapParsingException e) {
 					Log.e(Log.metaMapControllerTag, "map parsing exception");
 				}
-				
-				metaMapView.splashDeactivate();
-				
-				//Simple fix
-				if (metaMap == null) {
-					return;
-				}
-				
-				currentMap = metaMap;
-				
-				final Map finalMetaMap = metaMap;
+
+				splashDeactivate();
+
+				internetView = new MetaMapView(metaMap);
 
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						metaMapView.loadMetaMap(finalMetaMap);
+						internetView.activate(context);
 					}
 				});
 			}
@@ -207,13 +277,39 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public void loadMetaMapTopic(final Topic topic) {
-		currentTopic = topic;
-		
+		// prepare the topic
+		if (currentView == MetaMapViewType.SDCARD_VIEW) {
+			topic.removeAllChildTopics();
+
+			File directory = new File(topic.getNote());
+			for (File file : directory.listFiles()) {
+				Topic newTopic = new Topic(0, topic);
+				try {
+					newTopic.setText(file.getName());
+				} catch (StringToXMLConvertionException e) {
+					Log.e(Log.metaMapControllerTag, "error while parsing file name");
+				}
+
+				newTopic.setNote(file.getAbsolutePath());
+
+				if (!file.isDirectory()) {
+					newTopic.setMapRef(file.getAbsolutePath());
+				}
+
+				topic.addChild(newTopic);
+			}
+		}
+		// end prepare
+
 		currentTopicChildren = topic.getChildTopics();
 
 		Arrays.sort(currentTopicChildren, new TopicComparator());
 
-		metaMapView.drawMetaMapTopic(topic, currentTopicChildren);
+		if (currentView == MetaMapViewType.INTERNET_VIEW) {
+			internetView.drawMetaMapTopic(topic, currentTopicChildren);
+		} else {
+			sdcardView.drawMetaMapTopic(topic, currentTopicChildren);
+		}
 	}
 
 	public void loadMap(final String mapId, final ViewType viewType) {
@@ -242,7 +338,7 @@ public class MetaMapActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		metaMapView.splashDeactivate();
+		splashDeactivate();
 		super.onDestroy();
 	}
 }
