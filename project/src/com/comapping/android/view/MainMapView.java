@@ -11,8 +11,13 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.Scroller;
+import android.widget.ZoomControls;
 
 public class MainMapView extends View {
+
+	private static final float MAX_SCALE = 1.0f;
+	private static final float MIN_SCALE = 0.5f;
+	private static final long TIME_TO_HIDE = 2000;
 
 	public MapRender mRender;
 	public Scroller mScroller;
@@ -51,28 +56,54 @@ public class MainMapView extends View {
 		mRender.setScrollController(scrollController);
 	}
 
-	public MainMapView(Context context, MapRender render) {
-		super(context);
-		setFocusable(true);
-		mRender = render;
-		mRender.setScrollController(scrollController);
-		mScroller = new Scroller(context);
+	public void setZoom(ZoomControls zoom) {
+		this.zoom = zoom;
+		zoom.hide();
+		zoomVisible = false;
+		scale = MAX_SCALE;
+		zoom.setIsZoomInEnabled(false);
+		zoom.setOnZoomInClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setScale(getScale() + 0.1f);
+				lastZoomPress = System.currentTimeMillis();
+			}
+		});
+		zoom.setOnZoomOutClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setScale(getScale() - 0.1f);
+				lastZoomPress = System.currentTimeMillis();
+			}
+		});
 	}
 
 	int frameCount = 0;
 	long fps = 0;
 	long lastFPSCalcTime = System.currentTimeMillis();
-	private float scale = 0.5f;
+	private ZoomControls zoom;
+	private float scale;
+	private long lastZoomPress = -100000;
+	private boolean zoomVisible;
+
+	public void setVisible() {
+		lastZoomPress = System.currentTimeMillis();
+		zoomVisible = true;
+	}
 
 	public float getScale() {
 		return scale;
 	}
 
+	private static final float eps = 1e-6f;
+
 	public void setScale(float scale) {
-		if (scale > 1f)
-			scale = 1f;
-		if (scale < 0.5f)
-			scale = 0.5f;
+		if (scale > MAX_SCALE)
+			scale = MAX_SCALE;
+		if (scale < MIN_SCALE)
+			scale = MIN_SCALE;
+		zoom.setIsZoomInEnabled(Math.abs(scale - MAX_SCALE) > eps);
+		zoom.setIsZoomOutEnabled(Math.abs(scale - MIN_SCALE) > eps);
 		this.scale = scale;
 		mRender.update();
 	}
@@ -96,6 +127,13 @@ public class MainMapView extends View {
 		canvas.drawText("FPS: " + fps, 20, 30, p);
 		canvas.drawText("Width: " + mRender.getWidth(), 20, 50, p);
 		canvas.drawText("Height: " + mRender.getHeight(), 20, 70, p);
+
+		if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
+			if (zoomVisible) {
+				zoom.hide();
+				zoomVisible = false;
+			}
+		}
 
 		if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
 			fps = (1000 * frameCount)

@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ZoomControls;
 
 import com.comapping.android.Cache;
@@ -63,7 +64,8 @@ public class MapActivity extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 
-		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
+		final ViewType viewType = ViewType.getViewTypeFromString(extras
+				.getString(EXT_VIEW_TYPE));
 		final String mapId = extras.getString(EXT_MAP_ID);
 
 		Map map = (Map) Cache.get(mapId);
@@ -77,15 +79,18 @@ public class MapActivity extends Activity {
 						splashActivate("Downloading map");
 
 						try {
-							result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
+							result = MetaMapActivity.getCurrentMapProvider()
+									.getComap(mapId, current);
 						} catch (InvalidCredentialsException e) {
-							Log.e(Log.mapControllerTag, "invalid credentials while map getting");
+							Log.e(Log.mapControllerTag,
+									"invalid credentials while map getting");
 							// TODO: ???
 						}
 
 						splashActivate("Loading map");
 
-						final Map buildedMap = MetaMapActivity.mapBuilder.buildMap(result);
+						final Map buildedMap = MetaMapActivity.mapBuilder
+								.buildMap(result);
 
 						splashDeactivate();
 
@@ -114,6 +119,9 @@ public class MapActivity extends Activity {
 		}
 	}
 
+	ZoomControls zoom;
+	MainMapView view;	
+
 	public void loadMap(Map map, ViewType viewType) {
 		MapRender r = null;
 		switch (viewType) {
@@ -126,24 +134,30 @@ public class MapActivity extends Activity {
 		}
 
 		this.setContentView(R.layout.map);
-		MainMapView view = (MainMapView) findViewById(R.id.MapView);
-		view.setRender(r);
-		ZoomControls zoom = (ZoomControls) findViewById(R.id.Zoom);
-		zoom.setOnZoomInClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MainMapView view = (MainMapView) findViewById(R.id.MapView);
-				view.setScale(view.getScale() + 0.1f);
-			}
-		});
-		zoom.setOnZoomOutClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MainMapView view = (MainMapView) findViewById(R.id.MapView);
-				view.setScale(view.getScale() - 0.1f);
-			}
-		});
+		
+		zoom = (ZoomControls) findViewById(R.id.Zoom);
 
+		view = (MainMapView) findViewById(R.id.MapView);
+		view.setRender(r);
+		view.setZoom(zoom);
+
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.map_options, menu);
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.zoom:
+			zoom.show();
+			view.setVisible();
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override

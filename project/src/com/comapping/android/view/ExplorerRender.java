@@ -113,7 +113,7 @@ public class ExplorerRender extends MapRender {
 
 		// TODO Sort lines
 
-		for (int i = lo; i < lines.size(); i++) {
+		for (int i = 0; i < lines.size(); i++) {
 			Rect line = lines.get(i);
 			int x1 = line.left + xPlus;
 			int y1 = line.top + yPlus;
