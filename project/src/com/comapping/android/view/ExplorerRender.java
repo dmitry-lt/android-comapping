@@ -25,6 +25,16 @@ public class ExplorerRender extends MapRender {
 		}
 	}
 
+	private class MyTopic {
+		public Topic topic;
+		public boolean open;
+		public TopicRender topicRender;
+		public int topicX, topicY;
+		public ArrayList<MyTopic> childs;
+		public int x1, y1, x2, y2;
+		public MyTopic up, down, left, right;
+	}
+
 	private static final int X_SHIFT = 30;
 	private static final int Y_SHIFT = 15;
 	private static final int OUTER_SIZE = 15;
@@ -41,15 +51,6 @@ public class ExplorerRender extends MapRender {
 
 	private Context context;
 
-	private class MyTopic {
-		public Topic topic;
-		public boolean open;
-		public TopicRender topicRender;
-		public int topicX, topicY;
-		public ArrayList<MyTopic> childs;
-		public MyTopic up, down, left, right;
-	}
-
 	private ArrayList<TouchPoint> points = new ArrayList<TouchPoint>();
 	private ArrayList<Rect> lines = new ArrayList<Rect>();
 	private ArrayList<MyTopic> topics = new ArrayList<MyTopic>();
@@ -64,35 +65,45 @@ public class ExplorerRender extends MapRender {
 		selectedTopic = null;
 	}
 
+	// Is two segment intersects
 	private boolean intersects(int a, int b, int c, int d) {
-		if (b < c)
+		if (b < c) {
 			return false;
-		if (d < a)
+		}
+		if (d < a) {
 			return false;
+		}
 		return true;
 	}
 
+	// Is rectangle lies on screen
 	private boolean onScreen(int x1, int y1, int x2, int y2) {
 		return intersects(0, screenWidth, x1, x2)
 				&& intersects(0, screenHeight, y1, y2);
 	}
 
+	// Method builds initially MyTopics tree
 	private MyTopic initTopic(Topic topic, MyTopic parent) {
 		MyTopic t = new MyTopic();
 		t.topic = topic;
 		t.open = true;
 		t.topicRender = new TopicRender(topic, context);
 		t.childs = new ArrayList<MyTopic>();
-		for (int i = 0; i < topic.getChildrenCount(); i++)
+		for (int i = 0; i < topic.getChildrenCount(); i++) {
 			t.childs.add(initTopic(topic.getChildByIndex(i), t));
+		}
 		t.left = parent;
-		if (topic.getChildrenCount() > 0)
+		if (topic.getChildrenCount() > 0) {
 			t.right = t.childs.get(0);
-		else
+		} else {
 			t.right = null;
+		}
 		return t;
 	}
 
+	// Draw tree
+	// We can use binary search on Y-coordinate of topics
+	// and circles
 	private void draw(Canvas c) {
 		Paint p = new Paint();
 		int lo, hi;
@@ -191,53 +202,67 @@ public class ExplorerRender extends MapRender {
 
 	}
 
+	// Set selection and move scroll if it needed
 	private void focusTopic(MyTopic topic) {
-		if (topic == null)
+		if (topic == null) {
 			return;
-		if (selectedTopic != null)
+		}
+		if (selectedTopic != null) {
 			selectedTopic.topicRender.setSelected(false);
+		}
 		topic.topicRender.setSelected(true);
 		selectedTopic = topic;
-		int x1 = topic.topicX + xPlus;
-		int y1 = topic.topicY + yPlus;
-		int x2 = x1 + topic.topicRender.getWidth();
-		int y2 = y1 + topic.topicRender.getHeight();
-		x1 -= X_SHIFT + BLOCK_SHIFT + OUTER_SIZE;
+		int x1 = topic.x1 + xPlus;
+		int y1 = topic.y1 + yPlus;
+		int x2 = topic.x2 + xPlus;
+		int y2 = topic.y2 + yPlus;
 		int nx = -xPlus, ny = -yPlus;
-		if (x2 > screenWidth)
+		if (x2 > screenWidth) {
 			nx -= screenWidth - x2;
-		if (y2 > screenHeight)
+		}
+		if (y2 > screenHeight) {
 			ny -= screenHeight - y2;
-		if (x1 < 0)
-			nx = x1 - xPlus;
-		if (y1 < 0)
-			ny = y1 - yPlus;
+		}
+		if (x1 < 0) {
+			nx = topic.x1;
+		}
+		if (y1 < 0) {
+			ny = topic.y1;
+		}
 		scroll.smoothScroll(nx, ny);
 	}
 
+	// Method to calculate coordinates of topics, circles
+	// and lines according screen size and collapsed topics
 	private int[] updateTopic(MyTopic topic, int x, int y) {
+		// calculate sizes
+		topic.x1 = x;
+		topic.y1 = y;
 		TopicRender topicRender = topic.topicRender;
-		// topicRender.setMaxWidth(screenWidth);
 		topicRender.setMaxWidth(screenWidth - OUTER_SIZE - X_SHIFT
 				- BLOCK_SHIFT);
 		int height = topicRender.getHeight();
-		if (topic.childs.size() > 0)
+		if (topic.childs.size() > 0) {
 			height = Math.max(height, OUTER_SIZE * 2);
+		}
 		int[] ret = new int[3];
 		ret[0] = topicRender.getWidth() + BLOCK_SHIFT;
 		ret[1] = y;
 		ret[2] = height / 2;
 
+		// update topic
 		x += OUTER_SIZE;
 		y += (height - topicRender.getHeight()) / 2;
 		x += X_SHIFT + BLOCK_SHIFT;
 		topic.topicX = x;
 		topic.topicY = y;
+		topic.x2 = x + topicRender.getWidth();
 		x -= X_SHIFT + BLOCK_SHIFT;
 		topics.add(topic);
 
 		// update circle and line
 		y = ret[1] + ret[2];
+		topic.y2 = y + y - topic.y1;
 		lines.add(new Rect(x, y, x + X_SHIFT, y));
 		if (topic.childs.size() > 0) {
 			points.add(new TouchPoint(x, y, topic));
@@ -272,6 +297,10 @@ public class ExplorerRender extends MapRender {
 		return ret;
 	}
 
+	// Public methods
+
+	// Method to update tree, sizes and references for
+	// key pressing
 	@Override
 	public void update() {
 		points.clear();
@@ -323,13 +352,17 @@ public class ExplorerRender extends MapRender {
 
 	@Override
 	public void onTouch(int x, int y) {
+		// touch circles
 		for (TouchPoint point : points) {
 			if (Math.hypot(point.x - x, point.y - y) <= OUTER_SIZE) {
 				point.topic.open = !point.topic.open;
+				focusTopic(point.topic);
 				toUpdate = true;
+				break;
 			}
 		}
 
+		// touch topics
 		for (MyTopic topic : topics) {
 			int x1 = topic.topicX;
 			int y1 = topic.topicY;
@@ -338,6 +371,7 @@ public class ExplorerRender extends MapRender {
 			if (x1 <= x && x <= x2 && y1 <= y && y <= y2) {
 				topic.topicRender.onTouch(x - x1, y - y1);
 				focusTopic(topic);
+				break;
 			}
 		}
 
@@ -350,8 +384,9 @@ public class ExplorerRender extends MapRender {
 
 	@Override
 	public void onKeyDown(int keyCode) {
-		if (selectedTopic == null)
+		if (selectedTopic == null) {
 			return;
+		}
 		if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
 			focusTopic(selectedTopic.up);
 		}
