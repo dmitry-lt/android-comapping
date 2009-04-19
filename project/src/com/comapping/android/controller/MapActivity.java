@@ -64,8 +64,7 @@ public class MapActivity extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 
-		final ViewType viewType = ViewType.getViewTypeFromString(extras
-				.getString(EXT_VIEW_TYPE));
+		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
 		final String mapId = extras.getString(EXT_MAP_ID);
 
 		Map map = (Map) Cache.get(mapId);
@@ -79,18 +78,15 @@ public class MapActivity extends Activity {
 						splashActivate("Downloading map");
 
 						try {
-							result = MetaMapActivity.getCurrentMapProvider()
-									.getComap(mapId, current);
+							result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
 						} catch (InvalidCredentialsException e) {
-							Log.e(Log.mapControllerTag,
-									"invalid credentials while map getting");
+							Log.e(Log.mapControllerTag, "invalid credentials while map getting");
 							// TODO: ???
 						}
 
 						splashActivate("Loading map");
 
-						final Map buildedMap = MetaMapActivity.mapBuilder
-								.buildMap(result);
+						final Map buildedMap = MetaMapActivity.mapBuilder.buildMap(result);
 
 						splashDeactivate();
 
@@ -120,7 +116,7 @@ public class MapActivity extends Activity {
 	}
 
 	ZoomControls zoom;
-	MainMapView view;	
+	MainMapView view;
 
 	public void loadMap(Map map, ViewType viewType) {
 		MapRender r = null;
@@ -134,7 +130,7 @@ public class MapActivity extends Activity {
 		}
 
 		this.setContentView(R.layout.map);
-		
+
 		zoom = (ZoomControls) findViewById(R.id.Zoom);
 
 		view = (MainMapView) findViewById(R.id.MapView);
@@ -148,7 +144,7 @@ public class MapActivity extends Activity {
 		inflater.inflate(R.menu.map_options, menu);
 		return true;
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.zoom:
