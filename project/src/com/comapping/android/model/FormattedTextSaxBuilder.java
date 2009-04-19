@@ -46,9 +46,9 @@ public class FormattedTextSaxBuilder {
 			InputStream stream = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
 			handler = new FormattedTextSaxHandler();
 
-			parser.parse(stream, handler);
 			Log.d(Log.modelTag, "Text SAX parsing: " + xmlString);
 			
+			parser.parse(stream, handler);
 		} catch (FactoryConfigurationError e) {
 			Log.e("SAX Text Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
