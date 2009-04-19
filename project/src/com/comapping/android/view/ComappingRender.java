@@ -359,6 +359,17 @@ public class ComappingRender extends MapRender {
 			lazyTreeWidth = -1;
 		}
 
+		public void clearTree() {
+			lazyAbsoluteY = -1;
+			lazyAbsoluteX = -1;
+
+			lazyOffset = -1;
+			lazyRenderZoneHeight = -1;
+			lazyTreeWidth = -1;
+			for (int i = 0; i < children.length; i++)
+				children[i].clearTree();
+		}
+
 		/* ---------- Misc code ---------- */
 
 		/**
@@ -531,6 +542,7 @@ public class ComappingRender extends MapRender {
 	}
 
 	private int renderZoneHeight = 0;
+	private int renderZoneWidth = 0;
 
 	/**
 	 * Returns offset for centering small o collapsed maps
@@ -538,6 +550,7 @@ public class ComappingRender extends MapRender {
 	 * @return Offset for drawing
 	 */
 	private final int getVertOffset() {
+		// return 0;
 		if (getHeight() >= renderZoneHeight)
 			return 0;
 		else
@@ -547,6 +560,7 @@ public class ComappingRender extends MapRender {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		renderZoneHeight = height;
+		renderZoneWidth = width;
 		xOffset = x;
 		yOffset = y - getVertOffset();
 		draw(-x, -y + getVertOffset(), root, width, height, c);
@@ -623,9 +637,40 @@ public class ComappingRender extends MapRender {
 		topic.render.setSelected(true);
 		selected = topic;
 
-		// scrollController.smoothScroll(topic.getAbsoluteX(), topic
-		// .getTopicOffset()
-		// + topic.getAbsoluteY());
+		smoothScroll(topic.getRenderZoneX(), topic.getTopicOffset()
+				+ topic.getRenderZoneY());
+	}
+
+	private int fixXOffset(int dx) {
+		if (dx > this.getWidth() - renderZoneWidth)
+			dx = this.getWidth() - renderZoneWidth;
+
+		if (dx < 0)
+			dx = 0;
+
+		return dx;
+	}
+
+	private int fixYOffset(int dy) {
+		if (dy > this.getHeight() - renderZoneHeight)
+			dy = this.getHeight() - renderZoneHeight;
+
+		if (dy < 0)
+			dy = 0;
+
+		return dy;
+	}
+
+	private void smoothScroll(int dx, int dy) {
+		dx = fixXOffset(dx);
+		dy = fixYOffset(dy);
+		scrollController.smoothScroll(dx, dy);
+	}
+
+	private void sharpScroll(int dx, int dy) {
+		dx = fixXOffset(dx);
+		dy = fixYOffset(dy);
+		scrollController.intermediateScroll(dx, dy);
 	}
 
 	/**
@@ -635,21 +680,38 @@ public class ComappingRender extends MapRender {
 	 *            Parent Item
 	 */
 	private final void changeChildVisibleStatus(Item topic) {
-		int oldAbsPosX = topic.getRenderZoneX();
-		int oldAbsPosY = topic.getRenderZoneY() + topic.getTopicOffset();
+		int deltaY = topic.getRenderZoneY() + topic.getTopicOffset()
+				+ getVertOffset() - yOffset;
 
 		topic.setChildrenVisible(!topic.isChildsVisible());
 
-		root.clearLazyAbsPosBuffers();
+		root.clearTree();
 
-		int newAbsPosX = topic.getRenderZoneX();
-		int newAbsPosY = topic.getRenderZoneY() + topic.getTopicOffset();
+		int destOffsetX = xOffset;
+		int destOffsetY = topic.getTopicOffset() + topic.getRenderZoneY()
+				- deltaY;
 
-		scrollController.intermediateScroll(
-				(oldAbsPosX - xOffset) + newAbsPosX, (oldAbsPosY - yOffset)
-						+ newAbsPosY);
+		if ((fixXOffset(destOffsetX) != destOffsetX)
+				||
+				(fixXOffset(destOffsetY) != destOffsetY))
+			smoothScroll(destOffsetX, destOffsetY);
+		else
+			sharpScroll(destOffsetX, destOffsetY);
 
-		focusTopic(topic);
+		// scrollController.intermediateScroll(topic.getRenderZoneX()
+		// - (oldScreenPosX - newScreenPosX), topic.getRenderZoneY()
+		// - (oldScreenPosY - newScreenPosY));
+
+		// int newAbsPosX = topic.getRenderZoneX();
+		// int newAbsPosY = topic.getRenderZoneY() + topic.getTopicOffset();
+		//
+		// scrollController.intermediateScroll(
+		// (oldAbsPosX + getVertOffset()) + newAbsPosX, (oldAbsPosY +
+		// getVertOffset())
+		// + newAbsPosY);
+		//		
+
+		// focusTopic(topic);
 	}
 
 	/*
@@ -689,7 +751,7 @@ public class ComappingRender extends MapRender {
 		int index = selected.getIndex();
 
 		if (index == -1) {
-			Log.e(DEBUG_TAG, "Denger! Seems to be broken tree!");
+			Log.e(DEBUG_TAG, "Danger! Seems to be broken tree!");
 			return;
 		}
 
@@ -785,6 +847,6 @@ public class ComappingRender extends MapRender {
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
