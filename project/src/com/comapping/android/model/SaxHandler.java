@@ -67,10 +67,11 @@ class SaxHandler extends DefaultHandler {
 	public void startDocument() {
 		startTime = System.currentTimeMillis();
 
-		Log.i(Log.modelTag, "SAX parsing started... \n");
+		// Log.i(Log.modelTag, "SAX parsing started... \n");
 	}
 
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName,
+			Attributes attributes) throws SAXException {
 		try {
 			if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
 				isTextTag = true;
@@ -96,25 +97,28 @@ class SaxHandler extends DefaultHandler {
 				Task task = new Task(start, deadline, responsible);
 				currentTopic.setTask(task);
 			} else if (localName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
-				Date date = new Date((long)Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG)));
+				Date date = new Date((long) Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG)));
 				String filename = attributes.getValue(MapBuilder.ATTACHMENT_FILENAME_TAG);
 				String key = attributes.getValue(MapBuilder.ATTACHMENT_KEY_TAG);
 				int size = Integer.parseInt(attributes.getValue(MapBuilder.ATTACHMENT_SIZE_TAG));
-				Attachment attachment = new Attachment(date, filename, key, size);
+				Attachment attachment = new Attachment(date, filename, key,size);
 				currentTopic.setAttachment(attachment);
 			} else if (!hasMeta) {
 				if (localName.equals(MapBuilder.METADATA_TAG)) {
 				} else if (localName.equals(MapBuilder.MAP_ID_TAG) && mapId == 0) {
 					isMapIDTag = true;
-				} else if (localName.equals(MapBuilder.MAP_NAME_TAG) && mapName == null) {
+				} else if (localName.equals(MapBuilder.MAP_NAME_TAG)&& mapName == null) {
 					isMapNameTag = true;
 				} else if (localName.equals(MapBuilder.MAP_OWNER_TAG)) {
 					isOwnerTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_ID_TAG) && isOwnerTag) {
+				} else if (localName.equals(MapBuilder.OWNER_ID_TAG)
+						&& isOwnerTag) {
 					isOwnerIDTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_NAME_TAG) && isOwnerTag) {
+				} else if (localName.equals(MapBuilder.OWNER_NAME_TAG)
+						&& isOwnerTag) {
 					isOwnerNameTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_EMAIL_TAG) && isOwnerTag) {
+				} else if (localName.equals(MapBuilder.OWNER_EMAIL_TAG)
+						&& isOwnerTag) {
 					isOwnerEmailTag = true;
 				}
 			}
@@ -138,7 +142,8 @@ class SaxHandler extends DefaultHandler {
 		try {
 			int length = attributes.getLength();
 			for (int i = 0; i < length; i++) {
-				attributesMap[mod(attributes.getLocalName(i).hashCode())] = attributes.getValue(i);
+				attributesMap[mod(attributes.getLocalName(i).hashCode())] = attributes
+						.getValue(i);
 			}
 
 			if (attributesMap[TOPIC_ID_TAG_HASHCODE] != null) {
@@ -156,8 +161,8 @@ class SaxHandler extends DefaultHandler {
 				attributesMap[TOPIC_FLAG_TAG_HASHCODE] = null;
 			}
 
-			if (attributesMap[TOPIC_FLAG_TAG_HASHCODE] != null) {
-				currentTopic.setPriority(Integer.parseInt(attributesMap[TOPIC_FLAG_TAG_HASHCODE]));
+			if (attributesMap[TOPIC_PRIORITY_TAG_HASHCODE] != null) {
+				currentTopic.setPriority(Integer.parseInt(attributesMap[TOPIC_PRIORITY_TAG_HASHCODE]));
 				attributesMap[TOPIC_PRIORITY_TAG_HASHCODE] = null;
 			}
 
@@ -208,7 +213,8 @@ class SaxHandler extends DefaultHandler {
 		}
 	}
 
-	public void endElement(String uri, String localName, String qName) throws SAXException {
+	public void endElement(String uri, String localName, String qName)
+			throws SAXException {
 		try {
 			if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
 				currentTopic.setText(topicText);
@@ -241,6 +247,8 @@ class SaxHandler extends DefaultHandler {
 
 	public void endDocument() {
 		long parsingTime = System.currentTimeMillis() - startTime;
-		Log.i(Log.modelTag, "map was built with SAX successfully, parsing time: " + parsingTime);
+		Log.i(Log.modelTag,
+				"map was built with SAX successfully, parsing time: "
+						+ parsingTime);
 	}
 }
