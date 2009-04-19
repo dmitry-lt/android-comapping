@@ -1,7 +1,10 @@
 package com.comapping.android.controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -32,6 +35,7 @@ public class MapActivity extends Activity {
 	public static final String EXT_MAP_ID = "mapId";
 
 	private ProgressDialog splash = null;
+	private Thread mapProcessingThread;
 
 	public void splashActivate(final String message) {
 		final Activity context = this;
@@ -40,6 +44,12 @@ public class MapActivity extends Activity {
 			public void run() {
 				if (splash == null) {
 					splash = ProgressDialog.show(context, "Comapping", message);
+//					splash.setCancelable(true);
+//					splash.setOnCancelListener(new OnCancelListener() {
+//						@Override
+//						public void onCancel(DialogInterface dialog) {
+//							finish();
+//						}
 				} else {
 					splash.setMessage(message);
 				}
@@ -57,6 +67,24 @@ public class MapActivity extends Activity {
 			}
 		});
 	}
+	
+	private void onError(final String message, final Activity activity) {
+		activity.runOnUiThread(new Runnable() {
+			public void run() {
+				Dialog dialog = (new AlertDialog.Builder(activity)
+				.setTitle("Error")
+				.setMessage(message)
+				.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {						
+						activity.finish();
+					}
+				})
+				).create();
+				dialog.show();
+			}
+		});
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +99,7 @@ public class MapActivity extends Activity {
 		final Activity current = this;
 
 		if (map == null) {
-			new Thread() {
+			mapProcessingThread = new Thread() {
 				public void run() {
 					String result = "";
 					try {
@@ -101,15 +129,20 @@ public class MapActivity extends Activity {
 						});
 					} catch (LoginInterruptedException e) {
 						Log.e(Log.mapControllerTag, "login interrupted");
+						onError("login interrupted", current);
 					} catch (ConnectionException e) {
 						Log.e(Log.mapControllerTag, "connection exception");
+						onError("Connection error", current);
 					} catch (StringToXMLConvertionException e) {
 						Log.e(Log.mapControllerTag, e.toString());
+						onError("Wrong file format", current);
 					} catch (MapParsingException e) {
 						Log.e(Log.mapControllerTag, e.toString());
+						onError("Wrong file format", current);
 					}
 				}
-			}.start();
+			};
+			mapProcessingThread.start();
 		} else {
 			loadMap(map, viewType);
 		}
