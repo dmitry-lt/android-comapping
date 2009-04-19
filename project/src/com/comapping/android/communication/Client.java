@@ -257,8 +257,9 @@ public class Client implements MapProvider {
 
 		// Log result
 		Log.i(Log.connectionTag, "New server response = " + responseText);
-		// Log.d(Log.connectionTag, "New server checksum = " +
-		// getBytesSum(responseText));
+		if (responseText != null) {
+			Log.d(Log.connectionTag, "New server checksum = " + getBytesSum(responseText));
+		}
 		Log.d(Log.connectionTag, "New server response code = " + code);
 
 		// DefaultHttpClient client = new DefaultHttpClient();

@@ -62,7 +62,7 @@ public class ClientHelper {
 	public static String getTextFromInputStream(InputStream input) throws IOException {
 		StringBuffer content = new StringBuffer();
         
-		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(input), 8*1024);
         
         String line = null;
         boolean first = true;
