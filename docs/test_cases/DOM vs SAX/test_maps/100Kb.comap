@@ -1,0 +1,1212 @@
+<mindmap escape="false">
+  <metadata>
+    <id><![CDATA[26644]]></id>
+    <name><![CDATA[Database]]></name>
+    <owner>
+      <id><![CDATA[8739]]></id>
+      <name><![CDATA[Dmitry Manayev]]></name>
+      <email><![CDATA[Dmitry.Manayev@gmail.com]]></email>
+    </owner>
+    <access><![CDATA[Private]]></access>
+    <source><![CDATA[Server]]></source>
+    <collaborators><![CDATA[]]></collaborators>
+    <watchers><![CDATA[]]></watchers>
+    <isTemplate><![CDATA[false]]></isTemplate>
+    <params/>
+  </metadata>
+  <presentation/>
+  <node id="2838604">
+    <text><![CDATA[Database]]></text>
+    <node LastModificationData="2009-04-18 16:02:34" id="2838605">
+      <text><![CDATA[Manuals]]></text>
+      <node LastModificationData="2009-04-18 16:07:11" id="2838613">
+        <text><![CDATA[ManualID]]></text>
+        <node LastModificationData="2009-04-18 16:20:26" id="2838663" priority="1"><text><![CDATA[Topic]]></text></node>
+        <node LastModificationData="2009-04-18 16:20:29" id="2838666" priority="2"><text><![CDATA[Topic]]></text></node>
+        <node LastModificationData="2009-04-18 16:20:33" id="2838667" priority="3"><text><![CDATA[Topic]]></text></node>
+        <node LastModificationData="2009-04-18 16:20:43" id="2838668" priority="4"><text><![CDATA[Topic]]></text></node>
+        <node LastModificationData="2009-04-18 16:20:48" id="2838669" priority="5"><text><![CDATA[Topic]]></text></node>
+        <node LastModificationData="2009-04-18 16:21:40" id="2838670" priority="6"><text><![CDATA[Topic]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:07:27" id="2838615"><text><![CDATA[ManualTypeID]]></text></node>
+      <node LastModificationData="2009-04-18 16:07:39" id="2838616"><text><![CDATA[ManualName]]></text></node>
+    </node>
+    <node LastModificationData="2009-04-18 16:02:55" id="2838607">
+      <text><![CDATA[ManualTypes]]></text>
+      <node LastModificationData="2009-04-18 16:07:56" id="2838617"><text><![CDATA[ManualTypeID]]></text></node>
+      <node LastModificationData="2009-04-18 16:08:06" id="2838619">
+        <text><![CDATA[ManualTypeName]]></text>
+        <node LastModificationData="2009-04-18 16:22:24" id="2838675" smiley="happy"><text><![CDATA[Topic]]></text></node>
+        <node LastModificationData="2009-04-18 16:22:30" id="2838676" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+        <node LastModificationData="2009-04-18 16:22:33" id="2838677" smiley="sad"><text><![CDATA[Topic]]></text></node>
+      </node>
+    </node>
+    <node LastModificationData="2009-04-18 16:03:07" id="2838608">
+      <text><![CDATA[Objects]]></text>
+      <node LastModificationData="2009-04-18 16:08:28" id="2838620"><text><![CDATA[ObjectID]]></text></node>
+      <node LastModificationData="2009-04-18 16:09:06" id="2838622"><text><![CDATA[ObjectManualID]]></text></node>
+      <node LastModificationData="2009-04-18 16:09:18" id="2838625">
+        <text><![CDATA[Name]]></text>
+        <node LastModificationData="2009-04-18 16:24:12" id="2838678">
+          <icon name="dollar"/>
+          <text><![CDATA[Topic]]></text>
+        </node>
+        <node LastModificationData="2009-04-18 16:24:17" id="2838679">
+          <icon name="heart"/>
+          <text><![CDATA[Topic]]></text>
+        </node>
+        <node LastModificationData="2009-04-18 16:24:22" id="2838680">
+          <icon name="clock"/>
+          <text><![CDATA[Topic]]></text>
+        </node>
+        <node LastModificationData="2009-04-18 16:24:34" id="2838681">
+          <icon name="question_mark"/>
+          <text><![CDATA[Topic]]></text>
+        </node>
+        <node LastModificationData="2009-04-18 16:24:36" id="2838682">
+          <icon name="exclamation_mark"/>
+          <text><![CDATA[Topic]]></text>
+        </node>
+        <node LastModificationData="2009-04-18 16:24:39" id="2838683">
+          <icon name="bomb"/>
+          <text><![CDATA[Topic]]></text>
+        </node>
+      </node>
+      <node LastModificationData="2009-04-18 16:09:25" id="2838626"><text><![CDATA[Note]]></text></node>
+    </node>
+    <node LastModificationData="2009-04-18 16:03:16" id="2838609">
+      <text><![CDATA[ObjectDescriptions]]></text>
+      <node LastModificationData="2009-04-18 16:26:03" bgColor="16776960" id="2838627"><text><![CDATA[ObjectDescriptionID]]></text></node>
+      <node LastModificationData="2009-04-18 16:27:00" bgColor="16225862" id="2838628"><text><![CDATA[ObjectManualID]]></text></node>
+      <node LastModificationData="2009-04-18 16:27:04" bgColor="4959430" id="2838630"><text><![CDATA[ObjectPropertyID]]></text></node>
+      <node LastModificationData="2009-04-18 16:27:10" bgColor="8414370" id="2838631"><text><![CDATA[PropertyTypeID]]></text></node>
+      <node LastModificationData="2009-04-18 16:27:21" bgColor="10206041" id="2838634"><text><![CDATA[Note]]></text></node>
+    </node>
+    <node LastModificationData="2009-04-18 16:03:27" id="2838610">
+      <text><![CDATA[RelationDescriptions]]></text>
+      <node LastModificationData="2009-04-18 16:26:11" bgColor="16711680" id="2838635"><text><![CDATA[RelationDescriptionID]]></text></node>
+      <node LastModificationData="2009-04-18 16:26:25" bgColor="16760832" id="2838636"><text><![CDATA[RelationManualID]]></text></node>
+      <node LastModificationData="2009-04-18 16:26:31" bgColor="9621584" id="2838640"><text><![CDATA[ObjectManualID1]]></text></node>
+      <node LastModificationData="2009-04-18 16:26:37" bgColor="45136" id="2838641"><text><![CDATA[ObjectManualID2]]></text></node>
+      <node LastModificationData="2009-04-18 16:26:41" bgColor="45296" id="2838643"><text><![CDATA[DateStart]]></text></node>
+      <node LastModificationData="2009-04-18 16:26:48" bgColor="8288" id="2838645"><text><![CDATA[DateEnd]]></text></node>
+      <node LastModificationData="2009-04-18 16:26:51" bgColor="7352480" id="2838646"><text><![CDATA[Note]]></text></node>
+    </node>
+    <node LastModificationData="2009-04-18 16:03:35" id="2838611">
+      <text><![CDATA[Relations]]></text>
+      <node LastModificationData="2009-04-18 16:28:05" bgColor="9621584" id="2838648"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+      <node LastModificationData="2009-04-18 16:28:01" bgColor="9621584" id="2838649"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+      <node LastModificationData="2009-04-18 16:27:57" bgColor="9621584" id="2838650"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+      <node LastModificationData="2009-04-18 16:27:51" bgColor="9621584" id="2838651"><text><![CDATA[ObjectID2]]></text></node>
+    </node>
+    <node LastModificationData="2009-04-18 16:06:54" id="2838612">
+      <text><![CDATA[Properties]]></text>
+      <node LastModificationData="2009-04-18 16:29:09" bgColor="7352480" id="2838653"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+      <node LastModificationData="2009-04-18 16:29:18" bgColor="8288" id="2838654"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+      <node LastModificationData="2009-04-18 16:29:27" bgColor="45296" id="2838655"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+      <node LastModificationData="2009-04-18 16:29:34" bgColor="16776960" id="2838658">
+        <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+        <node LastModificationData="2009-04-18 16:30:56" id="2838684"><text><![CDATA[a]]></text></node>
+        <node LastModificationData="2009-04-18 16:31:09" id="2838686"><text><![CDATA[b]]></text></node>
+        <node LastModificationData="2009-04-18 16:31:12" id="2838687"><text><![CDATA[c]]></text></node>
+        <node LastModificationData="2009-04-18 16:31:14" id="2838688"><text><![CDATA[d]]></text></node>
+        <node LastModificationData="2009-04-18 16:31:17" id="2838689"><text><![CDATA[e]]></text></node>
+        <node LastModificationData="2009-04-18 16:31:20" id="2838690"><text><![CDATA[f]]></text></node>
+        <node LastModificationData="2009-04-18 16:31:23" id="2838691"><text><![CDATA[g]]></text></node>
+        <node LastModificationData="2009-04-18 16:31:27" id="2838692"><text><![CDATA[h]]></text></node>
+        <node LastModificationData="2009-04-18 16:35:23" id="2838694"><text><![CDATA[i]]></text></node>
+        <node LastModificationData="2009-04-18 16:35:25" id="2838695"><text><![CDATA[j]]></text></node>
+        <node LastModificationData="2009-04-18 16:35:26" id="2838696"><text><![CDATA[k]]></text></node>
+        <node LastModificationData="2009-04-18 16:35:28" id="2838697"><text><![CDATA[l]]></text></node>
+        <node LastModificationData="2009-04-18 16:35:30" id="2838698"><text><![CDATA[m]]></text></node>
+        <node LastModificationData="2009-04-18 16:35:33" id="2838699"><text><![CDATA[n]]></text></node>
+        <node LastModificationData="2009-04-18 16:35:59" id="2838701"><text><![CDATA[o]]></text></node>
+        <node LastModificationData="2009-04-18 16:36:02" id="2838702"><text><![CDATA[p]]></text></node>
+        <node LastModificationData="2009-04-18 16:36:05" id="2838703"><text><![CDATA[q]]></text></node>
+        <node LastModificationData="2009-04-18 16:36:07" id="2838705"><text><![CDATA[r]]></text></node>
+        <node LastModificationData="2009-04-18 16:36:08" id="2838706"><text><![CDATA[s]]></text></node>
+        <node LastModificationData="2009-04-18 16:36:10" id="2838707"><text><![CDATA[t]]></text></node>
+        <node LastModificationData="2009-04-18 16:36:30" id="2838709"><text><![CDATA[u]]></text></node>
+        <node LastModificationData="2009-04-18 16:36:33" id="2838710"><text><![CDATA[v]]></text></node>
+        <node LastModificationData="2009-04-18 16:37:04" id="2838712"><text><![CDATA[w]]></text></node>
+        <node LastModificationData="2009-04-18 16:37:06" id="2838713"><text><![CDATA[x]]></text></node>
+        <node LastModificationData="2009-04-18 16:37:08" id="2838714"><text><![CDATA[y]]></text></node>
+        <node LastModificationData="2009-04-18 16:37:12" id="2838715"><text><![CDATA[z]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:29:44" bgColor="12603469" id="2838662"><text><![CDATA[Note]]></text></node>
+    </node>
+    <node LastModificationData="2009-04-18 16:42:04" id="2838716">
+      <text><![CDATA[NewDatabase]]></text>
+      <node LastModificationData="2009-04-18 16:42:44" id="2838797">
+        <text><![CDATA[Manuals]]></text>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838798"><text><![CDATA[ManualID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838805"><text><![CDATA[ManualTypeID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838806"><text><![CDATA[ManualName]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:42:44" id="2838807">
+        <text><![CDATA[ManualTypes]]></text>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838808"><text><![CDATA[ManualTypeID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838809">
+          <text><![CDATA[ManualTypeName]]></text>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838810" smiley="happy"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838811" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838812" smiley="sad"><text><![CDATA[Topic]]></text></node>
+        </node>
+      </node>
+      <node LastModificationData="2009-04-18 16:42:44" id="2838813">
+        <text><![CDATA[Objects]]></text>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838814"><text><![CDATA[ObjectID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838815"><text><![CDATA[ObjectManualID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838816">
+          <text><![CDATA[Name]]></text>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838817">
+            <icon name="dollar"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838818">
+            <icon name="heart"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838819">
+            <icon name="clock"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838820">
+            <icon name="question_mark"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838821">
+            <icon name="exclamation_mark"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838822">
+            <icon name="bomb"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+        </node>
+        <node LastModificationData="2009-04-18 16:42:44" id="2838823"><text><![CDATA[Note]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:42:44" id="2838824">
+        <text><![CDATA[ObjectDescriptions]]></text>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="16776960" id="2838825"><text><![CDATA[ObjectDescriptionID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="16225862" id="2838826"><text><![CDATA[ObjectManualID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="4959430" id="2838827"><text><![CDATA[ObjectPropertyID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="8414370" id="2838828"><text><![CDATA[PropertyTypeID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="10206041" id="2838829"><text><![CDATA[Note]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:42:44" id="2838830">
+        <text><![CDATA[RelationDescriptions]]></text>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="16711680" id="2838831"><text><![CDATA[RelationDescriptionID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="16760832" id="2838832"><text><![CDATA[RelationManualID]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="9621584" id="2838833"><text><![CDATA[ObjectManualID1]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="45136" id="2838834"><text><![CDATA[ObjectManualID2]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="45296" id="2838835"><text><![CDATA[DateStart]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="8288" id="2838836"><text><![CDATA[DateEnd]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="7352480" id="2838837"><text><![CDATA[Note]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:42:44" id="2838838">
+        <text><![CDATA[Relations]]></text>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="9621584" id="2838839"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="9621584" id="2838840"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="9621584" id="2838841"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="9621584" id="2838842"><text><![CDATA[ObjectID2]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:42:44" id="2838843">
+        <text><![CDATA[Properties]]></text>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="7352480" id="2838844"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="8288" id="2838845"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="45296" id="2838846"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="16776960" id="2838847">
+          <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838848"><text><![CDATA[a]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838849"><text><![CDATA[b]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838850"><text><![CDATA[c]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838851"><text><![CDATA[d]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838852"><text><![CDATA[e]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838853"><text><![CDATA[f]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838854"><text><![CDATA[g]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838855"><text><![CDATA[h]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838856"><text><![CDATA[i]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838857"><text><![CDATA[j]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838858"><text><![CDATA[k]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838859"><text><![CDATA[l]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838860"><text><![CDATA[m]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838861"><text><![CDATA[n]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838862"><text><![CDATA[o]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838863"><text><![CDATA[p]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838864"><text><![CDATA[q]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838865"><text><![CDATA[r]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838866"><text><![CDATA[s]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838867"><text><![CDATA[t]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838868"><text><![CDATA[u]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838869"><text><![CDATA[v]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838870"><text><![CDATA[w]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838871"><text><![CDATA[x]]></text></node>
+          <node LastModificationData="2009-04-18 16:42:44" id="2838872"><text><![CDATA[y]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:42:44" bgColor="12603469" id="2838874"><text><![CDATA[Note]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:42:44" id="2838875">
+        <text><![CDATA[NewDatabase]]></text>
+        <node LastModificationData="2009-04-18 16:43:16" id="2838876">
+          <text><![CDATA[Manuals]]></text>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838877">
+            <text><![CDATA[ManualID]]></text>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838878" priority="1"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838879" priority="2"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838880" priority="3"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838881" priority="4"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838882" priority="5"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838883" priority="6"><text><![CDATA[Topic]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838884"><text><![CDATA[ManualTypeID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838885"><text><![CDATA[ManualName]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:43:16" id="2838886">
+          <text><![CDATA[ManualTypes]]></text>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838887"><text><![CDATA[ManualTypeID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838888">
+            <text><![CDATA[ManualTypeName]]></text>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838889" smiley="happy"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838890" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838891" smiley="sad"><text><![CDATA[Topic]]></text></node>
+          </node>
+        </node>
+        <node LastModificationData="2009-04-18 16:43:16" id="2838892">
+          <text><![CDATA[Objects]]></text>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838893"><text><![CDATA[ObjectID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838894"><text><![CDATA[ObjectManualID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838895">
+            <text><![CDATA[Name]]></text>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838896">
+              <icon name="dollar"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838897">
+              <icon name="heart"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838898">
+              <icon name="clock"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838899">
+              <icon name="question_mark"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838900">
+              <icon name="exclamation_mark"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:16" id="2838901">
+              <icon name="bomb"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:16" id="2838902"><text><![CDATA[Note]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:43:16" id="2838903">
+          <text><![CDATA[ObjectDescriptions]]></text>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="16776960" id="2838904"><text><![CDATA[ObjectDescriptionID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="16225862" id="2838905"><text><![CDATA[ObjectManualID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="4959430" id="2838906"><text><![CDATA[ObjectPropertyID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="8414370" id="2838907"><text><![CDATA[PropertyTypeID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="10206041" id="2838908"><text><![CDATA[Note]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:43:16" id="2838909">
+          <text><![CDATA[RelationDescriptions]]></text>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="16711680" id="2838910"><text><![CDATA[RelationDescriptionID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="16760832" id="2838911"><text><![CDATA[RelationManualID]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="9621584" id="2838912"><text><![CDATA[ObjectManualID1]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="45136" id="2838913"><text><![CDATA[ObjectManualID2]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="45296" id="2838914"><text><![CDATA[DateStart]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="8288" id="2838915"><text><![CDATA[DateEnd]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="7352480" id="2838916"><text><![CDATA[Note]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:43:16" id="2838917">
+          <text><![CDATA[Relations]]></text>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="9621584" id="2838918"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="9621584" id="2838919"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="9621584" id="2838920"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:16" bgColor="9621584" id="2838921"><text><![CDATA[ObjectID2]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:43:17" id="2838922">
+          <text><![CDATA[Properties]]></text>
+          <node LastModificationData="2009-04-18 16:43:17" bgColor="7352480" id="2838923"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:17" bgColor="8288" id="2838924"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:17" bgColor="45296" id="2838925"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:43:17" bgColor="16776960" id="2838926">
+            <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838927"><text><![CDATA[a]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838928"><text><![CDATA[b]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838929"><text><![CDATA[c]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838930"><text><![CDATA[d]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838931"><text><![CDATA[e]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838932"><text><![CDATA[f]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838933"><text><![CDATA[g]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838934"><text><![CDATA[h]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838935"><text><![CDATA[i]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838936"><text><![CDATA[j]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838937"><text><![CDATA[k]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838938"><text><![CDATA[l]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838939"><text><![CDATA[m]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838940"><text><![CDATA[n]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838941"><text><![CDATA[o]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838942"><text><![CDATA[p]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838943"><text><![CDATA[q]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838944"><text><![CDATA[r]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838945"><text><![CDATA[s]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838946"><text><![CDATA[t]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838947"><text><![CDATA[u]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838948"><text><![CDATA[v]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838949"><text><![CDATA[w]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838950"><text><![CDATA[x]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838951"><text><![CDATA[y]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:17" id="2838952"><text><![CDATA[z]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:17" bgColor="12603469" id="2838953"><text><![CDATA[Note]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:43:17" id="2838954">
+          <text><![CDATA[NewDatabase]]></text>
+          <node LastModificationData="2009-04-18 16:43:24" id="2838955">
+            <text><![CDATA[Manuals]]></text>
+            <node LastModificationData="2009-04-18 16:43:24" id="2838956">
+              <text><![CDATA[ManualID]]></text>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838957" priority="1"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838958" priority="2"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838959" priority="3"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838960" priority="4"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838961" priority="5"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838962" priority="6"><text><![CDATA[Topic]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:24" id="2838963"><text><![CDATA[ManualTypeID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:24" id="2838964"><text><![CDATA[ManualName]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:24" id="2838965">
+            <text><![CDATA[ManualTypes]]></text>
+            <node LastModificationData="2009-04-18 16:43:24" id="2838966"><text><![CDATA[ManualTypeID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:24" id="2838967">
+              <text><![CDATA[ManualTypeName]]></text>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838968" smiley="happy"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838969" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:24" id="2838970" smiley="sad"><text><![CDATA[Topic]]></text></node>
+            </node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:25" id="2838971">
+            <text><![CDATA[Objects]]></text>
+            <node LastModificationData="2009-04-18 16:43:25" id="2838972"><text><![CDATA[ObjectID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" id="2838973"><text><![CDATA[ObjectManualID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" id="2838974">
+              <text><![CDATA[Name]]></text>
+              <node LastModificationData="2009-04-18 16:43:25" id="2838975">
+                <icon name="dollar"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2838976">
+                <icon name="heart"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2838977">
+                <icon name="clock"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2838978">
+                <icon name="question_mark"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2838979">
+                <icon name="exclamation_mark"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2838980">
+                <icon name="bomb"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:25" id="2838981"><text><![CDATA[Note]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:25" id="2838982">
+            <text><![CDATA[ObjectDescriptions]]></text>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="16776960" id="2838983"><text><![CDATA[ObjectDescriptionID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="16225862" id="2838984"><text><![CDATA[ObjectManualID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="4959430" id="2838985"><text><![CDATA[ObjectPropertyID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="8414370" id="2838986"><text><![CDATA[PropertyTypeID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="10206041" id="2838987"><text><![CDATA[Note]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:25" id="2838988">
+            <text><![CDATA[RelationDescriptions]]></text>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="16711680" id="2838989"><text><![CDATA[RelationDescriptionID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="16760832" id="2838990"><text><![CDATA[RelationManualID]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="9621584" id="2838991"><text><![CDATA[ObjectManualID1]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="45136" id="2838992"><text><![CDATA[ObjectManualID2]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="45296" id="2838993"><text><![CDATA[DateStart]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="8288" id="2838994"><text><![CDATA[DateEnd]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="7352480" id="2838995"><text><![CDATA[Note]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:25" id="2838996">
+            <text><![CDATA[Relations]]></text>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="9621584" id="2838997"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="9621584" id="2838998"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="9621584" id="2838999"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="9621584" id="2839000"><text><![CDATA[ObjectID2]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:25" id="2839001">
+            <text><![CDATA[Properties]]></text>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="7352480" id="2839002"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="8288" id="2839003"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="45296" id="2839004"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="16776960" id="2839005">
+              <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839006"><text><![CDATA[a]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839007"><text><![CDATA[b]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839008"><text><![CDATA[c]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839009"><text><![CDATA[d]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839010"><text><![CDATA[e]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839011"><text><![CDATA[f]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839012"><text><![CDATA[g]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839013"><text><![CDATA[h]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839014"><text><![CDATA[i]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839015"><text><![CDATA[j]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839016"><text><![CDATA[k]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839017"><text><![CDATA[l]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839018"><text><![CDATA[m]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839019"><text><![CDATA[n]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839020"><text><![CDATA[o]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839021"><text><![CDATA[p]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839022"><text><![CDATA[q]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839023"><text><![CDATA[r]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839024"><text><![CDATA[s]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839025"><text><![CDATA[t]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839026"><text><![CDATA[u]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839027"><text><![CDATA[v]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839028"><text><![CDATA[w]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839029"><text><![CDATA[x]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839030"><text><![CDATA[y]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:25" id="2839031"><text><![CDATA[z]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:25" bgColor="12603469" id="2839032"><text><![CDATA[Note]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:43:25" id="2839033">
+            <text><![CDATA[NewDatabase]]></text>
+            <node LastModificationData="2009-04-18 16:43:33" id="2839034">
+              <text><![CDATA[Manuals]]></text>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839035">
+                <text><![CDATA[ManualID]]></text>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839036" priority="1"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839037" priority="2"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839038" priority="3"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839039" priority="4"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839040" priority="5"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839041" priority="6"><text><![CDATA[Topic]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839042"><text><![CDATA[ManualTypeID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839043"><text><![CDATA[ManualName]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:33" id="2839044">
+              <text><![CDATA[ManualTypes]]></text>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839045"><text><![CDATA[ManualTypeID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839046">
+                <text><![CDATA[ManualTypeName]]></text>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839047" smiley="happy"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839048" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839049" smiley="sad"><text><![CDATA[Topic]]></text></node>
+              </node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:33" id="2839050">
+              <text><![CDATA[Objects]]></text>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839051"><text><![CDATA[ObjectID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839052"><text><![CDATA[ObjectManualID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839053">
+                <text><![CDATA[Name]]></text>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839054">
+                  <icon name="dollar"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839055">
+                  <icon name="heart"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839056">
+                  <icon name="clock"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839057">
+                  <icon name="question_mark"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839058">
+                  <icon name="exclamation_mark"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839059">
+                  <icon name="bomb"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+              </node>
+              <node LastModificationData="2009-04-18 16:43:33" id="2839060"><text><![CDATA[Note]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:33" id="2839061">
+              <text><![CDATA[ObjectDescriptions]]></text>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="16776960" id="2839062"><text><![CDATA[ObjectDescriptionID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="16225862" id="2839063"><text><![CDATA[ObjectManualID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="4959430" id="2839064"><text><![CDATA[ObjectPropertyID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="8414370" id="2839065"><text><![CDATA[PropertyTypeID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="10206041" id="2839066"><text><![CDATA[Note]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:33" id="2839067">
+              <text><![CDATA[RelationDescriptions]]></text>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="16711680" id="2839068"><text><![CDATA[RelationDescriptionID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="16760832" id="2839069"><text><![CDATA[RelationManualID]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="9621584" id="2839070"><text><![CDATA[ObjectManualID1]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="45136" id="2839071"><text><![CDATA[ObjectManualID2]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="45296" id="2839072"><text><![CDATA[DateStart]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="8288" id="2839073"><text><![CDATA[DateEnd]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="7352480" id="2839074"><text><![CDATA[Note]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:33" id="2839075">
+              <text><![CDATA[Relations]]></text>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="9621584" id="2839076"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="9621584" id="2839077"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="9621584" id="2839078"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="9621584" id="2839079"><text><![CDATA[ObjectID2]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:33" id="2839080">
+              <text><![CDATA[Properties]]></text>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="7352480" id="2839081"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="8288" id="2839082"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="45296" id="2839083"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="16776960" id="2839084">
+                <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839085"><text><![CDATA[a]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839086"><text><![CDATA[b]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839087"><text><![CDATA[c]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839088"><text><![CDATA[d]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839089"><text><![CDATA[e]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839090"><text><![CDATA[f]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839091"><text><![CDATA[g]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839092"><text><![CDATA[h]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839093"><text><![CDATA[i]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839094"><text><![CDATA[j]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839095"><text><![CDATA[k]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839096"><text><![CDATA[l]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839097"><text><![CDATA[m]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839098"><text><![CDATA[n]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839099"><text><![CDATA[o]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839100"><text><![CDATA[p]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839101"><text><![CDATA[q]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839102"><text><![CDATA[r]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839103"><text><![CDATA[s]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839104"><text><![CDATA[t]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839105"><text><![CDATA[u]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839106"><text><![CDATA[v]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839107"><text><![CDATA[w]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839108"><text><![CDATA[x]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839109"><text><![CDATA[y]]></text></node>
+                <node LastModificationData="2009-04-18 16:43:33" id="2839110"><text><![CDATA[z]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:43:33" bgColor="12603469" id="2839111"><text><![CDATA[Note]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:43:33" id="2839112"><text><![CDATA[NewDatabase]]></text></node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node LastModificationData="2009-04-18 16:49:00" id="2839113">
+      <text><![CDATA[NewDatabase2]]></text>
+      <node LastModificationData="2009-04-18 16:49:34" id="2839116">
+        <text><![CDATA[Manuals]]></text>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839117">
+          <text><![CDATA[ManualID]]></text>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839118" priority="1"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839119" priority="2"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839120" priority="3"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839121" priority="4"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839122" priority="5"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839123" priority="6"><text><![CDATA[Topic]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839124"><text><![CDATA[ManualTypeID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839125"><text><![CDATA[ManualName]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:49:34" id="2839126">
+        <text><![CDATA[ManualTypes]]></text>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839127"><text><![CDATA[ManualTypeID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839128">
+          <text><![CDATA[ManualTypeName]]></text>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839129" smiley="happy"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839130" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839131" smiley="sad"><text><![CDATA[Topic]]></text></node>
+        </node>
+      </node>
+      <node LastModificationData="2009-04-18 16:49:34" id="2839132">
+        <text><![CDATA[Objects]]></text>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839133"><text><![CDATA[ObjectID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839134"><text><![CDATA[ObjectManualID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839135">
+          <text><![CDATA[Name]]></text>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839136">
+            <icon name="dollar"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839137">
+            <icon name="heart"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839138">
+            <icon name="clock"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839139">
+            <icon name="question_mark"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839140">
+            <icon name="exclamation_mark"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:34" id="2839141">
+            <icon name="bomb"/>
+            <text><![CDATA[Topic]]></text>
+          </node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:34" id="2839142"><text><![CDATA[Note]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:49:34" id="2839143">
+        <text><![CDATA[ObjectDescriptions]]></text>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="16776960" id="2839144"><text><![CDATA[ObjectDescriptionID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="16225862" id="2839145"><text><![CDATA[ObjectManualID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="4959430" id="2839146"><text><![CDATA[ObjectPropertyID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="8414370" id="2839147"><text><![CDATA[PropertyTypeID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="10206041" id="2839148"><text><![CDATA[Note]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:49:34" id="2839149">
+        <text><![CDATA[RelationDescriptions]]></text>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="16711680" id="2839150"><text><![CDATA[RelationDescriptionID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="16760832" id="2839151"><text><![CDATA[RelationManualID]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="9621584" id="2839152"><text><![CDATA[ObjectManualID1]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="45136" id="2839153"><text><![CDATA[ObjectManualID2]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="45296" id="2839154"><text><![CDATA[DateStart]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="8288" id="2839155"><text><![CDATA[DateEnd]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="7352480" id="2839156"><text><![CDATA[Note]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:49:34" id="2839157">
+        <text><![CDATA[Relations]]></text>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="9621584" id="2839158"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="9621584" id="2839159"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="9621584" id="2839160"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:34" bgColor="9621584" id="2839161"><text><![CDATA[ObjectID2]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:49:35" id="2839162">
+        <text><![CDATA[Properties]]></text>
+        <node LastModificationData="2009-04-18 16:49:35" bgColor="7352480" id="2839163"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:35" bgColor="8288" id="2839164"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:35" bgColor="45296" id="2839165"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+        <node LastModificationData="2009-04-18 16:49:35" bgColor="16776960" id="2839166">
+          <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839167"><text><![CDATA[a]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839168"><text><![CDATA[b]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839169"><text><![CDATA[c]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839170"><text><![CDATA[d]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839171"><text><![CDATA[e]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839172"><text><![CDATA[f]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839173"><text><![CDATA[g]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839174"><text><![CDATA[h]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839175"><text><![CDATA[i]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839176"><text><![CDATA[j]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839177"><text><![CDATA[k]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839178"><text><![CDATA[l]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839179"><text><![CDATA[m]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839180"><text><![CDATA[n]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839181"><text><![CDATA[o]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839182"><text><![CDATA[p]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839183"><text><![CDATA[q]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839184"><text><![CDATA[r]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839185"><text><![CDATA[s]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839186"><text><![CDATA[t]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839187"><text><![CDATA[u]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839188"><text><![CDATA[v]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839189"><text><![CDATA[w]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839190"><text><![CDATA[x]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839191"><text><![CDATA[y]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:35" id="2839192"><text><![CDATA[z]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:35" bgColor="12603469" id="2839193"><text><![CDATA[Note]]></text></node>
+      </node>
+      <node LastModificationData="2009-04-18 16:49:36" id="2839194">
+        <text><![CDATA[NewDatabase]]></text>
+        <node LastModificationData="2009-04-18 16:49:36" id="2839195">
+          <text><![CDATA[Manuals]]></text>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839196"><text><![CDATA[ManualID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839197"><text><![CDATA[ManualTypeID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839198"><text><![CDATA[ManualName]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:36" id="2839199">
+          <text><![CDATA[ManualTypes]]></text>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839200"><text><![CDATA[ManualTypeID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839201">
+            <text><![CDATA[ManualTypeName]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839202" smiley="happy"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839203" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839204" smiley="sad"><text><![CDATA[Topic]]></text></node>
+          </node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:36" id="2839205">
+          <text><![CDATA[Objects]]></text>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839206"><text><![CDATA[ObjectID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839207"><text><![CDATA[ObjectManualID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839208">
+            <text><![CDATA[Name]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839209">
+              <icon name="dollar"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839210">
+              <icon name="heart"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839211">
+              <icon name="clock"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839212">
+              <icon name="question_mark"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839213">
+              <icon name="exclamation_mark"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839214">
+              <icon name="bomb"/>
+              <text><![CDATA[Topic]]></text>
+            </node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839215"><text><![CDATA[Note]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:36" id="2839216">
+          <text><![CDATA[ObjectDescriptions]]></text>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="16776960" id="2839217"><text><![CDATA[ObjectDescriptionID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="16225862" id="2839218"><text><![CDATA[ObjectManualID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="4959430" id="2839219"><text><![CDATA[ObjectPropertyID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="8414370" id="2839220"><text><![CDATA[PropertyTypeID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="10206041" id="2839221"><text><![CDATA[Note]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:36" id="2839222">
+          <text><![CDATA[RelationDescriptions]]></text>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="16711680" id="2839223"><text><![CDATA[RelationDescriptionID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="16760832" id="2839224"><text><![CDATA[RelationManualID]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839225"><text><![CDATA[ObjectManualID1]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="45136" id="2839226"><text><![CDATA[ObjectManualID2]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="45296" id="2839227"><text><![CDATA[DateStart]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="8288" id="2839228"><text><![CDATA[DateEnd]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="7352480" id="2839229"><text><![CDATA[Note]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:36" id="2839230">
+          <text><![CDATA[Relations]]></text>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839231"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839232"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839233"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839234"><text><![CDATA[ObjectID2]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:36" id="2839235">
+          <text><![CDATA[Properties]]></text>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="7352480" id="2839236"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="8288" id="2839237"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="45296" id="2839238"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="16776960" id="2839239">
+            <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839240"><text><![CDATA[a]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839241"><text><![CDATA[b]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839242"><text><![CDATA[c]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839243"><text><![CDATA[d]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839244"><text><![CDATA[e]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839245"><text><![CDATA[f]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839246"><text><![CDATA[g]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839247"><text><![CDATA[h]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839248"><text><![CDATA[i]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839249"><text><![CDATA[j]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839250"><text><![CDATA[k]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839251"><text><![CDATA[l]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839252"><text><![CDATA[m]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839253"><text><![CDATA[n]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839254"><text><![CDATA[o]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839255"><text><![CDATA[p]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839256"><text><![CDATA[q]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839257"><text><![CDATA[r]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839258"><text><![CDATA[s]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839259"><text><![CDATA[t]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839260"><text><![CDATA[u]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839261"><text><![CDATA[v]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839262"><text><![CDATA[w]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839263"><text><![CDATA[x]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839264"><text><![CDATA[y]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" bgColor="12603469" id="2839265"><text><![CDATA[Note]]></text></node>
+        </node>
+        <node LastModificationData="2009-04-18 16:49:36" id="2839266">
+          <text><![CDATA[NewDatabase]]></text>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839267">
+            <text><![CDATA[Manuals]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839268">
+              <text><![CDATA[ManualID]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839269" priority="1"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839270" priority="2"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839271" priority="3"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839272" priority="4"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839273" priority="5"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839274" priority="6"><text><![CDATA[Topic]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839275"><text><![CDATA[ManualTypeID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839276"><text><![CDATA[ManualName]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839277">
+            <text><![CDATA[ManualTypes]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839278"><text><![CDATA[ManualTypeID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839279">
+              <text><![CDATA[ManualTypeName]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839280" smiley="happy"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839281" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839282" smiley="sad"><text><![CDATA[Topic]]></text></node>
+            </node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839283">
+            <text><![CDATA[Objects]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839284"><text><![CDATA[ObjectID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839285"><text><![CDATA[ObjectManualID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839286">
+              <text><![CDATA[Name]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839287">
+                <icon name="dollar"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839288">
+                <icon name="heart"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839289">
+                <icon name="clock"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839290">
+                <icon name="question_mark"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839291">
+                <icon name="exclamation_mark"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839292">
+                <icon name="bomb"/>
+                <text><![CDATA[Topic]]></text>
+              </node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839293"><text><![CDATA[Note]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839294">
+            <text><![CDATA[ObjectDescriptions]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="16776960" id="2839295"><text><![CDATA[ObjectDescriptionID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="16225862" id="2839296"><text><![CDATA[ObjectManualID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="4959430" id="2839297"><text><![CDATA[ObjectPropertyID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="8414370" id="2839298"><text><![CDATA[PropertyTypeID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="10206041" id="2839299"><text><![CDATA[Note]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839300">
+            <text><![CDATA[RelationDescriptions]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="16711680" id="2839301"><text><![CDATA[RelationDescriptionID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="16760832" id="2839302"><text><![CDATA[RelationManualID]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839303"><text><![CDATA[ObjectManualID1]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="45136" id="2839304"><text><![CDATA[ObjectManualID2]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="45296" id="2839305"><text><![CDATA[DateStart]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="8288" id="2839306"><text><![CDATA[DateEnd]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="7352480" id="2839307"><text><![CDATA[Note]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839308">
+            <text><![CDATA[Relations]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839309"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839310"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839311"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839312"><text><![CDATA[ObjectID2]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839313">
+            <text><![CDATA[Properties]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="7352480" id="2839314"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="8288" id="2839315"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="45296" id="2839316"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="16776960" id="2839317">
+              <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839318"><text><![CDATA[a]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839319"><text><![CDATA[b]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839320"><text><![CDATA[c]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839321"><text><![CDATA[d]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839322"><text><![CDATA[e]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839323"><text><![CDATA[f]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839324"><text><![CDATA[g]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839325"><text><![CDATA[h]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839326"><text><![CDATA[i]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839327"><text><![CDATA[j]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839328"><text><![CDATA[k]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839329"><text><![CDATA[l]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839330"><text><![CDATA[m]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839331"><text><![CDATA[n]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839332"><text><![CDATA[o]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839333"><text><![CDATA[p]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839334"><text><![CDATA[q]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839335"><text><![CDATA[r]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839336"><text><![CDATA[s]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839337"><text><![CDATA[t]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839338"><text><![CDATA[u]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839339"><text><![CDATA[v]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839340"><text><![CDATA[w]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839341"><text><![CDATA[x]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839342"><text><![CDATA[y]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839343"><text><![CDATA[z]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" bgColor="12603469" id="2839344"><text><![CDATA[Note]]></text></node>
+          </node>
+          <node LastModificationData="2009-04-18 16:49:36" id="2839345">
+            <text><![CDATA[NewDatabase]]></text>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839346">
+              <text><![CDATA[Manuals]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839347">
+                <text><![CDATA[ManualID]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839348" priority="1"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839349" priority="2"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839350" priority="3"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839351" priority="4"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839352" priority="5"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839353" priority="6"><text><![CDATA[Topic]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839354"><text><![CDATA[ManualTypeID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839355"><text><![CDATA[ManualName]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839356">
+              <text><![CDATA[ManualTypes]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839357"><text><![CDATA[ManualTypeID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839358">
+                <text><![CDATA[ManualTypeName]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839359" smiley="happy"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839360" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839361" smiley="sad"><text><![CDATA[Topic]]></text></node>
+              </node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839362">
+              <text><![CDATA[Objects]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839363"><text><![CDATA[ObjectID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839364"><text><![CDATA[ObjectManualID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839365">
+                <text><![CDATA[Name]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839366">
+                  <icon name="dollar"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839367">
+                  <icon name="heart"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839368">
+                  <icon name="clock"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839369">
+                  <icon name="question_mark"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839370">
+                  <icon name="exclamation_mark"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839371">
+                  <icon name="bomb"/>
+                  <text><![CDATA[Topic]]></text>
+                </node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839372"><text><![CDATA[Note]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839373">
+              <text><![CDATA[ObjectDescriptions]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="16776960" id="2839374"><text><![CDATA[ObjectDescriptionID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="16225862" id="2839375"><text><![CDATA[ObjectManualID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="4959430" id="2839376"><text><![CDATA[ObjectPropertyID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="8414370" id="2839377"><text><![CDATA[PropertyTypeID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="10206041" id="2839378"><text><![CDATA[Note]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839379">
+              <text><![CDATA[RelationDescriptions]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="16711680" id="2839380"><text><![CDATA[RelationDescriptionID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="16760832" id="2839381"><text><![CDATA[RelationManualID]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839382"><text><![CDATA[ObjectManualID1]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="45136" id="2839383"><text><![CDATA[ObjectManualID2]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="45296" id="2839384"><text><![CDATA[DateStart]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="8288" id="2839385"><text><![CDATA[DateEnd]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="7352480" id="2839386"><text><![CDATA[Note]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839387">
+              <text><![CDATA[Relations]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839388"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839389"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839390"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839391"><text><![CDATA[ObjectID2]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839392">
+              <text><![CDATA[Properties]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="7352480" id="2839393"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="8288" id="2839394"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="45296" id="2839395"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="16776960" id="2839396">
+                <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839397"><text><![CDATA[a]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839398"><text><![CDATA[b]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839399"><text><![CDATA[c]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839400"><text><![CDATA[d]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839401"><text><![CDATA[e]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839402"><text><![CDATA[f]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839403"><text><![CDATA[g]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839404"><text><![CDATA[h]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839405"><text><![CDATA[i]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839406"><text><![CDATA[j]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839407"><text><![CDATA[k]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839408"><text><![CDATA[l]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839409"><text><![CDATA[m]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839410"><text><![CDATA[n]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839411"><text><![CDATA[o]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839412"><text><![CDATA[p]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839413"><text><![CDATA[q]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839414"><text><![CDATA[r]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839415"><text><![CDATA[s]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839416"><text><![CDATA[t]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839417"><text><![CDATA[u]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839418"><text><![CDATA[v]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839419"><text><![CDATA[w]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839420"><text><![CDATA[x]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839421"><text><![CDATA[y]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839422"><text><![CDATA[z]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" bgColor="12603469" id="2839423"><text><![CDATA[Note]]></text></node>
+            </node>
+            <node LastModificationData="2009-04-18 16:49:36" id="2839424">
+              <text><![CDATA[NewDatabase]]></text>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839425">
+                <text><![CDATA[Manuals]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839426">
+                  <text><![CDATA[ManualID]]></text>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839427" priority="1"><text><![CDATA[Topic]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839428" priority="2"><text><![CDATA[Topic]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839429" priority="3"><text><![CDATA[Topic]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839430" priority="4"><text><![CDATA[Topic]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839431" priority="5"><text><![CDATA[Topic]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839432" priority="6"><text><![CDATA[Topic]]></text></node>
+                </node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839433"><text><![CDATA[ManualTypeID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839434"><text><![CDATA[ManualName]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839435">
+                <text><![CDATA[ManualTypes]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839436"><text><![CDATA[ManualTypeID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839437">
+                  <text><![CDATA[ManualTypeName]]></text>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839438" smiley="happy"><text><![CDATA[Topic]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839439" smiley="neutral"><text><![CDATA[Topic]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839440" smiley="sad"><text><![CDATA[Topic]]></text></node>
+                </node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839441">
+                <text><![CDATA[Objects]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839442"><text><![CDATA[ObjectID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839443"><text><![CDATA[ObjectManualID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839444">
+                  <text><![CDATA[Name]]></text>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839445">
+                    <icon name="dollar"/>
+                    <text><![CDATA[Topic]]></text>
+                  </node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839446">
+                    <icon name="heart"/>
+                    <text><![CDATA[Topic]]></text>
+                  </node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839447">
+                    <icon name="clock"/>
+                    <text><![CDATA[Topic]]></text>
+                  </node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839448">
+                    <icon name="question_mark"/>
+                    <text><![CDATA[Topic]]></text>
+                  </node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839449">
+                    <icon name="exclamation_mark"/>
+                    <text><![CDATA[Topic]]></text>
+                  </node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839450">
+                    <icon name="bomb"/>
+                    <text><![CDATA[Topic]]></text>
+                  </node>
+                </node>
+                <node LastModificationData="2009-04-18 16:49:36" id="2839451"><text><![CDATA[Note]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839452">
+                <text><![CDATA[ObjectDescriptions]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="16776960" id="2839453"><text><![CDATA[ObjectDescriptionID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="16225862" id="2839454"><text><![CDATA[ObjectManualID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="4959430" id="2839455"><text><![CDATA[ObjectPropertyID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="8414370" id="2839456"><text><![CDATA[PropertyTypeID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="10206041" id="2839457"><text><![CDATA[Note]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839458">
+                <text><![CDATA[RelationDescriptions]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="16711680" id="2839459"><text><![CDATA[RelationDescriptionID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="16760832" id="2839460"><text><![CDATA[RelationManualID]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839461"><text><![CDATA[ObjectManualID1]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="45136" id="2839462"><text><![CDATA[ObjectManualID2]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="45296" id="2839463"><text><![CDATA[DateStart]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="8288" id="2839464"><text><![CDATA[DateEnd]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="7352480" id="2839465"><text><![CDATA[Note]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839466">
+                <text><![CDATA[Relations]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839467"><text><![CDATA[<FONT SIZE="16" COLOR="#FF0000">RelationID</FONT>]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839468"><text><![CDATA[<FONT SIZE="16" COLOR="#FFC000">RelationDescriptionID</FONT>]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839469"><text><![CDATA[<FONT SIZE="16" COLOR="#FFFF00">ObjectID1</FONT>]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="9621584" id="2839470"><text><![CDATA[ObjectID2]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839471">
+                <text><![CDATA[Properties]]></text>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="7352480" id="2839472"><text><![CDATA[<FONT SIZE="16" COLOR="#797979">PropertID</FONT>]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="8288" id="2839473"><text><![CDATA[<FONT SIZE="16" COLOR="#5F5F5F">PropertyManualID</FONT>]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="45296" id="2839474"><text><![CDATA[<FONT SIZE="16" COLOR="#464646">ObjectID</FONT>]]></text></node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="16776960" id="2839475">
+                  <text><![CDATA[<FONT SIZE="16" COLOR="#191919">Value</FONT>]]></text>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839476"><text><![CDATA[a]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839477"><text><![CDATA[b]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839478"><text><![CDATA[c]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839479"><text><![CDATA[d]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839480"><text><![CDATA[e]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839481"><text><![CDATA[f]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839482"><text><![CDATA[g]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839483"><text><![CDATA[h]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839484"><text><![CDATA[i]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839485"><text><![CDATA[j]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839486"><text><![CDATA[k]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839487"><text><![CDATA[l]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839488"><text><![CDATA[m]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839489"><text><![CDATA[n]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839490"><text><![CDATA[o]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839491"><text><![CDATA[p]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839492"><text><![CDATA[q]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839493"><text><![CDATA[r]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839494"><text><![CDATA[s]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839495"><text><![CDATA[t]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839496"><text><![CDATA[u]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839497"><text><![CDATA[v]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839498"><text><![CDATA[w]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839499"><text><![CDATA[x]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839500"><text><![CDATA[y]]></text></node>
+                  <node LastModificationData="2009-04-18 16:49:36" id="2839501"><text><![CDATA[z]]></text></node>
+                </node>
+                <node LastModificationData="2009-04-18 16:49:36" bgColor="12603469" id="2839502"><text><![CDATA[Note]]></text></node>
+              </node>
+              <node LastModificationData="2009-04-18 16:49:36" id="2839503"><text><![CDATA[NewDatabase]]></text></node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+</mindmap>
