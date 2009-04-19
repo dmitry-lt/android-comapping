@@ -1,6 +1,7 @@
 package com.comapping.android.model;
 
 import java.util.EmptyStackException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 
@@ -18,6 +19,8 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 	private Stack<TextFormat> stackTextFormat;
 	private FormattedText formattedText;
 	private TextParagraph currentTextParagraph;
+	private TextFormat currentTextFormat;
+	private String currentText;
 	
 	private TextFormat getDefFormat() {
 		TextFormat format = new TextFormat();
@@ -28,6 +31,27 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 		return format;
 	}
 	
+	private void refreshParagraph(){
+		if (currentTextParagraph != null || currentText != "") {
+			if (currentTextParagraph == null) {
+				currentTextParagraph = new TextParagraph();
+			}
+			if (currentText != "") {
+				currentTextParagraph.add(new TextBlock(currentText, currentTextFormat));
+			}
+		}
+		currentText = "";
+		currentTextFormat = stackTextFormat.lastElement();
+	}
+	
+	private void addParagraph() {
+		refreshParagraph();
+		if (currentTextParagraph != null) {
+			formattedText.add(currentTextParagraph);
+		}
+		currentTextParagraph = null;
+	}
+	
 	public FormattedTextSaxHandler() {
 		stackTextFormat = new Stack<TextFormat>();  
 		formattedText = new FormattedText();
@@ -36,62 +60,61 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 	public void startDocument() throws SAXException {
 		stackTextFormat.push(getDefFormat());
 		currentTextParagraph = null;
+		currentText = "";
+		currentTextFormat = getDefFormat();
 	}
 	
 	public void endDocument() throws SAXException {
-		if (currentTextParagraph != null) {
-			formattedText.add(currentTextParagraph);
-		}
-		currentTextParagraph = null;
 		
 		try {
+			addParagraph();
 			stackTextFormat.pop();
 		}
 		catch (EmptyStackException e) {
 			Log.e("SAX Parser ", e.toString());
 			throw new SAXException();
 		}
+		catch (NoSuchElementException e) {
+			Log.e("SAX Parser ", e.toString());
+			throw new SAXException();			
+		}
 	}
 	
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		if (currentTextParagraph != null) {
-			formattedText.add(currentTextParagraph);
-		}
-		currentTextParagraph = null;
 		
 		try {
-			TextFormat currentTextFormat;
+			TextFormat newTextFormat;
 			
 			if (!stackTextFormat.isEmpty()) {
-				currentTextFormat = stackTextFormat.lastElement().clone();
+				newTextFormat = stackTextFormat.lastElement().clone();
 			} else {
-				currentTextFormat = getDefFormat();
+				newTextFormat = getDefFormat();
 			}
 			
 			if (localName.equals(FormattedTextSaxBuilder.FONT_TAG)) {
 							
 				if (attributes.getValue(FormattedTextSaxBuilder.FONT_ATTR_SIZE_TAG) != null) {
 					int fontSize = Integer.parseInt(attributes.getValue(FormattedTextSaxBuilder.FONT_ATTR_SIZE_TAG));
-					currentTextFormat.setFontSize(fontSize);
+					newTextFormat.setFontSize(fontSize);
 				}
 				
 				if (attributes.getValue(FormattedTextSaxBuilder.FONT_ATTR_COLOR_TAG) != null) {
 					int fontColor = Color.parseColor(attributes.getValue(FormattedTextSaxBuilder.FONT_ATTR_COLOR_TAG));
-					currentTextFormat.setFontColor(fontColor);
+					newTextFormat.setFontColor(fontColor);
 				}
 				
 			} else if (localName.equals(FormattedTextSaxBuilder.HYPER_REF_TAG)) {	
 				String href = attributes.getValue(FormattedTextSaxBuilder.HYPER_REF_ATTR_HREF_TAG);
-				currentTextFormat.setHRef(href);
+				newTextFormat.setHRef(href);
 				
 			} else if (localName.equals(FormattedTextSaxBuilder.UNDERLINED_TAG)) {
-				currentTextFormat.setUnderlined(true);
+				newTextFormat.setUnderlined(true);
 				
 			} else if (localName.equals(FormattedTextSaxBuilder.PARAGRAPH_TAG)) {
-				// we should do nothing
+				addParagraph();
 			}
 
-			stackTextFormat.push(currentTextFormat);
+			stackTextFormat.push(newTextFormat);
 		}
 		catch (NumberFormatException e) {
 			Log.e("SAX Parser ", e.toString());
@@ -104,11 +127,6 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 	}
 	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if (currentTextParagraph != null) {
-			formattedText.add(currentTextParagraph);
-		}
-		currentTextParagraph = null;
-		
 		try {
 			stackTextFormat.pop();
 		}
@@ -119,15 +137,17 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 	}
 	
 	public void characters(char[] ch, int start, int len) throws SAXException {
-		String text = new String(ch, start, len);
+		String newText = new String(ch, start, len);
 		
 		try {
-			TextFormat currentFormat = stackTextFormat.lastElement();
-			if (text != "") {
-				if (currentTextParagraph == null) {
-					currentTextParagraph = new TextParagraph();
+			TextFormat newTextFormat = stackTextFormat.lastElement();
+			
+			if (newText != "") {
+				if (newTextFormat.equals(currentTextFormat)) {
+					currentText += newText;
+				} else {
+					refreshParagraph();
 				}
-				currentTextParagraph.add(new TextBlock(text, currentFormat));
 			}
 		}
 		catch (NoSuchElementException e) {
