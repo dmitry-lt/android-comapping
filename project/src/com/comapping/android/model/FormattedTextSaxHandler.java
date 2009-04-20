@@ -22,15 +22,6 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 	private TextFormat currentTextFormat;
 	private String currentText;
 	
-	private TextFormat getDefFormat() {
-		TextFormat format = new TextFormat();
-		format.setFontSize(16);
-		format.setFontColor(Color.BLACK);
-		format.setHRef("");
-		format.setUnderlined(false);
-		return format;
-	}
-	
 	private void refreshParagraph(){
 		if (currentTextParagraph != null || currentText != "") {
 			if (currentTextParagraph == null) {
@@ -58,10 +49,10 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 	}
 	
 	public void startDocument() throws SAXException {
-		stackTextFormat.push(getDefFormat());
+		stackTextFormat.push(FormattedTextSaxBuilder.getDefFormat());
 		currentTextParagraph = null;
 		currentText = "";
-		currentTextFormat = getDefFormat();
+		currentTextFormat = FormattedTextSaxBuilder.getDefFormat();
 	}
 	
 	public void endDocument() throws SAXException {
@@ -88,7 +79,7 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 			if (!stackTextFormat.isEmpty()) {
 				newTextFormat = stackTextFormat.lastElement().clone();
 			} else {
-				newTextFormat = getDefFormat();
+				newTextFormat = FormattedTextSaxBuilder.getDefFormat();
 			}
 			
 			if (localName.equals(FormattedTextSaxBuilder.FONT_TAG)) {

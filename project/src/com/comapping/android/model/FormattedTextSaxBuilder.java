@@ -11,6 +11,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
+import android.graphics.Color;
+
 import com.comapping.android.Log;
 import com.comapping.android.model.exceptions.DocumentBuilderCreatingError;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
@@ -25,7 +27,18 @@ public class FormattedTextSaxBuilder {
 	static final String HYPER_REF_ATTR_HREF_TAG = "HREF";
 	static final String UNDERLINED_TAG = "U";	
 	
+	private static final String ERROR_TEXT = "#ERROR"; 
+	
 	private static FormattedTextSaxHandler handler;
+	
+	static TextFormat getDefFormat() {
+		TextFormat format = new TextFormat();
+		format.setFontSize(16);
+		format.setFontColor(Color.BLACK);
+		format.setHRef("");
+		format.setUnderlined(false);
+		return format;
+	}
 
 	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {
 		
@@ -38,8 +51,9 @@ public class FormattedTextSaxBuilder {
 		} else {
 			xmlString = "<TEXT><P><FONT>" + xmlString + "</FONT></P></TEXT>";
 		}
-
-		try {
+		
+		FormattedText resultText;
+		try {			
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser parser = saxParserFactory.newSAXParser();
 
@@ -49,6 +63,7 @@ public class FormattedTextSaxBuilder {
 			Log.d(Log.modelTag, "Text SAX parsing: " + xmlString);
 			
 			parser.parse(stream, handler);
+			resultText = handler.getFormattedText();
 		} catch (FactoryConfigurationError e) {
 			Log.e("SAX Text Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
@@ -57,7 +72,8 @@ public class FormattedTextSaxBuilder {
 			throw new DocumentBuilderCreatingError();
 		} catch (SAXException e) {
 			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
-			throw new StringToXMLConvertionException();
+			resultText = new FormattedText(ERROR_TEXT, getDefFormat());
+			//throw new StringToXMLConvertionException();
 		} catch (IOException e) {
 			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
@@ -67,6 +83,6 @@ public class FormattedTextSaxBuilder {
 		
 		Log.i(Log.modelTag, "Formatted Text was built with SAX successfully, parsing time: " + parsingTime);
 		
-		return handler.getFormattedText();
+		return resultText;
 	}
 }

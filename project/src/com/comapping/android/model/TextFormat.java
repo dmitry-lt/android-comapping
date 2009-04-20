@@ -19,7 +19,25 @@ public class TextFormat implements Cloneable {
 		this.underlined = underlined;
 	}
 
-	public int getFontSize() {
+	public boolean equals(TextFormat format) {
+		if ((this.hRef == null && format.hRef != null) ||
+				(this.hRef != null) && (format.hRef == null)) {
+			return false;
+		}
+			
+		if (this.fontColor == format.fontColor &&
+				this.fontSize == format.fontSize &&
+				this.underlined == format.underlined &&
+				((this.hRef == null && format.hRef == null) ||
+				(this.hRef.equals(format.hRef)))) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public int getFontSize(){
 		return fontSize;
 	}
 
