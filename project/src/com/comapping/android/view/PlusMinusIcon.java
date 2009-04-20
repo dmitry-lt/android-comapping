@@ -11,9 +11,8 @@ public class PlusMinusIcon  extends Render {
 	private static final int PLUS_LENGTH = 7;
 	private static final int PLUS_WIDTH = 2;
 	
-	public static final int RADIUS = OUTER_SIZE;
-	public static final int WIDTH = OUTER_SIZE*2;
-	public static final int HEIGHT = OUTER_SIZE*2;
+	private static final int WIDTH = OUTER_SIZE*2;
+	private static final int HEIGHT = OUTER_SIZE*2;
 	
 	public boolean isPlus = true;
 	Paint p = new Paint();

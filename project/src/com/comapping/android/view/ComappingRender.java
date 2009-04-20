@@ -148,8 +148,8 @@ public class ComappingRender extends MapRender {
 				// Draw +/- circle
 
 				plusMinusIcon.draw(x + render.getWidth(), y
-						+ getUnderlineOffset() - PlusMinusIcon.RADIUS,
-						PlusMinusIcon.WIDTH, PlusMinusIcon.HEIGHT, c);
+						+ getUnderlineOffset() - plusMinusIcon.getWidth() / 2,
+						plusMinusIcon.getWidth(), plusMinusIcon.getHeight(), c);
 
 			}
 		}
@@ -167,10 +167,11 @@ public class ComappingRender extends MapRender {
 		 */
 		public boolean isOverButton(int x, int y) {
 			return ((x >= render.getWidth())
-					&& (y >= render.getLineOffset() - PlusMinusIcon.RADIUS)
-					&& (x <= render.getWidth() + PlusMinusIcon.WIDTH) && (y <= render
+					&& (y >= render.getLineOffset() - plusMinusIcon.getWidth()
+							/ 2)
+					&& (x <= render.getWidth() + plusMinusIcon.getWidth()) && (y <= render
 					.getLineOffset()
-					+ PlusMinusIcon.RADIUS));
+					+ plusMinusIcon.getWidth() / 2));
 		}
 
 		/**
@@ -196,7 +197,7 @@ public class ComappingRender extends MapRender {
 		 * @return Width of a rendering topic
 		 */
 		public int getTopicWidth() {
-			return render.getWidth() + PlusMinusIcon.WIDTH;
+			return render.getWidth() + plusMinusIcon.getWidth();
 		}
 
 		/**
@@ -692,8 +693,7 @@ public class ComappingRender extends MapRender {
 				- deltaY;
 
 		if ((fixXOffset(destOffsetX) != destOffsetX)
-				||
-				(fixXOffset(destOffsetY) != destOffsetY))
+				|| (fixXOffset(destOffsetY) != destOffsetY))
 			smoothScroll(destOffsetX, destOffsetY);
 		else
 			sharpScroll(destOffsetX, destOffsetY);
