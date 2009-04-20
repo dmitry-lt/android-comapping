@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,22 +38,25 @@ public class MapActivity extends Activity {
 	private ProgressDialog splash = null;
 	private Thread mapProcessingThread;
 
-	public void splashActivate(final String message) {
+	public void splashActivate(final String message, final boolean cancelable) {
 		final Activity context = this;
 
 		runOnUiThread(new Runnable() {
 			public void run() {
 				if (splash == null) {
-					splash = ProgressDialog.show(context, "Comapping", message);
-//					splash.setCancelable(true);
-//					splash.setOnCancelListener(new OnCancelListener() {
-//						@Override
-//						public void onCancel(DialogInterface dialog) {
-//							finish();
-//						}
+					splash = ProgressDialog.show(context, "Comapping", message);					
+					splash.setOnCancelListener(new OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							mapProcessingThread.interrupt();
+							mapProcessingThread.setPriority(Thread.MIN_PRIORITY);
+							finish();
+						}
+					});
 				} else {
 					splash.setMessage(message);
 				}
+				splash.setCancelable(cancelable);
 			}
 		});
 	}
@@ -67,20 +71,17 @@ public class MapActivity extends Activity {
 			}
 		});
 	}
-	
+
 	private void onError(final String message, final Activity activity) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				Dialog dialog = (new AlertDialog.Builder(activity)
-				.setTitle("Error")
-				.setMessage(message)
-				.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {						
-						activity.finish();
-					}
-				})
-				).create();
+				Dialog dialog = (new AlertDialog.Builder(activity).setTitle("Error").setMessage(message)
+						.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								activity.finish();
+							}
+						})).create();
 				dialog.show();
 			}
 		});
@@ -95,16 +96,15 @@ public class MapActivity extends Activity {
 		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
 		final String mapId = extras.getString(EXT_MAP_ID);
 
-		Map map = (Map) Cache.get(mapId);
 		final Activity current = this;
 
-		if (map == null) {
-			mapProcessingThread = new Thread() {
-				public void run() {
-					String result = "";
-					try {
-						splashActivate("Downloading map");
-
+		mapProcessingThread = new Thread() {
+			public void run() {
+				try {
+					final Map map;
+					if (!Cache.has(mapId)) {
+						splashActivate("Downloading map", false);						
+						String result = "";
 						try {
 							result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
 						} catch (InvalidCredentialsException e) {
@@ -112,64 +112,70 @@ public class MapActivity extends Activity {
 							// TODO: ???
 						}
 
-						splashActivate("Loading map");
+						splashActivate("Parsing map", true);
+						map = MetaMapActivity.mapBuilder.buildMap(result);
 
-						final Map buildedMap = MetaMapActivity.mapBuilder.buildMap(result);
-
-						splashDeactivate();
-
-						// add to chache
-						Cache.set(mapId, buildedMap);
-
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								loadMap(buildedMap, viewType);
-							};
-						});
-					} catch (LoginInterruptedException e) {
-						Log.e(Log.mapControllerTag, "login interrupted");
-						onError("login interrupted", current);
-					} catch (ConnectionException e) {
-						Log.e(Log.mapControllerTag, "connection exception");
-						onError("Connection error", current);
-					} catch (StringToXMLConvertionException e) {
-						Log.e(Log.mapControllerTag, e.toString());
-						onError("Wrong file format", current);
-					} catch (MapParsingException e) {
-						Log.e(Log.mapControllerTag, e.toString());
-						onError("Wrong file format", current);
+						// add to cache
+						Cache.set(mapId, map);
+					} else {
+						map = (Map) Cache.get(mapId);
 					}
+					
+					if (interrupted()) {
+						return;
+					}
+					
+					splashActivate("Loading map", true);
+					final MapRender mapRender = initMapRender(map, viewType);
+
+					if (interrupted()) {
+						return;
+					}
+					
+					splashDeactivate();
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							setContentView(R.layout.map);
+
+							zoom = (ZoomControls) findViewById(R.id.Zoom);
+
+							view = (MainMapView) findViewById(R.id.MapView);
+							view.setRender(mapRender);
+							view.setZoom(zoom);
+						};
+					});
+				} catch (LoginInterruptedException e) {
+					Log.e(Log.mapControllerTag, "login interrupted");
+					onError("login interrupted", current);
+				} catch (ConnectionException e) {
+					Log.e(Log.mapControllerTag, "connection exception");
+					onError("Connection error", current);
+				} catch (StringToXMLConvertionException e) {
+					Log.e(Log.mapControllerTag, e.toString());
+					onError("Wrong file format", current);
+				} catch (MapParsingException e) {
+					Log.e(Log.mapControllerTag, e.toString());
+					onError("Wrong file format", current);
 				}
-			};
-			mapProcessingThread.start();
-		} else {
-			loadMap(map, viewType);
-		}
+			}
+		};
+		mapProcessingThread.start();
 	}
 
 	ZoomControls zoom;
 	MainMapView view;
 
-	public void loadMap(Map map, ViewType viewType) {
-		MapRender r = null;
+	public MapRender initMapRender(Map map, ViewType viewType) {
 		switch (viewType) {
 		case EXPLORER_VIEW:
-			r = new ExplorerRender(this, map);
-			break;
+			return new ExplorerRender(this, map);
 		case TREE_VIEW:
-			r = new ComappingRender(this, map.getRoot());
-			break;
+			return new ComappingRender(this, map.getRoot());
+		default:
+			return null;
 		}
-
-		this.setContentView(R.layout.map);
-
-		zoom = (ZoomControls) findViewById(R.id.Zoom);
-
-		view = (MainMapView) findViewById(R.id.MapView);
-		view.setRender(r);
-		view.setZoom(zoom);
-
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {

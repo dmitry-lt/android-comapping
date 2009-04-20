@@ -16,6 +16,10 @@ public class Cache {
 
 		cache.put(key, object);
 	}
+	
+	synchronized public static boolean has(String key) {
+		return cache.containsKey(key);
+	}
 
 	synchronized public static void clear() {
 		cache = new HashMap<String, Object>();
