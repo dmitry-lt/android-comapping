@@ -20,21 +20,10 @@ public class TextFormat implements Cloneable {
 	}
 
 	public boolean equals(TextFormat format) {
-		if ((this.hRef == null && format.hRef != null) ||
-				(this.hRef != null) && (format.hRef == null)) {
-			return false;
-		}
-			
-		if (this.fontColor == format.fontColor &&
+		return (this.fontColor == format.fontColor &&
 				this.fontSize == format.fontSize &&
 				this.underlined == format.underlined &&
-				((this.hRef == null && format.hRef == null) ||
-				(this.hRef.equals(format.hRef)))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+				this.getHRef().equals(format.getHRef()));
 	}
 	
 	public int getFontSize(){
@@ -54,7 +43,7 @@ public class TextFormat implements Cloneable {
 	}
 
 	public String getHRef() {
-		return hRef;
+		return hRef != null ? hRef : "";
 	}
 
 	public void setHRef(String ref) {

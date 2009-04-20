@@ -27,7 +27,7 @@ public class FormattedTextSaxBuilder {
 	static final String HYPER_REF_ATTR_HREF_TAG = "HREF";
 	static final String UNDERLINED_TAG = "U";	
 	
-	private static final String ERROR_TEXT = "#ERROR"; 
+	private static final String ERROR_TEXT = "#ERROR#"; 
 	
 	private static FormattedTextSaxHandler handler;
 	
