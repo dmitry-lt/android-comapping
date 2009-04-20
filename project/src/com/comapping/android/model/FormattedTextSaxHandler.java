@@ -147,6 +147,7 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 					currentText += newText;
 				} else {
 					refreshParagraph();
+					currentText = newText;
 				}
 			}
 		}
