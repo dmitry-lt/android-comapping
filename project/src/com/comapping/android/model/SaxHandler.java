@@ -92,6 +92,7 @@ class SaxHandler extends DefaultHandler {
 				String note = attributes.getValue(MapBuilder.NOTE_TEXT_ATTR);
 				if (note != null) {
 					currentTopic.setNote(note);
+					noteText = null;
 				} else {
 					isNoteTag = true;
 					noteText = "";
@@ -228,7 +229,9 @@ class SaxHandler extends DefaultHandler {
 				}
 			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
 				isNoteTag = false;
-				currentTopic.setNote(noteText);
+				if (noteText != null) {
+					currentTopic.setNote(noteText);
+				}
 			} else if (!hasMeta) {
 				if (localName.equals(MapBuilder.MAP_OWNER_TAG)) {
 					owner = new User(ownerId, ownerName, ownerEmail);
