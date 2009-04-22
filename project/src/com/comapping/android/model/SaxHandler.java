@@ -18,12 +18,12 @@ import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 class SaxHandler extends DefaultHandler {
 	private static int base = 1000;
 
-	private static int TOPIC_ID_TAG_HASHCODE = mod(MapBuilder.TOPIC_ID_TAG.hashCode());
-	private static int TOPIC_BGCOLOR_TAG_HASHCODE = mod(MapBuilder.TOPIC_BGCOLOR_TAG.hashCode());
-	private static int TOPIC_FLAG_TAG_HASHCODE = mod(MapBuilder.TOPIC_FLAG_TAG.hashCode());
-	private static int TOPIC_PRIORITY_TAG_HASHCODE = mod(MapBuilder.TOPIC_PRIORITY_TAG.hashCode());
-	private static int TOPIC_SMILEY_TAG_HASHCODE = mod(MapBuilder.TOPIC_SMILEY_TAG.hashCode());
-	private static int TOPIC_TASK_COMPLETION_TAG_HASHCODE = mod(MapBuilder.TOPIC_TASK_COMPLETION_TAG.hashCode());
+	private static int TOPIC_ID_TAG_HASHCODE = mod(MapBuilder.TOPIC_ID_ATTR.hashCode());
+	private static int TOPIC_BGCOLOR_TAG_HASHCODE = mod(MapBuilder.TOPIC_BGCOLOR_ATTR.hashCode());
+	private static int TOPIC_FLAG_TAG_HASHCODE = mod(MapBuilder.TOPIC_FLAG_ATTR.hashCode());
+	private static int TOPIC_PRIORITY_TAG_HASHCODE = mod(MapBuilder.TOPIC_PRIORITY_ATTR.hashCode());
+	private static int TOPIC_SMILEY_TAG_HASHCODE = mod(MapBuilder.TOPIC_SMILEY_ATTR.hashCode());
+	private static int TOPIC_TASK_COMPLETION_TAG_HASHCODE = mod(MapBuilder.TOPIC_TASK_COMPLETION_ATTR.hashCode());
 	private static int TOPIC_MAP_REF_TAG_HASHCODE = mod(MapBuilder.TOPIC_MAP_REF_TAG.hashCode());
 
 	private String[] attributesMap = new String[base]; // make it global for
@@ -85,11 +85,11 @@ class SaxHandler extends DefaultHandler {
 					currentTopic.getParent().addChild(currentTopic);
 				}
 			} else if (localName.equals(MapBuilder.TOPIC_ICON_TAG)) {
-				String iconName = attributes.getValue(MapBuilder.ICON_NAME_TAG);
+				String iconName = attributes.getValue(MapBuilder.ICON_NAME_ATTR);
 				currentTopic.addIcon(Icon.parse(iconName));
 
 			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
-				String note = attributes.getValue(MapBuilder.NOTE_TEXT_TAG);
+				String note = attributes.getValue(MapBuilder.NOTE_TEXT_ATTR);
 				if (note != null) {
 					currentTopic.setNote(note);
 				} else {
@@ -98,16 +98,16 @@ class SaxHandler extends DefaultHandler {
 				}
 
 			} else if (localName.equals(MapBuilder.TOPIC_TASK_TAG)) {
-				String start = attributes.getValue(MapBuilder.TASK_START_TAG);
-				String deadline = attributes.getValue(MapBuilder.TASK_DEADLINE_TAG);
-				String responsible = attributes.getValue(MapBuilder.TASK_RESPONSIBLE_TAG);
+				String start = attributes.getValue(MapBuilder.TASK_START_ATTR);
+				String deadline = attributes.getValue(MapBuilder.TASK_DEADLINE_ATTR);
+				String responsible = attributes.getValue(MapBuilder.TASK_RESPONSIBLE_ATTR);
 				Task task = new Task(start, deadline, responsible);
 				currentTopic.setTask(task);
 			} else if (localName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
-				Date date = new Date((long) Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_TAG)));
-				String filename = attributes.getValue(MapBuilder.ATTACHMENT_FILENAME_TAG);
-				String key = attributes.getValue(MapBuilder.ATTACHMENT_KEY_TAG);
-				int size = Integer.parseInt(attributes.getValue(MapBuilder.ATTACHMENT_SIZE_TAG));
+				Date date = new Date((long) Float.parseFloat(attributes.getValue(MapBuilder.ATTACHMENT_DATE_ATTR)));
+				String filename = attributes.getValue(MapBuilder.ATTACHMENT_FILENAME_ATTR);
+				String key = attributes.getValue(MapBuilder.ATTACHMENT_KEY_ATTR);
+				int size = Integer.parseInt(attributes.getValue(MapBuilder.ATTACHMENT_SIZE_ATTR));
 				Attachment attachment = new Attachment(date, filename, key, size);
 				currentTopic.setAttachment(attachment);
 			} else if (!hasMeta) {

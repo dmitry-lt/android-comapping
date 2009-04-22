@@ -128,25 +128,25 @@ public class DomMapBuilder extends MapBuilder {
 		for (int i = 0; i < attributes.getLength(); i++) {
 			Node curAttr = attributes.item(i);
 
-			if (curAttr.getNodeName().equals(TOPIC_ID_TAG)) {
+			if (curAttr.getNodeName().equals(TOPIC_ID_ATTR)) {
 				topic.setId(Integer.parseInt(curAttr.getNodeValue()));
 				hasId = true;
 
-			} else if (curAttr.getNodeName().equals(TOPIC_BGCOLOR_TAG)) {
+			} else if (curAttr.getNodeName().equals(TOPIC_BGCOLOR_ATTR)) {
 				topic.setBgColor(Integer.parseInt(curAttr.getNodeValue()));
 
-			} else if (curAttr.getNodeName().equals(TOPIC_FLAG_TAG)) {
+			} else if (curAttr.getNodeName().equals(TOPIC_FLAG_ATTR)) {
 				String strFlag = curAttr.getNodeValue();
 				topic.setFlag(Flag.parse(strFlag));
 
-			} else if (curAttr.getNodeName().equals(TOPIC_PRIORITY_TAG)) {
+			} else if (curAttr.getNodeName().equals(TOPIC_PRIORITY_ATTR)) {
 				topic.setPriority(Integer.parseInt(curAttr.getNodeValue()));
 
-			} else if (curAttr.getNodeName().equals(TOPIC_SMILEY_TAG)) {
+			} else if (curAttr.getNodeName().equals(TOPIC_SMILEY_ATTR)) {
 				String strSmiley = curAttr.getNodeValue();
 				topic.setSmiley(Smiley.parse(strSmiley));
 
-			} else if (curAttr.getNodeName().equals(TOPIC_TASK_COMPLETION_TAG)) {
+			} else if (curAttr.getNodeName().equals(TOPIC_TASK_COMPLETION_ATTR)) {
 				String strTaskCompletion = curAttr.getNodeValue();
 				topic.setTaskCompletion(TaskCompletion.parse(strTaskCompletion));
 			} else if (curAttr.getNodeName().equals(TOPIC_MAP_REF_TAG)) {
@@ -170,26 +170,26 @@ public class DomMapBuilder extends MapBuilder {
 				topic.addChild(buildTopic(childNode, topic));
 
 			} else if (childNode.getNodeName().equals(TOPIC_ICON_TAG)) {
-				String iconName = childNode.getAttributes().getNamedItem(ICON_NAME_TAG).getNodeValue();
+				String iconName = childNode.getAttributes().getNamedItem(ICON_NAME_ATTR).getNodeValue();
 				topic.addIcon(Icon.parse(iconName));
 
 			} else if (childNode.getNodeName().equals(TOPIC_NOTE_TAG)) {
-				String note = childNode.getAttributes().getNamedItem(NOTE_TEXT_TAG).getNodeValue();
+				String note = childNode.getAttributes().getNamedItem(NOTE_TEXT_ATTR).getNodeValue();
 				topic.setNote(note);
 
 			} else if (childNode.getNodeName().equals(TOPIC_TASK_TAG)) {
-				String start = childNode.getAttributes().getNamedItem(TASK_START_TAG).getNodeValue();
-				String deadline = childNode.getAttributes().getNamedItem(TASK_DEADLINE_TAG).getNodeValue();
-				String responsible = childNode.getAttributes().getNamedItem(TASK_RESPONSIBLE_TAG).getNodeValue();
+				String start = childNode.getAttributes().getNamedItem(TASK_START_ATTR).getNodeValue();
+				String deadline = childNode.getAttributes().getNamedItem(TASK_DEADLINE_ATTR).getNodeValue();
+				String responsible = childNode.getAttributes().getNamedItem(TASK_RESPONSIBLE_ATTR).getNodeValue();
 				Task task = new Task(start, deadline, responsible);
 				topic.setTask(task);
 
 			} else if (childNode.getNodeName().equals(TOPIC_ATTACHMENT_TAG)) {
 				// float fDate =
 				// Float.parseFloat(childNode.getAttributes().getNamedItem(ATTACHMENT_DATE_TAG).getNodeValue());
-				String filename = childNode.getAttributes().getNamedItem(ATTACHMENT_FILENAME_TAG).getNodeValue();
-				String key = childNode.getAttributes().getNamedItem(ATTACHMENT_KEY_TAG).getNodeValue();
-				int size = Integer.parseInt(childNode.getAttributes().getNamedItem(ATTACHMENT_SIZE_TAG).getNodeValue());
+				String filename = childNode.getAttributes().getNamedItem(ATTACHMENT_FILENAME_ATTR).getNodeValue();
+				String key = childNode.getAttributes().getNamedItem(ATTACHMENT_KEY_ATTR).getNodeValue();
+				int size = Integer.parseInt(childNode.getAttributes().getNamedItem(ATTACHMENT_SIZE_ATTR).getNodeValue());
 				Attachment attachment = new Attachment(new Date(), filename, key, size);
 				topic.setAttachment(attachment);
 			}
