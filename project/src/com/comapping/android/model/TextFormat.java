@@ -1,8 +1,11 @@
 package com.comapping.android.model;
 
+import java.io.Serializable;
+
 import android.graphics.Color;
 
-public class TextFormat implements Cloneable {
+public class TextFormat implements Cloneable, Serializable {
+	private static final long serialVersionUID = 3663809688417285721L;
 
 	private int fontSize = 16;
 	private int fontColor = Color.BLACK;
@@ -20,13 +23,11 @@ public class TextFormat implements Cloneable {
 	}
 
 	public boolean equals(TextFormat format) {
-		return (this.fontColor == format.fontColor &&
-				this.fontSize == format.fontSize &&
-				this.underlined == format.underlined &&
-				this.getHRef().equals(format.getHRef()));
+		return (this.fontColor == format.fontColor && this.fontSize == format.fontSize
+				&& this.underlined == format.underlined && this.getHRef().equals(format.getHRef()));
 	}
-	
-	public int getFontSize(){
+
+	public int getFontSize() {
 		return fontSize;
 	}
 

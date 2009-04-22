@@ -1,5 +1,6 @@
 package com.comapping.android.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,8 @@ import com.comapping.android.model.exceptions.StringToXMLConvertionException;
  * @author Passichenko Victor and Yuri Zemlyanskiy
  * 
  */
-public class Topic implements Iterable<Topic> {
+public class Topic implements Iterable<Topic>, Serializable {
+	private static final long serialVersionUID = 9028218616007509606L;
 
 	private int id;
 	private Topic parent;
@@ -230,7 +232,7 @@ public class Topic implements Iterable<Topic> {
 	public void removeAllChildTopics() {
 		children = new ArrayList<Topic>();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText() + "\"]";

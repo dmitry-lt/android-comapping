@@ -1,9 +1,12 @@
 package com.comapping.android.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextParagraph {
+public class TextParagraph implements Serializable {
+	private static final long serialVersionUID = 150495793618162768L;
+
 	private List<TextBlock> textBlocks;
 	private int maxFontSize;
 	private String simpleText;

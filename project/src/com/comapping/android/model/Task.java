@@ -1,6 +1,10 @@
 package com.comapping.android.model;
 
-public class Task {
+import java.io.Serializable;
+
+public class Task implements Serializable {
+	private static final long serialVersionUID = 4156893986325113199L;
+
 	private String start;
 	private String deadline;
 	private String responsible;

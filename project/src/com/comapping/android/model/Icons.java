@@ -1,9 +1,12 @@
 package com.comapping.android.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Icons {
+public class Icons implements Serializable {
+	private static final long serialVersionUID = 6756889595119233479L;
+
 	private int mask;
 
 	public void addIcon(Icon icon) {

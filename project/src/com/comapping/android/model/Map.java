@@ -1,5 +1,7 @@
 package com.comapping.android.model;
 
+import java.io.Serializable;
+
 import com.comapping.android.Log;
 
 /**
@@ -7,7 +9,9 @@ import com.comapping.android.Log;
  * 
  */
 
-public class Map {
+public class Map implements Serializable {
+	private static final long serialVersionUID = 1735863291545926897L;
+
 	private final int id;
 	private String name;
 	private User owner;
@@ -71,5 +75,4 @@ public class Map {
 	public String toString() {
 		return "[Map: id=" + this.getId() + ", name=\"" + this.getName() + "\"]";
 	}
-
 }

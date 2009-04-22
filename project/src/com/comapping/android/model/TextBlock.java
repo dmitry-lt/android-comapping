@@ -1,8 +1,12 @@
 package com.comapping.android.model;
 
+import java.io.Serializable;
+
 import com.comapping.android.Log;
 
-public class TextBlock {
+public class TextBlock implements Serializable {
+	private static final long serialVersionUID = -155561696789833530L;
+
 	private String text;
 	private TextFormat format;
 

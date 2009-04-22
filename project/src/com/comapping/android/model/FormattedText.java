@@ -1,5 +1,6 @@
 package com.comapping.android.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,8 @@ import java.util.List;
  * @author Yuri Zemlyanskiy
  * 
  */
-public class FormattedText {
+public class FormattedText implements Serializable {
+	private static final long serialVersionUID = -8707558569665486055L;
 
 	private List<TextParagraph> textParagraphs;
 	private String simpleText;
@@ -23,7 +25,15 @@ public class FormattedText {
 
 	public FormattedText(String text, TextFormat format) {
 		this();
-		add(new TextParagraph(text, format));
+		int pos = 0;
+		while (pos < text.length()) {
+			int lineEndPos = text.indexOf('\n', pos);
+			if (lineEndPos == -1) {
+				lineEndPos = text.length();
+			}
+			add(new TextParagraph(text.substring(pos, lineEndPos - 1), format));
+			pos = lineEndPos + 1;
+		}
 	}
 
 	public FormattedText(List<TextParagraph> textParagraphs) {

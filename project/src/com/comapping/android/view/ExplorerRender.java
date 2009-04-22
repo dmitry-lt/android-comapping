@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 
 public class ExplorerRender extends MapRender {
 
+	// название не очень понятное
 	private class TouchPoint {
 		public int x, y;
 		public MyTopic topic;
@@ -25,19 +26,20 @@ public class ExplorerRender extends MapRender {
 		}
 	}
 
+	// название не очень понятное
 	private class MyTopic {
 		public Topic topic;
-		public boolean open;
+		public boolean open; // isOpen better
 		public TopicRender topicRender;
 		public int topicX, topicY;
-		public ArrayList<MyTopic> childs;
-		public int x1, y1, x2, y2;
-		public MyTopic up, down, left, right;
+		public ArrayList<MyTopic> childs; // children
+		public int x1, y1, x2, y2; // unintelligible(hard to understand)
+		public MyTopic up, down, left, right; // unintelligible(hard to understand)
 	}
 
 	private static final int X_SHIFT = 30;
 	private static final int Y_SHIFT = 15;
-	private static final int OUTER_SIZE = 15;
+	private static final int OUTER_SIZE = 15; // of what?
 	private static final int CIRCLE_WIDTH = 2;
 	private static final int PLUS_LENGTH = 7;
 	private static final int PLUS_WIDTH = 2;
@@ -52,7 +54,7 @@ public class ExplorerRender extends MapRender {
 	private Context context;
 
 	private ArrayList<TouchPoint> points = new ArrayList<TouchPoint>();
-	private ArrayList<Rect> lines = new ArrayList<Rect>();
+	private ArrayList<Rect> lines = new ArrayList<Rect>(); // line is rect?
 	private ArrayList<MyTopic> topics = new ArrayList<MyTopic>();
 
 	private int xPlus, yPlus;
@@ -234,7 +236,7 @@ public class ExplorerRender extends MapRender {
 
 	// Method to calculate coordinates of topics, circles
 	// and lines according screen size and collapsed topics
-	private int[] updateTopic(MyTopic topic, int x, int y) {
+	private int[] updateTopic(MyTopic topic, int x, int y) { // there is a Point class
 		// calculate sizes
 		topic.x1 = x;
 		topic.y1 = y;
@@ -302,7 +304,7 @@ public class ExplorerRender extends MapRender {
 	// Method to update tree, sizes and references for
 	// key pressing
 	@Override
-	public void update() {
+	public void update() { // why it's method of abstract class MapRender
 		points.clear();
 		lines.clear();
 		topics.clear();
@@ -328,7 +330,7 @@ public class ExplorerRender extends MapRender {
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		x = -x;
+		x = -x; // magic?
 		y = -y;
 		xPlus = x;
 		yPlus = y;

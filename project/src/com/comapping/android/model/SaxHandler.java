@@ -37,6 +37,7 @@ class SaxHandler extends DefaultHandler {
 	private boolean isOwnerNameTag = false;
 	private boolean isOwnerEmailTag = false;
 	private boolean isTextTag = false;
+	private boolean isNoteTag = false;
 
 	private boolean hasMeta = false;
 
@@ -49,6 +50,7 @@ class SaxHandler extends DefaultHandler {
 	private User owner;
 	private Map map;
 	private String topicText;
+	private String noteText;
 	private Topic currentTopic = null;
 	private long startTime;
 
@@ -70,8 +72,7 @@ class SaxHandler extends DefaultHandler {
 		// Log.i(Log.modelTag, "SAX parsing started... \n");
 	}
 
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		try {
 			if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
 				isTextTag = true;
@@ -86,9 +87,15 @@ class SaxHandler extends DefaultHandler {
 			} else if (localName.equals(MapBuilder.TOPIC_ICON_TAG)) {
 				String iconName = attributes.getValue(MapBuilder.ICON_NAME_TAG);
 				currentTopic.addIcon(Icon.parse(iconName));
+
 			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
 				String note = attributes.getValue(MapBuilder.NOTE_TEXT_TAG);
-				currentTopic.setNote(note);
+				if (note != null) {
+					currentTopic.setNote(note);
+				} else {
+					isNoteTag = true;
+					noteText = "";
+				}
 
 			} else if (localName.equals(MapBuilder.TOPIC_TASK_TAG)) {
 				String start = attributes.getValue(MapBuilder.TASK_START_TAG);
@@ -101,24 +108,21 @@ class SaxHandler extends DefaultHandler {
 				String filename = attributes.getValue(MapBuilder.ATTACHMENT_FILENAME_TAG);
 				String key = attributes.getValue(MapBuilder.ATTACHMENT_KEY_TAG);
 				int size = Integer.parseInt(attributes.getValue(MapBuilder.ATTACHMENT_SIZE_TAG));
-				Attachment attachment = new Attachment(date, filename, key,size);
+				Attachment attachment = new Attachment(date, filename, key, size);
 				currentTopic.setAttachment(attachment);
 			} else if (!hasMeta) {
 				if (localName.equals(MapBuilder.METADATA_TAG)) {
 				} else if (localName.equals(MapBuilder.MAP_ID_TAG) && mapId == 0) {
 					isMapIDTag = true;
-				} else if (localName.equals(MapBuilder.MAP_NAME_TAG)&& mapName == null) {
+				} else if (localName.equals(MapBuilder.MAP_NAME_TAG) && mapName == null) {
 					isMapNameTag = true;
 				} else if (localName.equals(MapBuilder.MAP_OWNER_TAG)) {
 					isOwnerTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_ID_TAG)
-						&& isOwnerTag) {
+				} else if (localName.equals(MapBuilder.OWNER_ID_TAG) && isOwnerTag) {
 					isOwnerIDTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_NAME_TAG)
-						&& isOwnerTag) {
+				} else if (localName.equals(MapBuilder.OWNER_NAME_TAG) && isOwnerTag) {
 					isOwnerNameTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_EMAIL_TAG)
-						&& isOwnerTag) {
+				} else if (localName.equals(MapBuilder.OWNER_EMAIL_TAG) && isOwnerTag) {
 					isOwnerEmailTag = true;
 				}
 			}
@@ -142,8 +146,7 @@ class SaxHandler extends DefaultHandler {
 		try {
 			int length = attributes.getLength();
 			for (int i = 0; i < length; i++) {
-				attributesMap[mod(attributes.getLocalName(i).hashCode())] = attributes
-						.getValue(i);
+				attributesMap[mod(attributes.getLocalName(i).hashCode())] = attributes.getValue(i);
 			}
 
 			if (attributesMap[TOPIC_ID_TAG_HASHCODE] != null) {
@@ -193,6 +196,8 @@ class SaxHandler extends DefaultHandler {
 		if (isTextTag) {
 			topicText = string;
 			isTextTag = false;
+		} else if (isNoteTag) {
+			noteText += string;
 		} else if (!hasMeta) {
 			if (isMapIDTag) {
 				mapId = Integer.parseInt(string);
@@ -213,8 +218,7 @@ class SaxHandler extends DefaultHandler {
 		}
 	}
 
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
+	public void endElement(String uri, String localName, String qName) throws SAXException {
 		try {
 			if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
 				currentTopic.setText(topicText);
@@ -222,6 +226,9 @@ class SaxHandler extends DefaultHandler {
 				if (currentTopic.getParent() != null) {
 					currentTopic = currentTopic.getParent();
 				}
+			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
+				isNoteTag = false;
+				currentTopic.setNote(noteText);
 			} else if (!hasMeta) {
 				if (localName.equals(MapBuilder.MAP_OWNER_TAG)) {
 					owner = new User(ownerId, ownerName, ownerEmail);
@@ -247,8 +254,6 @@ class SaxHandler extends DefaultHandler {
 
 	public void endDocument() {
 		long parsingTime = System.currentTimeMillis() - startTime;
-		Log.i(Log.modelTag,
-				"map was built with SAX successfully, parsing time: "
-						+ parsingTime);
+		Log.i(Log.modelTag, "map was built with SAX successfully, parsing time: " + parsingTime);
 	}
 }
