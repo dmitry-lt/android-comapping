@@ -58,6 +58,7 @@ public class TextRender extends Render {
 
 			paint = new Paint();
 			paint.setAntiAlias(true);
+			paint.setSubpixelText(true);
 
 			// precalc of paragraphs width
 			parsWidth = new int[text.getTextParagraphs().size()];
