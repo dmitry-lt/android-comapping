@@ -1,5 +1,7 @@
 package com.comapping.android.view;
 
+import com.comapping.android.Options;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -108,9 +110,17 @@ public class MainMapView extends View {
 		mRender.update();
 	}
 
+	boolean isDrawing = false;
+
+	private void refresh() {
+		while (!isDrawing)
+			;
+		invalidate();
+	}
+
 	@Override
 	protected void onDraw(Canvas canvas) {
-		mScroller.computeScrollOffset();
+		isDrawing = false;
 
 		Paint p = new Paint();
 		canvas.drawARGB(255, 255, 255, 255);
@@ -123,10 +133,12 @@ public class MainMapView extends View {
 
 		canvas.scale(1 / scale, 1 / scale);
 
-		p.setColor(Color.BLACK);
-		canvas.drawText("FPS: " + fps, 20, 30, p);
-		canvas.drawText("Width: " + mRender.getWidth(), 20, 50, p);
-		canvas.drawText("Height: " + mRender.getHeight(), 20, 70, p);
+		if (Options.DEBUG_RENDERING) {
+			p.setColor(Color.BLACK);
+			canvas.drawText("FPS: " + fps, 20, 30, p);
+			canvas.drawText("Width: " + mRender.getWidth(), 20, 50, p);
+			canvas.drawText("Height: " + mRender.getHeight(), 20, 70, p);
+		}
 
 		if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
 			if (zoomVisible) {
@@ -135,14 +147,20 @@ public class MainMapView extends View {
 			}
 		}
 
-		if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
-			fps = (1000 * frameCount)
-					/ (System.currentTimeMillis() - lastFPSCalcTime);
-			lastFPSCalcTime = System.currentTimeMillis();
-			frameCount = 0;
+		isDrawing = true;
+
+		if (mScroller.computeScrollOffset())
+			invalidate();
+
+		if (Options.DEBUG_RENDERING) {
+			if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
+				fps = (1000 * frameCount)
+						/ (System.currentTimeMillis() - lastFPSCalcTime);
+				lastFPSCalcTime = System.currentTimeMillis();
+				frameCount = 0;
+			}
+			frameCount++;
 		}
-		frameCount++;
-		invalidate();
 	}
 
 	VelocityTracker mVelocityTracker;
@@ -199,6 +217,8 @@ public class MainMapView extends View {
 
 				mScroller.startScroll(mScroller.getCurrX(), mScroller
 						.getCurrY(), deltaX, deltaY, 0);
+
+				refresh();
 			}
 			return true;
 		}
@@ -208,14 +228,12 @@ public class MainMapView extends View {
 					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
 					* (startY - (int) ev.getY());
 
-			Log.i("Test", "Time:" + timeDelta + " Path len:" + pathLen);
 			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
 				mRender.onTouch(mScroller.getCurrX()
 						+ (int) (ev.getX() / scale), mScroller.getCurrY()
 						+ (int) (ev.getY() / scale) - getVertOffset());
-				Log.i("Test", "Touch!");
+				refresh();
 			} else {
-				Log.i("Test", "Scroll!");
 				mVelocityTracker.addMovement(ev);
 
 				mVelocityTracker.computeCurrentVelocity(1000);
@@ -230,6 +248,8 @@ public class MainMapView extends View {
 						-vx, -vy, 0, getScrollWidth(), 0, getScrollHeight());
 
 				mVelocityTracker.recycle();
+
+				refresh();
 
 				return true;
 			}
@@ -249,7 +269,7 @@ public class MainMapView extends View {
 		Log.d("Test", "Press");
 
 		mRender.onKeyDown(keyCode);
-
+		refresh();
 		return false;
 	}
 
