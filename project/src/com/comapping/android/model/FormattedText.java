@@ -53,8 +53,12 @@ public class FormattedText implements Serializable {
 		textParagraphs.add(paragraph);
 		update();
 	}
+	
+	public TextParagraph getLast() {
+		return textParagraphs.get(textParagraphs.size() - 1);
+	}
 
-	private void update() {
+	public void update() {
 		StringBuilder text = new StringBuilder();
 		for (int i = 0; i < textParagraphs.size(); i++) {
 			TextParagraph cur = textParagraphs.get(i);
