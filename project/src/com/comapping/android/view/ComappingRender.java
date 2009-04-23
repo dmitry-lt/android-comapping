@@ -390,6 +390,11 @@ public class ComappingRender extends MapRender {
 			}
 			return index;
 		}
+		
+		public void onTouch(int x, int y)
+		{
+			render.onTouch(x, y);
+		}
 	}
 
 	/*
@@ -590,14 +595,19 @@ public class ComappingRender extends MapRender {
 	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY) {
 		int yStart = itm.getTopicOffset() + baseY;
 		int xStart = baseX;
+		
+		int localX = destX - xStart;
+		int localY = destY - yStart;
 
-		if (itm.isOverButton(destX - xStart, destY - yStart)) {
+		if (itm.isOverButton(localX, localY)) {
 
 			changeChildVisibleStatus(itm);
 
 			return true;
-		} else if (itm.isOverTopic(destX - xStart, destY - yStart)) {
-			focusTopic(itm);
+		} else if (itm.isOverTopic(localX, localY)) {
+			selectTopic(itm);
+			itm.onTouch(localX, localY);
+			//focusTopic(itm);
 		}
 
 		if (itm.isChildsVisible()) {
@@ -626,20 +636,54 @@ public class ComappingRender extends MapRender {
 	 */
 
 	/**
+	 * Selecting topic
+	 * 
+	 * @param topic
+	 *            Item to select
+	 */
+	private final void selectTopic(Item topic)
+	{
+		if (selected != null)
+			selected.render.setSelected(false);
+
+		topic.render.setSelected(true);
+		selected = topic;
+	}
+	 
+	
+	/**
 	 * Focusing on topic
 	 * 
 	 * @param topic
 	 *            Item to focus on
 	 */
 	private final void focusTopic(Item topic) {
-		if (selected != null)
-			selected.render.setSelected(false);
-
-		topic.render.setSelected(true);
-		selected = topic;
-
-		smoothScroll(topic.getRenderZoneX(), topic.getTopicOffset()
-				+ topic.getRenderZoneY());
+		
+		selectTopic(topic);
+		
+		int topicX = topic.getRenderZoneX();
+		int topicY = topic.getTopicOffset() + topic.getRenderZoneY();
+		
+		int screenPosX = topicX - xOffset;
+		int screenPosY = topicY - yOffset;
+		
+		int deltaX = xOffset;
+		int deltaY = yOffset;
+		
+		if (screenPosX < 0)
+			deltaX +=  screenPosX;
+		else if (screenPosX + topic.getTopicWidth() > renderZoneWidth)
+			deltaX += screenPosX + topic.getTopicWidth() -  renderZoneWidth;
+		
+		if (screenPosY < 0)
+			deltaY +=  screenPosY;
+		else if (screenPosY + topic.getTopicHeight() > renderZoneHeight)
+			deltaY += screenPosY + topic.getTopicHeight() -  renderZoneHeight;
+		
+		smoothScroll(deltaX, deltaY);
+		
+//		smoothScroll(topic.getRenderZoneX(), topic.getTopicOffset()
+//				+ topic.getRenderZoneY());
 	}
 
 	private int fixXOffset(int dx) {
