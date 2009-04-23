@@ -33,6 +33,7 @@
  */
 package com.comapping.android.view;
 
+import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
 
 import android.content.Context;
@@ -424,9 +425,9 @@ public class ComappingRender extends MapRender {
 	 * @param map
 	 *            Root element
 	 */
-	public ComappingRender(Context context, Topic map) {
+	public ComappingRender(Context context, Map map) {
 		this.context = context;
-		root = buildTree(map, null);
+		root = buildTree(map.getRoot(), null);
 	}
 
 	/**

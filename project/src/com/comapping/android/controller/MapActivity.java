@@ -172,7 +172,7 @@ public class MapActivity extends Activity {
 		case EXPLORER_VIEW:
 			return new ExplorerRender(this, map);
 		case TREE_VIEW:
-			return new ComappingRender(this, map.getRoot());
+			return new ComappingRender(this, map);
 		default:
 			return null;
 		}
