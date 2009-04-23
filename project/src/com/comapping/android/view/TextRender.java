@@ -39,9 +39,6 @@ public class TextRender extends Render {
 	// upper-left corner
 	private Rect[][] blocksRect;
 
-	// for precalc
-	private int[] parsWidth;
-
 	private Context context;
 
 	public TextRender(FormattedText text, Context context) {
@@ -59,17 +56,6 @@ public class TextRender extends Render {
 			paint = new Paint();
 			paint.setAntiAlias(true);
 			paint.setSubpixelText(true);
-
-			// precalc of paragraphs width
-			parsWidth = new int[text.getTextParagraphs().size()];
-			for (int i = 0; i < text.getTextParagraphs().size(); i++) {
-				TextParagraph paragraph = text.getTextParagraphs().get(i);
-				parsWidth[i] = 0;
-				for (TextBlock block : paragraph.getTextBlocks()) {
-					paint.setTextSize(block.getFormat().getFontSize());
-					parsWidth[i] += paint.measureText(block.getText());
-				}
-			}
 
 			textToDraw = text;
 			setBorder(DEFAULT_BORDER, DEFAULT_BORDER, DEFAULT_BORDER, DEFAULT_BORDER);
