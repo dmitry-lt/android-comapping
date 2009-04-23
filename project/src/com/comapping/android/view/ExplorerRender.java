@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 
 public class ExplorerRender extends MapRender {
 
-	// название не очень понятное
 	private class TouchPoint {
 		public int x, y;
 		public MyTopic topic;
@@ -26,20 +25,19 @@ public class ExplorerRender extends MapRender {
 		}
 	}
 
-	// название не очень понятное
 	private class MyTopic {
 		public Topic topic;
-		public boolean open; // isOpen better
+		public boolean open;
 		public TopicRender topicRender;
 		public int topicX, topicY;
-		public ArrayList<MyTopic> childs; // children
-		public int x1, y1, x2, y2; // unintelligible(hard to understand)
-		public MyTopic up, down, left, right; // unintelligible(hard to understand)
+		public ArrayList<MyTopic> childs;
+		public int x1, y1, x2, y2;
+		public MyTopic up, down, left, right;
 	}
 
 	private static final int X_SHIFT = 30;
 	private static final int Y_SHIFT = 15;
-	private static final int OUTER_SIZE = 15; // of what?
+	private static final int OUTER_SIZE = 15;
 	private static final int CIRCLE_WIDTH = 2;
 	private static final int PLUS_LENGTH = 7;
 	private static final int PLUS_WIDTH = 2;
@@ -54,7 +52,7 @@ public class ExplorerRender extends MapRender {
 	private Context context;
 
 	private ArrayList<TouchPoint> points = new ArrayList<TouchPoint>();
-	private ArrayList<Rect> lines = new ArrayList<Rect>(); // line is rect?
+	private ArrayList<Rect> lines = new ArrayList<Rect>();
 	private ArrayList<MyTopic> topics = new ArrayList<MyTopic>();
 
 	private int xPlus, yPlus;
@@ -80,8 +78,7 @@ public class ExplorerRender extends MapRender {
 
 	// Is rectangle lies on screen
 	private boolean onScreen(int x1, int y1, int x2, int y2) {
-		return intersects(0, screenWidth, x1, x2)
-				&& intersects(0, screenHeight, y1, y2);
+		return intersects(0, screenWidth, x1, x2) && intersects(0, screenHeight, y1, y2);
 	}
 
 	// Method builds initially MyTopics tree
@@ -160,17 +157,14 @@ public class ExplorerRender extends MapRender {
 			if (y - OUTER_SIZE > screenHeight) {
 				break;
 			}
-			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y
-					+ OUTER_SIZE)) {
+			if (onScreen(x - OUTER_SIZE, y - OUTER_SIZE, x + OUTER_SIZE, y + OUTER_SIZE)) {
 				c.drawCircle(x, y, OUTER_SIZE, p);
 				p.setColor(Color.WHITE);
 				c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
 				p.setColor(Color.GRAY);
-				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y
-						+ PLUS_WIDTH, p);
+				c.drawRect(x - PLUS_LENGTH, y - PLUS_WIDTH, x + PLUS_LENGTH, y + PLUS_WIDTH, p);
 				if (!point.topic.open)
-					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH,
-							y + PLUS_LENGTH, p);
+					c.drawRect(x - PLUS_WIDTH, y - PLUS_LENGTH, x + PLUS_WIDTH, y + PLUS_LENGTH, p);
 			}
 		}
 		p.setAntiAlias(false);
@@ -180,8 +174,7 @@ public class ExplorerRender extends MapRender {
 		hi = topics.size() - 1;
 		while (lo < hi) {
 			int mid = (lo + hi + 1) / 2;
-			if (topics.get(mid).topicY
-					+ topics.get(mid).topicRender.getHeight() + yPlus < 0) {
+			if (topics.get(mid).topicY + topics.get(mid).topicRender.getHeight() + yPlus < 0) {
 				lo = mid;
 			} else {
 				hi = mid - 1;
@@ -196,8 +189,7 @@ public class ExplorerRender extends MapRender {
 				break;
 			}
 			TopicRender topicRender = topic.topicRender;
-			if (onScreen(x, y, x + topicRender.getWidth(), y
-					+ topicRender.getHeight())) {
+			if (onScreen(x, y, x + topicRender.getWidth(), y + topicRender.getHeight())) {
 				topicRender.draw(x, y, 0, 0, c);
 			}
 		}
@@ -236,13 +228,12 @@ public class ExplorerRender extends MapRender {
 
 	// Method to calculate coordinates of topics, circles
 	// and lines according screen size and collapsed topics
-	private int[] updateTopic(MyTopic topic, int x, int y) { // there is a Point class
+	private int[] updateTopic(MyTopic topic, int x, int y) {
 		// calculate sizes
 		topic.x1 = x;
 		topic.y1 = y;
 		TopicRender topicRender = topic.topicRender;
-		topicRender.setMaxWidth(screenWidth - OUTER_SIZE - X_SHIFT
-				- BLOCK_SHIFT);
+		topicRender.setMaxWidth(screenWidth - OUTER_SIZE - X_SHIFT - BLOCK_SHIFT);
 		int height = topicRender.getHeight();
 		if (topic.childs.size() > 0) {
 			height = Math.max(height, OUTER_SIZE * 2);
@@ -304,7 +295,7 @@ public class ExplorerRender extends MapRender {
 	// Method to update tree, sizes and references for
 	// key pressing
 	@Override
-	public void update() { // why it's method of abstract class MapRender
+	public void update() {
 		points.clear();
 		lines.clear();
 		topics.clear();
@@ -330,7 +321,7 @@ public class ExplorerRender extends MapRender {
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		x = -x; // magic?
+		x = -x;
 		y = -y;
 		xPlus = x;
 		yPlus = y;
