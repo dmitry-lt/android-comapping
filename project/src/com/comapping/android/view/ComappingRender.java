@@ -391,9 +391,8 @@ public class ComappingRender extends MapRender {
 			}
 			return index;
 		}
-		
-		public void onTouch(int x, int y)
-		{
+
+		public void onTouch(int x, int y) {
 			render.onTouch(x, y);
 		}
 	}
@@ -540,6 +539,16 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
+	private void initTree(Item itm) {
+		if (itm.getRenderZoneX() + itm.getRenderZoneWidth() > renderZoneWidth) {
+			setChildrenVisible(itm, false);
+		} else {
+			setChildrenVisible(itm, true);
+		}
+		for(Item i : itm.children)
+			initTree(i);
+	}
+
 	public int getWidth() {
 		return root.getTreeWidth();
 	}
@@ -548,8 +557,8 @@ public class ComappingRender extends MapRender {
 		return root.getRenderZoneHeight();
 	}
 
-	private int renderZoneHeight = 0;
-	private int renderZoneWidth = 0;
+	private int renderZoneHeight = -1;
+	private int renderZoneWidth = -1;
 
 	/**
 	 * Returns offset for centering small o collapsed maps
@@ -566,8 +575,19 @@ public class ComappingRender extends MapRender {
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		renderZoneHeight = height;
-		renderZoneWidth = width;
+		
+		if (renderZoneWidth == -1)
+		{
+			renderZoneHeight = height;
+			renderZoneWidth = width;
+			initTree(root);
+		}
+		else
+		{
+			renderZoneHeight = height;
+			renderZoneWidth = width;
+		}
+		
 		xOffset = x;
 		yOffset = y - getVertOffset();
 		draw(-x, -y + getVertOffset(), root, width, height, c);
@@ -596,7 +616,7 @@ public class ComappingRender extends MapRender {
 	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY) {
 		int yStart = itm.getTopicOffset() + baseY;
 		int xStart = baseX;
-		
+
 		int localX = destX - xStart;
 		int localY = destY - yStart;
 
@@ -608,7 +628,7 @@ public class ComappingRender extends MapRender {
 		} else if (itm.isOverTopic(localX, localY)) {
 			selectTopic(itm);
 			itm.onTouch(localX, localY);
-			//focusTopic(itm);
+			// focusTopic(itm);
 		}
 
 		if (itm.isChildsVisible()) {
@@ -642,16 +662,14 @@ public class ComappingRender extends MapRender {
 	 * @param topic
 	 *            Item to select
 	 */
-	private final void selectTopic(Item topic)
-	{
+	private final void selectTopic(Item topic) {
 		if (selected != null)
 			selected.render.setSelected(false);
 
 		topic.render.setSelected(true);
 		selected = topic;
 	}
-	 
-	
+
 	/**
 	 * Focusing on topic
 	 * 
@@ -659,32 +677,32 @@ public class ComappingRender extends MapRender {
 	 *            Item to focus on
 	 */
 	private final void focusTopic(Item topic) {
-		
+
 		selectTopic(topic);
-		
+
 		int topicX = topic.getRenderZoneX();
 		int topicY = topic.getTopicOffset() + topic.getRenderZoneY();
-		
+
 		int screenPosX = topicX - xOffset;
 		int screenPosY = topicY - yOffset;
-		
+
 		int deltaX = xOffset;
 		int deltaY = yOffset;
-		
+
 		if (screenPosX < 0)
-			deltaX +=  screenPosX;
+			deltaX += screenPosX;
 		else if (screenPosX + topic.getTopicWidth() > renderZoneWidth)
-			deltaX += screenPosX + topic.getTopicWidth() -  renderZoneWidth;
-		
+			deltaX += screenPosX + topic.getTopicWidth() - renderZoneWidth;
+
 		if (screenPosY < 0)
-			deltaY +=  screenPosY;
+			deltaY += screenPosY;
 		else if (screenPosY + topic.getTopicHeight() > renderZoneHeight)
-			deltaY += screenPosY + topic.getTopicHeight() -  renderZoneHeight;
-		
+			deltaY += screenPosY + topic.getTopicHeight() - renderZoneHeight;
+
 		smoothScroll(deltaX, deltaY);
-		
-//		smoothScroll(topic.getRenderZoneX(), topic.getTopicOffset()
-//				+ topic.getRenderZoneY());
+
+		// smoothScroll(topic.getRenderZoneX(), topic.getTopicOffset()
+		// + topic.getRenderZoneY());
 	}
 
 	private int fixXOffset(int dx) {
@@ -719,17 +737,11 @@ public class ComappingRender extends MapRender {
 		scrollController.intermediateScroll(dx, dy);
 	}
 
-	/**
-	 * Show/Hide chldren
-	 * 
-	 * @param topic
-	 *            Parent Item
-	 */
-	private final void changeChildVisibleStatus(Item topic) {
+	private final void setChildrenVisible(Item topic, boolean isVisible) {
 		int deltaY = topic.getRenderZoneY() + topic.getTopicOffset()
 				+ getVertOffset() - yOffset;
 
-		topic.setChildrenVisible(!topic.isChildsVisible());
+		topic.setChildrenVisible(isVisible);
 
 		root.clearTree();
 
@@ -742,21 +754,17 @@ public class ComappingRender extends MapRender {
 			smoothScroll(destOffsetX, destOffsetY);
 		else
 			sharpScroll(destOffsetX, destOffsetY);
+	}
 
-		// scrollController.intermediateScroll(topic.getRenderZoneX()
-		// - (oldScreenPosX - newScreenPosX), topic.getRenderZoneY()
-		// - (oldScreenPosY - newScreenPosY));
+	/**
+	 * Show/Hide chldren
+	 * 
+	 * @param topic
+	 *            Parent Item
+	 */
+	private final void changeChildVisibleStatus(Item topic) {
 
-		// int newAbsPosX = topic.getRenderZoneX();
-		// int newAbsPosY = topic.getRenderZoneY() + topic.getTopicOffset();
-		//
-		// scrollController.intermediateScroll(
-		// (oldAbsPosX + getVertOffset()) + newAbsPosX, (oldAbsPosY +
-		// getVertOffset())
-		// + newAbsPosY);
-		//		
-
-		// focusTopic(topic);
+		setChildrenVisible(topic, !topic.isChildsVisible());
 	}
 
 	/*
