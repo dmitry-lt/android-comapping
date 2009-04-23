@@ -21,8 +21,14 @@ public class MainMapView extends View {
 	private static final float MIN_SCALE = 0.5f;
 	private static final long TIME_TO_HIDE = 2000;
 
+	private static final int SCROLLBAR_WIDTH = 4;
+	private static final int SCROLLBAR_LINE_LEN = 15;
+
 	public MapRender mRender;
 	public Scroller mScroller;
+
+	private Paint scrollBarBackgroundPaint = new Paint();
+	private Paint scrollBarPaint = new Paint();
 
 	ScrollController scrollController = new ScrollController() {
 
@@ -49,6 +55,12 @@ public class MainMapView extends View {
 
 	public MainMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		scrollBarBackgroundPaint.setColor(Color.GRAY);
+		scrollBarBackgroundPaint.setAlpha(127);
+
+		scrollBarPaint.setColor(Color.GRAY);
+
 		setFocusable(true);
 		mScroller = new Scroller(context);
 	}
@@ -125,13 +137,17 @@ public class MainMapView extends View {
 		Paint p = new Paint();
 		canvas.drawARGB(255, 255, 255, 255);
 
+		canvas.save();
 		canvas.scale(scale, scale);
 
 		mRender.draw(mScroller.getCurrX(), -getVertOffset()
-				+ mScroller.getCurrY(), (int) (this.getWidth() / scale),
-				(int) (this.getHeight() / scale), canvas);
+				+ mScroller.getCurrY(), (int) (this.getWidth() / scale)
+				- SCROLLBAR_WIDTH, (int) (this.getHeight() / scale)
+				- SCROLLBAR_WIDTH, canvas);
 
-		canvas.scale(1 / scale, 1 / scale);
+		canvas.restore();
+
+		drawScrollBars(canvas);
 
 		if (Options.DEBUG_RENDERING) {
 			p.setColor(Color.BLACK);
@@ -161,6 +177,34 @@ public class MainMapView extends View {
 			}
 			frameCount++;
 		}
+	}
+
+	void drawScrollBars(Canvas c) {
+		// Horizontal
+		c.drawRect(0, getHeight() - SCROLLBAR_WIDTH, getWidth(), getHeight(),
+				scrollBarBackgroundPaint);
+
+		int horLen = getWidth() - SCROLLBAR_LINE_LEN;
+		float horLinePos = (float) mScroller.getCurrX()
+				/ (float) (mRender.getWidth() - this.getWidth());
+
+		c.drawRect(horLen * horLinePos, getHeight() - SCROLLBAR_WIDTH, horLen
+				* horLinePos + SCROLLBAR_LINE_LEN, getHeight(), scrollBarPaint);
+
+		// Vertical
+		// Not "getHeight()"!!
+		// Should be "getHeight() - SCROLLBAR_WIDTH" because of intersection
+		c.drawRect(getWidth() - SCROLLBAR_WIDTH, 0, getWidth(), getHeight()
+				- SCROLLBAR_WIDTH, scrollBarBackgroundPaint);
+
+		int vertLen = getHeight() - SCROLLBAR_LINE_LEN;
+		float vertLinePos = (float) mScroller.getCurrY()
+				/ (float) ( mRender.getHeight() - this.getHeight());
+
+		c.drawRect(getWidth() - SCROLLBAR_WIDTH, vertLen * vertLinePos,
+				getWidth(), vertLen * vertLinePos + SCROLLBAR_LINE_LEN,
+				scrollBarPaint);
+
 	}
 
 	VelocityTracker mVelocityTracker;
