@@ -143,9 +143,8 @@ public class MainMapView extends View {
 		canvas.scale(scale, scale);
 
 		mRender.draw(mScroller.getCurrX(), -getVertOffset()
-				+ mScroller.getCurrY(), (int) (this.getWidth() / scale)
-				- SCROLLBAR_WIDTH, (int) (this.getHeight() / scale)
-				- SCROLLBAR_WIDTH, canvas);
+				+ mScroller.getCurrY(), getScreenForRenderWidth(),
+				getScreenForRenderHeight(), canvas);
 
 		canvas.restore();
 
@@ -185,13 +184,19 @@ public class MainMapView extends View {
 		// Horizontal
 		c.drawRect(0, getHeight() - SCROLLBAR_WIDTH, getWidth(), getHeight(),
 				scrollBarBackgroundPaint);
+		
+		float horBarAlpha = (float)getScreenForRenderWidth() / (float)mRender.getWidth();
+		float horBarLen = horBarAlpha*this.getWidth();
+		if (horBarLen < SCROLLBAR_LINE_LEN)
+			horBarLen = SCROLLBAR_LINE_LEN;
 
-		int horLen = getWidth() - SCROLLBAR_LINE_LEN;
+		float horLen = getWidth() - horBarLen;
 		float horLinePos = (float) mScroller.getCurrX()
-				/ (float) (mRender.getWidth() - this.getWidth());
+				/ (float) getScrollWidth();
 
+		
 		c.drawRect(horLen * horLinePos, getHeight() - SCROLLBAR_WIDTH, horLen
-				* horLinePos + SCROLLBAR_LINE_LEN, getHeight(), scrollBarPaint);
+				* horLinePos + horBarLen, getHeight(), scrollBarPaint);
 
 		// Vertical
 		// Not "getHeight()"!!
@@ -199,12 +204,17 @@ public class MainMapView extends View {
 		c.drawRect(getWidth() - SCROLLBAR_WIDTH, 0, getWidth(), getHeight()
 				- SCROLLBAR_WIDTH, scrollBarBackgroundPaint);
 
-		int vertLen = getHeight() - SCROLLBAR_LINE_LEN;
+		float vertBarAlpha = (float)getScreenForRenderHeight() / (float)mRender.getHeight();
+		float vertBarLen = vertBarAlpha*this.getHeight();
+		if (vertBarLen < SCROLLBAR_LINE_LEN)
+			vertBarLen = SCROLLBAR_LINE_LEN;
+		
+		float vertLen = getHeight() - vertBarLen;
 		float vertLinePos = (float) mScroller.getCurrY()
-				/ (float) ( mRender.getHeight() - this.getHeight());
+				/ (float) getScrollHeight();
 
 		c.drawRect(getWidth() - SCROLLBAR_WIDTH, vertLen * vertLinePos,
-				getWidth(), vertLen * vertLinePos + SCROLLBAR_LINE_LEN,
+				getWidth(), vertLen * vertLinePos + vertBarLen,
 				scrollBarPaint);
 
 	}
@@ -334,5 +344,14 @@ public class MainMapView extends View {
 	private final int getScrollHeight() {
 		return mRender.getHeight() - (int) (this.getHeight() / scale)
 				- getVertOffset();
+	}
+
+	private final int getScreenForRenderWidth() {
+		return (int) (this.getWidth() / scale) - SCROLLBAR_WIDTH;
+	}
+
+	private final int getScreenForRenderHeight() {
+		return (int) (this.getHeight() / scale) - SCROLLBAR_WIDTH;
+
 	}
 }
