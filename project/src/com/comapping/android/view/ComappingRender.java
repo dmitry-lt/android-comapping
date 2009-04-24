@@ -603,30 +603,6 @@ public class ComappingRender extends MapRender {
 		yOffset = y - getVertOffset();
 		draw(-x, -y + getVertOffset(), root, width, height, c);
 
-		if (selected != null) {
-			
-			
-			searchResult.clear();
-			Rect zone = new Rect();
-			zone.set(selected.getTopicRectangle());
-			zone.top = 0;
-			
-			this.search(root, zone);
-			
-			Paint p = new Paint();
-			p.setColor(Color.GREEN);
-			p.setAlpha(127);
-			
-			for(Item i: searchResult)
-			{
-				Rect rect = i.getTopicRectangle();
-				rect.offset(-xOffset, -yOffset);
-				c.drawRect(rect, p);
-			}
-			
-			zone.offset(-xOffset, -yOffset);
-			c.drawRect(zone, p);
-		}
 	}
 
 	@Override
@@ -836,10 +812,53 @@ public class ComappingRender extends MapRender {
 
 	Item searchUp(Item src) {
 		searchResult.clear();
-		Rect zone = new Rect();
-		zone.set(src.getTopicRectangle());
+		Rect zone = src.getTopicRectangle();
+		zone.bottom = zone.top;
 		zone.top = 0;
-		return null;
+
+		search(root, zone);
+
+		if (searchResult.size() == 0)
+			return null;
+		else {
+			Item res = null;
+			for (Item i : searchResult) {
+
+				if (res == null) {
+					res = i;
+				} else {
+					if (res.getRenderZoneY() < i.getRenderZoneY())
+						res = i;
+				}
+			}
+			return res;
+		}
+	}
+	
+	Item searchDown(Item src) {
+		searchResult.clear();
+		Rect zone = src.getTopicRectangle();
+		zone.top = zone.bottom + 1;
+		zone.bottom = this.getHeight();
+		
+
+		search(root, zone);
+
+		if (searchResult.size() == 0)
+			return null;
+		else {
+			Item res = null;
+			for (Item i : searchResult) {
+
+				if (res == null) {
+					res = i;
+				} else {
+					if (res.getRenderZoneY() > i.getRenderZoneY())
+						res = i;
+				}
+			}
+			return res;
+		}
 	}
 
 	/**
@@ -866,7 +885,10 @@ public class ComappingRender extends MapRender {
 		{
 			focusTopic(selected.parent.children[index - 1]);
 		} else {
-			// TODO: Focusing when itm is highest child
+			
+			Item itm = searchUp(selected);
+			if (itm != null)
+				focusTopic(itm);
 		}
 	}
 
@@ -896,7 +918,10 @@ public class ComappingRender extends MapRender {
 		{
 			focusTopic(parentChilds[index + 1]);
 		} else {
-			// TODO: Focusing when itm is lowest child
+			
+			Item itm = searchDown(selected);
+			if (itm != null)
+				focusTopic(itm);
 		}
 	}
 
