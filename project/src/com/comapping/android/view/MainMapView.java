@@ -81,6 +81,7 @@ public class MainMapView extends View {
 			public void onClick(View v) {
 				setScale(getScale() + 0.1f);
 				lastZoomPress = System.currentTimeMillis();
+				refresh();
 			}
 		});
 		zoom.setOnZoomOutClickListener(new OnClickListener() {
@@ -88,6 +89,7 @@ public class MainMapView extends View {
 			public void onClick(View v) {
 				setScale(getScale() - 0.1f);
 				lastZoomPress = System.currentTimeMillis();
+				refresh();
 			}
 		});
 	}
