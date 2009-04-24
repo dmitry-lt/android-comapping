@@ -604,16 +604,27 @@ public class ComappingRender extends MapRender {
 		draw(-x, -y + getVertOffset(), root, width, height, c);
 
 		if (selected != null) {
+			
+			
+			searchResult.clear();
 			Rect zone = new Rect();
 			zone.set(selected.getTopicRectangle());
 			zone.top = 0;
 			
-			zone.offset(-xOffset, -yOffset);
-
+			this.search(root, zone);
+			
 			Paint p = new Paint();
 			p.setColor(Color.GREEN);
 			p.setAlpha(127);
-
+			
+			for(Item i: searchResult)
+			{
+				Rect rect = i.getTopicRectangle();
+				rect.offset(-xOffset, -yOffset);
+				c.drawRect(rect, p);
+			}
+			
+			zone.offset(-xOffset, -yOffset);
 			c.drawRect(zone, p);
 		}
 	}
@@ -798,11 +809,11 @@ public class ComappingRender extends MapRender {
 
 	ArrayList<Item> searchResult = new ArrayList<Item>();
 
-	void search(Item root, Rect zone) {
-		if (Rect.intersects(zone, root.getTopicRectangle()))
-			searchResult.add(root);
+	void search(Item parent, Rect zone) {
+		if (Rect.intersects(zone, parent.getTopicRectangle()))
+			searchResult.add(parent);
 
-		for (Item i : root.children)
+		for (Item i : parent.children)
 			search(i, zone);
 	}
 
