@@ -62,6 +62,12 @@ public class ComappingRender extends MapRender {
 
 		private static final int HORIZONTAL_BORDER_SIZE = 10;
 
+		/* ------- Navigation data ------- */
+		public Item up = null;
+		public Item down = null;
+		public Item left = null;
+		public Item right = null;
+
 		/* ---------- Tree data ---------- */
 
 		public Item[] children;
@@ -86,6 +92,8 @@ public class ComappingRender extends MapRender {
 		private int lazyRenderZoneHeight = -1;
 		private int lazyAbsoluteX = -1;
 		private int lazyAbsoluteY = -1;
+
+		private boolean visible = true;
 
 		/**
 		 * Constructor of Render Item
@@ -113,6 +121,7 @@ public class ComappingRender extends MapRender {
 		public void setChildrenVisible(boolean isVisible) {
 			childrenVisible = isVisible;
 			plusMinusIcon.isPlus = !childrenVisible;
+			setVisible(isVisible);
 			clearLazyBuffers();
 		}
 
@@ -123,6 +132,16 @@ public class ComappingRender extends MapRender {
 		 */
 		public boolean isChildrenVisible() {
 			return childrenVisible;
+		}
+
+		public boolean isVisible() {
+			return visible;
+		}
+
+		private void setVisible(boolean _visible) {
+			visible = _visible;
+			for (Item i : children)
+				i.setVisible(_visible);
 		}
 
 		/* ---------- Draw code ---------- */
@@ -201,7 +220,10 @@ public class ComappingRender extends MapRender {
 		 * @return Width of a rendering topic
 		 */
 		public int getTopicWidth() {
-			return render.getWidth() + plusMinusIcon.getWidth();
+			if (this.children.length > 0)
+				return render.getWidth() + plusMinusIcon.getWidth();
+			else
+				return render.getWidth();
 		}
 
 		/**
@@ -383,6 +405,9 @@ public class ComappingRender extends MapRender {
 		 * @return index in parent.children array
 		 */
 		public int getIndex() {
+			if (parent == null)
+				return -1;
+
 			// May be I should add buffering?
 			int index = -1;
 			ComappingRender.Item[] parentChildren = parent.children;
@@ -590,6 +615,9 @@ public class ComappingRender extends MapRender {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 
+		if (selected == null)
+			focusTopic(root);
+
 		if (renderZoneWidth == -1) {
 			renderZoneHeight = height;
 			renderZoneWidth = width;
@@ -789,25 +817,9 @@ public class ComappingRender extends MapRender {
 		if (Rect.intersects(zone, parent.getTopicRectangle()))
 			searchResult.add(parent);
 
-		for (Item i : parent.children)
-			search(i, zone);
-	}
-
-	/**
-	 * Moves selection left
-	 */
-	private final void moveLeft() {
-		if (selected == null) {
-			focusTopic(root);
-			return;
-		}
-
-		if (selected.parent == null) {
-			focusTopic(selected);
-			return;
-		}
-
-		focusTopic(selected.parent);
+		if (parent.isChildrenVisible())
+			for (Item i : parent.children)
+				search(i, zone);
 	}
 
 	Item searchUp(Item src) {
@@ -834,13 +846,12 @@ public class ComappingRender extends MapRender {
 			return res;
 		}
 	}
-	
+
 	Item searchDown(Item src) {
 		searchResult.clear();
 		Rect zone = src.getTopicRectangle();
 		zone.top = zone.bottom + 1;
 		zone.bottom = this.getHeight();
-		
 
 		search(root, zone);
 
@@ -865,13 +876,16 @@ public class ComappingRender extends MapRender {
 	 * Moves selection up
 	 */
 	private final void moveUp() {
-		if (selected == null) {
-			focusTopic(root);
+
+		if (selected.parent == null)
 			return;
-		}
-		if (selected.parent == null) {
-			focusTopic(selected);
-			return;
+
+		if (selected.up != null) {
+			if (selected.up.isVisible()) {
+				selected.up.down = selected;
+				focusTopic(selected.up);
+				return;
+			}
 		}
 
 		int index = selected.getIndex();
@@ -883,12 +897,15 @@ public class ComappingRender extends MapRender {
 
 		if (index > 0) // Is not highest child
 		{
+			selected.parent.children[index - 1].down = selected;
 			focusTopic(selected.parent.children[index - 1]);
 		} else {
-			
+
 			Item itm = searchUp(selected);
-			if (itm != null)
+			if (itm != null) {
+				itm.down = selected;
 				focusTopic(itm);
+			}
 		}
 	}
 
@@ -896,64 +913,95 @@ public class ComappingRender extends MapRender {
 	 * Moves selection down
 	 */
 	private final void moveDown() {
-		if (selected == null) {
-			focusTopic(root);
-			return;
-		}
-		if (selected.parent == null) {
-			focusTopic(selected);
-			return;
+
+		if (selected.down != null) {
+			if (selected.down.isVisible()) {
+				selected.down.up = selected;
+				focusTopic(selected.down);
+				return;
+			}
 		}
 
+		if (selected.parent == null)
+			return;
+
 		int index = selected.getIndex();
-		;
 		ComappingRender.Item[] parentChilds = selected.parent.children;
 
 		if (index == -1) {
-			Log.e(DEBUG_TAG, "Denger! Seems to be broken tree!");
+			Log.e(DEBUG_TAG, "Danger! Seems to be broken tree!");
 			return;
 		}
 
 		if (index < parentChilds.length - 1) // Is not lowest child
 		{
+			parentChilds[index + 1].up = selected;
 			focusTopic(parentChilds[index + 1]);
 		} else {
-			
+
 			Item itm = searchDown(selected);
-			if (itm != null)
+			if (itm != null) {
+				itm.up = selected;
 				focusTopic(itm);
+			}
 		}
+	}
+
+	/**
+	 * Moves selection left
+	 */
+	private final void moveLeft() {
+
+		if (selected.parent == null) {
+			return;
+		}
+
+		if (selected.left != null) {
+			selected.left.right = selected;
+			focusTopic(selected.left);
+			return;
+		}
+
+		selected.parent.right = selected;
+
+		focusTopic(selected.parent);
 	}
 
 	/**
 	 * Moves selection right
 	 */
 	private final void moveRight() {
-		if (selected == null) {
-			focusTopic(root);
-			return;
-		}
+
 		if (!selected.isChildrenVisible()) {
 			this.setChildrenVisible(selected, true);
-			// focusTopic(selected);
-			// return;
+		}
+		if (selected.right != null) {
+			selected.right.left = selected;
+			focusTopic(selected.right);
+			return;
 		}
 		for (int i = 0; i < selected.children.length; i++) {
 			if (selected.children[i].getRenderZoneY()
 					+ selected.children[i].getTopicOffset() > selected
 					.getRenderZoneY()
 					+ selected.getTopicOffset()) {
-				if (i == 0)
-					focusTopic(selected.children[i]);
-				else
+
+				if (i == 0) {
+					selected.children[0].left = selected;
+					focusTopic(selected.children[0]);
+				} else {
+					selected.children[i - 1].left = selected;
 					focusTopic(selected.children[i - 1]);
+				}
 
 				return;
 			}
 		}
 
-		if (selected.children.length > 0)
+		if (selected.children.length > 0) {
+			selected.children[0].left = selected;
 			focusTopic(selected.children[0]);
+		}
 	}
 
 	@Override
