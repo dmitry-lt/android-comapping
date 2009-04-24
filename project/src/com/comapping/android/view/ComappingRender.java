@@ -545,7 +545,7 @@ public class ComappingRender extends MapRender {
 		} else {
 			setChildrenVisible(itm, true);
 		}
-		for(Item i : itm.children)
+		for (Item i : itm.children)
 			initTree(i);
 	}
 
@@ -575,19 +575,16 @@ public class ComappingRender extends MapRender {
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		
-		if (renderZoneWidth == -1)
-		{
+
+		if (renderZoneWidth == -1) {
 			renderZoneHeight = height;
 			renderZoneWidth = width;
 			initTree(root);
-		}
-		else
-		{
+		} else {
 			renderZoneHeight = height;
 			renderZoneWidth = width;
 		}
-		
+
 		xOffset = x;
 		yOffset = y - getVertOffset();
 		draw(-x, -y + getVertOffset(), root, width, height, c);
@@ -626,9 +623,8 @@ public class ComappingRender extends MapRender {
 
 			return true;
 		} else if (itm.isOverTopic(localX, localY)) {
-			selectTopic(itm);
 			itm.onTouch(localX, localY);
-			// focusTopic(itm);
+			focusTopic(itm);
 		}
 
 		if (itm.isChildsVisible()) {
@@ -855,8 +851,9 @@ public class ComappingRender extends MapRender {
 			return;
 		}
 		if (!selected.isChildsVisible()) {
-			focusTopic(selected);
-			return;
+			this.setChildrenVisible(selected, true);
+			// focusTopic(selected);
+			// return;
 		}
 		for (int i = 0; i < selected.children.length; i++) {
 			if (selected.children[i].getRenderZoneY()
@@ -899,7 +896,5 @@ public class ComappingRender extends MapRender {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-
 	}
 }
