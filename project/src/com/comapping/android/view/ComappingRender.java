@@ -33,6 +33,8 @@
  */
 package com.comapping.android.view;
 
+import java.util.ArrayList;
+
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
 
@@ -40,6 +42,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -395,6 +398,17 @@ public class ComappingRender extends MapRender {
 		public void onTouch(int x, int y) {
 			render.onTouch(x, y);
 		}
+
+		public Rect getTopicRectangle() {
+			Rect res = new Rect();
+			int topicAbsX = this.getRenderZoneX();
+			int topicAbsY = this.getRenderZoneY() + this.getTopicOffset();
+
+			res.set(topicAbsX, topicAbsY, topicAbsX + this.getTopicWidth(),
+					topicAbsY + this.getTopicHeight());
+
+			return res;
+		}
 	}
 
 	/*
@@ -588,6 +602,20 @@ public class ComappingRender extends MapRender {
 		xOffset = x;
 		yOffset = y - getVertOffset();
 		draw(-x, -y + getVertOffset(), root, width, height, c);
+
+		if (selected != null) {
+			Rect zone = new Rect();
+			zone.set(selected.getTopicRectangle());
+			zone.top = 0;
+			
+			zone.offset(-xOffset, -yOffset);
+
+			Paint p = new Paint();
+			p.setColor(Color.GREEN);
+			p.setAlpha(127);
+
+			c.drawRect(zone, p);
+		}
 	}
 
 	@Override
@@ -618,10 +646,10 @@ public class ComappingRender extends MapRender {
 		int localY = destY - yStart;
 
 		if (itm.isOverButton(localX, localY)) {
-			
+
 			changeChildVisibleStatus(itm);
 			focusTopic(itm);
-			
+
 			return true;
 		} else if (itm.isOverTopic(localX, localY)) {
 			itm.onTouch(localX, localY);
@@ -768,6 +796,16 @@ public class ComappingRender extends MapRender {
 	 * D-Pad functions.
 	 */
 
+	ArrayList<Item> searchResult = new ArrayList<Item>();
+
+	void search(Item root, Rect zone) {
+		if (Rect.intersects(zone, root.getTopicRectangle()))
+			searchResult.add(root);
+
+		for (Item i : root.children)
+			search(i, zone);
+	}
+
 	/**
 	 * Moves selection left
 	 */
@@ -783,6 +821,14 @@ public class ComappingRender extends MapRender {
 		}
 
 		focusTopic(selected.parent);
+	}
+
+	Item searchUp(Item src) {
+		searchResult.clear();
+		Rect zone = new Rect();
+		zone.set(src.getTopicRectangle());
+		zone.top = 0;
+		return null;
 	}
 
 	/**
@@ -813,26 +859,6 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
-//	Item searchDown(Item root, int x, int y)
-//	{
-//		Item res = null;
-//		
-//		Item[] children = root.children;
-//		for(int i = 0; i< children.length; i++)
-//		{
-//			Item childResult = searchDown(children[i], x, y);
-//			if (childResult != null)
-//			{
-//				if (res == null)
-//					res = childResult;
-//				else
-//				{
-//					if (res.getRenderZoneX() < )
-//				}
-//			}
-//		}
-//		return null;
-//	}
 	/**
 	 * Moves selection down
 	 */
