@@ -618,16 +618,10 @@ public class ComappingRender extends MapRender {
 		int localY = destY - yStart;
 
 		if (itm.isOverButton(localX, localY)) {
-			if (itm.isChildrenVisible())
-			{
-				setChildrenVisible(itm, false);
-				focusTopic(itm);
-			}
-			else
-			{
-				setChildrenVisible(itm, true);
-				moveRight();
-			}
+			
+			changeChildVisibleStatus(itm);
+			focusTopic(itm);
+			
 			return true;
 		} else if (itm.isOverTopic(localX, localY)) {
 			itm.onTouch(localX, localY);
@@ -819,6 +813,26 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
+//	Item searchDown(Item root, int x, int y)
+//	{
+//		Item res = null;
+//		
+//		Item[] children = root.children;
+//		for(int i = 0; i< children.length; i++)
+//		{
+//			Item childResult = searchDown(children[i], x, y);
+//			if (childResult != null)
+//			{
+//				if (res == null)
+//					res = childResult;
+//				else
+//				{
+//					if (res.getRenderZoneX() < )
+//				}
+//			}
+//		}
+//		return null;
+//	}
 	/**
 	 * Moves selection down
 	 */
