@@ -187,7 +187,7 @@ public class ComappingRender extends MapRender {
 		public boolean isOverTopic(int x, int y) {
 			return (!isOverButton(x, y))
 					&& ((x >= 0) && (y >= 0) && (x <= render.getWidth()) && (y <= render
-							.getLineOffset()));
+							.getHeight()));
 		}
 
 		/* -- Topic sizes and positions code -- */
