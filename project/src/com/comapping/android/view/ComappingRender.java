@@ -118,7 +118,7 @@ public class ComappingRender extends MapRender {
 		 * 
 		 * @return Visible state
 		 */
-		public boolean isChildsVisible() {
+		public boolean isChildrenVisible() {
 			return childrenVisible;
 		}
 
@@ -507,7 +507,7 @@ public class ComappingRender extends MapRender {
 					- yOffset, c);
 		}
 
-		if (itm.isChildsVisible()) {
+		if (itm.isChildrenVisible()) {
 			int dataLen = itm.getTopicWidth();
 
 			int vertOffset = 0;
@@ -618,16 +618,23 @@ public class ComappingRender extends MapRender {
 		int localY = destY - yStart;
 
 		if (itm.isOverButton(localX, localY)) {
-
-			changeChildVisibleStatus(itm);
-
+			if (itm.isChildrenVisible())
+			{
+				setChildrenVisible(itm, false);
+				focusTopic(itm);
+			}
+			else
+			{
+				setChildrenVisible(itm, true);
+				moveRight();
+			}
 			return true;
 		} else if (itm.isOverTopic(localX, localY)) {
 			itm.onTouch(localX, localY);
 			focusTopic(itm);
 		}
 
-		if (itm.isChildsVisible()) {
+		if (itm.isChildrenVisible()) {
 			int dataLen = itm.getTopicWidth();
 
 			int vertOffset = 0;
@@ -760,7 +767,7 @@ public class ComappingRender extends MapRender {
 	 */
 	private final void changeChildVisibleStatus(Item topic) {
 
-		setChildrenVisible(topic, !topic.isChildsVisible());
+		setChildrenVisible(topic, !topic.isChildrenVisible());
 	}
 
 	/*
@@ -850,7 +857,7 @@ public class ComappingRender extends MapRender {
 			focusTopic(root);
 			return;
 		}
-		if (!selected.isChildsVisible()) {
+		if (!selected.isChildrenVisible()) {
 			this.setChildrenVisible(selected, true);
 			// focusTopic(selected);
 			// return;
