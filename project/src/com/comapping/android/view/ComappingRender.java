@@ -72,7 +72,7 @@ public class ComappingRender extends MapRender {
 
 		/* ------ Rendering helpers ------ */
 		private TopicRender render;
-		private PlusMinusIcon plusMinusIcon;
+		private PlusMinusRender plusMinusIcon;
 
 		private Paint p = new Paint();
 
@@ -94,7 +94,7 @@ public class ComappingRender extends MapRender {
 			topicData = topic;
 			render = new TopicRender(topicData, context);
 			render.setMaxWidth(300);
-			plusMinusIcon = new PlusMinusIcon(!childrenVisible);
+			plusMinusIcon = new PlusMinusRender(!childrenVisible);
 
 			p.setColor(LINE_COLOR);
 		}
