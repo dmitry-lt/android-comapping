@@ -19,6 +19,7 @@ public class PlusMinusIcon  extends Render {
 	public PlusMinusIcon(boolean plus)
 	{
 		isPlus = plus;
+		p.setAntiAlias(true);
 	}
 	
 	@Override
