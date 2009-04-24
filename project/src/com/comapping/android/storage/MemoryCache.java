@@ -1,8 +1,8 @@
-package com.comapping.android;
+package com.comapping.android.storage;
 
 import java.util.HashMap;
 
-public class Cache {
+public class MemoryCache {
 	private static HashMap<String, Object> cache = new HashMap<String, Object>();
 
 	synchronized public static Object get(String key) {

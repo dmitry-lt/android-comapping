@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ZoomControls;
 
-import com.comapping.android.Cache;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
@@ -24,6 +23,7 @@ import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.view.ComappingRender;
 import com.comapping.android.view.ExplorerRender;
 import com.comapping.android.view.MainMapView;
@@ -44,7 +44,7 @@ public class MapActivity extends Activity {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				if (splash == null) {
-					splash = ProgressDialog.show(context, "Comapping", message);					
+					splash = ProgressDialog.show(context, "Comapping", message);
 					splash.setOnCancelListener(new OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface dialog) {
@@ -102,8 +102,8 @@ public class MapActivity extends Activity {
 			public void run() {
 				try {
 					final Map map;
-					if (!Cache.has(mapId)) {
-						splashActivate("Downloading map", false);						
+					if (!MemoryCache.has(mapId)) {
+						splashActivate("Downloading map", false);
 						String result = "";
 						try {
 							result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
@@ -116,22 +116,22 @@ public class MapActivity extends Activity {
 						map = MetaMapActivity.mapBuilder.buildMap(result);
 
 						// add to cache
-						Cache.set(mapId, map);
+						MemoryCache.set(mapId, map);
 					} else {
-						map = (Map) Cache.get(mapId);
+						map = (Map) MemoryCache.get(mapId);
 					}
-					
+
 					if (interrupted()) {
 						return;
 					}
-					
+
 					splashActivate("Loading map", true);
 					final MapRender mapRender = initMapRender(map, viewType);
 
 					if (interrupted()) {
 						return;
 					}
-					
+
 					splashDeactivate();
 
 					runOnUiThread(new Runnable() {

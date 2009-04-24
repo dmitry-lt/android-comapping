@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.widget.CheckBox;
 
 import com.comapping.android.Log;
-import com.comapping.android.communication.Client;
+import com.comapping.android.communication.CachingClient;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
@@ -34,8 +34,7 @@ public class LoginActivity extends Activity {
 
 	private LoginView loginView;
 
-	// use server from MetaMapController
-	Client client = null;
+	CachingClient client = null;
 
 	private void finishLoginAttempt(final String errorMsg) {
 		runOnUiThread(new Runnable() {

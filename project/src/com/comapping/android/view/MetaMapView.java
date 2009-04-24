@@ -1,5 +1,6 @@
 package com.comapping.android.view;
 
+import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -104,21 +105,26 @@ public class MetaMapView {
 	private void bindSwitchViewButton() {
 		ImageButton switchButton = (ImageButton) metaMapActivity.findViewById(R.id.viewSwitcher);
 		
+		MetaMapViewType oppositeViewType = null;
+		
 		if (metaMapActivity.getCurrentView() == MetaMapViewType.SDCARD_VIEW) {
 			switchButton.setImageResource(R.drawable.internet_icon);
+			oppositeViewType = MetaMapViewType.INTERNET_VIEW;
+		} else {
+			oppositeViewType = MetaMapViewType.SDCARD_VIEW;
 		}
 		
+		final MetaMapViewType finalOppositeViewType = oppositeViewType;
+		
 		switchButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				metaMapActivity.switchView();
+			public void onClick(View view) {	
+				metaMapActivity.switchView(finalOppositeViewType);
 			}
 		});
 	}
 	
 	public void activate(MetaMapActivity _metaMapActivity) {
 		metaMapActivity = _metaMapActivity;
-		
-		metaMapActivity.setContentView(R.layout.metamap);
 		
 		metaMapActivity.setTitle("Comapping: "+currentTopic.getText());
 		
@@ -132,5 +138,9 @@ public class MetaMapView {
 		bindSwitchViewButton();
 		
 		metaMapActivity.loadMetaMapTopic(currentTopic);
+	}
+	
+	public static void loadLayout(Activity activity) {
+		activity.setContentView(R.layout.metamap);
 	}
 }

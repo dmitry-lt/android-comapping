@@ -22,13 +22,13 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.comapping.android.Cache;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.LoginActivity;
+import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.storage.Storage;
 
 public class Client implements MapProvider {
@@ -43,9 +43,9 @@ public class Client implements MapProvider {
 	final static private char SALT_FLAG = '#';
 
 	final static private int MAX_READ_TIMEOUT = 30 * 1000; // 30 seconds in
-															// milliseconds
+	// milliseconds
 	final static private int MAX_CONNECT_TIMEOUT = 30 * 1000; // 30 seconds in
-																// milliseconds
+	// milliseconds
 
 	// private variables
 	private String clientId = null;
@@ -149,7 +149,7 @@ public class Client implements MapProvider {
 	 */
 	public void clientSideLogout() {
 		clientId = null;
-		Cache.clear();
+		MemoryCache.clear();
 
 		// clear AUTOLOGIN_KEY anyway
 		Storage.getInstance().set(Storage.AUTOLOGIN_KEY, "");
@@ -226,13 +226,13 @@ public class Client implements MapProvider {
 
 		try {
 			HttpURLConnection connection = null;
-			
+
 			if (Options.USE_PROXY) {
 				connection = (HttpURLConnection) url.openConnection(Options.proxy);
 			} else {
 				connection = (HttpURLConnection) url.openConnection();
 			}
-			
+
 			connection.setReadTimeout(MAX_READ_TIMEOUT);
 			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
 
@@ -261,50 +261,6 @@ public class Client implements MapProvider {
 			Log.d(Log.connectionTag, "New server checksum = " + getBytesSum(responseText));
 		}
 		Log.d(Log.connectionTag, "New server response code = " + code);
-
-		// DefaultHttpClient client = new DefaultHttpClient();
-		//
-		// // add proxy if needed
-		// if (Options.USE_PROXY) {
-		// client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-		// Options.PROXY_HOST);
-		// }
-		//
-		// // set timeout
-		// // client.getParams().setLongParameter(ConnManagerPNames.TIMEOUT,
-		// // MAX_TIMEOUT);
-		//
-		// HttpPost post = new HttpPost(Options.SERVER);
-		//
-		// UrlEncodedFormEntity entity = null;
-		// try {
-		// entity = new UrlEncodedFormEntity(data);
-		// } catch (UnsupportedEncodingException e1) {
-		// Log.e(Log.connectionTag, "unsupported encoding for data in request");
-		// }
-		//
-		// post.setEntity(entity);
-		//
-		// String responseText = "";
-		// int responseStatus = 0;
-		//
-		// try {
-		// HttpResponse response = client.execute(post);
-		//
-		// responseText = getTextFromResponse(response);
-		// responseStatus = response.getStatusLine().getStatusCode();
-		// } catch (ClientProtocolException e) {
-		// Log.d(Log.connectionTag, "client protocol exception");
-		// throw new ConnectionException();
-		// } catch (IOException e) {
-		// Log.d(Log.connectionTag, "IO exception");
-		// throw new ConnectionException();
-		// }
-		//		
-		// Log.i(Log.connectionTag, "response from server: " + responseText);
-		// Log.i(Log.connectionTag, "response check sum: " +
-		// getBytesSum(responseText));
-		// Log.i(Log.connectionTag, "response status code: " + responseStatus);
 
 		if (loginInterrupted) {
 			throw new LoginInterruptedException();
