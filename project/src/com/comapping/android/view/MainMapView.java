@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -17,18 +16,41 @@ import android.widget.ZoomControls;
 
 public class MainMapView extends View {
 
+	// Zoom constants
 	private static final float MAX_SCALE = 1.0f;
 	private static final float MIN_SCALE = 0.5f;
 	private static final long TIME_TO_HIDE = 2000;
 
+	// Taping constants
+	private static final long TAP_MAX_TIME = 500;
+	private static final long BLOCK_PATH_LEN = 1000;
+
+	// Scrollbar constants
 	private static final int SCROLLBAR_WIDTH = 4;
 	private static final int SCROLLBAR_LINE_LEN = 15;
 
+	// Drawing variables
 	public MapRender mRender;
 	public Scroller mScroller;
 
 	private Paint scrollBarBackgroundPaint = new Paint();
 	private Paint scrollBarPaint = new Paint();
+
+	private boolean isDrawing = false;
+
+	// Debug variables
+
+	int frameCount = 0;
+	long fps = 0;
+	long lastFPSCalcTime = System.currentTimeMillis();
+
+	// Zooming variables
+	private ZoomControls zoom;
+	private float scale;
+	private long lastZoomPress = -100000;
+	private boolean zoomVisible;
+
+	// Scrolling variables
 
 	ScrollController scrollController = new ScrollController() {
 
@@ -53,16 +75,28 @@ public class MainMapView extends View {
 
 	};
 
+	// Taping variables
+	VelocityTracker mVelocityTracker;
+	int oldX = -1, oldY = -1;
+	int startX = -1, startY = -1;
+	long touchStartTime = 0;
+	boolean fixedScroll = true;
+
 	public MainMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
+		initScrolling(context);
+		setFocusable(true);
+	}
+
+	void initScrolling(Context context) {
+		mScroller = new Scroller(context);
+
+		// Painting
 		scrollBarBackgroundPaint.setColor(Color.GRAY);
 		scrollBarBackgroundPaint.setAlpha(127);
 
 		scrollBarPaint.setColor(Color.GRAY);
-
-		setFocusable(true);
-		mScroller = new Scroller(context);
 	}
 
 	public void setRender(MapRender render) {
@@ -94,14 +128,6 @@ public class MainMapView extends View {
 		});
 	}
 
-	int frameCount = 0;
-	long fps = 0;
-	long lastFPSCalcTime = System.currentTimeMillis();
-	private ZoomControls zoom;
-	private float scale;
-	private long lastZoomPress = -100000;
-	private boolean zoomVisible;
-
 	public void setVisible() {
 		lastZoomPress = System.currentTimeMillis();
 		zoomVisible = true;
@@ -124,8 +150,6 @@ public class MainMapView extends View {
 		mRender.update();
 	}
 
-	boolean isDrawing = false;
-
 	private void refresh() {
 		while (!isDrawing)
 			;
@@ -142,9 +166,8 @@ public class MainMapView extends View {
 		canvas.save();
 		canvas.scale(scale, scale);
 
-		mRender.draw(mScroller.getCurrX(), -getVertOffset()
-				+ mScroller.getCurrY(), getScreenForRenderWidth(),
-				getScreenForRenderHeight(), canvas);
+		mRender.draw(mScroller.getCurrX(), +mScroller.getCurrY(),
+				getScreenForRenderWidth(), getScreenForRenderHeight(), canvas);
 
 		canvas.restore();
 
@@ -184,9 +207,10 @@ public class MainMapView extends View {
 		// Horizontal
 		c.drawRect(0, getHeight() - SCROLLBAR_WIDTH, getWidth(), getHeight(),
 				scrollBarBackgroundPaint);
-		
-		float horBarAlpha = (float)getScreenForRenderWidth() / (float)mRender.getWidth();
-		float horBarLen = horBarAlpha*this.getWidth();
+
+		float horBarAlpha = (float) getScreenForRenderWidth()
+				/ (float) mRender.getWidth();
+		float horBarLen = horBarAlpha * this.getWidth();
 		if (horBarLen < SCROLLBAR_LINE_LEN)
 			horBarLen = SCROLLBAR_LINE_LEN;
 
@@ -194,7 +218,6 @@ public class MainMapView extends View {
 		float horLinePos = (float) mScroller.getCurrX()
 				/ (float) getScrollWidth();
 
-		
 		c.drawRect(horLen * horLinePos, getHeight() - SCROLLBAR_WIDTH, horLen
 				* horLinePos + horBarLen, getHeight(), scrollBarPaint);
 
@@ -204,29 +227,20 @@ public class MainMapView extends View {
 		c.drawRect(getWidth() - SCROLLBAR_WIDTH, 0, getWidth(), getHeight()
 				- SCROLLBAR_WIDTH, scrollBarBackgroundPaint);
 
-		float vertBarAlpha = (float)getScreenForRenderHeight() / (float)mRender.getHeight();
-		float vertBarLen = vertBarAlpha*this.getHeight();
+		float vertBarAlpha = (float) getScreenForRenderHeight()
+				/ (float) mRender.getHeight();
+		float vertBarLen = vertBarAlpha * this.getHeight();
 		if (vertBarLen < SCROLLBAR_LINE_LEN)
 			vertBarLen = SCROLLBAR_LINE_LEN;
-		
+
 		float vertLen = getHeight() - vertBarLen;
 		float vertLinePos = (float) mScroller.getCurrY()
 				/ (float) getScrollHeight();
 
 		c.drawRect(getWidth() - SCROLLBAR_WIDTH, vertLen * vertLinePos,
-				getWidth(), vertLen * vertLinePos + vertBarLen,
-				scrollBarPaint);
+				getWidth(), vertLen * vertLinePos + vertBarLen, scrollBarPaint);
 
 	}
-
-	VelocityTracker mVelocityTracker;
-	int oldX = -1, oldY = -1;
-	int startX = -1, startY = -1;
-	long touchStartTime = 0;
-	boolean fixedScroll = true;
-
-	private static final long TAP_MAX_TIME = 500;
-	private static final long BLOCK_PATH_LEN = 1000;
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
@@ -287,7 +301,7 @@ public class MainMapView extends View {
 			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
 				mRender.onTouch(mScroller.getCurrX()
 						+ (int) (ev.getX() / scale), mScroller.getCurrY()
-						+ (int) (ev.getY() / scale) - getVertOffset());
+						+ (int) (ev.getY() / scale));
 				refresh();
 			} else {
 				mVelocityTracker.addMovement(ev);
@@ -322,19 +336,9 @@ public class MainMapView extends View {
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 			return false;
 
-		Log.d("Test", "Press");
-
 		mRender.onKeyDown(keyCode);
 		refresh();
 		return false;
-	}
-
-	private final int getVertOffset() {
-		return 0;
-		// if (mRender.getHeight() >= this.getHeight())
-		// return 0;
-		// else
-		// return (this.getHeight() - mRender.getHeight()) / 2;
 	}
 
 	private final int getScrollWidth() {
@@ -342,8 +346,7 @@ public class MainMapView extends View {
 	}
 
 	private final int getScrollHeight() {
-		return mRender.getHeight() - (int) (this.getHeight() / scale)
-				- getVertOffset();
+		return mRender.getHeight() - (int) (this.getHeight() / scale);
 	}
 
 	private final int getScreenForRenderWidth() {
