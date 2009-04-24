@@ -28,6 +28,7 @@ public class PlusMinusIcon  extends Render {
 	}
 	
 	private void drawCircle(int x, int y, Canvas c) {
+		p.setColor(Color.GRAY);
 		c.drawCircle(x, y, OUTER_SIZE, p);
 		p.setColor(Color.WHITE);
 		c.drawCircle(x, y, OUTER_SIZE - CIRCLE_WIDTH, p);
