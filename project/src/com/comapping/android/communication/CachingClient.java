@@ -12,11 +12,14 @@ import android.app.Activity;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.storage.SqliteMapCache;
 
 public class CachingClient implements MapProvider {
 	private Client client = null;
 	private SqliteMapCache cache = null;
+	
+	private boolean remember = false;
 
 	public CachingClient(Client client, SqliteMapCache cache) {
 		this.client = client;
@@ -26,6 +29,8 @@ public class CachingClient implements MapProvider {
 	public void login(String email, String password, boolean remember) throws ConnectionException,
 			LoginInterruptedException, InvalidCredentialsException {
 		client.login(email, password, remember);
+		
+		this.remember = remember;
 	}
 
 	public boolean isAutologinPossible() {
@@ -34,33 +39,55 @@ public class CachingClient implements MapProvider {
 
 	public void autologin() throws ConnectionException, InvalidCredentialsException, LoginInterruptedException {
 		client.autologin();
+		
+		remember = true;
 	}
 
 	public boolean isLoggedIn() {
 		return client.isLoggedIn();
 	}
 
-	public void clientSideLogout() {
-		client.clientSideLogout();
-	}
-
 	public void logout(Activity context) throws ConnectionException {
-		client.logout(context);
+		cache.clear();
+		MemoryCache.clear();
+		
+		client.logout(context, true);
+	}
+	
+	public void applicationClose(Activity context) throws ConnectionException {
+		MemoryCache.clear();
+		
+		if (!remember) {
+			cache.clear();
+		}
+		
+		client.logout(context, false);
+		cache.close();
 	}
 
 	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException,
 			InvalidCredentialsException {
-		String result = cache.get(mapId);
+		return getComap(mapId, context, false);
+	}
 
+	public String getComap(String mapId, Activity context, boolean ignoreCache) throws ConnectionException, LoginInterruptedException,
+		InvalidCredentialsException {
+		String result = null;
+		
+		if (!ignoreCache) {
+			result = cache.get(mapId);
+		}
+		
 		if (result == null) {
-			// save result to cache
 			result = client.getComap(mapId, context);
+			// save result to cache
 			cache.set(mapId, result);
 		}
-
+		
 		return result;
 	}
 
+	
 	public void interruptLogin() {
 		client.interruptLogin();
 	}

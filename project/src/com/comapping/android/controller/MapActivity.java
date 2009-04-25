@@ -16,6 +16,7 @@ import android.widget.ZoomControls;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
+import com.comapping.android.communication.CachingClient;
 import com.comapping.android.communication.Client;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
@@ -34,9 +35,13 @@ public class MapActivity extends Activity {
 
 	public static final String EXT_VIEW_TYPE = "viewType";
 	public static final String EXT_MAP_ID = "mapId";
+	public static final String EXT_IS_IGNORE_CACHE = "ignoreCache";
 
 	private ProgressDialog splash = null;
 	private Thread mapProcessingThread;
+
+	private String currentMapId = null;
+	private ViewType currentViewType = null;
 
 	public void splashActivate(final String message, final boolean cancelable) {
 		final Activity context = this;
@@ -95,6 +100,10 @@ public class MapActivity extends Activity {
 
 		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
 		final String mapId = extras.getString(EXT_MAP_ID);
+		final boolean ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
+
+		currentMapId = mapId;
+		currentViewType = viewType;
 
 		final Activity current = this;
 
@@ -102,11 +111,16 @@ public class MapActivity extends Activity {
 			public void run() {
 				try {
 					final Map map;
-					if (!MemoryCache.has(mapId)) {
+					if (!MemoryCache.has(mapId) || (ignoreCache)) {
 						splashActivate("Downloading map", false);
 						String result = "";
 						try {
-							result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
+							if (MetaMapActivity.getCurrentMapProvider() instanceof CachingClient) {
+								result = ((CachingClient) MetaMapActivity.getCurrentMapProvider()).getComap(mapId,
+										current, ignoreCache);
+							} else {
+								result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
+							}
 						} catch (InvalidCredentialsException e) {
 							Log.e(Log.mapControllerTag, "invalid credentials while map getting");
 							// TODO: ???
@@ -171,7 +185,7 @@ public class MapActivity extends Activity {
 		switch (viewType) {
 		case EXPLORER_VIEW:
 			return new ExplorerRender(this, map);
-		case TREE_VIEW:
+		case COMAPPING_VIEW:
 			return new ComappingRender(this, map);
 		default:
 			return null;
@@ -188,6 +202,11 @@ public class MapActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.zoom:
 			zoom.show();
+			view.setVisible();
+			return true;
+		case R.id.mapSynchronizeButton:
+			finish();
+			MetaMapActivity.getInstance().loadMap(currentMapId, currentViewType, true);
 			view.setVisible();
 			return true;
 		}

@@ -1,17 +1,17 @@
 package com.comapping.android;
 
 public enum ViewType {
-	EXPLORER_VIEW, TREE_VIEW;
+	EXPLORER_VIEW, COMAPPING_VIEW;
 
 	final static private String EXPLORER_VIEW_STRING = "Explorer view";
-	final static private String TREE_VIEW_STRING = "Tree view";
+	final static private String COMAPPING_VIEW_STRING = "Comapping view";
 
 	public static ViewType getViewTypeFromString(String viewType) {
 		if (viewType.equals(EXPLORER_VIEW_STRING)) {
 			return EXPLORER_VIEW;
 		} else {
-			if (viewType.equals(TREE_VIEW_STRING)) {
-				return TREE_VIEW;
+			if (viewType.equals(COMAPPING_VIEW_STRING)) {
+				return COMAPPING_VIEW;
 			}
 		}
 
@@ -23,8 +23,8 @@ public enum ViewType {
 		switch (this) {
 		case EXPLORER_VIEW:
 			return EXPLORER_VIEW_STRING;
-		case TREE_VIEW:
-			return TREE_VIEW_STRING;
+		case COMAPPING_VIEW:
+			return COMAPPING_VIEW_STRING;
 		}
 
 		// unreachable code

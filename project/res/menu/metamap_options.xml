@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="Preferences" android:id="@+id/preferences" android:icon="@drawable/preferences_menu_icon"/>
     <item android:title="Logout" android:icon="@drawable/logout_menu_icon" android:id="@+id/logout"/>
-<item android:icon="@drawable/clear_cache_menu_icon" android:id="@+id/clearCache" android:title="Clear cache"></item>
-<item android:icon="@drawable/reload_metamap_menu_icon" android:id="@+id/reloadMetamap" android:title="Reload map list"></item>
+
+
 </menu>

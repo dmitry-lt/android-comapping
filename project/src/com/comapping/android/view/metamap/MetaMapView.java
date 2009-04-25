@@ -1,6 +1,5 @@
 package com.comapping.android.view.metamap;
 
-import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -48,7 +47,7 @@ public class MetaMapView {
 					metaMapActivity.loadMetaMapTopic(childTopics[position]);
 				} else {
 					metaMapActivity
-							.loadMap(childTopics[position].getMapRef(), ViewType.getViewTypeFromString(viewType));
+							.loadMap(childTopics[position].getMapRef(), ViewType.getViewTypeFromString(viewType), false);
 				}
 			}
 		});
@@ -111,6 +110,16 @@ public class MetaMapView {
 		});
 	}
 
+	private static void bindSynchronizeButton(final MetaMapActivity activity) {
+		ImageButton synchronizeButton = (ImageButton) activity.findViewById(R.id.synchronizeButton);
+
+		synchronizeButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				activity.synchronize();
+			}
+		});
+	}
+	
 	public void activate(MetaMapActivity _metaMapActivity) {
 		metaMapActivity = _metaMapActivity;
 
@@ -128,7 +137,14 @@ public class MetaMapView {
 		metaMapActivity.loadMetaMapTopic(currentTopic);
 	}
 
-	public static void loadLayout(Activity activity) {
+	public static void loadLayout(MetaMapActivity activity) {
 		activity.setContentView(R.layout.metamap);
+		
+		// bing synchronize button
+		bindSynchronizeButton(activity);
+	}
+	
+	public void prepareTopic(Topic topic) {
+		
 	}
 }

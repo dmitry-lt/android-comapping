@@ -28,7 +28,6 @@ import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.LoginActivity;
-import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.storage.Storage;
 
 public class Client implements MapProvider {
@@ -66,7 +65,7 @@ public class Client implements MapProvider {
 	public void login(String email, String password, boolean remember) throws ConnectionException,
 			LoginInterruptedException, InvalidCredentialsException {
 		// if you try to log in, previous user logged out
-		clientSideLogout();
+		clientSideLogout(true);
 
 		// anyway save email
 		Storage.getInstance().set(Storage.EMAIL_KEY, email);
@@ -123,7 +122,7 @@ public class Client implements MapProvider {
 		String email = Storage.getInstance().get(Storage.EMAIL_KEY);
 		String autologinKey = Storage.getInstance().get(Storage.AUTOLOGIN_KEY);
 
-		clientSideLogout();
+		clientSideLogout(true);
 
 		setClientId(loginRequest(email, autologinKey, COOKIE_LOGIN_METHOD));
 
@@ -147,12 +146,12 @@ public class Client implements MapProvider {
 	/**
 	 * Method for only client side logout
 	 */
-	public void clientSideLogout() {
+	public void clientSideLogout(boolean isToEmptyAutologin) {
 		clientId = null;
-		MemoryCache.clear();
 
-		// clear AUTOLOGIN_KEY anyway
-		Storage.getInstance().set(Storage.AUTOLOGIN_KEY, "");
+		if (isToEmptyAutologin) {
+			Storage.getInstance().set(Storage.AUTOLOGIN_KEY, "");
+		}
 	}
 
 	/**
@@ -160,23 +159,24 @@ public class Client implements MapProvider {
 	 * 
 	 * @throws ConnectionException
 	 */
-	public void logout(Activity context) throws ConnectionException {
+	public void logout(Activity context, boolean isToEmptyAutologin) throws ConnectionException {
 		if (!isLoggedIn()) {
-			Log.i(Log.connectionTag, "logout without logn");
-		}
+			Log.i(Log.connectionTag, "logout without login");
+			clientSideLogout(isToEmptyAutologin);
+		} else {
+			List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
+			data.add(new BasicNameValuePair("action", "notifier_logout"));
+			data.add(new BasicNameValuePair("clientId", clientId));
 
-		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
-		data.add(new BasicNameValuePair("action", "notifier_logout"));
-		data.add(new BasicNameValuePair("clientId", clientId));
+			clientSideLogout(isToEmptyAutologin);
 
-		clientSideLogout();
-
-		try {
-			requestToServer(data);
-		} catch (LoginInterruptedException e) {
-			Log.e(Log.connectionTag, "login interrupted in logout");
-		} catch (InvalidCredentialsException e) {
-			Log.e(Log.connectionTag, "invalid credentails in logout");
+			try {
+				requestToServer(data);
+			} catch (LoginInterruptedException e) {
+				Log.e(Log.connectionTag, "login interrupted in logout");
+			} catch (InvalidCredentialsException e) {
+				Log.e(Log.connectionTag, "invalid credentails in logout");
+			}
 		}
 	}
 

@@ -12,7 +12,8 @@
 		<ImageButton android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/homeButton" android:src="@drawable/home_button_grey"></ImageButton>
 
-	<ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/viewSwitcher" android:src="@drawable/sdcard_icon"></ImageButton>
+	<ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/synchronizeButton" android:src="@drawable/reload_metamap_menu_icon" android:visibility="visible"></ImageButton><ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/viewSwitcher" android:src="@drawable/sdcard_icon"></ImageButton>
+
 
 </LinearLayout>
 	

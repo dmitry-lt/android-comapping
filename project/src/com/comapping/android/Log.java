@@ -11,6 +11,7 @@ public class Log {
 	public static final String topicRenderTag = "TopicRender";
 	public static final String loginTag = "Login";
 	public static final String storageTag = "Storage";
+	public static final String sqliteCacheTag = "SQLite";
 
 	public static void v(String module, String msg) {
 		android.util.Log.v(applicationTag, module + ": " + msg);

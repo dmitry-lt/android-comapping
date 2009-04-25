@@ -20,7 +20,7 @@ public class PreferencesActivity extends PreferenceActivity implements OnPrefere
 		ListPreference viewType = (ListPreference) findPreference("viewType");
 		if (viewType.getEntry() == null) {
 			// set default value
-			viewType.setValue(ViewType.TREE_VIEW.toString());
+			viewType.setValue(ViewType.COMAPPING_VIEW.toString());
 		}
 
 		viewType.setSummary(viewType.getEntry());

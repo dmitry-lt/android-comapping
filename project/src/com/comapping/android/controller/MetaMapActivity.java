@@ -8,7 +8,6 @@
 
 package com.comapping.android.controller;
 
-import java.io.File;
 import java.util.Arrays;
 
 import android.app.Activity;
@@ -39,7 +38,6 @@ import com.comapping.android.model.Topic;
 import com.comapping.android.model.TopicComparator;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
-import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.storage.SqliteMapCache;
 import com.comapping.android.storage.Storage;
 import com.comapping.android.view.metamap.InternetView;
@@ -64,7 +62,7 @@ public class MetaMapActivity extends Activity {
 	private static MetaMapView currentView = null;
 
 	private static InternetView internetView = null;
-	private static SdcardView sdcardView = null;
+	private static SdcardView sdcardView = new SdcardView();
 
 	//
 	private static MetaMapActivity instance;
@@ -81,14 +79,9 @@ public class MetaMapActivity extends Activity {
 
 		MetaMapView.loadLayout(this);
 
-		// init sdcardView if needed
-		if (sdcardView == null) {
-			initSdcardView();
-		}
-
 		// init internetView if needed
 		if (internetView == null) {
-			metaMapRefresh();
+			metaMapRefresh(false);
 		} else {
 			if (currentView instanceof InternetView) {
 				switchView(internetView);
@@ -134,14 +127,6 @@ public class MetaMapActivity extends Activity {
 		case R.id.logout:
 			logout();
 			return true;
-		case R.id.reloadMetamap:
-			metaMapRefresh();
-			return true;
-		case R.id.clearCache:
-			MemoryCache.clear();
-			client.clearCache();
-
-			return true;
 		}
 
 		return false;
@@ -157,10 +142,10 @@ public class MetaMapActivity extends Activity {
 
 			switch (item.getItemId()) {
 			case R.id.openWithTreeView:
-				loadMap(mapId, ViewType.TREE_VIEW);
+				loadMap(mapId, ViewType.COMAPPING_VIEW, false);
 				break;
 			case R.id.openWithExplorerView:
-				loadMap(mapId, ViewType.EXPLORER_VIEW);
+				loadMap(mapId, ViewType.EXPLORER_VIEW, false);
 				break;
 			}
 		} else {
@@ -173,29 +158,17 @@ public class MetaMapActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		splashDeactivate();
+		
+		try {
+			client.applicationClose(this);
+		} catch (ConnectionException e) {
+			Log.e(Log.metaMapControllerTag, "Connection exception in logout");
+		}
+		
 		super.onDestroy();
 	}
 
 	// MetaMap methods
-
-	public void initSdcardView() {
-		Map sdMap = new Map(0);
-		Topic root = new Topic(0, null);
-
-		try {
-			root.setText("sdcard");
-		} catch (StringToXMLConvertionException e) {
-			// unreachable code
-			Log.e(Log.metaMapControllerTag, "error while parsing 'sdcard'");
-		}
-
-		root.setNote("/sdcard");
-
-		sdMap.setRoot(root);
-
-		sdcardView = new SdcardView(sdMap);
-	}
-
 	public static MapProvider getCurrentMapProvider() {
 		return (currentView instanceof InternetView) ? client : fileMapProvider;
 	}
@@ -242,8 +215,12 @@ public class MetaMapActivity extends Activity {
 			}
 		});
 	}
-
-	private void metaMapRefresh() {
+	
+	public void synchronize() {
+		metaMapRefresh(true);
+	}
+	
+	private void metaMapRefresh(final boolean ignoreCache) {
 		final MetaMapActivity context = this;
 
 		new Thread() {
@@ -253,7 +230,7 @@ public class MetaMapActivity extends Activity {
 				splashActivate("Downloading map list");
 
 				try {
-					result = client.getComap("meta", context);
+					result = client.getComap("meta", context, ignoreCache);
 				} catch (ConnectionException e) {
 					Log.e(Log.metaMapControllerTag, "connection error in metamap retrieving");
 				} catch (LoginInterruptedException e) {
@@ -287,35 +264,9 @@ public class MetaMapActivity extends Activity {
 		}.start();
 	}
 
-	private void prepareSdcardTopic(final Topic topic) {
-		topic.removeAllChildTopics();
-
-		File directory = new File(topic.getNote());
-		for (File file : directory.listFiles()) {
-			Topic newTopic = new Topic(0, topic);
-			try {
-				newTopic.setText(file.getName());
-			} catch (StringToXMLConvertionException e) {
-				Log.e(Log.metaMapControllerTag, "error while parsing file name");
-			}
-
-			newTopic.setNote(file.getAbsolutePath());
-
-			if (!file.isDirectory()) {
-				newTopic.setMapRef(file.getAbsolutePath());
-			}
-
-			topic.addChild(newTopic);
-		}
-	}
-
 	public void loadMetaMapTopic(final Topic topic) {
-		// prepare the topic
-		if (currentView instanceof SdcardView) {
-			prepareSdcardTopic(topic);
-		}
-		// end prepare
-
+		currentView.prepareTopic(topic);
+		
 		currentTopicChildren = topic.getChildTopics();
 
 		Arrays.sort(currentTopicChildren, new TopicComparator());
@@ -323,10 +274,12 @@ public class MetaMapActivity extends Activity {
 		currentView.drawMetaMapTopic(topic, currentTopicChildren);
 	}
 
-	public void loadMap(final String mapId, final ViewType viewType) {
+	public void loadMap(final String mapId, final ViewType viewType, boolean ignoreCache) {
 		Intent intent = new Intent(MapActivity.MAP_ACTIVITY_INTENT);
+
 		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
+		intent.putExtra(MapActivity.EXT_IS_IGNORE_CACHE, ignoreCache);
 
 		startActivityForResult(intent, MAP_REQUEST);
 	}
@@ -340,7 +293,7 @@ public class MetaMapActivity extends Activity {
 			Log.e(Log.metaMapControllerTag, "connection exception in logout");
 		}
 
-		metaMapRefresh();
+		metaMapRefresh(false);
 	}
 
 	public void preferences() {

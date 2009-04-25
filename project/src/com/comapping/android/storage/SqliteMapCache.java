@@ -1,8 +1,11 @@
 package com.comapping.android.storage;
 
+import com.comapping.android.Log;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 public class SqliteMapCache {
@@ -31,6 +34,7 @@ public class SqliteMapCache {
 	}
 
 	public void set(String mapId, String data) {
+		Log.d(Log.sqliteCacheTag, "set ["+mapId+"] = "+data);
 		if (database == null) {
 			return;
 		}
@@ -41,13 +45,25 @@ public class SqliteMapCache {
 		values.put(MAP_ID_ATTR_NAME, mapId);
 		values.put(DATA_ATTR_NAME, data);
 
-		if (database.insert(TABLE_NAME, null, values) == -1) {
+		Log.d(Log.sqliteCacheTag, "set attributes "+values);
+		
+		long result = -1;
+		try {
+			result = database.insertOrThrow(TABLE_NAME, null, values);
+		} catch(SQLException e) {
+			result = -1;
+			Log.e(Log.sqliteCacheTag, "sql exception while insert");
+		}
+		
+		if (result == -1) {
 			// insert not successful, update required
 			database.update(TABLE_NAME, values, "mapId=?", new String[] { mapId });
 		}
 	}
 
 	public String get(String mapId) {
+		Log.d(Log.sqliteCacheTag, "get ["+mapId+"]");
+		
 		if (database == null) {
 			return null;
 		}
@@ -64,7 +80,9 @@ public class SqliteMapCache {
         
         if (result != null) {
         	if (result.moveToFirst()) {
-        		return result.getString(result.getColumnIndex(DATA_ATTR_NAME));
+        		String res = result.getString(result.getColumnIndex(DATA_ATTR_NAME));
+        		Log.d(Log.sqliteCacheTag, "getting result "+res);
+        		return res;
         	}
         }
         
@@ -77,22 +95,24 @@ public class SqliteMapCache {
 
 	// private methods
 	private Integer getIdAttribute(String mapId) {
-		if (mapId.equals("meta")) {
-			return 0;
-		} else {
-			try {
-				return Integer.parseInt(mapId);
-			} catch (NumberFormatException e) {
-				return null;
-			}
-		}
+		return null;
+		/*try {
+			return Integer.parseInt(mapId);
+		} catch (NumberFormatException e) {
+			return null;
+		}*/	
 	}
 
 	public void clear() {
+		Log.d(Log.sqliteCacheTag, "clear database");
 		if (database != null) {
 			database.execSQL(DELETE_TABLE_QUERY);
 			initDatabase();
 		}
+	}
+	
+	public void close() {
+		database.close();
 	}
 	
 	private void initDatabase() {
