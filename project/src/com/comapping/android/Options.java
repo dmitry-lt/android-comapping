@@ -9,7 +9,7 @@ public class Options {
 	final public static int RESULT_CHAIN_CLOSE = 24313;
 
 	// Proxy server options
-	final public static boolean USE_PROXY = true;
+	final public static boolean USE_PROXY = false;
 	final public static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("217.197.3.157", 8089));
 
 	// Address to downloading attachment files
