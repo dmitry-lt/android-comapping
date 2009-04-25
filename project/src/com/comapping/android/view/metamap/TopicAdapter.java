@@ -1,4 +1,4 @@
-package com.comapping.android.view;
+package com.comapping.android.view.metamap;
 
 import java.util.ArrayList;
 import java.util.List;

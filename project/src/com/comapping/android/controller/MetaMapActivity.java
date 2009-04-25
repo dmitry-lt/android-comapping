@@ -24,7 +24,6 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.comapping.android.Log;
-import com.comapping.android.MetaMapViewType;
 import com.comapping.android.ViewType;
 import com.comapping.android.communication.CachingClient;
 import com.comapping.android.communication.Client;
@@ -43,7 +42,9 @@ import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.storage.SqliteMapCache;
 import com.comapping.android.storage.Storage;
-import com.comapping.android.view.MetaMapView;
+import com.comapping.android.view.metamap.InternetView;
+import com.comapping.android.view.metamap.MetaMapView;
+import com.comapping.android.view.metamap.SdcardView;
 
 public class MetaMapActivity extends Activity {
 	// constants
@@ -60,10 +61,10 @@ public class MetaMapActivity extends Activity {
 
 	// private variables
 	// views
-	private static MetaMapViewType currentView = MetaMapViewType.INTERNET_VIEW;
+	private static MetaMapView currentView = null;
 
-	private static MetaMapView internetView = null;
-	private static MetaMapView sdcardView = null;
+	private static InternetView internetView = null;
+	private static SdcardView sdcardView = null;
 
 	//
 	private static MetaMapActivity instance;
@@ -89,14 +90,14 @@ public class MetaMapActivity extends Activity {
 		if (internetView == null) {
 			metaMapRefresh();
 		} else {
-			if (currentView == MetaMapViewType.INTERNET_VIEW) {
-				internetView.activate(this);
+			if (currentView instanceof InternetView) {
+				switchView(internetView);
 			}
 		}
 
 		// activate sdcardView if needed
-		if (currentView == MetaMapViewType.SDCARD_VIEW) {
-			sdcardView.activate(this);
+		if ((currentView != null) && (currentView instanceof SdcardView)) {
+			switchView(sdcardView);
 		}
 	}
 
@@ -192,28 +193,28 @@ public class MetaMapActivity extends Activity {
 
 		sdMap.setRoot(root);
 
-		sdcardView = new MetaMapView(sdMap);
+		sdcardView = new SdcardView(sdMap);
 	}
 
 	public static MapProvider getCurrentMapProvider() {
-		return (currentView == MetaMapViewType.INTERNET_VIEW) ? client : fileMapProvider;
+		return (currentView instanceof InternetView) ? client : fileMapProvider;
 	}
 
 	public static MetaMapActivity getInstance() {
 		return instance;
 	}
 
-	public MetaMapViewType getCurrentView() {
-		return currentView;
+	public void switchView(MetaMapView view) {
+		currentView = view;
+
+		currentView.activate(this);
 	}
 
-	public void switchView(MetaMapViewType viewType) {
-		currentView = viewType;
-
-		if (viewType == MetaMapViewType.INTERNET_VIEW) {
-			internetView.activate(this);
+	public void switchView() {
+		if (currentView instanceof SdcardView) {
+			switchView(internetView);
 		} else {
-			sdcardView.activate(this);
+			switchView(sdcardView);
 		}
 	}
 
@@ -274,12 +275,12 @@ public class MetaMapActivity extends Activity {
 
 				splashDeactivate();
 
-				internetView = new MetaMapView(metaMap);
+				internetView = new InternetView(metaMap);
 
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						switchView(MetaMapViewType.INTERNET_VIEW);
+						switchView(internetView);
 					}
 				});
 			}
@@ -310,7 +311,7 @@ public class MetaMapActivity extends Activity {
 
 	public void loadMetaMapTopic(final Topic topic) {
 		// prepare the topic
-		if (currentView == MetaMapViewType.SDCARD_VIEW) {
+		if (currentView instanceof SdcardView) {
 			prepareSdcardTopic(topic);
 		}
 		// end prepare
@@ -319,11 +320,7 @@ public class MetaMapActivity extends Activity {
 
 		Arrays.sort(currentTopicChildren, new TopicComparator());
 
-		if (currentView == MetaMapViewType.INTERNET_VIEW) {
-			internetView.drawMetaMapTopic(topic, currentTopicChildren);
-		} else {
-			sdcardView.drawMetaMapTopic(topic, currentTopicChildren);
-		}
+		currentView.drawMetaMapTopic(topic, currentTopicChildren);
 	}
 
 	public void loadMap(final String mapId, final ViewType viewType) {
