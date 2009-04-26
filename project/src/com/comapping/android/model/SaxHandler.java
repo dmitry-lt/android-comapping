@@ -85,9 +85,17 @@ class SaxHandler extends DefaultHandler {
 					currentTopic.getParent().addChild(currentTopic);
 				}
 			} else if (localName.equals(MapBuilder.TOPIC_ICON_TAG)) {
+				
 				String iconName = attributes.getValue(MapBuilder.ICON_NAME_ATTR);
-				currentTopic.addIcon(Icon.parse(iconName));
-
+				try 
+				{
+					currentTopic.addIcon(Icon.parse(iconName));
+				}
+				catch (EnumParsingException e) {
+					e.printStackTrace();
+					Log.e(Log.modelTag, e.toString());
+				}
+				
 			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
 				String note = attributes.getValue(MapBuilder.NOTE_TEXT_ATTR);
 				if (note != null) {
@@ -133,10 +141,6 @@ class SaxHandler extends DefaultHandler {
 			Log.e(Log.modelTag, e.toString());
 			throw new SAXException();
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
-			throw new SAXException();
-		} catch (EnumParsingException e) {
 			e.printStackTrace();
 			Log.e(Log.modelTag, e.toString());
 			throw new SAXException();
