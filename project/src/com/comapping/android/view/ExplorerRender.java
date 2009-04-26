@@ -31,7 +31,7 @@ public class ExplorerRender extends MapRender {
 		public int topicRenderX, topicRenderY;
 		public ArrayList<TopicView> children;
 		public int x1, y1, x2, y2;
-		public TopicView parent, nextBrother = null, prevBrother = null;
+		public TopicView parent, nextSibling = null, prevSibling = null;
 
 		public TopicView(Topic topic, TopicView parent) {
 			isOpen = true;
@@ -43,10 +43,10 @@ public class ExplorerRender extends MapRender {
 			this.parent = parent;
 			for (int i = 0; i < topic.getChildrenCount(); i++) {
 				if (i - 1 >= 0) {
-					children.get(i).prevBrother = children.get(i - 1);
+					children.get(i).prevSibling = children.get(i - 1);
 				}
 				if (i + 1 < topic.getChildrenCount()) {
-					children.get(i).nextBrother = children.get(i + 1);
+					children.get(i).nextSibling = children.get(i + 1);
 				}
 			}
 		}
@@ -57,8 +57,8 @@ public class ExplorerRender extends MapRender {
 			}
 			TopicView topic = this;
 			while (true) {
-				if (topic.nextBrother != null) {
-					return topic.nextBrother;
+				if (topic.nextSibling != null) {
+					return topic.nextSibling;
 				}
 				if (topic.parent != null) {
 					topic = topic.parent;
@@ -77,8 +77,8 @@ public class ExplorerRender extends MapRender {
 		}
 
 		public TopicView getPrevTopic() {
-			if (prevBrother != null) {
-				return prevBrother.getLastTopic();
+			if (prevSibling != null) {
+				return prevSibling.getLastTopic();
 			}
 			return parent;
 		}
@@ -100,7 +100,7 @@ public class ExplorerRender extends MapRender {
 
 	private ArrayList<Expander> expanders = new ArrayList<Expander>();
 	private ArrayList<Rect> lines = new ArrayList<Rect>();
-	private ArrayList<TopicView> expandedTopics = new ArrayList<TopicView>();
+	private ArrayList<TopicView> topics = new ArrayList<TopicView>();
 
 	private int radius = plusMinusRender.getHeight() / 2;
 	private int xOffset, yOffset;
@@ -196,19 +196,19 @@ public class ExplorerRender extends MapRender {
 
 		// draw topics
 		lo = -1;
-		hi = expandedTopics.size() - 1;
+		hi = topics.size() - 1;
 		while (lo < hi) {
 			int mid = (lo + hi + 1) / 2;
-			if (expandedTopics.get(mid).topicRenderY
-					+ expandedTopics.get(mid).topicRender.getHeight() + yOffset < 0) {
+			if (topics.get(mid).topicRenderY
+					+ topics.get(mid).topicRender.getHeight() + yOffset < 0) {
 				lo = mid;
 			} else {
 				hi = mid - 1;
 			}
 		}
 		lo++;
-		for (int i = lo; i < expandedTopics.size(); i++) {
-			TopicView topic = expandedTopics.get(i);
+		for (int i = lo; i < topics.size(); i++) {
+			TopicView topic = topics.get(i);
 			int x = topic.topicRenderX + xOffset;
 			int y = topic.topicRenderY + yOffset;
 			if (y > screenHeight) {
@@ -278,7 +278,7 @@ public class ExplorerRender extends MapRender {
 		topic.topicRenderY = y;
 		topic.x2 = x + topicRender.getWidth();
 		x -= X_SHIFT + BLOCK_SHIFT;
-		expandedTopics.add(topic);
+		topics.add(topic);
 
 		// update circle and line
 		y = ret[1] + ret[2];
@@ -318,7 +318,7 @@ public class ExplorerRender extends MapRender {
 	}
 
 	private void expanding() {
-		for (TopicView topic : expandedTopics) {
+		for (TopicView topic : topics) {
 			if (topic.topicRenderX + topic.topicRender.getWidth() > screenWidth) {
 				topic.parent.isOpen = false;
 			}
@@ -335,7 +335,7 @@ public class ExplorerRender extends MapRender {
 	public void update() {
 		expanders.clear();
 		lines.clear();
-		expandedTopics.clear();
+		topics.clear();
 		int[] temp = updateTopic(root, 0, 0);
 		this.width = temp[0];
 		this.height = temp[1];
@@ -385,7 +385,7 @@ public class ExplorerRender extends MapRender {
 		}
 
 		// touch topics
-		for (TopicView topic : expandedTopics) {
+		for (TopicView topic : topics) {
 			int x1 = topic.topicRenderX;
 			int y1 = topic.topicRenderY;
 			int x2 = x1 + topic.topicRender.getWidth();
