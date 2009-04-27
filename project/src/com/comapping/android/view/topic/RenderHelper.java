@@ -1,4 +1,4 @@
-package com.comapping.android.view;
+package com.comapping.android.view.topic;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

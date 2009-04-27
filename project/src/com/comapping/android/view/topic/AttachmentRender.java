@@ -1,4 +1,4 @@
-package com.comapping.android.view;
+package com.comapping.android.view.topic;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -8,6 +8,8 @@ import com.comapping.android.Options;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Attachment;
+import com.comapping.android.view.Render;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,7 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 
-import static com.comapping.android.view.RenderHelper.getBitmap;
+import static com.comapping.android.view.topic.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {
 

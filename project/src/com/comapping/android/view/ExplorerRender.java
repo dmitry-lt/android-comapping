@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
+import com.comapping.android.view.topic.TopicRender;
 
 import android.content.Context;
 import android.graphics.Canvas;

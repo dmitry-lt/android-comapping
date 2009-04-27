@@ -1,7 +1,8 @@
-package com.comapping.android.view;
+package com.comapping.android.view.topic;
 
 import com.comapping.android.Log;
 import com.comapping.android.model.Topic;
+import com.comapping.android.view.Render;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,7 +13,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
 
-import static com.comapping.android.view.RenderHelper.pointLiesOnRect;
+import static com.comapping.android.view.topic.RenderHelper.pointLiesOnRect;
 
 public class TopicRender extends Render {
 
