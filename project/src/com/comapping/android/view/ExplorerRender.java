@@ -8,14 +8,13 @@ import com.comapping.android.view.topic.TopicRender;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.KeyEvent;
 
 public class ExplorerRender extends MapRender {
 
-	private class Expander {
+	private class Expander implements Comparable<Expander> {
 		public int x, y;
 		public TopicView topic;
 
@@ -23,6 +22,17 @@ public class ExplorerRender extends MapRender {
 			this.x = x;
 			this.y = y;
 			this.topic = topic;
+		}
+
+		@Override
+		public int compareTo(Expander another) {
+			if (this.y < another.y) {
+				return -1;
+			} else if (this.y == another.y) {
+				return 0;
+			} else {
+				return 1;
+			}
 		}
 	}
 
@@ -131,6 +141,22 @@ public class ExplorerRender extends MapRender {
 				&& isSegmentsIntersects(0, screenHeight, y1, y2);
 	}
 
+	// private int getFirstOccurence(ArrayList<Object> a, Object o) {
+	// int lo = -1;
+	// int hi = a.size() - 1;
+	// while (lo < hi) {
+	// int mid = (lo + hi + 1) / 2;
+	// Class type = a.get(mid).getClass();
+	// if (a.get(mid).compareTo(type.cast(o)) < 0) {
+	// lo = mid;
+	// } else {
+	// hi = mid - 1;
+	// }
+	// }
+	// lo++;
+	// return lo;
+	// }
+
 	// Draw tree
 	// We can use binary search on Y-coordinate of topics
 	// and circles
@@ -139,47 +165,18 @@ public class ExplorerRender extends MapRender {
 		int lo, hi;
 
 		// draw lines
-		lo = -1;
-		hi = lines.size() - 1;
-		while (lo < hi) {
-			int mid = (lo + hi + 1) / 2;
-			if (lines.get(mid).bottom + yOffset < 0) {
-				lo = mid;
-			} else {
-				hi = mid - 1;
-			}
-		}
-		lo++;
-		p.setColor(Color.GRAY);
-
-		// TODO Sort lines
-
-		for (int i = 0; i < lines.size(); i++) {
-			Rect line = lines.get(i);
+		for (Rect line : lines) {
 			int x1 = line.left + xOffset;
 			int y1 = line.top + yOffset;
 			int x2 = line.right + xOffset;
 			int y2 = line.bottom + yOffset;
-			// if (y1 > screenHeight) {
-			// break;
-			// }
 			if (onScreen(x1, y1, x2, y2)) {
 				c.drawLine(x1, y1, x2, y2, p);
 			}
 		}
 
 		// draw circles
-		lo = -1;
-		hi = expanders.size() - 1;
-		while (lo < hi) {
-			int mid = (lo + hi + 1) / 2;
-			if (expanders.get(mid).y + radius + yOffset < 0) {
-				lo = mid;
-			} else {
-				hi = mid - 1;
-			}
-		}
-		lo++;
+		lo = 0;
 		p.setAntiAlias(true);
 		for (int i = lo; i < expanders.size(); i++) {
 			Expander expander = expanders.get(i);
