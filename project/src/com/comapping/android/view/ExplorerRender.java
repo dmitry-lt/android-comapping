@@ -120,7 +120,6 @@ public class ExplorerRender extends MapRender {
 	private TopicView selectedTopic;
 	private ScrollController scroll;
 	private PlusMinusRender plusMinusRender = new PlusMinusRender(true);
-	private boolean updateNeeded = true;
 	private boolean selectRootNeeded = true;
 	private boolean expandingNeeded = true;
 
@@ -328,24 +327,18 @@ public class ExplorerRender extends MapRender {
 		expandingNeeded = false;
 	}
 
-	// Public methods
-
 	// Method to update tree, sizes and references for
 	// key pressing
-	@Override
-	public void update() {
+	private void update() {
 		expanders.clear();
 		lines.clear();
 		topics.clear();
 		int[] temp = updateTopic(root, 0, 0);
 		this.width = temp[0];
 		this.height = temp[1];
-		updateNeeded = false;
-		if (selectRootNeeded) {
-			selectTopic(root);
-			selectRootNeeded = false;
-		}
-	}
+	}	
+	
+	// Public methods
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
@@ -353,8 +346,9 @@ public class ExplorerRender extends MapRender {
 		yOffset = -y;
 		screenWidth = width;
 		screenHeight = height;
-		if (updateNeeded) {
-			update();
+		if (selectRootNeeded) {
+			selectTopic(root);
+			selectRootNeeded = false;
 		}
 		if (expandingNeeded) {
 			expanding();
@@ -380,7 +374,7 @@ public class ExplorerRender extends MapRender {
 					* (expander.y - y) <= radius * radius) {
 				expander.topic.isOpen = !expander.topic.isOpen;
 				selectTopic(expander.topic);
-				updateNeeded = true;
+				update();
 				break;
 			}
 		}
@@ -435,5 +429,12 @@ public class ExplorerRender extends MapRender {
 			}
 			break;
 		}
+	}
+
+	@Override
+	public void setBounds(int width, int height) {
+		screenWidth = width;
+		screenHeight = height;
+		update();
 	}
 }

@@ -147,7 +147,6 @@ public class MainMapView extends View {
 		zoom.setIsZoomInEnabled(Math.abs(scale - MAX_SCALE) > eps);
 		zoom.setIsZoomOutEnabled(Math.abs(scale - MIN_SCALE) > eps);
 		this.scale = scale;
-		mRender.update();
 	}
 
 	private void refresh() {
@@ -165,6 +164,9 @@ public class MainMapView extends View {
 
 		canvas.save();
 		canvas.scale(scale, scale);
+		mRender
+				.setBounds(getScreenForRenderWidth(),
+						getScreenForRenderHeight());
 
 		mRender.draw(mScroller.getCurrX(), +mScroller.getCurrY(),
 				getScreenForRenderWidth(), getScreenForRenderHeight(), canvas);

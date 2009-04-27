@@ -1027,6 +1027,9 @@ public class ComappingRender extends MapRender {
 	}
 
 	@Override
-	public void update() {
+	public void setBounds(int width, int height) {
+		// TODO Auto-generated method stub
+		
 	}
+
 }
