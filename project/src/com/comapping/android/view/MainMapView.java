@@ -159,27 +159,30 @@ public class MainMapView extends View {
 	protected void onDraw(Canvas canvas) {
 		isDrawing = false;
 
-		Paint p = new Paint();
+		//Clear screen
 		canvas.drawARGB(255, 255, 255, 255);
 
+		// Save matrix
 		canvas.save();
+		
+		//Scaling
 		canvas.scale(scale, scale);
 		mRender
 				.setBounds(getScreenForRenderWidth(),
 						getScreenForRenderHeight());
 
+		//Draw map
 		mRender.draw(mScroller.getCurrX(), +mScroller.getCurrY(),
 				getScreenForRenderWidth(), getScreenForRenderHeight(), canvas);
 
+		//Restore matrix
 		canvas.restore();
 
+		// Draw scrollbars
 		drawScrollBars(canvas);
 
 		if (Options.DEBUG_RENDERING) {
-			p.setColor(Color.BLACK);
-			canvas.drawText("FPS: " + fps, 20, 30, p);
-			canvas.drawText("Width: " + mRender.getWidth(), 20, 50, p);
-			canvas.drawText("Height: " + mRender.getHeight(), 20, 70, p);
+			drawDebugInfo(canvas);
 		}
 
 		if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
@@ -195,14 +198,28 @@ public class MainMapView extends View {
 			invalidate();
 
 		if (Options.DEBUG_RENDERING) {
-			if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
-				fps = (1000 * frameCount)
-						/ (System.currentTimeMillis() - lastFPSCalcTime);
-				lastFPSCalcTime = System.currentTimeMillis();
-				frameCount = 0;
-			}
-			frameCount++;
+			debugFrameTick();
 		}
+	}
+	
+	void debugFrameTick()
+	{
+		if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
+			fps = (1000 * frameCount)
+					/ (System.currentTimeMillis() - lastFPSCalcTime);
+			lastFPSCalcTime = System.currentTimeMillis();
+			frameCount = 0;
+		}
+		frameCount++;
+	}
+	
+	void drawDebugInfo(Canvas canvas)
+	{
+		Paint p = new Paint();
+		p.setColor(Color.BLACK);
+		canvas.drawText("FPS: " + fps, 20, 30, p);
+		canvas.drawText("Width: " + mRender.getWidth(), 20, 50, p);
+		canvas.drawText("Height: " + mRender.getHeight(), 20, 70, p);
 	}
 
 	void drawScrollBars(Canvas c) {
@@ -247,8 +264,7 @@ public class MainMapView extends View {
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 
-		int action = ev.getAction();
-		switch (action) {
+		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN: {
 			mVelocityTracker = VelocityTracker.obtain();
 			oldX = (int) ev.getX();
