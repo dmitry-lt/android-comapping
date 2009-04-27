@@ -31,7 +31,7 @@ public class FormattedText implements Serializable {
 			if (lineEndPos == -1) {
 				lineEndPos = text.length();
 			}
-			add(new TextParagraph(text.substring(pos, lineEndPos - 1), format));
+			add(new TextParagraph(text.substring(pos, lineEndPos), format));
 			pos = lineEndPos + 1;
 		}
 	}
