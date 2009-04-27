@@ -8,6 +8,7 @@ import com.comapping.android.view.topic.TopicRender;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.KeyEvent;
@@ -177,6 +178,7 @@ public class ExplorerRender extends MapRender {
 	// and circles
 	private void draw(Canvas c) {
 		Paint p = new Paint();
+		p.setColor(Color.GRAY);
 
 		// draw lines
 		for (Rect line : lines) {
