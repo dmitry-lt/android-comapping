@@ -233,7 +233,15 @@ public class ComappingRender extends MapRender {
 		 * @return Height of a rendering topic
 		 */
 		public int getTopicHeight() {
-			return render.getHeight() + HORIZONTAL_BORDER_SIZE;
+			if (this.children.length > 0) {
+				if (render.getHeight() - render.getLineOffset() < plusMinusIcon
+						.getHeight() / 2)
+					return render.getLineOffset() + plusMinusIcon.getHeight()
+							/ 2;
+				else
+					return render.getHeight() + HORIZONTAL_BORDER_SIZE;
+			} else
+				return render.getHeight() + HORIZONTAL_BORDER_SIZE;
 		}
 
 		/**
