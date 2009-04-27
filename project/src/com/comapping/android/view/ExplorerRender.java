@@ -36,7 +36,7 @@ public class ExplorerRender extends MapRender {
 		}
 	}
 
-	private class TopicView {
+	private class TopicView implements Comparable<TopicView> {
 		public boolean isOpen;
 		public TopicRender topicRender;
 		public int topicRenderX, topicRenderY;
@@ -93,6 +93,23 @@ public class ExplorerRender extends MapRender {
 			}
 			return parent;
 		}
+
+		public TopicView(int y) {
+			topicRenderY = y;
+		}
+
+		@Override
+		public int compareTo(TopicView another) {
+			int y1 = this.topicRenderY + this.topicRender.getHeight();
+			int y2 = another.topicRenderY;
+			if (y1 < y2) {
+				return -1;
+			} else if (y1 == y2) {
+				return 0;
+			} else {
+				return 1;
+			}
+		}
 	}
 
 	private static final int X_SHIFT = 30;
@@ -141,28 +158,26 @@ public class ExplorerRender extends MapRender {
 				&& isSegmentsIntersects(0, screenHeight, y1, y2);
 	}
 
-	// private int getFirstOccurence(ArrayList<Object> a, Object o) {
-	// int lo = -1;
-	// int hi = a.size() - 1;
-	// while (lo < hi) {
-	// int mid = (lo + hi + 1) / 2;
-	// Class type = a.get(mid).getClass();
-	// if (a.get(mid).compareTo(type.cast(o)) < 0) {
-	// lo = mid;
-	// } else {
-	// hi = mid - 1;
-	// }
-	// }
-	// lo++;
-	// return lo;
-	// }
+	private <T> int getFirstOccurence(ArrayList<? extends Comparable<T>> a, T o) {
+		int lo = -1;
+		int hi = a.size() - 1;
+		while (lo < hi) {
+			int mid = (lo + hi + 1) / 2;
+			if (a.get(mid).compareTo(o) < 0) {
+				lo = mid;
+			} else {
+				hi = mid - 1;
+			}
+		}
+		lo++;
+		return lo;
+	}
 
 	// Draw tree
 	// We can use binary search on Y-coordinate of topics
 	// and circles
 	private void draw(Canvas c) {
 		Paint p = new Paint();
-		int lo, hi;
 
 		// draw lines
 		for (Rect line : lines) {
@@ -176,9 +191,9 @@ public class ExplorerRender extends MapRender {
 		}
 
 		// draw circles
-		lo = 0;
 		p.setAntiAlias(true);
-		for (int i = lo; i < expanders.size(); i++) {
+		for (int i = getFirstOccurence(expanders, new Expander(0, -radius
+				- yOffset, null)); i < expanders.size(); i++) {
 			Expander expander = expanders.get(i);
 			int x = expander.x + xOffset;
 			int y = expander.y + yOffset;
@@ -192,20 +207,8 @@ public class ExplorerRender extends MapRender {
 		}
 		p.setAntiAlias(false);
 
-		// draw topics
-		lo = -1;
-		hi = topics.size() - 1;
-		while (lo < hi) {
-			int mid = (lo + hi + 1) / 2;
-			if (topics.get(mid).topicRenderY
-					+ topics.get(mid).topicRender.getHeight() + yOffset < 0) {
-				lo = mid;
-			} else {
-				hi = mid - 1;
-			}
-		}
-		lo++;
-		for (int i = lo; i < topics.size(); i++) {
+		for (int i = getFirstOccurence(topics, new TopicView(-yOffset)); i < topics
+				.size(); i++) {
 			TopicView topic = topics.get(i);
 			int x = topic.topicRenderX + xOffset;
 			int y = topic.topicRenderY + yOffset;
