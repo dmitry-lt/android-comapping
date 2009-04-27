@@ -78,7 +78,7 @@ public class TaskRender extends Render {
 			} else if (!startRender.isEmpty()
 					&& startRender.getWidth() + deadlineRender.getWidth() + MIN_MERGING <= width) {
 				linesCount = 2;
-				merging = width - startRender.getWidth() + deadlineRender.getWidth();
+				merging = width - (startRender.getWidth() + deadlineRender.getWidth());
 			} else {
 				linesCount = 3;
 			}
