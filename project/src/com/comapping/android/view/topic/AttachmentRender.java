@@ -1,6 +1,7 @@
 package com.comapping.android.view.topic;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,7 @@ import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Attachment;
+import com.comapping.android.storage.Storage;
 import com.comapping.android.view.Render;
 
 import android.app.AlertDialog;
@@ -40,7 +42,8 @@ public class AttachmentRender extends Render {
 
 	private AlertDialog dialog;
 	private ProgressDialog downloadProgressDialog;
-	private boolean dowloadedSuccessfully;
+	private String downloadFolder;
+	private boolean downloadedSuccessfully;
 	private int width, height;
 	private Context context;
 	private Attachment attachment;
@@ -95,11 +98,14 @@ public class AttachmentRender extends Render {
 	@Override
 	public void onTouch(int x, int y) {
 		if (dialog == null) {
-			dialog = (new AlertDialog.Builder(context).setTitle("Save attachment in " + Options.DOWNLOAD_FOLDER + "?")
+			downloadFolder = Storage.getInstance().get(Storage.DOWNLOAD_FOLDER_KEY);
+			
+			dialog = (new AlertDialog.Builder(context).setTitle("Attachment")
 					.setMessage(
 							"File: " + attachment.getFilename() + "\n" + "Upload date: "
 									+ formatDate(attachment.getDate()) + "\n" + "Size: "
-									+ formatFileSize(attachment.getSize()) + "\n").setNegativeButton("No",
+									+ formatFileSize(attachment.getSize()) + "\n\n"
+									+ "Save in " + downloadFolder + " ?").setNegativeButton("No",
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
@@ -113,7 +119,7 @@ public class AttachmentRender extends Render {
 					downloadProgressDialog.setOnDismissListener(new OnDismissListener() {
 						@Override
 						public void onDismiss(DialogInterface dialog) {
-							if (!dowloadedSuccessfully) {
+							if (!downloadedSuccessfully) {
 								(new AlertDialog.Builder(context).setMessage("Error while downloading and saving file")
 										.setNeutralButton("Ok", null).create()).show();
 							}
@@ -127,9 +133,9 @@ public class AttachmentRender extends Render {
 						public void run() {
 							try {
 								downloadAndSaveAttachment();
-								dowloadedSuccessfully = true;
+								downloadedSuccessfully = true;
 							} catch (ConnectionException e) {
-								dowloadedSuccessfully = false;
+								downloadedSuccessfully = false;
 								e.printStackTrace();
 							}
 							downloadProgressDialog.dismiss();
@@ -212,32 +218,54 @@ public class AttachmentRender extends Render {
 		downloadProgressDialog.setMax(contentLength);
 
 		try {
-			// TODO problem: if file is already exist
-			FileOutputStream output = new FileOutputStream(Options.DOWNLOAD_FOLDER + "\\" + attachment.getFilename());
-			BufferedInputStream bInput = new BufferedInputStream(input, 8 * 1024);
+			String path = downloadFolder + "\\" + attachment.getFilename();
+			String name;
+			String ext;
+			int dotIndex = path.lastIndexOf('.');			
+			if (dotIndex != -1) {
+				name = path.substring(0, dotIndex);
+				ext = path.substring(dotIndex + 1, path.length());
+			} else {
+				name = path;
+				ext = "";
+			}
+			
+			File file = new File(downloadFolder);
+			file.mkdirs();
+			
+			file = new File(path);
+			int counter = 1;
+			while (file.exists()) {
+				file = new File(name + "(" + counter + ")" + ext);
+				counter++;
+			}
+			file.createNewFile();
+			
+			FileOutputStream output = new FileOutputStream(file);
+			BufferedInputStream bufferedInput = new BufferedInputStream(input, 8 * 1024);
 
 			int sum = 0;
-			int trysCount = 0;
+			int readsCount = 0;
 			while (sum < contentLength) {
 				if (Thread.interrupted()) {
 					connection.disconnect();
 					break;
 				}
 
-				int count = bInput.available();
+				int count = bufferedInput.available();
 				sum += count;
-				trysCount++;
+				readsCount++;
 				if (count > 0) {
 					byte[] buffer = new byte[count];
-					bInput.read(buffer);
+					bufferedInput.read(buffer);
 					output.write(buffer);
 				}
 				downloadProgressDialog.setProgress(sum);
 			}
-			bInput.close();
+			bufferedInput.close();
 			output.close();
 
-			Log.d(Log.topicRenderTag, "sum bytes=" + sum + " trysCount=" + trysCount);
+			Log.d(Log.topicRenderTag, "sum bytes=" + sum + " readsCount=" + readsCount);
 		} catch (IOException e) {
 			throw new ConnectionException();
 		}

@@ -9,4 +9,7 @@
 <string name="explorer_view_value">Explorer view</string>
 <string name="tree_view_value">Tree view</string>
 
+<string name="download_folder_preference_key">downloadFolder</string>
+<string name="download_folder_preference_title">Download Folder</string>
+<string name="download_folder_preference_dialogTitle">Specify attachments downloading folder</string>
 </resources>

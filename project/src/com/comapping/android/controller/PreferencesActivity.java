@@ -1,8 +1,10 @@
 package com.comapping.android.controller;
 
+import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -25,6 +27,14 @@ public class PreferencesActivity extends PreferenceActivity implements OnPrefere
 
 		viewType.setSummary(viewType.getEntry());
 		viewType.setOnPreferenceChangeListener(this);
+		
+		EditTextPreference downloadFolder = (EditTextPreference) findPreference("downloadFolder");
+		if (downloadFolder.getText() == null) {
+			downloadFolder.setText(Options.DEFAULT_DOWNLOAD_FOLDER);
+		}
+		
+		downloadFolder.setSummary(downloadFolder.getText());
+		downloadFolder.setOnPreferenceChangeListener(this);
 	}
 
 	@Override

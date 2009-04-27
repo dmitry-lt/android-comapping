@@ -14,7 +14,7 @@ public class Options {
 
 	// Address to downloading attachment files
 	final public static String DOWNLOAD_SERVER = "http://upload.comapping.com/";
-	final public static String DOWNLOAD_FOLDER = "\\sdcard";
+	final public static String DEFAULT_DOWNLOAD_FOLDER = "\\sdcard\\comapping\\download";
 	
 	public static final boolean DEBUG_RENDERING = true;
 }

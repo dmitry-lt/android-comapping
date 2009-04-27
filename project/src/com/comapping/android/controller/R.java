@@ -111,6 +111,9 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050000;
+        public static final int download_folder_preference_dialogTitle=0x7f050007;
+        public static final int download_folder_preference_key=0x7f050005;
+        public static final int download_folder_preference_title=0x7f050006;
         public static final int explorer_view_value=0x7f050003;
         public static final int tree_view_value=0x7f050004;
         public static final int view_type_preference_key=0x7f050001;
