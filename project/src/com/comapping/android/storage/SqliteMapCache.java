@@ -9,20 +9,20 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 public class SqliteMapCache {
-	private static final String DATABASE_NAME = "mapCache";
-	private static final String TABLE_NAME = "cache";
+	final static private String DATABASE_NAME = "mapCache";
+	final static private String TABLE_NAME = "cache";
 
-	private static final String ID_ATTR_NAME = "id";
-	private static final String LAST_UPDATE_ATTR_NAME = "lastUpdate";
-	private static final String MAP_ID_ATTR_NAME = "mapId";
-	private static final String DATA_ATTR_NAME = "data";
+	final static private String ID_ATTR_NAME = "id";
+	final static private String LAST_UPDATE_ATTR_NAME = "lastUpdate";
+	final static private String MAP_ID_ATTR_NAME = "mapId";
+	final static private String DATA_ATTR_NAME = "data";
 
-	private static final String CREATE_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + 
+	final static private String CREATE_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + 
 			ID_ATTR_NAME + " INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 			MAP_ID_ATTR_NAME + " TEXT, " + 
 			LAST_UPDATE_ATTR_NAME+ " DATE DEFAULT CURRENT_DATE, " + 
 			DATA_ATTR_NAME + " TEXT);";
-	private static final String DELETE_TABLE_QUERY = "DROP TABLE IF EXISTS "+TABLE_NAME;
+	final static private String DELETE_TABLE_QUERY = "DROP TABLE IF EXISTS "+TABLE_NAME;
 	
 	private SQLiteDatabase database = null;
 

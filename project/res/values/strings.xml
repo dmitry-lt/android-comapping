@@ -7,7 +7,7 @@
 <string name="view_type_preference_title">View type</string>
 
 <string name="explorer_view_value">Explorer view</string>
-<string name="tree_view_value">Tree view</string>
+<string name="comapping_view_value">Comapping view</string>
 
 <string name="download_folder_preference_key">downloadFolder</string>
 <string name="download_folder_preference_title">Download Folder</string>

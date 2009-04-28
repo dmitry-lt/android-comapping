@@ -17,7 +17,6 @@ import com.comapping.android.communication.CachingClient;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
-import com.comapping.android.storage.Storage;
 import com.comapping.android.view.LoginView;
 
 public class LoginActivity extends Activity {
@@ -85,12 +84,12 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		client = MetaMapActivity.client;
+
 		loginView = new LoginView(this);
 		loginView.load();
 
 		if (client.isAutologinPossible()) {
 			// autologin attempt
-			loginView.setEmailText(Storage.getInstance().get(Storage.EMAIL_KEY));
 			loginView.setPasswordText("******");
 
 			loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);

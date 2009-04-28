@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.controller.R;
+import com.comapping.android.storage.Storage;
 
 public class LoginView {
 	private LoginActivity loginActivity;
@@ -60,6 +61,7 @@ public class LoginView {
 
 	public void load() {
 		loginActivity.setContentView(R.layout.login);
+		setEmailText(Storage.getInstance().get(Storage.EMAIL_KEY));
 
 		// bind login button
 		Button loginButton = (Button) loginActivity.findViewById(R.id.login);

@@ -4,7 +4,7 @@
 	<PreferenceCategory android:title="View">
 		<ListPreference android:key="@string/view_type_preference_key"
 			android:title="@string/view_type_preference_title" android:entries="@array/view_types"
-			android:entryValues="@array/view_types" android:defaultValue="@string/tree_view_value" />					
+			android:entryValues="@array/view_types" android:defaultValue="@string/comapping_view_value" />					
 	</PreferenceCategory>
 	<PreferenceCategory android:title="Attachment">
 		<EditTextPreference android:key="@string/download_folder_preference_key"

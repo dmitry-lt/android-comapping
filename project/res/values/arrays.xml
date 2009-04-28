@@ -2,6 +2,6 @@
 <resources>
 	<string-array name="view_types">
 		<item>@string/explorer_view_value</item>
-		<item>@string/tree_view_value</item>
+		<item>@string/comapping_view_value</item>
 	</string-array>
 </resources>

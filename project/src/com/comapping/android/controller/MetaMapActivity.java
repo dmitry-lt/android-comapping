@@ -141,7 +141,7 @@ public class MetaMapActivity extends Activity {
 			String mapId = currentTopicChildren[itemId].getMapRef();
 
 			switch (item.getItemId()) {
-			case R.id.openWithTreeView:
+			case R.id.openWithComappingView:
 				loadMap(mapId, ViewType.COMAPPING_VIEW, false);
 				break;
 			case R.id.openWithExplorerView:
@@ -158,13 +158,13 @@ public class MetaMapActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		splashDeactivate();
-		
+
 		try {
 			client.applicationClose(this);
 		} catch (ConnectionException e) {
 			Log.e(Log.metaMapControllerTag, "Connection exception in logout");
 		}
-		
+
 		super.onDestroy();
 	}
 
@@ -215,11 +215,11 @@ public class MetaMapActivity extends Activity {
 			}
 		});
 	}
-	
+
 	public void synchronize() {
 		metaMapRefresh(true);
 	}
-	
+
 	private void metaMapRefresh(final boolean ignoreCache) {
 		final MetaMapActivity context = this;
 
@@ -266,7 +266,7 @@ public class MetaMapActivity extends Activity {
 
 	public void loadMetaMapTopic(final Topic topic) {
 		currentView.prepareTopic(topic);
-		
+
 		currentTopicChildren = topic.getChildTopics();
 
 		Arrays.sort(currentTopicChildren, new TopicComparator());

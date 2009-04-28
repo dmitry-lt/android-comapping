@@ -31,6 +31,7 @@ import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.storage.Storage;
 
 public class Client implements MapProvider {
+	final static String MetaMapId = "meta";
 	// constants
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
 	final static private String COOKIE_LOGIN_METHOD = "flashCookie";

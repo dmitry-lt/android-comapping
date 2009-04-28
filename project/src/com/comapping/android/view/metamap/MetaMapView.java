@@ -5,9 +5,11 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.comapping.android.ViewType;
+import com.comapping.android.communication.CachingClient;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Map;
@@ -46,8 +48,8 @@ public class MetaMapView {
 				if (childTopics[position].isFolder()) {
 					metaMapActivity.loadMetaMapTopic(childTopics[position]);
 				} else {
-					metaMapActivity
-							.loadMap(childTopics[position].getMapRef(), ViewType.getViewTypeFromString(viewType), false);
+					metaMapActivity.loadMap(childTopics[position].getMapRef(),
+							ViewType.getViewTypeFromString(viewType), false);
 				}
 			}
 		});
@@ -64,6 +66,22 @@ public class MetaMapView {
 
 			setButtonsEnabled();
 		}
+	}
+
+	private void drawMetaMapNotSynchronize() {
+		ListView mapList = (ListView) metaMapActivity.findViewById(R.id.listView);
+		mapList.setVisibility(ListView.GONE);
+
+		TextView pleaseSynchronize = (TextView) metaMapActivity.findViewById(R.id.pleaseSynchronize);
+		pleaseSynchronize.setVisibility(TextView.VISIBLE);
+	}
+
+	private void drawMetaMapSynchronize() {
+		ListView mapList = (ListView) metaMapActivity.findViewById(R.id.listView);
+		mapList.setVisibility(ListView.VISIBLE);
+
+		TextView pleaseSynchronize = (TextView) metaMapActivity.findViewById(R.id.pleaseSynchronize);
+		pleaseSynchronize.setVisibility(TextView.INVISIBLE);
 	}
 
 	private void bindHomeButton() {
@@ -119,11 +137,17 @@ public class MetaMapView {
 			}
 		});
 	}
-	
+
 	public void activate(MetaMapActivity _metaMapActivity) {
 		metaMapActivity = _metaMapActivity;
 
 		metaMapActivity.setTitle("Comapping: " + currentTopic.getText());
+
+		if (map.getId() == CachingClient.NotCachedMapId) {
+			drawMetaMapNotSynchronize();
+		} else {
+			drawMetaMapSynchronize();
+		}
 
 		if (currentTopic.isRoot()) {
 			setButtonsDisabled();
@@ -139,12 +163,12 @@ public class MetaMapView {
 
 	public static void loadLayout(MetaMapActivity activity) {
 		activity.setContentView(R.layout.metamap);
-		
+
 		// bing synchronize button
 		bindSynchronizeButton(activity);
 	}
-	
+
 	public void prepareTopic(Topic topic) {
-		
+
 	}
 }
