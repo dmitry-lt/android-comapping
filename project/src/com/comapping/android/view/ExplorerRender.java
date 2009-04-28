@@ -341,6 +341,16 @@ public class ExplorerRender extends MapRender {
 	}	
 	
 	// Public methods
+	
+	public void selectTopic(Topic topic){
+		for(int i = 0 ; i < topics.size();i++)
+		{
+			if (topics.get(i).topicRender.getTopic().equals(topic))
+			{
+				selectTopic(topics.get(i));
+			}
+		}
+	}
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {

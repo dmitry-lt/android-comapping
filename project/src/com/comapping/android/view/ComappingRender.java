@@ -1040,4 +1040,9 @@ public class ComappingRender extends MapRender {
 		
 	}
 
+	@Override
+	public void selectTopic(Topic topic) {
+		// TODO Auto-generated method stub
+		
+	}
 }

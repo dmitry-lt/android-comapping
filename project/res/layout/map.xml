@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="wrap_content"
+<RelativeLayout android:layout_width="fill_parent"
 	android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android">
 	<com.comapping.android.view.MainMapView
 		android:id="@+id/MapView" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
-	<ZoomControls android:id="@+id/Zoom"
+	<ZoomControls android:id="@+id/Zoom" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_alignBottom="@+id/MapView" android:layout_centerHorizontal="true"></ZoomControls>
+	<LinearLayout android:id="@+id/FindView" android:orientation="horizontal"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true" android:layout_alignBottom="@+id/MapView"></ZoomControls>
+		android:layout_alignBottom="@+id/MapView" android:visibility="invisible">
+		<ImageButton android:id="@+id/cancelButton"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:src="@drawable/deletebutton" android:background="@null"></ImageButton>
+		<AutoCompleteTextView android:id="@+id/nameEditText"
+			android:layout_width="220sp" android:layout_height="38sp"
+			android:singleLine="True" android:maxWidth="220sp" android:text="Find Topic"/>
+		<ImageButton android:id="@+id/previousButton"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:src="@drawable/previous_button" android:background="@null"></ImageButton>
+		<ImageButton android:id="@+id/nextButton"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:src="@drawable/nextbutton" android:background="@null" android:clickable="true"></ImageButton>
+	</LinearLayout>
 </RelativeLayout>

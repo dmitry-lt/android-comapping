@@ -216,7 +216,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 		children.toArray(result);
 		return result;
 	}
-
+	
 	public void addChild(Topic child) {
 		children.add(child);
 
@@ -238,6 +238,8 @@ public class Topic implements Iterable<Topic>, Serializable {
 		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText() + "\"]";
 	}
 
+
+	@Override
 	public TopicIterator iterator() {
 		return new TopicIterator(this);
 	}

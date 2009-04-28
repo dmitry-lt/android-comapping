@@ -31,6 +31,7 @@ import com.comapping.android.communication.MapProvider;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.model.DomMapBuilder;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.MapBuilder;
 import com.comapping.android.model.SaxMapBuilder;

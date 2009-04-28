@@ -36,7 +36,7 @@ class TopicAdapter extends ArrayAdapter<String> {
 		this.topics = topics;
 		this.context = context;
 	}
-
+	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = context.getLayoutInflater();
 		View row = inflater.inflate(R.layout.row, null);

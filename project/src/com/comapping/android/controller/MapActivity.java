@@ -1,9 +1,13 @@
 package com.comapping.android.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
@@ -11,6 +15,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ZoomControls;
 
 import com.comapping.android.Log;
@@ -22,6 +33,7 @@ import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.model.Map;
+import com.comapping.android.model.Topic;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.storage.MemoryCache;
@@ -106,7 +118,8 @@ public class MapActivity extends Activity {
 		currentViewType = viewType;
 
 		final Activity current = this;
-
+		final Context context = this;
+		
 		mapProcessingThread = new Thread() {
 			public void run() {
 				try {
@@ -154,7 +167,20 @@ public class MapActivity extends Activity {
 							setContentView(R.layout.map);
 
 							zoom = (ZoomControls) findViewById(R.id.Zoom);
-
+							
+							layout = (LinearLayout) findViewById(R.id.FindView);
+							cancel = (ImageButton) findViewById(R.id.cancelButton);
+							next = (ImageButton) findViewById(R.id.nextButton);
+							previous = (ImageButton) findViewById(R.id.previousButton);
+							text = (AutoCompleteTextView) findViewById(R.id.nameEditText);
+						
+							
+							Topic topic = map.getRoot();
+							allTopicsTexts(topic);
+							allTopics(topic);
+							
+							text.setAdapter(new ArrayAdapter<String>(context,android.R.layout.simple_dropdown_item_1line,texts));
+							
 							view = (MainMapView) findViewById(R.id.MapView);
 							view.setRender(mapRender);
 							view.setZoom(zoom);
@@ -180,7 +206,13 @@ public class MapActivity extends Activity {
 
 	ZoomControls zoom;
 	MainMapView view;
-
+	
+	LinearLayout layout;
+	ImageButton cancel;
+	ImageButton next;
+	ImageButton previous;
+	AutoCompleteTextView text;
+	
 	public MapRender initMapRender(Map map, ViewType viewType) {
 		switch (viewType) {
 		case EXPLORER_VIEW:
@@ -202,6 +234,11 @@ public class MapActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.zoom:
 			zoom.show();
+			view.IsVisible(View.INVISIBLE);
+			view.setVisible();
+			return true;
+		case R.id.find:
+			view.setlayout(layout,cancel,next,previous,text,topics);
 			view.setVisible();
 			return true;
 		case R.id.mapSynchronizeButton:
@@ -210,10 +247,30 @@ public class MapActivity extends Activity {
 			view.setVisible();
 			return true;
 		}
-
 		return false;
 	}
 
+	ArrayList<String> texts = new ArrayList<String>();
+	ArrayList<Topic> topics = new ArrayList<Topic>();
+	
+	public void allTopics(Topic parent)
+	{
+		topics.add(parent);
+		for(int i = 0;i<parent.getChildrenCount();i++)
+		{
+			allTopics(parent.getChildByIndex(i));
+		}
+	}
+	
+	public void allTopicsTexts(Topic parent)
+	{
+		if (!texts.contains(parent.getText())) texts.add(parent.getText());
+		for(int i = 0;i<parent.getChildrenCount();i++)
+		{
+			allTopicsTexts(parent.getChildByIndex(i));
+		}
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))

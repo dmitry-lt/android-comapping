@@ -1,6 +1,11 @@
 package com.comapping.android.view;
 
+import java.util.ArrayList;
+
 import com.comapping.android.Options;
+import com.comapping.android.controller.R;
+import com.comapping.android.model.Topic;
+import com.comapping.android.view.topic.TopicRender;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,8 +16,15 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.ZoomControls;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class MainMapView extends View {
 
@@ -32,6 +44,7 @@ public class MainMapView extends View {
 	// Drawing variables
 	public MapRender mRender;
 	public Scroller mScroller;
+	public Context context;
 
 	private Paint scrollBarBackgroundPaint = new Paint();
 	private Paint scrollBarPaint = new Paint();
@@ -102,6 +115,61 @@ public class MainMapView extends View {
 	public void setRender(MapRender render) {
 		mRender = render;
 		mRender.setScrollController(scrollController);
+	}
+
+	private LinearLayout layout;
+		
+	
+	public void setlayout(LinearLayout layout, ImageButton cancel,
+			ImageButton next, ImageButton previous, final AutoCompleteTextView text,final ArrayList<Topic> topics) 
+	{
+		zoom.hide();
+		layout.setVisibility(VISIBLE);
+
+		cancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				IsVisible(INVISIBLE);
+				}
+			
+		});
+		next.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String find = text.getText().toString();
+				for(int i = 0;i<topics.size();i++)
+				{
+					if(topics.get(i).getText().equals(find))
+					{
+						mRender.selectTopic(topics.get(i));
+					}
+				}
+			}	
+		});
+		text.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				String find = text.getText().toString();
+				for(int i = 0;i<topics.size();i++)
+				{
+					if(topics.get(i).getText().equals(find))
+					{
+						
+					}
+				}
+			}	
+			
+		});
+
+	}
+	
+	
+	public void IsVisible(int visibility) {
+		layout.setVisibility(visibility);
 	}
 
 	public void setZoom(ZoomControls zoom) {
@@ -353,7 +421,6 @@ public class MainMapView extends View {
 		// Back button fix
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 			return false;
-
 		mRender.onKeyDown(keyCode);
 		refresh();
 		return false;

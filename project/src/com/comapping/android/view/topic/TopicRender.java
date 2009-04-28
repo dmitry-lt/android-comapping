@@ -21,7 +21,8 @@ public class TopicRender extends Render {
 	private static final int SELECTION_COLOR = Color.argb(255, 127, 191, 255);
 	private static final int SELECTION_WIDTH = 3;
 	private static final int SELECTION_EDGES_RADIUS = 4;
-
+	private Topic topic;
+	
 	private boolean isEmpty;
 
 	private IconRender iconRender;
@@ -45,8 +46,9 @@ public class TopicRender extends Render {
 	private float textPart;
 
 	public TopicRender(Topic topic, Context context) {
+		this.topic = topic;
 		isEmpty = (topic == null);
-
+		
 		if (!isEmpty) {
 			textRender = new TextRender(topic.getFormattedText(), topic.getBgColor(), context);
 			iconRender = new IconRender(topic);
@@ -107,6 +109,11 @@ public class TopicRender extends Render {
 		return lineOffset;
 	}
 
+	public Topic getTopic()
+	{
+		return topic;
+	}
+	
 	@Override
 	public int getWidth() {
 		return width;
