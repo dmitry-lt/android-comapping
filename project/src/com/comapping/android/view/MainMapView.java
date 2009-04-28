@@ -3,9 +3,7 @@ package com.comapping.android.view;
 import java.util.ArrayList;
 
 import com.comapping.android.Options;
-import com.comapping.android.controller.R;
 import com.comapping.android.model.Topic;
-import com.comapping.android.view.topic.TopicRender;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -18,8 +16,6 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
@@ -118,19 +114,21 @@ public class MainMapView extends View {
 	}
 
 	private LinearLayout layout;
-		
+	//private ArrayList<Topic> findTopics;
 	
 	public void setlayout(LinearLayout layout, ImageButton cancel,
 			ImageButton next, ImageButton previous, final AutoCompleteTextView text,final ArrayList<Topic> topics) 
 	{
+		this.layout = layout;
+		
 		zoom.hide();
 		layout.setVisibility(VISIBLE);
-
+		
+		
 		cancel.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				IsVisible(INVISIBLE);
+				isVisible(INVISIBLE);
 				}
 			
 		});
@@ -138,7 +136,7 @@ public class MainMapView extends View {
 
 			@Override
 			public void onClick(View v) {
-				String find = text.getText().toString();
+			String find = text.getText().toString();
 				for(int i = 0;i<topics.size();i++)
 				{
 					if(topics.get(i).getText().equals(find))
@@ -149,18 +147,20 @@ public class MainMapView extends View {
 			}	
 		});
 		text.setOnItemClickListener(new OnItemClickListener(){
-
+			
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				String find = text.getText().toString();
+		/*		 	String find = text.getAdapter().getItem(arg2).toString();
+				if(!findTopics.isEmpty()) findTopics.clear();
 				for(int i = 0;i<topics.size();i++)
 				{
 					if(topics.get(i).getText().equals(find))
 					{
-						
+						findTopics.add(topics.get(i));
 					}
 				}
+				mRender.selectTopic(findTopics.get(0));*/
 			}	
 			
 		});
@@ -168,7 +168,7 @@ public class MainMapView extends View {
 	}
 	
 	
-	public void IsVisible(int visibility) {
+	public void isVisible(int visibility) {
 		layout.setVisibility(visibility);
 	}
 

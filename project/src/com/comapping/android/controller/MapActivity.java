@@ -234,7 +234,7 @@ public class MapActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.zoom:
 			zoom.show();
-			view.IsVisible(View.INVISIBLE);
+			view.isVisible(View.INVISIBLE);
 			view.setVisible();
 			return true;
 		case R.id.find:
