@@ -39,11 +39,14 @@ public class SaxMapBuilder extends MapBuilder {
 			Log.e("SAX Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
 		} catch (SAXException e) {
-			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.w(Log.modelTag, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		} catch (IOException e) {
-			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.w(Log.modelTag, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
+		} catch (NumberFormatException e) {			
+			Log.w(Log.modelTag, "wrong map format " + e.toString());
+			throw new MapParsingException();
 		}
 
 		return handler.getMap();
