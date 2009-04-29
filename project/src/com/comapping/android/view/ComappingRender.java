@@ -438,8 +438,8 @@ public class ComappingRender extends MapRender {
 			int topicAbsX = this.getRenderZoneX();
 			int topicAbsY = this.getRenderZoneY() + this.getTopicOffset();
 
-			res.set(topicAbsX, topicAbsY, topicAbsX + this.getTopicWidth(),
-					topicAbsY + this.getTopicHeight());
+			res.set(topicAbsX, topicAbsY, topicAbsX + render.getWidth(),
+					topicAbsY + render.getHeight());
 
 			return res;
 		}
@@ -831,6 +831,48 @@ public class ComappingRender extends MapRender {
 				search(i, zone);
 	}
 
+	int intersectLength(int a_start, int a_end, int b_start, int b_end) {
+
+		/*
+		 * b_start b_end |==================| ----------------------------
+		 * |=========| a_start a_end
+		 */
+
+		if ((b_start <= a_start) && (a_end <= b_end)) {
+			return a_end - a_start;
+		}
+
+		/*
+		 * b_start b_end |===========| ----------------------------
+		 * |====================| a_start a_end
+		 */
+
+		if ((a_start <= b_start) && (b_end <= a_end)) {
+			return b_end - b_start;
+		}
+
+		/*
+		 * b_start b_end |============| ---------------------------- |=========|
+		 * a_start a_end
+		 */
+		if ((a_start <= b_start) && (b_start >= a_end)) {
+			return a_end - b_start + 1;
+		}
+
+		/*
+		 * b_start b_end |===============| -----------------------------
+		 * |=========| a_start a_end
+		 */
+
+		if ((b_start <= a_start) && (a_end <= b_end)) {
+			return a_end - a_start;
+		}
+
+		return 0;
+	}
+
+	private static final int SEARCH_EPS = 5;
+
 	Item searchUp(Item src) {
 		searchResult.clear();
 		Rect zone = src.getTopicRectangle();
@@ -843,13 +885,35 @@ public class ComappingRender extends MapRender {
 			return null;
 		else {
 			Item res = null;
+			int maxY = searchResult.get(0).getUnderlineOffset()
+					+ searchResult.get(0).getRenderZoneY();
 			for (Item i : searchResult) {
+				int offset_i = i.getUnderlineOffset() + i.getRenderZoneY();
+				
+				if (offset_i> maxY)
+					maxY = offset_i;
 
 				if (res == null) {
 					res = i;
 				} else {
-					if (res.getRenderZoneY() < i.getRenderZoneY())
-						res = i;
+					int offset_res = res.getUnderlineOffset() + res.getRenderZoneY();
+					
+					if (maxY - SEARCH_EPS < offset_i) {
+						if (maxY - SEARCH_EPS < offset_res) {
+							Rect r_i = i.getTopicRectangle();
+							int iLen = intersectLength(r_i.left, r_i.right,
+									zone.left, zone.right);
+
+							Rect r_res = res.getTopicRectangle();
+							int resLen = intersectLength(r_res.left,
+									r_res.right, zone.left, zone.right);
+
+							if (iLen > resLen)
+								res = i;
+						} else
+							res = i;
+					}
+
 				}
 			}
 			return res;
@@ -889,13 +953,13 @@ public class ComappingRender extends MapRender {
 		if (selected.parent == null)
 			return;
 
-		if (selected.up != null) {
-			if (selected.up.isVisible()) {
-				selected.up.down = selected;
-				focusTopic(selected.up);
-				return;
-			}
-		}
+//		if (selected.up != null) {
+//			if (selected.up.isVisible()) {
+//				selected.up.down = selected;
+//				focusTopic(selected.up);
+//				return;
+//			}
+//		}
 
 		int index = selected.getIndex();
 
@@ -923,13 +987,13 @@ public class ComappingRender extends MapRender {
 	 */
 	private final void moveDown() {
 
-		if (selected.down != null) {
-			if (selected.down.isVisible()) {
-				selected.down.up = selected;
-				focusTopic(selected.down);
-				return;
-			}
-		}
+//		if (selected.down != null) {
+//			if (selected.down.isVisible()) {
+//				selected.down.up = selected;
+//				focusTopic(selected.down);
+//				return;
+//			}
+//		}
 
 		if (selected.parent == null)
 			return;
@@ -1037,12 +1101,12 @@ public class ComappingRender extends MapRender {
 	@Override
 	public void setBounds(int width, int height) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void selectTopic(Topic topic) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
