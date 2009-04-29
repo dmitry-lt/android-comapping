@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by Victor (1) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="mindmap">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="metadata"/>
+				<xs:element ref="presentation"/>
+				<xs:element ref="node"/>
+			</xs:sequence>
+			<xs:attribute name="escape" type="xs:boolean" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="metadata">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="id" type="xs:int"/>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="owner">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="id" type="xs:int"/>
+							<xs:element name="name" type="xs:string"/>
+							<xs:element name="email" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="access" type="xs:string"/>
+				<xs:element name="source" type="xs:string"/>
+				<xs:element name="collaborators" type="xs:string"/>
+				<xs:element name="watchers" type="xs:string"/>
+				<xs:element name="isTemplate" type="xs:boolean"/>
+				<xs:element name="params"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="presentation"/>
+	<xs:element name="node">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="icon" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="attachment" minOccurs="0">
+					<xs:complexType>
+						<xs:attribute name="date" type="xs:float"/>
+						<xs:attribute name="filename" type="xs:string"/>
+						<xs:attribute name="key" type="xs:long"/>
+						<xs:attribute name="size" type="xs:int"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="task" minOccurs="0"/>
+				<xs:element name="text" type="xs:string"/>
+				<xs:element ref="node" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:int" use="required"/>
+			<xs:attribute name="LastModificationData" type="xs:string"/>
+			<xs:attribute name="bgColor" type="xs:int"/>
+			<xs:attribute name="taskCompletion">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+						<xs:enumeration value="0"/>
+						<xs:enumeration value="25"/>
+						<xs:enumeration value="50"/>
+						<xs:enumeration value="75"/>
+						<xs:enumeration value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="smiley">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="happy"/>
+						<xs:enumeration value="neutral"/>
+						<xs:enumeration value="sad"/>
+						<xs:enumeration value="furious"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="priority">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="flag">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="go"/>
+						<xs:enumeration value="for_discussion"/>
+						<xs:enumeration value="possibility"/>
+						<xs:enumeration value="risk"/>
+						<xs:enumeration value="progress"/>
+						<xs:enumeration value="careful"/>
+						<xs:enumeration value="caution"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="task">
+		<xs:complexType>
+			<xs:attribute name="start" type="xs:string" use="required"/>
+			<xs:attribute name="responsible" type="xs:string" use="required"/>
+			<xs:attribute name="deadline" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="icon">
+		<xs:complexType>
+			<xs:attribute name="name" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="bomb"/>
+						<xs:enumeration value="clock"/>
+						<xs:enumeration value="dollar"/>
+						<xs:enumeration value="exclamation_mark"/>
+						<xs:enumeration value="heart"/>
+						<xs:enumeration value="magnifier"/>
+						<xs:enumeration value="question_mark"/>
+						<xs:enumeration value="thumbs_down"/>
+						<xs:enumeration value="thumbs_up"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
