@@ -624,9 +624,6 @@ public class ComappingRender extends MapRender {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 
-		if (selected == null)
-			focusTopic(root);
-
 		if (renderZoneWidth == -1) {
 			renderZoneHeight = height;
 			renderZoneWidth = width;
@@ -635,6 +632,12 @@ public class ComappingRender extends MapRender {
 			renderZoneHeight = height;
 			renderZoneWidth = width;
 		}
+		
+		if (selected == null)
+		{
+			centerRoot();
+		}
+
 
 		xOffset = x;
 		yOffset = y - getVertOffset();
@@ -704,6 +707,12 @@ public class ComappingRender extends MapRender {
 	/*
 	 * Some helper functions
 	 */
+
+	private final void centerRoot() {
+		smoothScroll(root.getRenderZoneX(), root.getRenderZoneY()
+				+ root.getTopicOffset() + root.getTopicHeight() / 2 - renderZoneHeight/2);
+		selectTopic(root);
+	}
 
 	/**
 	 * Selecting topic
