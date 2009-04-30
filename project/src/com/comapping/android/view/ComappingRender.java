@@ -855,7 +855,7 @@ public class ComappingRender extends MapRender {
 		 * b_start b_end |============| ---------------------------- |=========|
 		 * a_start a_end
 		 */
-		if ((a_start <= b_start) && (b_start >= a_end)) {
+		if ((a_start <= b_start) && (a_end <= b_end)) {
 			return a_end - b_start + 1;
 		}
 
@@ -864,8 +864,8 @@ public class ComappingRender extends MapRender {
 		 * |=========| a_start a_end
 		 */
 
-		if ((b_start <= a_start) && (a_end <= b_end)) {
-			return a_end - a_start;
+		if ((b_start <= a_start) && (b_end <= a_end)) {
+			return b_end - a_start + 1;
 		}
 
 		return 0;
@@ -889,15 +889,16 @@ public class ComappingRender extends MapRender {
 					+ searchResult.get(0).getRenderZoneY();
 			for (Item i : searchResult) {
 				int offset_i = i.getUnderlineOffset() + i.getRenderZoneY();
-				
-				if (offset_i> maxY)
+
+				if (maxY < offset_i)
 					maxY = offset_i;
 
 				if (res == null) {
 					res = i;
 				} else {
-					int offset_res = res.getUnderlineOffset() + res.getRenderZoneY();
-					
+					int offset_res = res.getUnderlineOffset()
+							+ res.getRenderZoneY();
+
 					if (maxY - SEARCH_EPS < offset_i) {
 						if (maxY - SEARCH_EPS < offset_res) {
 							Rect r_i = i.getTopicRectangle();
@@ -932,13 +933,40 @@ public class ComappingRender extends MapRender {
 			return null;
 		else {
 			Item res = null;
+			int minY = searchResult.get(0).getUnderlineOffset()
+					+ searchResult.get(0).getRenderZoneY();
 			for (Item i : searchResult) {
+
+				int offset_i = i.getUnderlineOffset() + i.getRenderZoneY();
+
+				if (minY > offset_i)
+					minY = offset_i;
 
 				if (res == null) {
 					res = i;
 				} else {
-					if (res.getRenderZoneY() > i.getRenderZoneY())
-						res = i;
+
+					int offset_res = res.getUnderlineOffset()
+							+ res.getRenderZoneY();
+
+					if (minY + SEARCH_EPS > offset_i) {
+						if (minY + SEARCH_EPS > offset_res) {
+							Rect r_i = i.getTopicRectangle();
+							int iLen = intersectLength(r_i.left, r_i.right,
+									zone.left, zone.right);
+
+							Rect r_res = res.getTopicRectangle();
+							int resLen = intersectLength(r_res.left,
+									r_res.right, zone.left, zone.right);
+
+							if (iLen > resLen)
+								res = i;
+						} else
+							res = i;
+					}
+
+					// if (res.getRenderZoneY() > i.getRenderZoneY())
+					// res = i;
 				}
 			}
 			return res;
@@ -953,13 +981,13 @@ public class ComappingRender extends MapRender {
 		if (selected.parent == null)
 			return;
 
-//		if (selected.up != null) {
-//			if (selected.up.isVisible()) {
-//				selected.up.down = selected;
-//				focusTopic(selected.up);
-//				return;
-//			}
-//		}
+		// if (selected.up != null) {
+		// if (selected.up.isVisible()) {
+		// selected.up.down = selected;
+		// focusTopic(selected.up);
+		// return;
+		// }
+		// }
 
 		int index = selected.getIndex();
 
@@ -987,13 +1015,13 @@ public class ComappingRender extends MapRender {
 	 */
 	private final void moveDown() {
 
-//		if (selected.down != null) {
-//			if (selected.down.isVisible()) {
-//				selected.down.up = selected;
-//				focusTopic(selected.down);
-//				return;
-//			}
-//		}
+		// if (selected.down != null) {
+		// if (selected.down.isVisible()) {
+		// selected.down.up = selected;
+		// focusTopic(selected.down);
+		// return;
+		// }
+		// }
 
 		if (selected.parent == null)
 			return;
