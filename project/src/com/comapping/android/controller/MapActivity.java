@@ -233,18 +233,15 @@ public class MapActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.zoom:
-			zoom.show();
-			view.isVisible(View.INVISIBLE);
-			view.setVisible();
+			// view.isVisible(View.INVISIBLE);
+			view.setZoomVisible();
 			return true;
 		case R.id.find:
 			view.setlayout(layout,cancel,next,previous,text,topics);
-			view.setVisible();
 			return true;
 		case R.id.mapSynchronizeButton:
 			finish();
 			MetaMapActivity.getInstance().loadMap(currentMapId, currentViewType, true);
-			view.setVisible();
 			return true;
 		}
 		return false;

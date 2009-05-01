@@ -45,7 +45,7 @@ public class MainMapView extends View {
 	private Paint scrollBarBackgroundPaint = new Paint();
 	private Paint scrollBarPaint = new Paint();
 
-	private boolean isDrawing = false;
+	private boolean isDrawing = true;
 
 	// Debug variables
 
@@ -114,60 +114,54 @@ public class MainMapView extends View {
 	}
 
 	private LinearLayout layout;
-	//private ArrayList<Topic> findTopics;
-	
+
+	// private ArrayList<Topic> findTopics;
+
 	public void setlayout(LinearLayout layout, ImageButton cancel,
-			ImageButton next, ImageButton previous, final AutoCompleteTextView text,final ArrayList<Topic> topics) 
-	{
+			ImageButton next, ImageButton previous,
+			final AutoCompleteTextView text, final ArrayList<Topic> topics) {
 		this.layout = layout;
-		
-		zoom.hide();
+
 		layout.setVisibility(VISIBLE);
-		
-		
+
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				isVisible(INVISIBLE);
-				}
-			
+			}
+
 		});
 		next.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-			String find = text.getText().toString();
-				for(int i = 0;i<topics.size();i++)
-				{
-					if(topics.get(i).getText().equals(find))
-					{
+				String find = text.getText().toString();
+				for (int i = 0; i < topics.size(); i++) {
+					if (topics.get(i).getText().equals(find)) {
 						mRender.selectTopic(topics.get(i));
 					}
 				}
-			}	
+			}
 		});
-		text.setOnItemClickListener(new OnItemClickListener(){
-			
+		text.setOnItemClickListener(new OnItemClickListener() {
+
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-		/*		 	String find = text.getAdapter().getItem(arg2).toString();
-				if(!findTopics.isEmpty()) findTopics.clear();
-				for(int i = 0;i<topics.size();i++)
-				{
-					if(topics.get(i).getText().equals(find))
-					{
-						findTopics.add(topics.get(i));
-					}
-				}
-				mRender.selectTopic(findTopics.get(0));*/
-			}	
-			
+				/*
+				 * String find = text.getAdapter().getItem(arg2).toString();
+				 * if(!findTopics.isEmpty()) findTopics.clear(); for(int i =
+				 * 0;i<topics.size();i++) {
+				 * if(topics.get(i).getText().equals(find)) {
+				 * findTopics.add(topics.get(i)); } }
+				 * mRender.selectTopic(findTopics.get(0));
+				 */
+			}
+
 		});
 
 	}
-	
-	
+
 	public void isVisible(int visibility) {
 		layout.setVisibility(visibility);
 	}
@@ -196,9 +190,12 @@ public class MainMapView extends View {
 		});
 	}
 
-	public void setVisible() {
+	public void setZoomVisible() {
 		lastZoomPress = System.currentTimeMillis();
-		zoomVisible = true;
+		if (!zoomVisible) {
+			zoomVisible = true;
+			zoom.show();
+		}
 	}
 
 	public float getScale() {
@@ -218,32 +215,39 @@ public class MainMapView extends View {
 	}
 
 	private void refresh() {
-		while (!isDrawing)
-			;
+		while (!isDrawing) {
+
+		}
 		invalidate();
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
+			if (zoomVisible) {
+				zoom.hide();
+				zoomVisible = false;
+			}
+		}
 		isDrawing = false;
 
-		//Clear screen
+		// Clear screen
 		canvas.drawARGB(255, 255, 255, 255);
 
 		// Save matrix
 		canvas.save();
-		
-		//Scaling
+
+		// Scaling
 		canvas.scale(scale, scale);
 		mRender
 				.setBounds(getScreenForRenderWidth(),
 						getScreenForRenderHeight());
 
-		//Draw map
-		mRender.draw(mScroller.getCurrX(), +mScroller.getCurrY(),
+		// Draw map
+		mRender.draw(mScroller.getCurrX(), mScroller.getCurrY(),
 				getScreenForRenderWidth(), getScreenForRenderHeight(), canvas);
 
-		//Restore matrix
+		// Restore matrix
 		canvas.restore();
 
 		// Draw scrollbars
@@ -253,25 +257,18 @@ public class MainMapView extends View {
 			drawDebugInfo(canvas);
 		}
 
-		if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
-			if (zoomVisible) {
-				zoom.hide();
-				zoomVisible = false;
-			}
-		}
-
 		isDrawing = true;
 
-		if (mScroller.computeScrollOffset())
+		if (mScroller.computeScrollOffset()) {
 			invalidate();
+		}
 
 		if (Options.DEBUG_RENDERING) {
 			debugFrameTick();
 		}
 	}
-	
-	void debugFrameTick()
-	{
+
+	void debugFrameTick() {
 		if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
 			fps = (1000 * frameCount)
 					/ (System.currentTimeMillis() - lastFPSCalcTime);
@@ -280,9 +277,8 @@ public class MainMapView extends View {
 		}
 		frameCount++;
 	}
-	
-	void drawDebugInfo(Canvas canvas)
-	{
+
+	void drawDebugInfo(Canvas canvas) {
 		Paint p = new Paint();
 		p.setColor(Color.BLACK);
 		canvas.drawText("FPS: " + fps, 20, 30, p);
@@ -384,10 +380,14 @@ public class MainMapView extends View {
 					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
 					* (startY - (int) ev.getY());
 
-			if ((timeDelta < TAP_MAX_TIME) && (pathLen < BLOCK_PATH_LEN)) {
-				mRender.onTouch(mScroller.getCurrX()
-						+ (int) (ev.getX() / scale), mScroller.getCurrY()
-						+ (int) (ev.getY() / scale));
+			if (pathLen < BLOCK_PATH_LEN) {
+				if (timeDelta < TAP_MAX_TIME) {
+					mRender.onTouch(mScroller.getCurrX()
+							+ (int) (ev.getX() / scale), mScroller.getCurrY()
+							+ (int) (ev.getY() / scale));
+				} else {
+					setZoomVisible();
+				}
 				refresh();
 			} else {
 				mVelocityTracker.addMovement(ev);
@@ -427,11 +427,13 @@ public class MainMapView extends View {
 	}
 
 	private final int getScrollWidth() {
-		return mRender.getWidth() - (int) (this.getWidth() / scale);
+		return mRender.getWidth() - (int) (this.getWidth() / scale)
+				+ SCROLLBAR_WIDTH;
 	}
 
 	private final int getScrollHeight() {
-		return mRender.getHeight() - (int) (this.getHeight() / scale);
+		return mRender.getHeight() - (int) (this.getHeight() / scale)
+				+ SCROLLBAR_WIDTH;
 	}
 
 	private final int getScreenForRenderWidth() {
@@ -440,6 +442,5 @@ public class MainMapView extends View {
 
 	private final int getScreenForRenderHeight() {
 		return (int) (this.getHeight() / scale) - SCROLLBAR_WIDTH;
-
 	}
 }

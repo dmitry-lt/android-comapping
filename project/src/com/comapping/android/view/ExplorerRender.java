@@ -123,6 +123,7 @@ public class ExplorerRender extends MapRender {
 	private PlusMinusRender plusMinusRender = new PlusMinusRender(true);
 	private boolean selectRootNeeded = true;
 	private boolean expandingNeeded = true;
+	private boolean setBoundsNeeded = true;
 
 	private Context context;
 
@@ -338,17 +339,25 @@ public class ExplorerRender extends MapRender {
 		int[] temp = updateTopic(root, 0, 0);
 		this.width = temp[0];
 		this.height = temp[1];
-	}	
-	
+	}
+
 	// Public methods
-	
-	public void selectTopic(Topic topic){
-		for(int i = 0 ; i < topics.size();i++)
-		{
-			if (topics.get(i).topicRender.getTopic().equals(topic))
-			{
+
+	public void selectTopic(Topic topic) {
+		for (int i = 0; i < topics.size(); i++) {
+			if (topics.get(i).topicRender.getTopic().equals(topic)) {
 				selectTopic(topics.get(i));
 			}
+		}
+	}
+
+	@Override
+	public void setBounds(int width, int height) {
+		screenWidth = width;
+		screenHeight = height;
+		if (setBoundsNeeded) {
+			update();
+			setBoundsNeeded = false;
 		}
 	}
 
@@ -443,10 +452,4 @@ public class ExplorerRender extends MapRender {
 		}
 	}
 
-	@Override
-	public void setBounds(int width, int height) {
-		screenWidth = width;
-		screenHeight = height;
-		update();
-	}
 }
