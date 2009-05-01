@@ -240,27 +240,18 @@ public class MapActivity extends Activity {
 											view.refresh();
 										}
 									});
-							final Thread zoomThread = new Thread(
-									new Runnable() {
-										@Override
-										public void run() {
-											while (true) {
-												if (System.currentTimeMillis()
-														- lastZoomPress > TIME_TO_HIDE) {
-													runOnUiThread(new Runnable() {
-														@Override
-														public void run() {
-															hideZoom();
-														}
-
-													});
-												}
-											}
-										}
-									});
-							zoomThread.start();
 						};
 					});
+					while (true) {
+						if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									hideZoom();
+								}
+							});
+						}
+					}
 				} catch (LoginInterruptedException e) {
 					Log.e(Log.mapControllerTag, "login interrupted");
 					onError("login interrupted", current);
@@ -309,7 +300,12 @@ public class MapActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.zoom:
 			// view.isVisible(View.INVISIBLE);
-			showZoom();
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					showZoom();
+				}
+			});
 			return true;
 		case R.id.find:
 			view.setlayout(layout, cancel, next, previous, text, topics);
