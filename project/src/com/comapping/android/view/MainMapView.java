@@ -3,6 +3,7 @@ package com.comapping.android.view;
 import java.util.ArrayList;
 
 import com.comapping.android.Options;
+import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.model.Topic;
 
 import android.content.Context;
@@ -27,7 +28,6 @@ public class MainMapView extends View {
 	// Zoom constants
 	private static final float MAX_SCALE = 1.0f;
 	private static final float MIN_SCALE = 0.5f;
-	private static final long TIME_TO_HIDE = 2000;
 
 	// Taping constants
 	private static final long TAP_MAX_TIME = 500;
@@ -45,7 +45,7 @@ public class MainMapView extends View {
 	private Paint scrollBarBackgroundPaint = new Paint();
 	private Paint scrollBarPaint = new Paint();
 
-	private boolean isDrawing = true;
+	private boolean isDrawing = false;
 
 	// Debug variables
 
@@ -54,10 +54,8 @@ public class MainMapView extends View {
 	long lastFPSCalcTime = System.currentTimeMillis();
 
 	// Zooming variables
+	private float scale = MAX_SCALE;
 	private ZoomControls zoom;
-	private float scale;
-	private long lastZoomPress = -100000;
-	private boolean zoomVisible;
 
 	// Scrolling variables
 
@@ -168,34 +166,6 @@ public class MainMapView extends View {
 
 	public void setZoom(ZoomControls zoom) {
 		this.zoom = zoom;
-		zoom.hide();
-		zoomVisible = false;
-		scale = MAX_SCALE;
-		zoom.setIsZoomInEnabled(false);
-		zoom.setOnZoomInClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setScale(getScale() + 0.1f);
-				lastZoomPress = System.currentTimeMillis();
-				refresh();
-			}
-		});
-		zoom.setOnZoomOutClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setScale(getScale() - 0.1f);
-				lastZoomPress = System.currentTimeMillis();
-				refresh();
-			}
-		});
-	}
-
-	public void setZoomVisible() {
-		lastZoomPress = System.currentTimeMillis();
-		if (!zoomVisible) {
-			zoomVisible = true;
-			zoom.show();
-		}
 	}
 
 	public float getScale() {
@@ -214,7 +184,7 @@ public class MainMapView extends View {
 		this.scale = scale;
 	}
 
-	private void refresh() {
+	public void refresh() {
 		while (!isDrawing) {
 
 		}
@@ -223,12 +193,6 @@ public class MainMapView extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
-			if (zoomVisible) {
-				zoom.hide();
-				zoomVisible = false;
-			}
-		}
 		isDrawing = false;
 
 		// Clear screen
@@ -385,8 +349,6 @@ public class MainMapView extends View {
 					mRender.onTouch(mScroller.getCurrX()
 							+ (int) (ev.getX() / scale), mScroller.getCurrY()
 							+ (int) (ev.getY() / scale));
-				} else {
-					setZoomVisible();
 				}
 				refresh();
 			} else {
