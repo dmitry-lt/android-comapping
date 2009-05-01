@@ -46,6 +46,7 @@ public class MainMapView extends View {
 	private Paint scrollBarPaint = new Paint();
 
 	private boolean isDrawing = false;
+	private boolean isInitialized = false;
 
 	// Debug variables
 
@@ -164,6 +165,10 @@ public class MainMapView extends View {
 		layout.setVisibility(visibility);
 	}
 
+	public boolean isInitialized() {
+		return isInitialized;
+	}
+	
 	public void setZoom(ZoomControls zoom) {
 		this.zoom = zoom;
 	}
@@ -222,6 +227,7 @@ public class MainMapView extends View {
 		}
 
 		isDrawing = true;
+		isInitialized = true;
 
 		if (mScroller.computeScrollOffset()) {
 			invalidate();

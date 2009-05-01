@@ -181,13 +181,7 @@ public class MapActivity extends Activity {
 					}
 
 					splashActivate("Loading map", true);
-					final MapRender mapRender = initMapRender(map, viewType);
-
-					if (interrupted()) {
-						return;
-					}
-
-					splashDeactivate();
+					final MapRender mapRender = initMapRender(map, viewType);				
 
 					runOnUiThread(new Runnable() {
 						@Override
@@ -221,7 +215,7 @@ public class MapActivity extends Activity {
 							zoom
 									.setOnZoomInClickListener(new OnClickListener() {
 										@Override
-										public void onClick(View v) {
+										public void onClick(View v) {											
 											view
 													.setScale(view.getScale() + 0.1f);
 											lastZoomPress = System
@@ -242,6 +236,17 @@ public class MapActivity extends Activity {
 									});
 						};
 					});
+					
+					while (view == null || !view.isInitialized()) {
+						if (interrupted()) {
+							current.finish();
+							return;
+						}			
+						sleep(100);
+					}
+					
+					splashDeactivate();
+					
 					while (true) {
 						if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
 							runOnUiThread(new Runnable() {
@@ -251,6 +256,7 @@ public class MapActivity extends Activity {
 								}
 							});
 						}
+						sleep(100);
 					}
 				} catch (LoginInterruptedException e) {
 					Log.e(Log.mapControllerTag, "login interrupted");
@@ -264,6 +270,9 @@ public class MapActivity extends Activity {
 				} catch (MapParsingException e) {
 					Log.e(Log.mapControllerTag, e.toString());
 					onError("Wrong file format", current);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		};
