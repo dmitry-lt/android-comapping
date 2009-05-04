@@ -73,6 +73,7 @@ public final class R {
         public static final int task_completion_todo=0x7f020038;
         public static final int up_level_button=0x7f020039;
         public static final int up_level_button_grey=0x7f02003a;
+        public static final int zoom=0x7f02003b;
     }
     public static final class id {
         public static final int CheckBox01=0x7f070009;
