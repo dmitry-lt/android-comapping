@@ -37,17 +37,8 @@ public class Topic implements Iterable<Topic>, Serializable {
 
 	private String mapRef;
 
-	Topic(Topic parent) {
+	public Topic(Topic parent) {
 		this.parent = parent;
-	}
-
-	public Topic(int id, Topic parent) {
-		this(parent);
-
-		this.id = id;
-		this.text = "";
-
-		Log.d(Log.modelTag, "created " + this);
 	}
 
 	void setId(int id) {
@@ -78,13 +69,18 @@ public class Topic implements Iterable<Topic>, Serializable {
 		return (mapRef == null);
 	}
 
-	public void setText(String text) throws StringToXMLConvertionException {
-		setFormattedText(FormattedTextSaxBuilder.buildFormattedText(text));
+	public void setHtmlText(String htmlText) throws StringToXMLConvertionException {
+		setFormattedText(FormattedTextSaxBuilder.buildFormattedText(htmlText));
 		String unescText = getFormattedText().getSimpleText();
 
 		Log.d(Log.modelTag, "set text=\"" + unescText + "\" in " + this);
 
 		this.text = unescText;
+	}
+	
+	public void setText(String text) {
+		setFormattedText(new FormattedText(text, new TextFormat()));
+		this.text = text;
 	}
 
 	public String getText() {

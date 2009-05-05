@@ -247,7 +247,7 @@ public class AndroidSaxParser {
 					public void end(String body) {
 						topicText = body;
 						try {
-							currentTopic.setText(topicText);
+							currentTopic.setHtmlText(topicText);
 						} catch (StringToXMLConvertionException e) {
 							e.printStackTrace();
 							Log.e(Log.modelTag, e.toString());

@@ -164,7 +164,7 @@ public class DomMapBuilder extends MapBuilder {
 			Node childNode = childNodes.item(i);
 
 			if (childNode.getNodeName().equals(TOPIC_TEXT_TAG)) {
-				topic.setText(getStringValue(childNode));
+				topic.setHtmlText(getStringValue(childNode));
 
 			} else if (childNode.getNodeName().equals(TOPIC_TAG)) {
 				topic.addChild(buildTopic(childNode, topic));

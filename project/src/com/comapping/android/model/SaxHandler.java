@@ -226,7 +226,7 @@ class SaxHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		try {
 			if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
-				currentTopic.setText(topicText);
+				currentTopic.setHtmlText(topicText);
 			} else if (localName.equals(MapBuilder.TOPIC_TAG)) {
 				if (currentTopic.getParent() != null) {
 					currentTopic = currentTopic.getParent();

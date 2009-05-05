@@ -22,19 +22,10 @@ public class SdcardView extends MetaMapView {
 
 	private static Map getSdMap() {
 		Map sdMap = new Map(0);
-		Topic root = new Topic(0, null);
-
-		try {
-			root.setText("sdcard");
-		} catch (StringToXMLConvertionException e) {
-			// unreachable code
-			Log.e(Log.metaMapControllerTag, "error while parsing 'sdcard'");
-		}
-
+		Topic root = new Topic(null);
+		root.setText("sdcard");
 		root.setNote("/sdcard");
-
 		sdMap.setRoot(root);
-
 		return sdMap;
 	}
 
@@ -44,23 +35,14 @@ public class SdcardView extends MetaMapView {
 
 	public void prepareTopic(Topic topic) {
 		topic.removeAllChildTopics();
-
 		File directory = new File(topic.getNote());
-
 		for (File file : directory.listFiles(filter)) {
-			Topic newTopic = new Topic(0, topic);
-			try {
-				newTopic.setText(file.getName());
-			} catch (StringToXMLConvertionException e) {
-				Log.e(Log.metaMapControllerTag, "error while parsing file name");
-			}
-
+			Topic newTopic = new Topic(topic);
+			newTopic.setText(file.getName());
 			newTopic.setNote(file.getAbsolutePath());
-
 			if (!file.isDirectory()) {
 				newTopic.setMapRef(file.getAbsolutePath());
 			}
-
 			topic.addChild(newTopic);
 		}
 	}

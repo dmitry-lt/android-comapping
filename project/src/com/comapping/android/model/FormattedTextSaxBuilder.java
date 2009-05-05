@@ -32,12 +32,7 @@ public class FormattedTextSaxBuilder {
 	private static FormattedTextSaxHandler handler;
 	
 	static TextFormat getDefFormat() {
-		TextFormat format = new TextFormat();
-		format.setFontSize(16);
-		format.setFontColor(Color.BLACK);
-		format.setHRef("");
-		format.setUnderlined(false);
-		return format;
+		return new TextFormat();
 	}
 
 	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {
