@@ -112,8 +112,10 @@ public class MainMapView extends View {
 	}
 
 	private LinearLayout layout;
+	private int findTopic;
 
-	// private ArrayList<Topic> findTopics;
+	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
+	
 
 	public void setlayout(LinearLayout layout, ImageButton cancel, ImageButton next, ImageButton previous,
 			final AutoCompleteTextView text, final ArrayList<Topic> topics) {
@@ -132,28 +134,36 @@ public class MainMapView extends View {
 
 			@Override
 			public void onClick(View v) {
-				String find = text.getText().toString();
-				for (int i = 0; i < topics.size(); i++) {
-					if (topics.get(i).getText().equals(find)) {
-						mRender.selectTopic(topics.get(i));
-					}
-				}
+				if(findTopic != findTopics.size() - 1)
+				mRender.selectTopic(findTopics.get(++findTopic));
+				isVisible(INVISIBLE);
 			}
 		});
-		text.setOnItemClickListener(new OnItemClickListener() {
+		previous.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				/*
-				 * String find = text.getAdapter().getItem(arg2).toString();
-				 * if(!findTopics.isEmpty()) findTopics.clear(); for(int i =
-				 * 0;i<topics.size();i++) {
-				 * if(topics.get(i).getText().equals(find)) {
-				 * findTopics.add(topics.get(i)); } }
-				 * mRender.selectTopic(findTopics.get(0));
-				 */
+			public void onClick(View v) {
+				if(findTopic != -1){
+				mRender.selectTopic(findTopics.get(--findTopic));
+				isVisible(INVISIBLE);
+				}
 			}
-
+			
+		});
+		text.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v,
+						int position, long id){
+				
+				String find = text.getAdapter().getItem(position).toString();
+				findTopics.clear();
+				for(int i = 0;i<topics.size();i++){
+					if(topics.get(i).getText().equals(find)){
+						findTopics.add(topics.get(i));
+					}
+				}
+				mRender.selectTopic(findTopics.get(0));
+				}
 		});
 
 	}

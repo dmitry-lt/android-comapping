@@ -191,7 +191,7 @@ public class MapActivity extends Activity {
 							allTopics(topic);
 
 							text.setAdapter(new ArrayAdapter<String>(context,
-									android.R.layout.simple_dropdown_item_1line, texts));
+									android.R.layout.simple_spinner_dropdown_item, texts));
 
 							view = (MainMapView) findViewById(R.id.MapView);
 							view.setRender(mapRender);
@@ -288,7 +288,7 @@ public class MapActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.zoom:
-			// view.isVisible(View.INVISIBLE);
+			view.isVisible(View.INVISIBLE);
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {

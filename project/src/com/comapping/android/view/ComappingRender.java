@@ -460,6 +460,9 @@ public class ComappingRender extends MapRender {
 
 	// Controller of scrolling
 	private ScrollController scrollController = null;
+	
+	//All items
+	private ArrayList<Item> items = new ArrayList<Item>();
 
 	// Execution context
 	private Context context;
@@ -490,14 +493,14 @@ public class ComappingRender extends MapRender {
 		Item res = new Item(itm);
 		res.children = new Item[itm.getChildrenCount()];
 		res.parent = parent;
-
+		items.add(res);
 		int index = 0;
 		for (Topic i : itm) {
 			res.children[index++] = buildTree(i, res);
 		}
 		return res;
 	}
-
+	
 	/**
 	 * Checks is Item is on screen. (MUST BE CHANGED FOR BETTER DESIGN)
 	 * 
@@ -1143,7 +1146,11 @@ public class ComappingRender extends MapRender {
 
 	@Override
 	public void selectTopic(Topic topic) {
-		// TODO Auto-generated method stub
+		for (int i = 0; i <  items.size() ; i++) {
+			if (items.get(i).render.getTopic().equals(topic)) {
+				focusTopic(items.get(i));
+			}
+		}
 
 	}
 }
