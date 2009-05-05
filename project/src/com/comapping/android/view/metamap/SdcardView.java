@@ -15,7 +15,7 @@ import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 public class SdcardView extends MetaMapView {
 	final static private FilenameFilter filter = new FilenameFilter() {
 		public boolean accept(File dir, String filename) {
-			return (new File(dir.getAbsolutePath() + File.pathSeparator + filename)).isDirectory()
+			return (new File(dir.getAbsolutePath() + "/" + filename)).isDirectory()
 					|| filename.toLowerCase().endsWith(".comap");
 		}
 	};
