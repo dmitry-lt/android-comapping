@@ -1,6 +1,7 @@
 package com.comapping.android.view.metamap;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 import android.widget.ImageButton;
 
@@ -12,6 +13,12 @@ import com.comapping.android.model.Topic;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
 public class SdcardView extends MetaMapView {
+	final static private FilenameFilter filter = new FilenameFilter() {
+		public boolean accept(File dir, String filename) {
+			return filename.toLowerCase().endsWith(".comap");
+		}
+	};
+	
 	private static Map getSdMap() {
 		Map sdMap = new Map(0);
 		Topic root = new Topic(0, null);
@@ -38,7 +45,8 @@ public class SdcardView extends MetaMapView {
 		topic.removeAllChildTopics();
 
 		File directory = new File(topic.getNote());
-		for (File file : directory.listFiles()) {
+		
+		for (File file : directory.listFiles(filter)) {
 			Topic newTopic = new Topic(0, topic);
 			try {
 				newTopic.setText(file.getName());
@@ -59,8 +67,13 @@ public class SdcardView extends MetaMapView {
 	public void activate(MetaMapActivity _metaMapActivity) {
 		super.activate(_metaMapActivity);
 		
+		drawMetaMap();
 		// change button to switch
 		ImageButton switchButton = (ImageButton) metaMapActivity.findViewById(R.id.viewSwitcher);
 		switchButton.setImageResource(R.drawable.internet_icon);
+		
+		// deactivate synchronize button
+		ImageButton synchronizeButton = (ImageButton) metaMapActivity.findViewById(R.id.synchronizeButton);
+		synchronizeButton.setEnabled(false);
 	}
 }

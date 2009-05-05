@@ -31,7 +31,6 @@ import com.comapping.android.communication.MapProvider;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
-import com.comapping.android.model.DomMapBuilder;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.MapBuilder;
 import com.comapping.android.model.SaxMapBuilder;
@@ -48,9 +47,6 @@ import com.comapping.android.view.metamap.SdcardView;
 public class MetaMapActivity extends Activity {
 	// constants
 	public static final int MAP_REQUEST = 5523;
-
-	public static final String MAP_DESCRIPTION = "Map";
-	public static final String FOLDER_DESCRIPTION = "Folder";
 
 	// public variables
 	public static CachingClient client = null;
@@ -169,6 +165,15 @@ public class MetaMapActivity extends Activity {
 		super.onDestroy();
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == MAP_REQUEST) {
+			currentView.activate(this);
+		}
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
 	// MetaMap methods
 	public static MapProvider getCurrentMapProvider() {
 		return (currentView instanceof InternetView) ? client : fileMapProvider;
@@ -178,6 +183,14 @@ public class MetaMapActivity extends Activity {
 		return instance;
 	}
 
+	public String getFolderDescription(Topic topic) {
+		return currentView.getFolderDescription(topic);
+	}
+	
+	public String getMapDescription(Topic topic) {
+		return currentView.getMapDescription(topic);
+	}
+	
 	public void switchView(MetaMapView view) {
 		currentView = view;
 
@@ -229,32 +242,46 @@ public class MetaMapActivity extends Activity {
 				String result = "";
 
 				splashActivate("Downloading map list");
-
+				String error = null;
+				
 				try {
-					result = client.getComap("meta", context, ignoreCache);
+					result = client.getComap("meta", context, ignoreCache, !ignoreCache);
 				} catch (ConnectionException e) {
+					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
 					Log.e(Log.metaMapControllerTag, "connection error in metamap retrieving");
 				} catch (LoginInterruptedException e) {
+					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
 					Log.e(Log.metaMapControllerTag, "login interrupted in metamap retrieving");
 				} catch (InvalidCredentialsException e) {
+					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
 					Log.e(Log.metaMapControllerTag, "invalid credentails while getting comap oO");
 				}
 
-				splashActivate("Loading map list");
-
 				Map metaMap = null;
-				try {
-					metaMap = mapBuilder.buildMap(result);
-				} catch (StringToXMLConvertionException e) {
-					Log.e(Log.metaMapControllerTag, "xml convertion exception");
-				} catch (MapParsingException e) {
-					Log.e(Log.metaMapControllerTag, "map parsing exception");
-				}
-
+				if (error == null) {
+					// retrieving was successful
+					splashActivate("Loading map list");
+	
+					try {
+						if (result != null) {
+							metaMap = mapBuilder.buildMap(result);
+						}
+					} catch (StringToXMLConvertionException e) {
+						Log.e(Log.metaMapControllerTag, "xml convertion exception");
+						error = InternetView.PROBLEMS_WITH_MAP_MESSAGE;
+					} catch (MapParsingException e) {
+						Log.e(Log.metaMapControllerTag, "map parsing exception");
+						error = InternetView.PROBLEMS_WITH_MAP_MESSAGE;
+					}
+					}
+				
 				splashDeactivate();
 
 				internetView = new InternetView(metaMap);
-
+				if (error != null) {
+					internetView.setError(error);
+				}
+				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -266,6 +293,10 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public void loadMetaMapTopic(final Topic topic) {
+		if (topic == null) {
+			return;
+		}
+		
 		currentView.prepareTopic(topic);
 
 		currentTopicChildren = topic.getChildTopics();

@@ -42,15 +42,15 @@ public class LoginView {
 	}
 
 	public void setEmailText(final String email) {
-		final TextView errorText = (TextView) loginActivity.findViewById(R.id.email);
+		final TextView emailText = (TextView) loginActivity.findViewById(R.id.email);
 
-		errorText.setText(email);
+		emailText.setText(email);
 	}
 
 	public void setPasswordText(final String password) {
-		final TextView errorText = (TextView) loginActivity.findViewById(R.id.password);
+		final TextView passwordText = (TextView) loginActivity.findViewById(R.id.password);
 
-		errorText.setText(password);
+		passwordText.setText(password);
 	}
 
 	public void setErrorText(final String error) {
@@ -61,8 +61,14 @@ public class LoginView {
 
 	public void load() {
 		loginActivity.setContentView(R.layout.login);
-		setEmailText(Storage.getInstance().get(Storage.EMAIL_KEY));
-
+		
+		String email = Storage.getInstance().get(Storage.EMAIL_KEY);
+		if (email != null) {
+			setEmailText(email);
+			TextView passwordText = (TextView) loginActivity.findViewById(R.id.password);
+			passwordText.requestFocus();
+		} 
+		
 		// bind login button
 		Button loginButton = (Button) loginActivity.findViewById(R.id.login);
 

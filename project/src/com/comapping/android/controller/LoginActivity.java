@@ -26,10 +26,10 @@ public class LoginActivity extends Activity {
 
 	// messages
 	private static final String LOGIN_ATTEMPT_MESSAGE = "Login attempt...";
-	private static final String AUTOLOGIN_ATTEMPT_FAILED_MESSAGE = "Auto login attempt failed";
+	private static final String AUTOLOGIN_ATTEMPT_FAILED_MESSAGE = "Autologin attempt failed";
 	private static final String CONNECTION_ERROR_MESSAGE = "Connection error";
-	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "Email or password is incorrect";
-	private static final String UNKNOWN_RESULT_MESSAGE = "Unknow result";
+	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "E-mail or password is incorrect";
+	private static final String UNKNOWN_RESULT_MESSAGE = "Unknown result";
 
 	private LoginView loginView;
 

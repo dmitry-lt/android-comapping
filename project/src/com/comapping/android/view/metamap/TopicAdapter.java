@@ -50,10 +50,10 @@ class TopicAdapter extends ArrayAdapter<String> {
 
 		if (topics[position].isFolder()) {
 			icon.setImageResource(R.drawable.folder_icon);
-			description.setText(MetaMapActivity.FOLDER_DESCRIPTION);
+			description.setText(MetaMapActivity.getInstance().getFolderDescription(topics[position]));
 		} else {
 			icon.setImageResource(R.drawable.map_icon);
-			description.setText(MetaMapActivity.MAP_DESCRIPTION);
+			description.setText(MetaMapActivity.getInstance().getMapDescription(topics[position]));
 		}
 
 		return row;

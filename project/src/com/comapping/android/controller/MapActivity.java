@@ -1,7 +1,6 @@
 package com.comapping.android.controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,8 +18,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ZoomControls;
@@ -150,7 +147,7 @@ public class MapActivity extends Activity {
 						try {
 							if (MetaMapActivity.getCurrentMapProvider() instanceof CachingClient) {
 								result = ((CachingClient) MetaMapActivity.getCurrentMapProvider()).getComap(mapId,
-										current, ignoreCache);
+										current, ignoreCache, false);
 							} else {
 								result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
 							}

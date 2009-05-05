@@ -9,7 +9,6 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.comapping.android.ViewType;
-import com.comapping.android.communication.CachingClient;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Map;
@@ -17,14 +16,21 @@ import com.comapping.android.model.Topic;
 import com.comapping.android.storage.Storage;
 
 public class MetaMapView {
+	protected static final String MAP_DESCRIPTION = "Map";
+	protected static final String FOLDER_DESCRIPTION = "Folder";
+	
 	protected MetaMapActivity metaMapActivity;
 
-	private Map map;
+	protected Map map;
 	private Topic currentTopic;
 
 	public MetaMapView(Map _map) {
 		map = _map;
-		currentTopic = map.getRoot();
+		if (map != null) {
+			currentTopic = map.getRoot();
+		} else {
+			currentTopic = null;
+		}
 	}
 
 	public void drawMetaMapTopic(final Topic topic, final Topic[] childTopics) {
@@ -68,20 +74,21 @@ public class MetaMapView {
 		}
 	}
 
-	private void drawMetaMapNotSynchronize() {
+	protected void drawMetaMapMessage(String message) {
 		ListView mapList = (ListView) metaMapActivity.findViewById(R.id.listView);
 		mapList.setVisibility(ListView.GONE);
 
-		TextView pleaseSynchronize = (TextView) metaMapActivity.findViewById(R.id.pleaseSynchronize);
-		pleaseSynchronize.setVisibility(TextView.VISIBLE);
+		TextView textViewMessage = (TextView) metaMapActivity.findViewById(R.id.textViewMessage);
+		textViewMessage.setText(message);
+		textViewMessage.setVisibility(TextView.VISIBLE);
 	}
 
-	private void drawMetaMapSynchronize() {
+	protected void drawMetaMap() {
 		ListView mapList = (ListView) metaMapActivity.findViewById(R.id.listView);
 		mapList.setVisibility(ListView.VISIBLE);
 
-		TextView pleaseSynchronize = (TextView) metaMapActivity.findViewById(R.id.pleaseSynchronize);
-		pleaseSynchronize.setVisibility(TextView.INVISIBLE);
+		TextView textViewMessage = (TextView) metaMapActivity.findViewById(R.id.textViewMessage);
+		textViewMessage.setVisibility(TextView.GONE);
 	}
 
 	private void bindHomeButton() {
@@ -141,15 +148,13 @@ public class MetaMapView {
 	public void activate(MetaMapActivity _metaMapActivity) {
 		metaMapActivity = _metaMapActivity;
 
-		metaMapActivity.setTitle("Comapping: " + currentTopic.getText());
-
-		if (map.getId() == CachingClient.NotCachedMapId) {
-			drawMetaMapNotSynchronize();
+		if (currentTopic != null) {
+			metaMapActivity.setTitle("Comapping: " + currentTopic.getText());
 		} else {
-			drawMetaMapSynchronize();
+			metaMapActivity.setTitle("Comapping");
 		}
-
-		if (currentTopic.isRoot()) {
+		
+		if ((currentTopic == null) || (currentTopic.isRoot())) {
 			setButtonsDisabled();
 		} else {
 			setButtonsEnabled();
@@ -169,6 +174,13 @@ public class MetaMapView {
 	}
 
 	public void prepareTopic(Topic topic) {
-
+	}
+	
+	public String getMapDescription(Topic topic) {
+		return MAP_DESCRIPTION;
+	}
+	
+	public String getFolderDescription(Topic topic) {
+		return FOLDER_DESCRIPTION;
 	}
 }
