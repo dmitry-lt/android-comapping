@@ -30,5 +30,5 @@
 
 		</ListView>
 		
-	</RelativeLayout><TextView android:id="@+id/pleaseSynchronize" android:gravity="center" android:text="Please synchronize map list or use sdcard viewer" android:layout_height="fill_parent" android:width="200px" android:layout_width="wrap_content" android:layout_gravity="center" android:visibility="invisible"></TextView>
+	</RelativeLayout><TextView android:gravity="center" android:layout_height="fill_parent" android:width="200px" android:layout_width="wrap_content" android:layout_gravity="center" android:visibility="invisible" android:id="@+id/textViewMessage"></TextView>
 </LinearLayout>
