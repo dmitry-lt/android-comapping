@@ -7,6 +7,8 @@
 
 package com.comapping.android.communication;
 
+import java.sql.Timestamp;
+
 import android.app.Activity;
 
 import com.comapping.android.communication.exceptions.ConnectionException;
@@ -16,18 +18,6 @@ import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.storage.SqliteMapCache;
 
 public class CachingClient implements MapProvider {
-	final public static int NotCachedMapId = 57426529;
-
-	final static private String NotCachedMetaMap = "<mindmap escape=\"false\"><metadata>"
-			+ "<id><![CDATA["
-			+ NotCachedMapId
-			+ "]]></id>"
-			+ "<name><![CDATA[metamap]]></name>"
-			+ "<owner><id><![CDATA[8743]]></id><name><![CDATA[Timur Abishev]]></name><email><![CDATA[abishev.timur@gmail.com]]></email></owner>"
-			+ "</metadata>"
-			+ "<node LastModificationData=\"2009-04-28 03:37:31\" id=\"3009721\"><text><![CDATA[metamap]]></text></node>"
-			+ "</mindmap>";
-
 	private Client client = null;
 	private SqliteMapCache cache = null;
 
@@ -38,10 +28,9 @@ public class CachingClient implements MapProvider {
 		this.cache = cache;
 	}
 
-	public void login(String email, String password, boolean remember) throws ConnectionException,
-			LoginInterruptedException, InvalidCredentialsException {
+	public void login(String email, String password, boolean remember) throws ConnectionException, InvalidCredentialsException, LoginInterruptedException {
 		client.login(email, password, remember);
-
+		
 		this.remember = remember;
 	}
 
@@ -77,24 +66,19 @@ public class CachingClient implements MapProvider {
 		cache.close();
 	}
 
-	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException,
-			InvalidCredentialsException {
-		return getComap(mapId, context, false);
+	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException, InvalidCredentialsException {
+		return getComap(mapId, context, false, false);
 	}
 
-	public String getComap(String mapId, Activity context, boolean ignoreCache) throws ConnectionException,
+	public String getComap(String mapId, Activity context, boolean ignoreCache, boolean ignoreInternet) throws ConnectionException,
 			LoginInterruptedException, InvalidCredentialsException {
 		String result = null;
 
 		if (!ignoreCache) {
 			result = cache.get(mapId);
-
-			if ((result == null) && (mapId.equals(Client.MetaMapId))) {
-				result = NotCachedMetaMap;
-			}
 		}
 
-		if (result == null) {
+		if ((result == null) && (!ignoreInternet)) {
 			result = client.getComap(mapId, context);
 			// save result to cache
 			cache.set(mapId, result);
@@ -109,5 +93,9 @@ public class CachingClient implements MapProvider {
 
 	public void clearCache() {
 		cache.clear();
+	}
+	
+	public Timestamp getLastSynchronizationDate(String mapId) {
+		return cache.getLastSynchronizationDate(mapId);
 	}
 }
