@@ -288,16 +288,16 @@ public class MapActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.zoom:
-			view.isVisible(View.INVISIBLE);
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					showZoom();
-				}
-			});
+//			view.isVisible(View.INVISIBLE);
+//			runOnUiThread(new Runnable() {
+//				@Override
+//				public void run() {
+//					showZoom();
+//				}
+//			});
 			return true;
 		case R.id.find:
-			view.setlayout(layout, cancel, next, previous, text, topics);
+			//view.setlayout(layout, cancel, next, previous, text, topics);
 			return true;
 		case R.id.mapSynchronizeButton:
 			finish();
