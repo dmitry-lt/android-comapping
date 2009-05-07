@@ -1,7 +1,6 @@
 package com.comapping.android.model;
 
 import java.util.EmptyStackException;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 
@@ -12,7 +11,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
-import com.comapping.android.model.exceptions.DocumentBuilderCreatingError;
 
 public class FormattedTextSaxHandler extends DefaultHandler {
 

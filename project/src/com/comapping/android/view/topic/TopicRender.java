@@ -68,7 +68,7 @@ public class TopicRender extends Render {
 			width = 0;
 		}
 
-		Log.d(Log.topicRenderTag, "created " + this);
+		Log.d(Log.TOPIC_RENDER_TAG, "created " + this);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class TopicRender extends Render {
 
 	@Override
 	public void onTouch(int x, int y) {
-		Log.d(Log.topicRenderTag, "Touch on " + this);
+		Log.d(Log.TOPIC_RENDER_TAG, "Touch on " + this);
 
 		if (!isEmpty && selected) {
 			Point touchPoint = new Point(x, y);
@@ -166,7 +166,7 @@ public class TopicRender extends Render {
 
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty && maxWidth != lastMaxWidth) {
-			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
 
 			lastMaxWidth = maxWidth;
 			maxWidth -= attachmentRender.getWidth();

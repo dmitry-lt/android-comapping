@@ -73,7 +73,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 		setFormattedText(FormattedTextSaxBuilder.buildFormattedText(htmlText));
 		String unescText = getFormattedText().getSimpleText();
 
-		Log.d(Log.modelTag, "set text=\"" + unescText + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set text=\"" + unescText + "\" in " + this);
 
 		this.text = unescText;
 	}
@@ -102,7 +102,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void setBgColor(int bgColor) {
 		this.bgColor = bgColor;
 
-		Log.d(Log.modelTag, "set bgColor=\"" + bgColor + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set bgColor=\"" + bgColor + "\" in " + this);
 	}
 
 	public Flag getFlag() {
@@ -112,7 +112,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void setFlag(Flag flag) {
 		this.flag = flag;
 
-		Log.d(Log.modelTag, "set flag=\"" + flag + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set flag=\"" + flag + "\" in " + this);
 	}
 
 	public int getPriority() {
@@ -122,7 +122,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void setPriority(int priority) {
 		this.priority = priority;
 
-		Log.d(Log.modelTag, "set priority=\"" + priority + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set priority=\"" + priority + "\" in " + this);
 	}
 
 	public Smiley getSmiley() {
@@ -132,7 +132,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void setSmiley(Smiley smiley) {
 		this.smiley = smiley;
 
-		Log.d(Log.modelTag, "set smiley=\"" + smiley + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set smiley=\"" + smiley + "\" in " + this);
 	}
 
 	public TaskCompletion getTaskCompletion() {
@@ -142,19 +142,19 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void setTaskCompletion(TaskCompletion taskCompletion) {
 		this.taskCompletion = taskCompletion;
 
-		Log.d(Log.modelTag, "set taskCompletion=\"" + taskCompletion + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set taskCompletion=\"" + taskCompletion + "\" in " + this);
 	}
 
 	public void addIcon(Icon icon) {
 		icons.addIcon(icon);
 
-		Log.d(Log.modelTag, "add icon " + icon + " in " + this);
+		Log.d(Log.MODEL_TAG, "add icon " + icon + " in " + this);
 	}
 
 	public void removeIcon(Icon icon) {
 		icons.removeIcon(icon);
 
-		Log.d(Log.modelTag, "remove icon " + icon + " from " + this);
+		Log.d(Log.MODEL_TAG, "remove icon " + icon + " from " + this);
 	}
 
 	public boolean hasIcon(Icon icon) {
@@ -176,7 +176,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void setNote(String note) {
 		this.note = note;
 
-		Log.d(Log.modelTag, "set note=\"" + note + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set note=\"" + note + "\" in " + this);
 	}
 
 	public Task getTask() {
@@ -186,13 +186,13 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void setTask(Task task) {
 		this.task = task;
 
-		Log.d(Log.modelTag, "set task=\"" + task + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set task=\"" + task + "\" in " + this);
 	}
 
 	public void setAttachment(Attachment attachment) {
 		this.attachment = attachment;
 
-		Log.d(Log.modelTag, "set attachment=" + attachment + " in " + this);
+		Log.d(Log.MODEL_TAG, "set attachment=" + attachment + " in " + this);
 	}
 
 	public Attachment getAttachment() {
@@ -216,11 +216,11 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void addChild(Topic child) {
 		children.add(child);
 
-		Log.d(Log.modelTag, "add " + child + " in " + this);
+		Log.d(Log.MODEL_TAG, "add " + child + " in " + this);
 	}
 
 	public void removeChildByIndex(int index) throws IndexOutOfBoundsException {
-		Log.d(Log.modelTag, "remove " + getChildByIndex(index) + " from " + this);
+		Log.d(Log.MODEL_TAG, "remove " + getChildByIndex(index) + " from " + this);
 
 		children.remove(index);
 	}

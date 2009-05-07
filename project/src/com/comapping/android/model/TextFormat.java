@@ -16,10 +16,10 @@ public class TextFormat implements Cloneable, Serializable {
 	}
 
 	public TextFormat(int fontSize, int fontColor, String hRef, boolean underlined) {
-		this.fontSize = fontSize;
-		this.fontColor = fontColor;
-		this.hRef = hRef;
-		this.underlined = underlined;
+		setFontSize(fontSize);
+		setFontColor(fontColor);
+		setHRef(hRef);
+		setUnderlined(underlined);
 	}
 
 	public boolean equals(TextFormat format) {
@@ -44,11 +44,11 @@ public class TextFormat implements Cloneable, Serializable {
 	}
 
 	public String getHRef() {
-		return hRef != null ? hRef : "";
+		return hRef;
 	}
 
-	public void setHRef(String ref) {
-		hRef = ref;
+	public void setHRef(String hRef) {
+		this.hRef = hRef == null ? "" : hRef;;
 	}
 
 	public boolean isUnderlined() {

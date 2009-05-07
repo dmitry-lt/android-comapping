@@ -63,7 +63,7 @@ public class TaskRender extends Render {
 
 	public void setWidth(int width) {
 		if (!isEmpty) {
-			Log.d(Log.topicRenderTag, "setting width=" + width + " in " + this);
+			Log.d(Log.TOPIC_RENDER_TAG, "setting width=" + width + " in " + this);
 
 			width = Math.max(width, MIN_MAX_WIDTH);
 

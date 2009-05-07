@@ -76,7 +76,7 @@ public class NoteRender extends Render {
 
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty) {
-			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
 			textRender.setMaxWidthAndLinesCount(Math.max(maxWidth, MIN_MAX_WIDTH), MAX_LINES_COUNT);
 			recalcDrawingData();
 		}

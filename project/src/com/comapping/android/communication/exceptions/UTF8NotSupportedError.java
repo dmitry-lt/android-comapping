@@ -12,6 +12,6 @@ public class UTF8NotSupportedError extends Error {
 	private static final long serialVersionUID = 3638173584258947120L;
 
 	public UTF8NotSupportedError() {
-		Log.e(Log.connectionTag, "Communication: UTF-8 encoding not supported");
+		Log.e(Log.CONNECTION_TAG, "Communication: UTF-8 encoding not supported");
 	}
 }

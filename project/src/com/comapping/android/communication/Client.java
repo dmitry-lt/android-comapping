@@ -162,7 +162,7 @@ public class Client implements MapProvider {
 	 */
 	public void logout(Activity context, boolean isToEmptyAutologin) throws ConnectionException {
 		if (!isLoggedIn()) {
-			Log.i(Log.connectionTag, "logout without login");
+			Log.i(Log.CONNECTION_TAG, "logout without login");
 			clientSideLogout(isToEmptyAutologin);
 		} else {
 			List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
@@ -174,9 +174,9 @@ public class Client implements MapProvider {
 			try {
 				requestToServer(data);
 			} catch (LoginInterruptedException e) {
-				Log.e(Log.connectionTag, "login interrupted in logout");
+				Log.e(Log.CONNECTION_TAG, "login interrupted in logout");
 			} catch (InvalidCredentialsException e) {
-				Log.e(Log.connectionTag, "invalid credentails in logout");
+				Log.e(Log.CONNECTION_TAG, "invalid credentails in logout");
 			}
 		}
 	}
@@ -193,7 +193,7 @@ public class Client implements MapProvider {
 	 */
 	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException,
 			InvalidCredentialsException {
-		Log.d(Log.connectionTag, "getting " + mapId + " comap");
+		Log.d(Log.CONNECTION_TAG, "getting " + mapId + " comap");
 
 		loginRequired(context);
 
@@ -212,7 +212,7 @@ public class Client implements MapProvider {
 
 	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException,
 			LoginInterruptedException, InvalidCredentialsException {
-		Log.d(Log.connectionTag, "request to server " + Arrays.toString(data.toArray()));
+		Log.d(Log.CONNECTION_TAG, "request to server " + Arrays.toString(data.toArray()));
 
 		URL url = null;
 		String responseText = null;
@@ -221,7 +221,7 @@ public class Client implements MapProvider {
 		try {
 			url = new URL(Options.SERVER);
 		} catch (MalformedURLException e1) {
-			Log.e(Log.connectionTag, "Malformed URL Exception!!!");
+			Log.e(Log.CONNECTION_TAG, "Malformed URL Exception!!!");
 			throw new ConnectionException();
 		}
 
@@ -229,7 +229,7 @@ public class Client implements MapProvider {
 			HttpURLConnection connection = null;
 
 			if (Options.USE_PROXY) {
-				connection = (HttpURLConnection) url.openConnection(Options.proxy);
+				connection = (HttpURLConnection) url.openConnection(Options.PROXY);
 			} else {
 				connection = (HttpURLConnection) url.openConnection();
 			}
@@ -257,11 +257,11 @@ public class Client implements MapProvider {
 		}
 
 		// Log result
-		Log.i(Log.connectionTag, "New server response = " + responseText);
+		Log.i(Log.CONNECTION_TAG, "New server response = " + responseText);
 		if (responseText != null) {
-			Log.d(Log.connectionTag, "New server checksum = " + getBytesSum(responseText));
+			Log.d(Log.CONNECTION_TAG, "New server checksum = " + getBytesSum(responseText));
 		}
-		Log.d(Log.connectionTag, "New server response code = " + code);
+		Log.d(Log.CONNECTION_TAG, "New server response code = " + code);
 
 		if (loginInterrupted) {
 			throw new LoginInterruptedException();
@@ -303,7 +303,7 @@ public class Client implements MapProvider {
 		if (clientId != null) {
 			if (checkClientId(clientId)) {
 				this.clientId = clientId;
-				Log.i(Log.connectionTag, email + " logged in!");
+				Log.i(Log.CONNECTION_TAG, email + " logged in!");
 			}
 		} else {
 			this.clientId = null;
@@ -311,7 +311,7 @@ public class Client implements MapProvider {
 	}
 
 	private void loginRequired(Activity context) throws LoginInterruptedException {
-		Log.d(Log.connectionTag, "login required action with login status: " + isLoggedIn());
+		Log.d(Log.CONNECTION_TAG, "login required action with login status: " + isLoggedIn());
 
 		if (!isLoggedIn()) {
 			loginInterrupted = false;
@@ -321,7 +321,7 @@ public class Client implements MapProvider {
 				try {
 					Thread.sleep(SLEEP_TIME);
 				} catch (InterruptedException e) {
-					Log.i(Log.connectionTag, "login required interrupted exception");
+					Log.i(Log.CONNECTION_TAG, "login required interrupted exception");
 				}
 			}
 

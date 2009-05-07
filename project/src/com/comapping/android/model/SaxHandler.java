@@ -93,7 +93,7 @@ class SaxHandler extends DefaultHandler {
 				}
 				catch (EnumParsingException e) {
 					e.printStackTrace();
-					Log.e(Log.modelTag, e.toString());
+					Log.e(Log.MODEL_TAG, e.toString());
 				}
 				
 			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
@@ -138,11 +138,11 @@ class SaxHandler extends DefaultHandler {
 
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new SAXException();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new SAXException();
 		}
 	}
@@ -190,7 +190,7 @@ class SaxHandler extends DefaultHandler {
 			}
 		} catch (EnumParsingException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new SAXException();
 		}
 
@@ -250,7 +250,7 @@ class SaxHandler extends DefaultHandler {
 			}
 		} catch (StringToXMLConvertionException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new SAXException();
 		}
 	}
@@ -261,6 +261,6 @@ class SaxHandler extends DefaultHandler {
 
 	public void endDocument() {
 		long parsingTime = System.currentTimeMillis() - startTime;
-		Log.i(Log.modelTag, "map was built with SAX successfully, parsing time: " + parsingTime);
+		Log.i(Log.MODEL_TAG, "map was built with SAX successfully, parsing time: " + parsingTime);
 	}
 }

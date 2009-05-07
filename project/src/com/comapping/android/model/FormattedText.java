@@ -55,6 +55,10 @@ public class FormattedText implements Serializable {
 	}
 	
 	public TextParagraph getLast() {
+		if (textParagraphs.size() == 0) {
+			return null;
+		} 
+		
 		return textParagraphs.get(textParagraphs.size() - 1);
 	}
 

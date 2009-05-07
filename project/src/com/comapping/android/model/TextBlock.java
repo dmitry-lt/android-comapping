@@ -2,8 +2,6 @@ package com.comapping.android.model;
 
 import java.io.Serializable;
 
-import com.comapping.android.Log;
-
 public class TextBlock implements Serializable {
 	private static final long serialVersionUID = -155561696789833530L;
 
@@ -52,10 +50,12 @@ public class TextBlock implements Serializable {
 		} else {
 			blocks[1] = new TextBlock("", getFormat().clone());
 		}
-		if (!getText().equals(blocks[0].getText() + blocks[1].getText())) {
-			Log.w(Log.modelTag, "TextBlock: wrong split, count=" + count + ", all text=" + getText() + "\n text[0]="
-					+ blocks[0].getText() + "\n text[1]=" + blocks[1].getText());
-		}
+	
+//		// debug checking
+//		if (!getText().equals(blocks[0].getText() + blocks[1].getText())) {
+//			Log.w(Log.modelTag, "TextBlock: wrong split, count=" + count + ", all text=" + getText() + "\n text[0]="
+//					+ blocks[0].getText() + "\n text[1]=" + blocks[1].getText());
+//		}
 
 		return blocks;
 	}

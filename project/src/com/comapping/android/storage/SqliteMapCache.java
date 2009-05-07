@@ -37,7 +37,7 @@ public class SqliteMapCache {
 	}
 
 	public void set(String mapId, String data) {
-		Log.d(Log.sqliteCacheTag, "set ["+mapId+"] = "+data);
+		Log.d(Log.SQLITE_CACHE_TAG, "set ["+mapId+"] = "+data);
 		if (database == null) {
 			return;
 		}
@@ -49,19 +49,19 @@ public class SqliteMapCache {
 		values.put(DATA_ATTR_NAME, data);
 		values.put(LAST_UPDATE_ATTR_NAME, new Timestamp(Calendar.getInstance().getTimeInMillis()).toString());
 
-		Log.d(Log.sqliteCacheTag, "set attributes "+values);
+		Log.d(Log.SQLITE_CACHE_TAG, "set attributes "+values);
 		
 		database.delete(TABLE_NAME, "mapId=?", new String[]{ mapId });
 		
 		try {
 			database.insertOrThrow(TABLE_NAME, null, values);
 		} catch(SQLException e) {
-			Log.e(Log.sqliteCacheTag, "sql exception while insert");
+			Log.e(Log.SQLITE_CACHE_TAG, "sql exception while insert");
 		}
 	}
 
 	private Cursor getMapCursor(String mapId) {
-		Log.d(Log.sqliteCacheTag, "get ["+mapId+"]");
+		Log.d(Log.SQLITE_CACHE_TAG, "get ["+mapId+"]");
 		
 		if (database == null) {
 			return null;
@@ -84,7 +84,7 @@ public class SqliteMapCache {
         if (result != null) {
         	if (result.moveToFirst()) {
         		String res = result.getString(result.getColumnIndex(DATA_ATTR_NAME));
-        		Log.d(Log.sqliteCacheTag, "getting result "+res);
+        		Log.d(Log.SQLITE_CACHE_TAG, "getting result "+res);
         		return res;
         	}
         }
@@ -98,7 +98,7 @@ public class SqliteMapCache {
         if (result != null) {
         	if (result.moveToFirst()) {
         		String res = result.getString(result.getColumnIndex(LAST_UPDATE_ATTR_NAME));
-        		Log.d(Log.sqliteCacheTag, "getting result "+res);
+        		Log.d(Log.SQLITE_CACHE_TAG, "getting result "+res);
         		
         		return Timestamp.valueOf(res);
         	}
@@ -118,7 +118,7 @@ public class SqliteMapCache {
 	}
 
 	public void clear() {
-		Log.d(Log.sqliteCacheTag, "clear database");
+		Log.d(Log.SQLITE_CACHE_TAG, "clear database");
 		if (database != null) {
 			database.execSQL(DELETE_TABLE_QUERY);
 			initDatabase();

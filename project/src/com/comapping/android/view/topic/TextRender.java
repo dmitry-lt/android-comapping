@@ -81,7 +81,7 @@ public class TextRender extends Render {
 
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty) {
-			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " in " + this);
+			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
 
 			setMaxWidthAndLinesCount(maxWidth, Integer.MAX_VALUE);
 		}
@@ -145,7 +145,7 @@ public class TextRender extends Render {
 
 	public void setMaxWidthAndLinesCount(int maxWidth, int linesCount) {
 		if (!isEmpty && linesCount > 0) {
-			Log.d(Log.topicRenderTag, "setting maxWidth=" + maxWidth + " linesCount=" + linesCount + " in " + this);
+			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " linesCount=" + linesCount + " in " + this);
 
 			maxWidth -= leftBorder + rightBorder;
 
@@ -212,34 +212,46 @@ public class TextRender extends Render {
 				}
 			}
 
-			// adding three dots
 			if (!fitIn) {
-				TextBlock threeDots = new TextBlock("...", new TextFormat());
-				TextParagraph lastParagraph = textToDraw.getLast();
-
-				// fake block
-				TextBlock lastRemoved = new TextBlock("", lastParagraph.getLast().getFormat());
-				threeDots.setFormat(lastRemoved.getFormat());
-				while (true) {
-					if (lastLineWidth + measureWidth(threeDots) <= curMaxWidth) {
-						int splitWidth = curMaxWidth - lastLineWidth - measureWidth(threeDots);
-						TextBlock lastBlock = splitTextBlockByWidth(lastRemoved, splitWidth, lastLineWidth == 0)[0];
-						if (!lastBlock.getText().equals("")) {
-							lastParagraph.add(lastBlock);
-							lastParagraph.add(threeDots);
-							break;
-						}
-					}
-
-					lastRemoved = lastParagraph.removeLast();
-					lastLineWidth -= measureWidth(lastRemoved);
-					threeDots.setFormat(lastRemoved.getFormat());
-				}
-				textToDraw.update();
+				addThreeDots(textToDraw, lastLineWidth, curMaxWidth);
 			}
 
 			recalcDrawingData();
 		}
+	}
+
+	private void addThreeDots(FormattedText formattedText, int lastLineWidth, int maxLineWidth) {
+		// checking data validness
+		if (formattedText == null || formattedText.getTextParagraphs().size() == 0 || lastLineWidth > maxLineWidth
+				|| maxLineWidth > MIN_MAX_WIDTH) {			
+			return;
+		}
+
+		TextBlock threeDots = new TextBlock("...", new TextFormat());
+		TextParagraph lastParagraph = textToDraw.getLast();
+		Log.d(Log.TOPIC_RENDER_TAG, "lastParagr=" + lastParagraph.getSimpleText());
+
+		// fake block
+		TextBlock lastRemoved = new TextBlock("", lastParagraph.getLast().getFormat());
+		threeDots.setFormat(lastRemoved.getFormat());
+		while (true) {
+			if (lastLineWidth + measureWidth(threeDots) <= maxLineWidth) {
+				int splitWidth = maxLineWidth - lastLineWidth - measureWidth(threeDots);
+				TextBlock lastBlock = splitTextBlockByWidth(lastRemoved, splitWidth, lastLineWidth == 0)[0];
+				if (!lastBlock.getText().equals("")) {
+					lastParagraph.add(lastBlock);
+					lastParagraph.add(threeDots);
+					break;
+				}
+				Log.d(Log.TOPIC_RENDER_TAG, "GM " + lastLineWidth + " splitWidth=" + splitWidth + " lastRemoved="
+						+ lastRemoved.getText());
+			}
+
+			lastRemoved = lastParagraph.removeLast();
+			lastLineWidth -= measureWidth(lastRemoved);
+			threeDots.setFormat(lastRemoved.getFormat());
+		}
+		textToDraw.update();
 	}
 
 	@Override
@@ -302,13 +314,13 @@ public class TextRender extends Render {
 		if (!isEmpty) {
 			Point touchPoint = new Point(x, y);
 
-			Log.d(Log.topicRenderTag, "Touch " + touchPoint + " on " + this);
+			Log.d(Log.TOPIC_RENDER_TAG, "Touch " + touchPoint + " on " + this);
 
 			for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
 				TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
 				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 					if (pointLiesOnRect(touchPoint, blocksRect[i][j])) {
-						Log.d(Log.topicRenderTag, "Touch on " + paragraph.getTextBlocks().get(j));
+						Log.d(Log.TOPIC_RENDER_TAG, "Touch on " + paragraph.getTextBlocks().get(j));
 
 						String url = paragraph.getTextBlocks().get(j).getFormat().getHRef();
 						if (!url.equals("")) {

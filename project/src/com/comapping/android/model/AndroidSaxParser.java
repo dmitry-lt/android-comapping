@@ -72,7 +72,7 @@ public class AndroidSaxParser {
 		root.setStartElementListener(new StartElementListener() {
 			public void start(Attributes attributes) {
 				startTime = System.currentTimeMillis();
-				Log.i(Log.modelTag, "AndroidSAX parsing started... \n");
+				Log.i(Log.MODEL_TAG, "AndroidSAX parsing started... \n");
 			}
 		});
 
@@ -138,7 +138,7 @@ public class AndroidSaxParser {
 		root.setEndElementListener(new EndElementListener() {
 			public void end() {
 				long parsingTime = System.currentTimeMillis() - startTime;
-				Log.i(Log.modelTag,
+				Log.i(Log.MODEL_TAG,
 						"map was built with AndroidSAX successfully, parsing time: "
 								+ parsingTime);
 			}
@@ -157,7 +157,7 @@ public class AndroidSaxParser {
 					getTopicAttributes(attributes);
 				} catch (SAXException e) {
 					e.printStackTrace();
-					Log.e(Log.modelTag, e.toString());
+					Log.e(Log.MODEL_TAG, e.toString());
 				}
 				if (currentTopic.isRoot()) {
 					map.setRoot(currentTopic);
@@ -176,7 +176,7 @@ public class AndroidSaxParser {
 							currentTopic.addIcon(Icon.parse(iconName));
 						} catch (EnumParsingException e) {
 							e.printStackTrace();
-							Log.e(Log.modelTag, e.toString());
+							Log.e(Log.MODEL_TAG, e.toString());
 						}
 					}
 				});
@@ -250,7 +250,7 @@ public class AndroidSaxParser {
 							currentTopic.setHtmlText(topicText);
 						} catch (StringToXMLConvertionException e) {
 							e.printStackTrace();
-							Log.e(Log.modelTag, e.toString());
+							Log.e(Log.MODEL_TAG, e.toString());
 						}
 					}
 				});
@@ -317,7 +317,7 @@ public class AndroidSaxParser {
 			}
 		} catch (EnumParsingException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new SAXException();
 		}
 

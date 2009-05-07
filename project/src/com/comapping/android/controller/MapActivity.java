@@ -152,7 +152,7 @@ public class MapActivity extends Activity {
 								result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
 							}
 						} catch (InvalidCredentialsException e) {
-							Log.e(Log.mapControllerTag, "invalid credentials while map getting");
+							Log.e(Log.MAP_CONTROLLER_TAG, "invalid credentials while map getting");
 							// TODO: ???
 						}
 
@@ -239,16 +239,16 @@ public class MapActivity extends Activity {
 						sleep(100);
 					}
 				} catch (LoginInterruptedException e) {
-					Log.e(Log.mapControllerTag, "login interrupted");
+					Log.e(Log.MAP_CONTROLLER_TAG, "login interrupted");
 					onError("login interrupted", current);
 				} catch (ConnectionException e) {
-					Log.e(Log.mapControllerTag, "connection exception");
+					Log.e(Log.MAP_CONTROLLER_TAG, "connection exception");
 					onError("Connection error", current);
 				} catch (StringToXMLConvertionException e) {
-					Log.e(Log.mapControllerTag, e.toString());
+					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
 					onError("Wrong file format", current);
 				} catch (MapParsingException e) {
-					Log.e(Log.mapControllerTag, e.toString());
+					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
 					onError("Wrong file format", current);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -330,7 +330,7 @@ public class MapActivity extends Activity {
 		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
 				|| (resultCode == Options.RESULT_CHAIN_CLOSE)) {
 			setResult(Options.RESULT_CHAIN_CLOSE);
-			Log.i(Log.mapControllerTag, "finish");
+			Log.i(Log.MAP_CONTROLLER_TAG, "finish");
 			finish();
 		}
 

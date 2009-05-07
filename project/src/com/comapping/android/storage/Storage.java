@@ -39,7 +39,7 @@ public class Storage {
 		edit.putString(key, value);
 		edit.commit();
 
-		Log.i(Log.storageTag, "[" + key + "] = " + value);
+		Log.i(Log.STORAGE_TAG, "[" + key + "] = " + value);
 	}
 
 	public String get(String key) {
@@ -47,7 +47,7 @@ public class Storage {
 
 		String value = preferances.getString(key, "");
 
-		Log.i(Log.storageTag, "get [" + key + "] = " + value);
+		Log.i(Log.STORAGE_TAG, "get [" + key + "] = " + value);
 
 		return value;
 	}

@@ -43,10 +43,18 @@ public class TextParagraph implements Serializable {
 	}
 	
 	public TextBlock getLast() {
+		if (textBlocks.size() == 0)  {
+			return null;
+		}
+		
 		return textBlocks.get(textBlocks.size() - 1);
 	}
 	
 	public TextBlock removeLast() {
+		if (textBlocks.size() == 0) {
+			return null;
+		}
+		
 		TextBlock removed = textBlocks.remove(textBlocks.size() - 1);
 		update();
 		return removed;		
@@ -54,6 +62,7 @@ public class TextParagraph implements Serializable {
 
 	public void update() {
 		StringBuilder text = new StringBuilder();
+		maxFontSize = 0;
 		for (TextBlock cur : textBlocks) {
 			maxFontSize = Math.max(maxFontSize, cur.getFormat().getFontSize());
 			text.append(cur.getText());

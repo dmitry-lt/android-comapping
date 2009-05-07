@@ -159,7 +159,7 @@ public class MetaMapActivity extends Activity {
 		try {
 			client.applicationClose(this);
 		} catch (ConnectionException e) {
-			Log.e(Log.metaMapControllerTag, "Connection exception in logout");
+			Log.e(Log.META_MAP_CONTROLLER_TAG, "Connection exception in logout");
 		}
 
 		super.onDestroy();
@@ -248,13 +248,13 @@ public class MetaMapActivity extends Activity {
 					result = client.getComap("meta", context, ignoreCache, !ignoreCache);
 				} catch (ConnectionException e) {
 					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
-					Log.e(Log.metaMapControllerTag, "connection error in metamap retrieving");
+					Log.e(Log.META_MAP_CONTROLLER_TAG, "connection error in metamap retrieving");
 				} catch (LoginInterruptedException e) {
 					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
-					Log.e(Log.metaMapControllerTag, "login interrupted in metamap retrieving");
+					Log.e(Log.META_MAP_CONTROLLER_TAG, "login interrupted in metamap retrieving");
 				} catch (InvalidCredentialsException e) {
 					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
-					Log.e(Log.metaMapControllerTag, "invalid credentails while getting comap oO");
+					Log.e(Log.META_MAP_CONTROLLER_TAG, "invalid credentails while getting comap oO");
 				}
 
 				Map metaMap = null;
@@ -267,10 +267,10 @@ public class MetaMapActivity extends Activity {
 							metaMap = mapBuilder.buildMap(result);
 						}
 					} catch (StringToXMLConvertionException e) {
-						Log.e(Log.metaMapControllerTag, "xml convertion exception");
+						Log.e(Log.META_MAP_CONTROLLER_TAG, "xml convertion exception");
 						error = InternetView.PROBLEMS_WITH_MAP_MESSAGE;
 					} catch (MapParsingException e) {
-						Log.e(Log.metaMapControllerTag, "map parsing exception");
+						Log.e(Log.META_MAP_CONTROLLER_TAG, "map parsing exception");
 						error = InternetView.PROBLEMS_WITH_MAP_MESSAGE;
 					}
 					}
@@ -322,7 +322,7 @@ public class MetaMapActivity extends Activity {
 		try {
 			client.logout(this);
 		} catch (ConnectionException e) {
-			Log.e(Log.metaMapControllerTag, "connection exception in logout");
+			Log.e(Log.META_MAP_CONTROLLER_TAG, "connection exception in logout");
 		}
 
 		metaMapRefresh(false);

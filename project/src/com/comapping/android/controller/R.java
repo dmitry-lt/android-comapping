@@ -106,10 +106,10 @@ public final class R {
         public static final int openWithComappingView=0x7f070022;
         public static final int openWithExplorerView=0x7f070021;
         public static final int password=0x7f070007;
-        public static final int pleaseSynchronize=0x7f070019;
         public static final int preferences=0x7f070023;
         public static final int previousButton=0x7f070011;
         public static final int synchronizeButton=0x7f070016;
+        public static final int textViewMessage=0x7f070019;
         public static final int upLevelButton=0x7f070014;
         public static final int viewSwitcher=0x7f070017;
         public static final int zoom=0x7f07001d;

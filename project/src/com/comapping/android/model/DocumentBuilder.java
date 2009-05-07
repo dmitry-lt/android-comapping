@@ -32,10 +32,10 @@ public class DocumentBuilder {
 			Log.e("Document Builder", e.toString());
 			throw new DocumentBuilderCreatingError();
 		} catch (SAXException e) {
-			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.e(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		} catch (IOException e) {
-			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.e(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		}
 

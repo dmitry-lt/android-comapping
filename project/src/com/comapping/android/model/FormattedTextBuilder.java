@@ -34,7 +34,7 @@ public class FormattedTextBuilder {
 			xmlString = "<TEXT><P><FONT>" + xmlString + "</FONT></P></TEXT>";
 		}
 
-		Log.d(Log.modelTag, "parsing text: " + xmlString);
+		Log.d(Log.MODEL_TAG, "parsing text: " + xmlString);
 
 		Document document = DocumentBuilder.buildDocument(xmlString);
 

@@ -198,7 +198,7 @@ public class AttachmentRender extends Render {
 		HttpURLConnection connection = null;
 		try {
 			if (Options.USE_PROXY) {
-				connection = (HttpURLConnection) url.openConnection(Options.proxy);
+				connection = (HttpURLConnection) url.openConnection(Options.PROXY);
 			} else {
 				connection = (HttpURLConnection) url.openConnection();
 			}
@@ -213,7 +213,7 @@ public class AttachmentRender extends Render {
 			throw new ConnectionException();
 		}
 
-		Log.d(Log.topicRenderTag, "contentLength=" + contentLength + " code=" + code);
+		Log.d(Log.TOPIC_RENDER_TAG, "contentLength=" + contentLength + " code=" + code);
 
 		downloadProgressDialog.setMax(contentLength);
 
@@ -265,7 +265,7 @@ public class AttachmentRender extends Render {
 			bufferedInput.close();
 			output.close();
 
-			Log.d(Log.topicRenderTag, "sum bytes=" + sum + " readsCount=" + readsCount);
+			Log.d(Log.TOPIC_RENDER_TAG, "sum bytes=" + sum + " readsCount=" + readsCount);
 		} catch (IOException e) {
 			throw new ConnectionException();
 		}

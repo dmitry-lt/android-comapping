@@ -62,12 +62,12 @@ public class LoginActivity extends Activity {
 				try {
 					client.login(email, password, remember.isChecked());
 				} catch (ConnectionException e) {
-					Log.e(Log.loginTag, "connection exception");
+					Log.e(Log.LOGIN_TAG, "connection exception");
 					errorMsg = CONNECTION_ERROR_MESSAGE;
 				} catch (LoginInterruptedException e) {
-					Log.e(Log.loginTag, "login interrupted");
+					Log.e(Log.LOGIN_TAG, "login interrupted");
 				} catch (InvalidCredentialsException e) {
-					Log.e(Log.loginTag, "invalid credentails");
+					Log.e(Log.LOGIN_TAG, "invalid credentails");
 					errorMsg = EMAIL_OR_PASSWORD_INCORRECT_MESSAGE;
 				}
 
@@ -101,12 +101,12 @@ public class LoginActivity extends Activity {
 					try {
 						client.autologin();
 					} catch (ConnectionException e) {
-						Log.e(Log.loginTag, "connection exception");
+						Log.e(Log.LOGIN_TAG, "connection exception");
 						errorMsg = CONNECTION_ERROR_MESSAGE;
 					} catch (LoginInterruptedException e) {
-						Log.e(Log.loginTag, "login interrupted");
+						Log.e(Log.LOGIN_TAG, "login interrupted");
 					} catch (InvalidCredentialsException e) {
-						Log.e(Log.loginTag, "invalid credentails");
+						Log.e(Log.LOGIN_TAG, "invalid credentails");
 					}
 
 					finishLoginAttempt(errorMsg);

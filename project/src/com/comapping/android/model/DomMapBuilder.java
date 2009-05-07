@@ -34,7 +34,7 @@ public class DomMapBuilder extends MapBuilder {
 	 *             when given XML document has wrong format
 	 */
 	public Map buildMap(String xmlDocument) throws StringToXMLConvertionException, MapParsingException {
-		Log.d(Log.modelTag, "parsing xml document: \n" + xmlDocument);
+		Log.d(Log.MODEL_TAG, "parsing xml document: \n" + xmlDocument);
 
 		long startTime = System.currentTimeMillis();
 
@@ -68,36 +68,36 @@ public class DomMapBuilder extends MapBuilder {
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new MapParsingException();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new MapParsingException();
 		} catch (DOMException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new MapParsingException();
 		} catch (ParseException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new MapParsingException();
 		} catch (EnumParsingException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new MapParsingException();
 		} catch (StringToXMLConvertionException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new MapParsingException();
 		} catch (DateParsingException e) {
 			e.printStackTrace();
-			Log.e(Log.modelTag, e.toString());
+			Log.e(Log.MODEL_TAG, e.toString());
 			throw new MapParsingException();
 		}
 
 		long parsingTime = System.currentTimeMillis() - startTime;
-		Log.i(Log.modelTag, "map was built with DOM successfully, parsing time: " + parsingTime);
+		Log.i(Log.MODEL_TAG, "map was built with DOM successfully, parsing time: " + parsingTime);
 
 		return map;
 	}

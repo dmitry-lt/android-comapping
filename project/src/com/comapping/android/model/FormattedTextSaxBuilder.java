@@ -11,8 +11,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
-import android.graphics.Color;
-
 import com.comapping.android.Log;
 import com.comapping.android.model.exceptions.DocumentBuilderCreatingError;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
@@ -37,7 +35,7 @@ public class FormattedTextSaxBuilder {
 
 	public static FormattedText buildFormattedText(String xmlString) throws StringToXMLConvertionException {
 		
-		long startTime = System.currentTimeMillis();
+//		long startTime = System.currentTimeMillis();
 		
 		if (xmlString.startsWith("<P")) {
 			xmlString = "<TEXT>" + xmlString + "</TEXT>";
@@ -55,7 +53,7 @@ public class FormattedTextSaxBuilder {
 			InputStream stream = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
 			handler = new FormattedTextSaxHandler();
 
-			Log.d(Log.modelTag, "Text SAX parsing: " + xmlString);
+			Log.d(Log.MODEL_TAG, "Text SAX parsing: " + xmlString);
 			
 			parser.parse(stream, handler);
 			resultText = handler.getFormattedText();
@@ -66,17 +64,17 @@ public class FormattedTextSaxBuilder {
 			Log.e("SAX Text Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
 		} catch (SAXException e) {
-			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.e(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			resultText = new FormattedText(ERROR_TEXT, getDefFormat());
 			//throw new StringToXMLConvertionException();
 		} catch (IOException e) {
-			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.e(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		}
 
-		long parsingTime = System.currentTimeMillis() - startTime;
+//		long parsingTime = System.currentTimeMillis() - startTime;
 		
-		Log.i(Log.modelTag, "Formatted Text was built with SAX successfully, parsing time: " + parsingTime);
+//		Log.d(Log.MODEL_TAG, "Formatted Text was built with SAX successfully, parsing time: " + parsingTime);
 		
 		return resultText;
 	}

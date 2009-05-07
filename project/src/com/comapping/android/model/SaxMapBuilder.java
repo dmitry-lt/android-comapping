@@ -29,7 +29,7 @@ public class SaxMapBuilder extends MapBuilder {
 			InputStream stream = new ByteArrayInputStream(xmlDocument.getBytes("UTF-8"));
 			handler = new SaxHandler();
 
-			Log.d(Log.modelTag, "parsing xml document: \n" + xmlDocument);
+			Log.d(Log.MODEL_TAG, "parsing xml document: \n" + xmlDocument);
 			
 			parser.parse(stream, handler);			
 		} catch (FactoryConfigurationError e) {
@@ -39,13 +39,13 @@ public class SaxMapBuilder extends MapBuilder {
 			Log.e("SAX Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
 		} catch (SAXException e) {
-			Log.w(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.w(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		} catch (IOException e) {
-			Log.w(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.w(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		} catch (NumberFormatException e) {			
-			Log.w(Log.modelTag, "wrong map format " + e.toString());
+			Log.w(Log.MODEL_TAG, "wrong map format " + e.toString());
 			throw new MapParsingException();
 		}
 

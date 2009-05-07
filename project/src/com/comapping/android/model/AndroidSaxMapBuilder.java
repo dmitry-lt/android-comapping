@@ -25,17 +25,17 @@ public class AndroidSaxMapBuilder extends MapBuilder {
 			InputStream stream = new ByteArrayInputStream(xmlDocument.getBytes());
 			handler = new AndroidSaxParser();
 
-			Log.d(Log.modelTag, "parsing xml document: \n" + xmlDocument);
+			Log.d(Log.MODEL_TAG, "parsing xml document: \n" + xmlDocument);
 			
 			Xml.parse(stream, Xml.Encoding.UTF_8,handler.newContentHandler());			
 		} catch (FactoryConfigurationError e) {
 			Log.e("AndroidSAX Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
 		} catch (SAXException e) {
-			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.e(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		} catch (IOException e) {
-			Log.e(Log.modelTag, "cannot convert string to xml:" + e.toString());
+			Log.e(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		}
 

@@ -24,15 +24,15 @@ public class FileMapProvider implements MapProvider {
 		try {
 			response = getTextFromInputStream(new FileInputStream(mapId));
 		} catch (FileNotFoundException e) {
-			Log.e(Log.connectionTag, "map file not found");
+			Log.e(Log.CONNECTION_TAG, "map file not found");
 			throw new ConnectionException();
 		} catch (IOException e) {
-			Log.e(Log.connectionTag, "map file IO exception");
+			Log.e(Log.CONNECTION_TAG, "map file IO exception");
 			throw new ConnectionException();
 		}
 		
-		Log.d(Log.connectionTag, "file comap provider response: " + response);
-		Log.d(Log.connectionTag, "file comap provider check sum: " + getBytesSum(response));
+		Log.d(Log.CONNECTION_TAG, "file comap provider response: " + response);
+		Log.d(Log.CONNECTION_TAG, "file comap provider check sum: " + getBytesSum(response));
 		
 		return response;
 	}
