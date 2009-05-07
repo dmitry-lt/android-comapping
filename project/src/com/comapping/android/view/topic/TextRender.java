@@ -163,17 +163,21 @@ public class TextRender extends Render {
 				if (finish) {
 					break;
 				}
+				
 				TextParagraph paragraph = text.getTextParagraphs().get(i);
 				TextParagraph paragraphToDraw = new TextParagraph();
 				int curParLineNumber = 1;
 				curLineNumber++;
 				int curLineWidth = 0;
+				
 				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 					if (finish) {
 						break;
 					}
+					
 					TextBlock block = paragraph.getTextBlocks().get(j);
 					paint.setTextSize(block.getFormat().getFontSize());
+					
 					while (true) {
 						if (curLineNumber > linesCount) {
 							fitIn = false;
@@ -204,6 +208,7 @@ public class TextRender extends Render {
 						}
 					}
 				}
+				
 				if (!finish) {
 					textToDraw.add(paragraphToDraw);
 				}
@@ -222,36 +227,37 @@ public class TextRender extends Render {
 
 	private void addThreeDots(FormattedText formattedText, int lastLineWidth, int maxLineWidth) {
 		// checking data validness
-		if (formattedText == null || formattedText.getTextParagraphs().size() == 0 || lastLineWidth > maxLineWidth
-				|| maxLineWidth > MIN_MAX_WIDTH) {			
+		if (formattedText == null || formattedText.getTextParagraphs().size() == 0
+				|| formattedText.getLast().getSimpleText().equals("") || lastLineWidth > maxLineWidth
+				|| maxLineWidth > MIN_MAX_WIDTH) {
+			Log.d(Log.TOPIC_RENDER_TAG, "Cannot add three dots in:\n" + formattedText.getSimpleText()
+					+ "\nlastLineWidth=" + lastLineWidth + " maxLineWidth=" + maxLineWidth);
 			return;
 		}
 
 		TextBlock threeDots = new TextBlock("...", new TextFormat());
-		TextParagraph lastParagraph = textToDraw.getLast();
-		Log.d(Log.TOPIC_RENDER_TAG, "lastParagr=" + lastParagraph.getSimpleText());
+		TextParagraph lastParagraph = formattedText.getLast();
 
-		// fake block
+		// add fake block
 		TextBlock lastRemoved = new TextBlock("", lastParagraph.getLast().getFormat());
 		threeDots.setFormat(lastRemoved.getFormat());
 		while (true) {
 			if (lastLineWidth + measureWidth(threeDots) <= maxLineWidth) {
 				int splitWidth = maxLineWidth - lastLineWidth - measureWidth(threeDots);
-				TextBlock lastBlock = splitTextBlockByWidth(lastRemoved, splitWidth, lastLineWidth == 0)[0];
+				TextBlock lastBlock = splitTextBlockByWidth(lastRemoved, splitWidth, true)[0];
 				if (!lastBlock.getText().equals("")) {
 					lastParagraph.add(lastBlock);
 					lastParagraph.add(threeDots);
 					break;
 				}
-				Log.d(Log.TOPIC_RENDER_TAG, "GM " + lastLineWidth + " splitWidth=" + splitWidth + " lastRemoved="
-						+ lastRemoved.getText());
 			}
 
 			lastRemoved = lastParagraph.removeLast();
 			lastLineWidth -= measureWidth(lastRemoved);
 			threeDots.setFormat(lastRemoved.getFormat());
 		}
-		textToDraw.update();
+
+		formattedText.update();
 	}
 
 	@Override
