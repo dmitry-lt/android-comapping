@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
@@ -49,7 +50,7 @@ public class MetaMapView {
 			@Override
 			public void onItemClick(AdapterView<?> apapterView, View view, int position, long arg3) {
 				// get viewType
-				String viewType = Storage.getInstance().get(Storage.VIEW_TYPE_KEY);
+				String viewType = Storage.getInstance().get(Storage.VIEW_TYPE_KEY, Options.DEFAULT_VIEW_TYPE);
 
 				if (childTopics[position].isFolder()) {
 					metaMapActivity.loadMetaMapTopic(childTopics[position]);

@@ -31,6 +31,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.preference.PreferenceActivity;
 import static com.comapping.android.view.topic.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {
@@ -99,7 +100,7 @@ public class AttachmentRender extends Render {
 	@Override
 	public void onTouch(int x, int y) {
 		if (dialog == null) {
-			downloadFolder = Storage.getInstance().get(Storage.DOWNLOAD_FOLDER_KEY);
+			downloadFolder = Storage.getInstance().get(Storage.DOWNLOAD_FOLDER_KEY, Options.DEFAULT_DOWNLOAD_FOLDER);
 			
 			dialog = (new AlertDialog.Builder(context).setTitle("Attachment")
 					.setMessage(

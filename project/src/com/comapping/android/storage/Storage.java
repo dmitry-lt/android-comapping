@@ -45,20 +45,20 @@ public class Storage {
 		Log.i(Log.STORAGE_TAG, "[" + key + "] = " + value);
 	}
 
-	public String get(String key) {
+	public String get(String key, String defaultValue) {
 		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
 
-		String value = preferances.getString(key, "");
+		String value = preferances.getString(key, defaultValue);
 
 		Log.i(Log.STORAGE_TAG, "get [" + key + "] = " + value);
 
 		return value;
 	}
 	
-	public boolean getBoolean(String key) {
+	public boolean getBoolean(String key, boolean defaultValue) {
 		// false if not created
 		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
 
-		return preferances.getBoolean(key, false);
+		return preferances.getBoolean(key, defaultValue);
 	}
 }

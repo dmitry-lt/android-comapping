@@ -108,7 +108,7 @@ public class Client implements MapProvider {
 	 * @return autologin possibility
 	 */
 	public boolean isAutologinPossible() {
-		return !Storage.getInstance().get(Storage.AUTOLOGIN_KEY).equals("");
+		return !Storage.getInstance().get(Storage.AUTOLOGIN_KEY, "").equals("");
 	}
 
 	/**
@@ -122,8 +122,8 @@ public class Client implements MapProvider {
 	 * @throws LoginInterruptedException
 	 */
 	public void autologin() throws ConnectionException, InvalidCredentialsException, LoginInterruptedException {
-		String email = Storage.getInstance().get(Storage.EMAIL_KEY);
-		String autologinKey = Storage.getInstance().get(Storage.AUTOLOGIN_KEY);
+		String email = Storage.getInstance().get(Storage.EMAIL_KEY, "");
+		String autologinKey = Storage.getInstance().get(Storage.AUTOLOGIN_KEY, "");
 
 		clientSideLogout(true);
 
@@ -213,12 +213,12 @@ public class Client implements MapProvider {
 	} 
 
 	public static Proxy getProxy() throws ConnectionException {
-		if (Storage.getInstance().getBoolean(Storage.USE_PROXY)) {
-			String proxyHost = Storage.getInstance().get(Storage.PROXY_HOST);
+		if (Storage.getInstance().getBoolean(Storage.USE_PROXY, Options.DEFAULT_USE_PROXY)) {
+			String proxyHost = Storage.getInstance().get(Storage.PROXY_HOST, "");
 			int proxyPort = 0;
 			
 			try {
-				proxyPort = Integer.parseInt(Storage.getInstance().get(Storage.PROXY_PORT));
+				proxyPort = Integer.parseInt(Storage.getInstance().get(Storage.PROXY_PORT, ""));
 			} catch(Exception e) {
 				throw new ConnectionException();
 			}
