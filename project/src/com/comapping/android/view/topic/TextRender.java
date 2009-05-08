@@ -163,21 +163,21 @@ public class TextRender extends Render {
 				if (finish) {
 					break;
 				}
-				
+
 				TextParagraph paragraph = text.getTextParagraphs().get(i);
 				TextParagraph paragraphToDraw = new TextParagraph();
 				int curParLineNumber = 1;
 				curLineNumber++;
 				int curLineWidth = 0;
-				
+
 				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 					if (finish) {
 						break;
 					}
-					
+
 					TextBlock block = paragraph.getTextBlocks().get(j);
 					paint.setTextSize(block.getFormat().getFontSize());
-					
+
 					while (true) {
 						if (curLineNumber > linesCount) {
 							fitIn = false;
@@ -208,7 +208,7 @@ public class TextRender extends Render {
 						}
 					}
 				}
-				
+
 				if (!finish) {
 					textToDraw.add(paragraphToDraw);
 				}
@@ -216,7 +216,7 @@ public class TextRender extends Render {
 					lastLineWidth = curLineWidth;
 				}
 			}
-
+			
 			if (!fitIn) {
 				addThreeDots(textToDraw, lastLineWidth, curMaxWidth);
 			}
@@ -227,15 +227,25 @@ public class TextRender extends Render {
 
 	private void addThreeDots(FormattedText formattedText, int lastLineWidth, int maxLineWidth) {
 		// checking data validness
-		if (formattedText == null || formattedText.getTextParagraphs().size() == 0
-				|| formattedText.getLast().getSimpleText().equals("") || lastLineWidth > maxLineWidth
-				|| maxLineWidth > MIN_MAX_WIDTH) {
-			Log.d(Log.TOPIC_RENDER_TAG, "Cannot add three dots in:\n" + formattedText.getSimpleText()
+		if (formattedText == null || lastLineWidth > maxLineWidth || maxLineWidth < MIN_MAX_WIDTH) {
+			Log.d(Log.TOPIC_RENDER_TAG, "Cannot add three dots, invalide args:\n" + formattedText
 					+ "\nlastLineWidth=" + lastLineWidth + " maxLineWidth=" + maxLineWidth);
 			return;
 		}
 
 		TextBlock threeDots = new TextBlock("...", new TextFormat());
+		
+		if (formattedText.getTextParagraphs().size() == 0) {
+			formattedText.add(new TextParagraph(threeDots));
+			return;
+		}
+		
+		if (formattedText.getLast().getSimpleText().equals("")) {
+			formattedText.getLast().add(threeDots);
+			formattedText.update();
+			return;
+		}
+		
 		TextParagraph lastParagraph = formattedText.getLast();
 
 		// add fake block

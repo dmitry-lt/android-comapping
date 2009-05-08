@@ -59,4 +59,9 @@ public class TextBlock implements Serializable {
 
 		return blocks;
 	}
+	
+	@Override
+	public String toString() {
+		return getText();
+	}
 }

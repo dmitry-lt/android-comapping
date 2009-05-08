@@ -16,8 +16,12 @@ public class TextParagraph implements Serializable {
 	}
 
 	public TextParagraph(String text, TextFormat format) {
-		this.textBlocks = new ArrayList<TextBlock>();
-		add(new TextBlock(text, format));
+		this(new TextBlock(text, format));
+	}
+	
+	public TextParagraph(TextBlock textBlock) {
+		this(new ArrayList<TextBlock>());
+		add(textBlock);
 	}
 
 	public TextParagraph(List<TextBlock> textBlocks) {
@@ -68,5 +72,10 @@ public class TextParagraph implements Serializable {
 			text.append(cur.getText());
 		}
 		this.simpleText = text.toString();
+	}
+	
+	@Override
+	public String toString() {
+		return getSimpleText();
 	}
 }
