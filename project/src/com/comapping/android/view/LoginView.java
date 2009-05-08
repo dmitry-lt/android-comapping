@@ -63,7 +63,7 @@ public class LoginView {
 		loginActivity.setContentView(R.layout.login);
 		
 		String email = Storage.getInstance().get(Storage.EMAIL_KEY);
-		if (email != null) {
+		if (!email.equals("")) {
 			setEmailText(email);
 			TextView passwordText = (TextView) loginActivity.findViewById(R.id.password);
 			passwordText.requestFocus();

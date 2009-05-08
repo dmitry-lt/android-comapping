@@ -20,6 +20,9 @@ public class Storage {
 	public static final String DOWNLOAD_FOLDER_KEY = "downloadFolder";
 	public static final String AUTOLOGIN_KEY = "autologin";
 	public static final String EMAIL_KEY = "email";	
+	public static final String USE_PROXY = "useProxy";	
+	public static final String PROXY_HOST = "proxyHost";
+	public static final String PROXY_PORT = "proxyPort";
 
 	// Singleton
 	private Storage() {
@@ -50,5 +53,12 @@ public class Storage {
 		Log.i(Log.STORAGE_TAG, "get [" + key + "] = " + value);
 
 		return value;
+	}
+	
+	public boolean getBoolean(String key) {
+		// false if not created
+		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
+
+		return preferances.getBoolean(key, false);
 	}
 }

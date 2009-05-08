@@ -10,37 +10,57 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
 
-public class PreferencesActivity extends PreferenceActivity implements OnPreferenceChangeListener {
+public class PreferencesActivity extends PreferenceActivity {
 	public final static String PREFERENCES_ACTIVITY_INTENT = "com.comapping.android.intent.PREFERENCES";
 
+	private void initPreference(Preference preference, CharSequence defaultValue) {
+		preference.setSummary(defaultValue);
+		
+		preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				preference.setSummary((CharSequence) newValue);
+
+				return true;
+			}
+			
+		});
+	}
+	
+	private void initListPreference(ListPreference preference, String defaultValue) {
+		if (preference.getEntry() == null) {
+			// set default value
+			preference.setValue(defaultValue);
+		}
+		
+		initPreference(preference, preference.getEntry());
+	}
+	
+	private void initTextPreference(EditTextPreference preference, String defaultValue) {
+		if (preference.getText() == null) {
+			preference.setText(defaultValue);
+		}
+		
+		initPreference(preference, preference.getText());
+	}
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.layout.preferences);
-
-		ListPreference viewType = (ListPreference) findPreference("viewType");
-		if (viewType.getEntry() == null) {
-			// set default value
-			viewType.setValue(ViewType.COMAPPING_VIEW.toString());
-		}
-
-		viewType.setSummary(viewType.getEntry());
-		viewType.setOnPreferenceChangeListener(this);
 		
-		EditTextPreference downloadFolder = (EditTextPreference) findPreference("downloadFolder");
-		if (downloadFolder.getText() == null) {
-			downloadFolder.setText(Options.DEFAULT_DOWNLOAD_FOLDER);
-		}
+		// init view type preference
+		initListPreference((ListPreference) findPreference("viewType"), ViewType.COMAPPING_VIEW.toString());
 		
-		downloadFolder.setSummary(downloadFolder.getText());
-		downloadFolder.setOnPreferenceChangeListener(this);
-	}
-
-	@Override
-	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		preference.setSummary((CharSequence) newValue);
-
-		return true;
+		// init download preference
+		initTextPreference((EditTextPreference) findPreference("downloadFolder"), Options.DEFAULT_DOWNLOAD_FOLDER);
+		
+		// init proxy preference
+		// proxy host
+		initTextPreference((EditTextPreference) findPreference("proxyHost"), "");
+		
+		// proxy port
+		initTextPreference((EditTextPreference) findPreference("proxyPort"), "");
 	}
 }

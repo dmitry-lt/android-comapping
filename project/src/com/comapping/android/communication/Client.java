@@ -11,7 +11,9 @@ import static com.comapping.android.communication.ClientHelper.*;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +44,7 @@ public class Client implements MapProvider {
 
 	final static private char SALT_FLAG = '#';
 
-	final static private int MAX_READ_TIMEOUT = 30 * 1000; // 30 seconds in
+	final static private int MAX_READ_TIMEOUT = 5 * 1000; // 30 seconds in
 	// milliseconds
 	final static private int MAX_CONNECT_TIMEOUT = 30 * 1000; // 30 seconds in
 	// milliseconds
@@ -208,8 +210,25 @@ public class Client implements MapProvider {
 
 	public void interruptLogin() {
 		loginInterrupted = true;
-	}
+	} 
 
+	public static Proxy getProxy() throws ConnectionException {
+		if (Storage.getInstance().getBoolean(Storage.USE_PROXY)) {
+			String proxyHost = Storage.getInstance().get(Storage.PROXY_HOST);
+			int proxyPort = 0;
+			
+			try {
+				proxyPort = Integer.parseInt(Storage.getInstance().get(Storage.PROXY_PORT));
+			} catch(Exception e) {
+				throw new ConnectionException();
+			}
+			
+			return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+		} else {
+			return Proxy.NO_PROXY;
+		}
+	}
+	
 	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException,
 			LoginInterruptedException, InvalidCredentialsException {
 		Log.d(Log.CONNECTION_TAG, "request to server " + Arrays.toString(data.toArray()));
@@ -227,13 +246,9 @@ public class Client implements MapProvider {
 
 		try {
 			HttpURLConnection connection = null;
-
-			if (Options.USE_PROXY) {
-				connection = (HttpURLConnection) url.openConnection(Options.PROXY);
-			} else {
-				connection = (HttpURLConnection) url.openConnection();
-			}
-
+			
+			connection = (HttpURLConnection) url.openConnection(getProxy());
+			
 			connection.setReadTimeout(MAX_READ_TIMEOUT);
 			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
 

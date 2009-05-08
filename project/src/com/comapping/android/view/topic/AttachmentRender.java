@@ -14,6 +14,7 @@ import java.util.Date;
 
 import com.comapping.android.Log;
 import com.comapping.android.Options;
+import com.comapping.android.communication.Client;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
@@ -197,12 +198,8 @@ public class AttachmentRender extends Render {
 
 		HttpURLConnection connection = null;
 		try {
-			if (Options.USE_PROXY) {
-				connection = (HttpURLConnection) url.openConnection(Options.PROXY);
-			} else {
-				connection = (HttpURLConnection) url.openConnection();
-			}
-
+			connection = (HttpURLConnection) url.openConnection(Client.getProxy());
+			
 			connection.setDoOutput(true);
 
 			code = connection.getResponseCode();
