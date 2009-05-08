@@ -248,7 +248,6 @@ public class Client implements MapProvider {
 			HttpURLConnection connection = null;
 			
 			connection = (HttpURLConnection) url.openConnection(getProxy());
-			
 			connection.setReadTimeout(MAX_READ_TIMEOUT);
 			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
 

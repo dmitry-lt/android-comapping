@@ -3,7 +3,6 @@ package com.comapping.android.view;
 import java.util.ArrayList;
 
 import com.comapping.android.Options;
-import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.model.Topic;
 
 import android.content.Context;
@@ -115,7 +114,6 @@ public class MainMapView extends View {
 	private int findTopic;
 
 	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
-	
 
 	public void setlayout(LinearLayout layout, ImageButton cancel, ImageButton next, ImageButton previous,
 			final AutoCompleteTextView text, final ArrayList<Topic> topics) {
@@ -134,8 +132,8 @@ public class MainMapView extends View {
 
 			@Override
 			public void onClick(View v) {
-				if(findTopic != findTopics.size() - 1)
-				mRender.selectTopic(findTopics.get(++findTopic));
+				if (findTopic != findTopics.size() - 1)
+					mRender.selectTopic(findTopics.get(++findTopic));
 				isVisible(INVISIBLE);
 			}
 		});
@@ -143,27 +141,26 @@ public class MainMapView extends View {
 
 			@Override
 			public void onClick(View v) {
-				if(findTopic != -1){
-				mRender.selectTopic(findTopics.get(--findTopic));
-				isVisible(INVISIBLE);
+				if (findTopic != -1) {
+					mRender.selectTopic(findTopics.get(--findTopic));
+					isVisible(INVISIBLE);
 				}
 			}
-			
+
 		});
 		text.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v,
-						int position, long id){
-				
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
 				String find = text.getAdapter().getItem(position).toString();
 				findTopics.clear();
-				for(int i = 0;i<topics.size();i++){
-					if(topics.get(i).getText().equals(find)){
+				for (int i = 0; i < topics.size(); i++) {
+					if (topics.get(i).getText().equals(find)) {
 						findTopics.add(topics.get(i));
 					}
 				}
 				mRender.selectTopic(findTopics.get(0));
-				}
+			}
 		});
 
 	}

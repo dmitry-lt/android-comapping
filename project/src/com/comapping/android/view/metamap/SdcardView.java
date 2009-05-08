@@ -5,12 +5,10 @@ import java.io.FilenameFilter;
 
 import android.widget.ImageButton;
 
-import com.comapping.android.Log;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.Map;
 import com.comapping.android.model.Topic;
-import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 
 public class SdcardView extends MetaMapView {
 	final static private FilenameFilter filter = new FilenameFilter() {

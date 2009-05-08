@@ -31,7 +31,6 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.preference.PreferenceActivity;
 import static com.comapping.android.view.topic.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {

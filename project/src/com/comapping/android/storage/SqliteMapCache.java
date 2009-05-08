@@ -85,10 +85,12 @@ public class SqliteMapCache {
         	if (result.moveToFirst()) {
         		String res = result.getString(result.getColumnIndex(DATA_ATTR_NAME));
         		Log.d(Log.SQLITE_CACHE_TAG, "getting result "+res);
+        		result.close();
         		return res;
         	}
         }
         
+        result.close();
         return null;
 	}
 
@@ -100,21 +102,18 @@ public class SqliteMapCache {
         		String res = result.getString(result.getColumnIndex(LAST_UPDATE_ATTR_NAME));
         		Log.d(Log.SQLITE_CACHE_TAG, "getting result "+res);
         		
+        		result.close();
         		return Timestamp.valueOf(res);
         	}
         }
         
+        result.close();
         return null;
 	}
 
 	// private methods
 	private Integer getIdAttribute(String mapId) {
 		return null;
-		/*try {
-			return Integer.parseInt(mapId);
-		} catch (NumberFormatException e) {
-			return null;
-		}*/	
 	}
 
 	public void clear() {
