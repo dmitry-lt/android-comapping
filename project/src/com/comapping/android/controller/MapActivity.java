@@ -180,18 +180,9 @@ public class MapActivity extends Activity {
 
 							zoom = (ZoomControls) findViewById(R.id.Zoom);
 
-							layout = (LinearLayout) findViewById(R.id.FindView);
-							cancel = (ImageButton) findViewById(R.id.cancelButton);
-							next = (ImageButton) findViewById(R.id.nextButton);
-							previous = (ImageButton) findViewById(R.id.previousButton);
-							text = (AutoCompleteTextView) findViewById(R.id.nameEditText);
-
 							Topic topic = map.getRoot();
 							allTopicsTexts(topic);
 							allTopics(topic);
-
-							text.setAdapter(new ArrayAdapter<String>(context,
-									android.R.layout.simple_spinner_dropdown_item, texts));
 
 							view = (MainMapView) findViewById(R.id.MapView);
 							view.setRender(mapRender);
@@ -262,12 +253,6 @@ public class MapActivity extends Activity {
 	ZoomControls zoom;
 	MainMapView view;
 
-	LinearLayout layout;
-	ImageButton cancel;
-	ImageButton next;
-	ImageButton previous;
-	AutoCompleteTextView text;
-
 	public MapRender initMapRender(Map map, ViewType viewType) {
 		switch (viewType) {
 		case EXPLORER_VIEW:
@@ -288,13 +273,13 @@ public class MapActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.zoom:
-//			view.isVisible(View.INVISIBLE);
-//			runOnUiThread(new Runnable() {
-//				@Override
-//				public void run() {
-//					showZoom();
-//				}
-//			});
+			//view.isVisible(View.INVISIBLE);
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					showZoom();
+				}
+			});
 			return true;
 		case R.id.find:
 			//view.setlayout(layout, cancel, next, previous, text, topics);
