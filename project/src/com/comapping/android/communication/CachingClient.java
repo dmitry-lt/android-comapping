@@ -21,7 +21,7 @@ public class CachingClient implements MapProvider {
 	private Client client = null;
 	private SqliteMapCache cache = null;
 
-	private boolean remember = false;
+	private boolean remember = true;
 
 	public CachingClient(Client client, SqliteMapCache cache) {
 		this.client = client;
@@ -40,8 +40,6 @@ public class CachingClient implements MapProvider {
 
 	public void autologin() throws ConnectionException, InvalidCredentialsException, LoginInterruptedException {
 		client.autologin();
-
-		remember = true;
 	}
 
 	public boolean isLoggedIn() {
@@ -61,9 +59,6 @@ public class CachingClient implements MapProvider {
 		if (!remember) {
 			cache.clear();
 		}
-
-		client.logout(context, false);
-		cache.close();
 	}
 
 	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException, InvalidCredentialsException {

@@ -72,7 +72,9 @@ public class MetaMapActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		instance = this;
 
-		client = new CachingClient(new Client(), new SqliteMapCache(this));
+		if (client == null) {
+			client = new CachingClient(new Client(), new SqliteMapCache(this));
+		}
 
 		MetaMapView.loadLayout(this);
 
@@ -92,12 +94,22 @@ public class MetaMapActivity extends Activity {
 	}
 
 	/* Creates the menu items */
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.metamap_options, menu);
-		return true;
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		Integer currentMenu = currentView.getOptionsMenu();
+		Log.d(Log.META_MAP_CONTROLLER_TAG, "On create options menu. Current menu: "+currentMenu);
+		
+		if (currentMenu != null) {
+			menu.clear();
+			
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(currentMenu, menu);
+			return true;
+		} else {
+			return false;
+		}
 	}
-
+	
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 

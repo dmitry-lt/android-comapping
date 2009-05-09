@@ -75,6 +75,10 @@ public class MetaMapView {
 		}
 	}
 
+	public Integer getOptionsMenu() {
+		return null;
+	}
+	
 	protected void drawMetaMapMessage(String message) {
 		ListView mapList = (ListView) metaMapActivity.findViewById(R.id.listView);
 		mapList.setVisibility(ListView.GONE);
@@ -92,15 +96,28 @@ public class MetaMapView {
 		textViewMessage.setVisibility(TextView.GONE);
 	}
 
+	protected void enableImageButton(ImageButton button, int resource) {
+		button.setEnabled(true);
+		button.setFocusable(true);
+		
+		button.setImageResource(resource);
+	}
+	
+	protected void disableImageButton(ImageButton button, int resource) {
+		button.setEnabled(false);
+		button.setFocusable(false);	
+		
+		button.setImageResource(resource);
+	}
+	
 	private void bindHomeButton() {
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
+		
 		homeButton.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				metaMapActivity.loadMetaMapTopic(map.getRoot());
 			}
-
 		});
 	}
 
@@ -108,22 +125,16 @@ public class MetaMapView {
 		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 
-		upLevelButton.setEnabled(true);
-		homeButton.setEnabled(true);
-
-		upLevelButton.setImageResource(R.drawable.up_level_button);
-		homeButton.setImageResource(R.drawable.home_button);
+		enableImageButton(upLevelButton, R.drawable.up_level_button);
+		enableImageButton(homeButton, R.drawable.home_button);
 	}
 
 	private void setButtonsDisabled() {
 		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 
-		upLevelButton.setEnabled(false);
-		homeButton.setEnabled(false);
-
-		upLevelButton.setImageResource(R.drawable.up_level_button_grey);
-		homeButton.setImageResource(R.drawable.home_button_grey);
+		disableImageButton(upLevelButton, R.drawable.up_level_button_grey);
+		disableImageButton(homeButton, R.drawable.home_button_grey);
 	}
 
 	private void bindSwitchViewButton() {

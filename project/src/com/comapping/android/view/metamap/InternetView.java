@@ -41,7 +41,7 @@ public class InternetView extends MetaMapView {
 		
 		// activate synchronize button
 		ImageButton synchronizeButton = (ImageButton) metaMapActivity.findViewById(R.id.synchronizeButton);
-		synchronizeButton.setEnabled(true);
+		enableImageButton(synchronizeButton, R.drawable.reload_metamap_menu_icon);
 	}
 	
 	public String getMapDescription(Topic topic) {
@@ -58,5 +58,13 @@ public class InternetView extends MetaMapView {
 	
 	public void setError(String _error) {
 		error = _error;
+	}
+	
+	public Integer getOptionsMenu() {
+		if (MetaMapActivity.client.isLoggedIn()) {
+			return R.menu.metamap_with_logout_options;
+		} else {
+			return R.menu.metamap_without_logout_options;
+		}
 	}
 }

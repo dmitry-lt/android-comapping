@@ -55,6 +55,6 @@ public class SdcardView extends MetaMapView {
 
 		// deactivate synchronize button
 		ImageButton synchronizeButton = (ImageButton) metaMapActivity.findViewById(R.id.synchronizeButton);
-		synchronizeButton.setEnabled(false);
+		disableImageButton(synchronizeButton, R.drawable.reload_metamap_menu_icon_grey);
 	}
 }
