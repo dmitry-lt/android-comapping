@@ -24,7 +24,7 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".MapActivity">
+		<activity android:name=".MapActivity" android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
 				<action android:name="com.comapping.android.intent.MAP"></action>
 				<category android:name="android.intent.category.DEFAULT"></category>
