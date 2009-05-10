@@ -109,11 +109,27 @@ public class MainMapView extends View {
 		mRender = render;
 		mRender.setScrollController(scrollController);
 	}
+	
+	ImageButton cancel,next, prev;
+	
+	public void showSearchButtins()
+	{
+		cancel.setVisibility(View.VISIBLE);
+		next.setVisibility(View.VISIBLE);
+		prev.setVisibility(View.VISIBLE);
+	}
+	
+	public void setSearchButtons(ImageButton cancel, ImageButton next, ImageButton prev)
+	{
+		this.cancel = cancel;
+		this.next = next;
+		this.prev = prev;
+	}
 
-	private LinearLayout layout;
-	private int findTopic;
-
-	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
+//	private LinearLayout layout;
+//	private int findTopic;
+//
+//	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
 
 //	public void setlayout(LinearLayout layout, ImageButton cancel, ImageButton next, ImageButton previous,
 //			final AutoCompleteTextView text, final ArrayList<Topic> topics) {

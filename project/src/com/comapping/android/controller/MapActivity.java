@@ -65,7 +65,8 @@ public class MapActivity extends Activity {
 						@Override
 						public void onCancel(DialogInterface dialog) {
 							mapProcessingThread.interrupt();
-							mapProcessingThread.setPriority(Thread.MIN_PRIORITY);
+							mapProcessingThread
+									.setPriority(Thread.MIN_PRIORITY);
 							finish();
 						}
 					});
@@ -91,10 +92,12 @@ public class MapActivity extends Activity {
 	private void onError(final String message, final Activity activity) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				Dialog dialog = (new AlertDialog.Builder(activity).setTitle("Error").setMessage(message)
-						.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+				Dialog dialog = (new AlertDialog.Builder(activity).setTitle(
+						"Error").setMessage(message).setNeutralButton("Ok",
+						new DialogInterface.OnClickListener() {
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								activity.finish();
 							}
 						})).create();
@@ -127,7 +130,8 @@ public class MapActivity extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 
-		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
+		final ViewType viewType = ViewType.getViewTypeFromString(extras
+				.getString(EXT_VIEW_TYPE));
 		final String mapId = extras.getString(EXT_MAP_ID);
 		final boolean ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
 
@@ -135,7 +139,6 @@ public class MapActivity extends Activity {
 		currentViewType = viewType;
 
 		final Activity current = this;
-		final Context context = this;
 
 		mapProcessingThread = new Thread() {
 			public void run() {
@@ -146,13 +149,17 @@ public class MapActivity extends Activity {
 						String result = "";
 						try {
 							if (MetaMapActivity.getCurrentMapProvider() instanceof CachingClient) {
-								result = ((CachingClient) MetaMapActivity.getCurrentMapProvider()).getComap(mapId,
-										current, ignoreCache, false);
+								result = ((CachingClient) MetaMapActivity
+										.getCurrentMapProvider()).getComap(
+										mapId, current, ignoreCache, false);
 							} else {
-								result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
+								result = MetaMapActivity
+										.getCurrentMapProvider().getComap(
+												mapId, current);
 							}
 						} catch (InvalidCredentialsException e) {
-							Log.e(Log.MAP_CONTROLLER_TAG, "invalid credentials while map getting");
+							Log.e(Log.MAP_CONTROLLER_TAG,
+									"invalid credentials while map getting");
 							// TODO: ???
 						}
 
@@ -179,32 +186,41 @@ public class MapActivity extends Activity {
 							setContentView(R.layout.map);
 
 							zoom = (ZoomControls) findViewById(R.id.Zoom);
-
+							prev = (ImageButton) findViewById(R.id.previousButton);
+							next = (ImageButton) findViewById(R.id.nextButton);
+							cancel = (ImageButton) findViewById(R.id.cancelButton);
 							Topic topic = map.getRoot();
 							allTopicsTexts(topic);
 							allTopics(topic);
 
 							view = (MainMapView) findViewById(R.id.MapView);
+							view.setSearchButtons(cancel, next, prev);
 							view.setRender(mapRender);
 							view.setZoom(zoom);
 							hideZoom();
 							zoom.setIsZoomInEnabled(false);
-							zoom.setOnZoomInClickListener(new OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									view.setScale(view.getScale() + 0.1f);
-									lastZoomPress = System.currentTimeMillis();
-									view.refresh();
-								}
-							});
-							zoom.setOnZoomOutClickListener(new OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									view.setScale(view.getScale() - 0.1f);
-									lastZoomPress = System.currentTimeMillis();
-									view.refresh();
-								}
-							});
+							zoom
+									.setOnZoomInClickListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											view
+													.setScale(view.getScale() + 0.1f);
+											lastZoomPress = System
+													.currentTimeMillis();
+											view.refresh();
+										}
+									});
+							zoom
+									.setOnZoomOutClickListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											view
+													.setScale(view.getScale() - 0.1f);
+											lastZoomPress = System
+													.currentTimeMillis();
+											view.refresh();
+										}
+									});
 						};
 					});
 
@@ -252,6 +268,9 @@ public class MapActivity extends Activity {
 
 	ZoomControls zoom;
 	MainMapView view;
+	ImageButton prev;
+	ImageButton next;
+	ImageButton cancel;
 
 	public MapRender initMapRender(Map map, ViewType viewType) {
 		switch (viewType) {
@@ -273,7 +292,7 @@ public class MapActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.zoom:
-			//view.isVisible(View.INVISIBLE);
+			// view.isVisible(View.INVISIBLE);
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -282,15 +301,50 @@ public class MapActivity extends Activity {
 			});
 			return true;
 		case R.id.find:
-			//view.setlayout(layout, cancel, next, previous, text, topics);
+			view.showSearchButtins();
+			onSearchRequested();
+			// view.setlayout(layout, cancel, next, previous, text, topics);
 			return true;
 		case R.id.mapSynchronizeButton:
 			finish();
-			MetaMapActivity.getInstance().loadMap(currentMapId, currentViewType, true);
+			MetaMapActivity.getInstance().loadMap(currentMapId,
+					currentViewType, true);
 			return true;
 		}
 		return false;
 	}
+	
+	@Override
+    public boolean onSearchRequested() {
+        // If your application absolutely must disable search, do it here.
+//        if (mMenuMode.getSelectedItemPosition() == MENUMODE_DISABLED) {
+//            return false;
+//        }
+        
+        // It's possible to prefill the query string before launching the search
+        // UI.  For this demo, we simply copy it from the user input field.
+        // For most applications, you can simply pass null to startSearch() to
+        // open the UI with an empty query string.
+        //final String queryPrefill = mQueryPrefill.getText().toString();
+        
+        // Next, set up a bundle to send context-specific search data (if any)
+        // The bundle can contain any number of elements, using any number of keys;
+        // For this Api Demo we copy a string from the user input field, and store
+        // it in the bundle as a string with the key "demo_key".
+        // For most applications, you can simply pass null to startSearch().
+        Bundle appDataBundle = null;
+//        final String queryAppDataString = mQueryAppData.getText().toString();
+//        if (queryAppDataString != null) {
+//            appDataBundle = new Bundle();
+//            appDataBundle.putString("demo_key", queryAppDataString);
+//        }
+        
+        // Now call the Activity member function that invokes the Search Manager UI.
+        startSearch(null, false, null, false); 
+        
+        // Returning true indicates that we did launch the search, instead of blocking it.
+        return true;
+    } 
 
 	ArrayList<String> texts = new ArrayList<String>();
 	ArrayList<Topic> topics = new ArrayList<Topic>();
