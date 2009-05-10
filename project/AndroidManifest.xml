@@ -29,6 +29,12 @@
 				<action android:name="com.comapping.android.intent.MAP"></action>
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable" />
 		</activity>
 
 	</application>

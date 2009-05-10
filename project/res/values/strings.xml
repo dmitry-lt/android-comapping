@@ -19,4 +19,6 @@
 	<string name="proxy_host_title">Proxy host</string>
 	<string name="proxy_port_preference_key">proxyPort</string>
 	<string name="proxy_port_title">Proxy port</string>
+<string name="search_label">Comapping</string>
+<string name="search_hint">Search in the current map</string>
 </resources>
