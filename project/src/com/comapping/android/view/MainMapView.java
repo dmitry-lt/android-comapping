@@ -125,6 +125,10 @@ public class MainMapView extends View {
 		next.setVisibility(View.INVISIBLE);
 		prev.setVisibility(View.INVISIBLE);
 	}
+	
+	
+	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
+	private int selectedSearchResult = 0;
 
 	public void setSearchUI(ImageButton cancel, ImageButton next,
 			ImageButton prev) {
@@ -139,15 +143,37 @@ public class MainMapView extends View {
 			}
 		});
 		
+		this.next.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				selectedSearchResult = (selectedSearchResult + 1) % findTopics.size();
+				
+				if (findTopics.size() > 0)
+					mRender.selectTopic(findTopics.get(selectedSearchResult));
+			}
+		});
+		
+		this.prev.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				selectedSearchResult = (selectedSearchResult + findTopics.size() - 1) % findTopics.size();
+				
+				if (findTopics.size() > 0)
+					mRender.selectTopic(findTopics.get(selectedSearchResult));
+			}
+		});		
+		
 		hideSearchUI();
 	}
 	
-	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
+	
 
 	public void onSearch(ArrayList<Topic> findTopics) {
 		
 		this.findTopics = findTopics;
-		
+		selectedSearchResult = 0;
+		if (findTopics.size() > 0)
+			mRender.selectTopic(findTopics.get(selectedSearchResult));
 		showSearchUI();
 	}
 
