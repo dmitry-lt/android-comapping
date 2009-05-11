@@ -36,19 +36,19 @@ import com.comapping.android.model.Topic;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.storage.MemoryCache;
-import com.comapping.android.view.ComappingRender;
+import com.comapping.android.view.comapping.ComappingRender;
 import com.comapping.android.view.explorer.ExplorerRender;
 import com.comapping.android.view.MainMapView;
 import com.comapping.android.view.MapRender;
 
 public class MapActivity extends Activity {
-	
+
 	private static MapActivity currentActivity = null;
-	public static final MapActivity getCurrentActivity()
-	{
+
+	public static final MapActivity getCurrentActivity() {
 		return currentActivity;
 	}
-	
+
 	public static final String MAP_ACTIVITY_INTENT = "com.comapping.android.intent.MAP";
 
 	public static final String EXT_VIEW_TYPE = "viewType";
@@ -139,14 +139,14 @@ public class MapActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
 			String query = getIntent().getStringExtra(SearchManager.QUERY);
 			currentActivity.setQuery(query);
 			finish();
 			return;
 		}
-		
+
 		currentActivity = this;
 
 		Bundle extras = getIntent().getExtras();
@@ -298,21 +298,18 @@ public class MapActivity extends Activity {
 	ImageButton cancel;
 	String searchQuery = "";
 
-	public void setQuery(String s)
-	{
+	public void setQuery(String s) {
 		searchQuery = s;
-		
-		ArrayList<Topic> searchResult = new ArrayList<Topic>(); 
-		for(Topic i : topics)
-		{
-			if (i.getText().contains(s))
-			{
+
+		ArrayList<Topic> searchResult = new ArrayList<Topic>();
+		for (Topic i : topics) {
+			if (i.getText().contains(s)) {
 				searchResult.add(i);
 			}
 		}
 		view.onSearch(searchResult);
 	}
-	
+
 	public MapRender initMapRender(Map map, ViewType viewType) {
 		switch (viewType) {
 		case EXPLORER_VIEW:
@@ -342,7 +339,7 @@ public class MapActivity extends Activity {
 			});
 			return true;
 		case R.id.find:
-			//view.showSearchButtins();
+			// view.showSearchButtins();
 			onSearchRequested();
 			// view.setlayout(layout, cancel, next, previous, text, topics);
 			return true;

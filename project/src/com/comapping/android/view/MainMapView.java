@@ -14,13 +14,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.ZoomControls;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class MainMapView extends View {
 
@@ -125,8 +121,7 @@ public class MainMapView extends View {
 		next.setVisibility(View.INVISIBLE);
 		prev.setVisibility(View.INVISIBLE);
 	}
-	
-	
+
 	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
 	private int selectedSearchResult = 0;
 
@@ -142,34 +137,35 @@ public class MainMapView extends View {
 				hideSearchUI();
 			}
 		});
-		
+
 		this.next.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectedSearchResult = (selectedSearchResult + 1) % findTopics.size();
-				
+				selectedSearchResult = (selectedSearchResult + 1)
+						% findTopics.size();
+
 				if (findTopics.size() > 0)
 					mRender.selectTopic(findTopics.get(selectedSearchResult));
 			}
 		});
-		
+
 		this.prev.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectedSearchResult = (selectedSearchResult + findTopics.size() - 1) % findTopics.size();
-				
+				selectedSearchResult = (selectedSearchResult
+						+ findTopics.size() - 1)
+						% findTopics.size();
+
 				if (findTopics.size() > 0)
 					mRender.selectTopic(findTopics.get(selectedSearchResult));
 			}
-		});		
-		
+		});
+
 		hideSearchUI();
 	}
-	
-	
 
 	public void onSearch(ArrayList<Topic> findTopics) {
-		
+
 		this.findTopics = findTopics;
 		selectedSearchResult = 0;
 		if (findTopics.size() > 0)
