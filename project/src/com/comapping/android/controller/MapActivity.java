@@ -42,6 +42,13 @@ import com.comapping.android.view.MainMapView;
 import com.comapping.android.view.MapRender;
 
 public class MapActivity extends Activity {
+	
+	private static MapActivity currentActivity = null;
+	public static final MapActivity getCurrentActivity()
+	{
+		return currentActivity;
+	}
+	
 	public static final String MAP_ACTIVITY_INTENT = "com.comapping.android.intent.MAP";
 
 	public static final String EXT_VIEW_TYPE = "viewType";
@@ -132,11 +139,15 @@ public class MapActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
 			String query = getIntent().getStringExtra(SearchManager.QUERY);
-			// return;
+			currentActivity.setQuery(query);
+			finish();
+			return;
 		}
+		
+		currentActivity = this;
 
 		Bundle extras = getIntent().getExtras();
 
@@ -208,7 +219,7 @@ public class MapActivity extends Activity {
 							allTopics(topic);
 
 							view = (MainMapView) findViewById(R.id.MapView);
-							view.setSearchButtons(cancel, next, prev);
+							view.setSearchUI(cancel, next, prev);
 							view.setRender(mapRender);
 							view.setZoom(zoom);
 							hideZoom();
@@ -285,7 +296,14 @@ public class MapActivity extends Activity {
 	ImageButton prev;
 	ImageButton next;
 	ImageButton cancel;
+	String searchQuery = "";
 
+	public void setQuery(String s)
+	{
+		searchQuery = s;
+		view.onSearch(s);
+	}
+	
 	public MapRender initMapRender(Map map, ViewType viewType) {
 		switch (viewType) {
 		case EXPLORER_VIEW:
@@ -315,7 +333,7 @@ public class MapActivity extends Activity {
 			});
 			return true;
 		case R.id.find:
-			view.showSearchButtins();
+			//view.showSearchButtins();
 			onSearchRequested();
 			// view.setlayout(layout, cancel, next, previous, text, topics);
 			return true;

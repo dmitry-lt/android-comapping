@@ -112,19 +112,35 @@ public class MainMapView extends View {
 	
 	ImageButton cancel,next, prev;
 	
-	public void showSearchButtins()
+	public void showSearchUI()
 	{
 		cancel.setVisibility(View.VISIBLE);
 		next.setVisibility(View.VISIBLE);
 		prev.setVisibility(View.VISIBLE);
 	}
 	
-	public void setSearchButtons(ImageButton cancel, ImageButton next, ImageButton prev)
+	public void hideSearchUI()
+	{
+		cancel.setVisibility(View.INVISIBLE);
+		next.setVisibility(View.INVISIBLE);
+		prev.setVisibility(View.INVISIBLE);
+	}
+	
+	public void setSearchUI(ImageButton cancel, ImageButton next, ImageButton prev)
 	{
 		this.cancel = cancel;
 		this.next = next;
 		this.prev = prev;
+		hideSearchUI();
 	}
+	
+	public void onSearch(String text)
+	{
+		showSearchUI();
+		
+	}
+	
+	
 
 //	private LinearLayout layout;
 //	private int findTopic;
