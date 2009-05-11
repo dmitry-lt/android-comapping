@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -65,7 +66,8 @@ public class MapActivity extends Activity {
 						@Override
 						public void onCancel(DialogInterface dialog) {
 							mapProcessingThread.interrupt();
-							mapProcessingThread.setPriority(Thread.MIN_PRIORITY);
+							mapProcessingThread
+									.setPriority(Thread.MIN_PRIORITY);
 							finish();
 						}
 					});
@@ -91,10 +93,12 @@ public class MapActivity extends Activity {
 	private void onError(final String message, final Activity activity) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				Dialog dialog = (new AlertDialog.Builder(activity).setTitle("Error").setMessage(message)
-						.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+				Dialog dialog = (new AlertDialog.Builder(activity).setTitle(
+						"Error").setMessage(message).setNeutralButton("Ok",
+						new DialogInterface.OnClickListener() {
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								activity.finish();
 							}
 						})).create();
@@ -121,15 +125,29 @@ public class MapActivity extends Activity {
 		}
 	}
 
+	static private ViewType viewType;
+	static private String mapId;
+	static private boolean ignoreCache;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
+			String query = getIntent().getStringExtra(SearchManager.QUERY);
+			// return;
+		}
+
 		Bundle extras = getIntent().getExtras();
 
-		final ViewType viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
-		final String mapId = extras.getString(EXT_MAP_ID);
-		final boolean ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
+		try {
+			viewType = ViewType.getViewTypeFromString(extras
+					.getString(EXT_VIEW_TYPE));
+			mapId = extras.getString(EXT_MAP_ID);
+			ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
+		} catch (Exception e) {
+
+		}
 
 		currentMapId = mapId;
 		currentViewType = viewType;
@@ -145,13 +163,17 @@ public class MapActivity extends Activity {
 						String result = "";
 						try {
 							if (MetaMapActivity.getCurrentMapProvider() instanceof CachingClient) {
-								result = ((CachingClient) MetaMapActivity.getCurrentMapProvider()).getComap(mapId,
-										current, ignoreCache, false);
+								result = ((CachingClient) MetaMapActivity
+										.getCurrentMapProvider()).getComap(
+										mapId, current, ignoreCache, false);
 							} else {
-								result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
+								result = MetaMapActivity
+										.getCurrentMapProvider().getComap(
+												mapId, current);
 							}
 						} catch (InvalidCredentialsException e) {
-							Log.e(Log.MAP_CONTROLLER_TAG, "invalid credentials while map getting");
+							Log.e(Log.MAP_CONTROLLER_TAG,
+									"invalid credentials while map getting");
 							// TODO: ???
 						}
 
@@ -191,22 +213,28 @@ public class MapActivity extends Activity {
 							view.setZoom(zoom);
 							hideZoom();
 							zoom.setIsZoomInEnabled(false);
-							zoom.setOnZoomInClickListener(new OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									view.setScale(view.getScale() + 0.1f);
-									lastZoomPress = System.currentTimeMillis();
-									view.refresh();
-								}
-							});
-							zoom.setOnZoomOutClickListener(new OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									view.setScale(view.getScale() - 0.1f);
-									lastZoomPress = System.currentTimeMillis();
-									view.refresh();
-								}
-							});
+							zoom
+									.setOnZoomInClickListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											view
+													.setScale(view.getScale() + 0.1f);
+											lastZoomPress = System
+													.currentTimeMillis();
+											view.refresh();
+										}
+									});
+							zoom
+									.setOnZoomOutClickListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											view
+													.setScale(view.getScale() - 0.1f);
+											lastZoomPress = System
+													.currentTimeMillis();
+											view.refresh();
+										}
+									});
 						};
 					});
 
@@ -293,7 +321,8 @@ public class MapActivity extends Activity {
 			return true;
 		case R.id.mapSynchronizeButton:
 			finish();
-			MetaMapActivity.getInstance().loadMap(currentMapId, currentViewType, true);
+			MetaMapActivity.getInstance().loadMap(currentMapId,
+					currentViewType, true);
 			return true;
 		}
 		return false;
