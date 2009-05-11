@@ -301,7 +301,16 @@ public class MapActivity extends Activity {
 	public void setQuery(String s)
 	{
 		searchQuery = s;
-		view.onSearch(s);
+		
+		ArrayList<Topic> searchResult = new ArrayList<Topic>(); 
+		for(Topic i : topics)
+		{
+			if (i.getText().contains(s))
+			{
+				searchResult.add(i);
+			}
+		}
+		view.onSearch(searchResult);
 	}
 	
 	public MapRender initMapRender(Map map, ViewType viewType) {

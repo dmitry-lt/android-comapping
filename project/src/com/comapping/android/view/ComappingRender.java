@@ -1146,11 +1146,13 @@ public class ComappingRender extends MapRender {
 
 	@Override
 	public void selectTopic(Topic topic) {
-		for (int i = 0; i <  items.size() ; i++) {
-			if (items.get(i).render.getTopic().equals(topic)) {
-				focusTopic(items.get(i));
+		for(Item i : items)
+		{
+			if (i.render.getTopic() == topic)
+			{
+				focusTopic(i);
+				break;
 			}
 		}
-
 	}
 }
