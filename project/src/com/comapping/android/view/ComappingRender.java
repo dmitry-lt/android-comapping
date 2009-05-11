@@ -28,8 +28,8 @@
  * This rectangle is render zone.
  * Left upper corner is (0,0)
  * 
- * Render zone width is Item.getRenderZoneWidth(), but must be changed
- * Render zone height is Item.getRenderZoneHeight()
+ * Render zone width is TopicView.getRenderZoneWidth(), but must be changed
+ * Render zone height is TopicView.getRenderZoneHeight()
  */
 package com.comapping.android.view;
 
@@ -51,6 +51,7 @@ public class ComappingRender extends MapRender {
 
 	private static final String DEBUG_TAG = "ComappingRender";
 	private static final int LINE_COLOR = Color.GRAY;
+	private static final int TEXT_WIDTH = 300;
 
 	/**
 	 * Container for Topic's whith some helpful functions for drawing,
@@ -59,25 +60,25 @@ public class ComappingRender extends MapRender {
 	 * @author Korshakov Stepan
 	 * 
 	 */
-	private class Item {
+	private class TopicView {
 
 		private static final int HORIZONTAL_BORDER_SIZE = 10;
 
 		/* ------- Navigation data ------- */
-		public Item up = null;
-		public Item down = null;
-		public Item left = null;
-		public Item right = null;
+		public TopicView up = null;
+		public TopicView down = null;
+		public TopicView left = null;
+		public TopicView right = null;
 
 		/* ---------- Tree data ---------- */
 
-		public Item[] children;
-		public Item parent = null;
+		public TopicView[] children;
+		public TopicView parent = null;
 
 		/* ----- Comapping tree data ----- */
 		public Topic topicData;
 
-		/* --------- Item state ---------- */
+		/* --------- TopicView state ---------- */
 		private boolean childrenVisible = true;
 
 		/* ------ Rendering helpers ------ */
@@ -97,15 +98,15 @@ public class ComappingRender extends MapRender {
 		private boolean visible = true;
 
 		/**
-		 * Constructor of Render Item
+		 * Constructor of Render TopicView
 		 * 
 		 * @param topic
 		 *            Topic for container
 		 */
-		public Item(Topic topic) {
+		public TopicView(Topic topic) {
 			topicData = topic;
 			render = new TopicRender(topicData, context);
-			render.setMaxWidth(300);
+			render.setMaxWidth(TEXT_WIDTH);
 			plusMinusIcon = new PlusMinusRender(!childrenVisible);
 
 			p.setColor(LINE_COLOR);
@@ -120,6 +121,10 @@ public class ComappingRender extends MapRender {
 		 *            true - show children, false - hide children
 		 */
 		public void setChildrenVisible(boolean isVisible) {
+			
+			if (childrenVisible == isVisible)
+				return;
+			
 			childrenVisible = isVisible;
 			plusMinusIcon.isPlus = !childrenVisible;
 			setVisible(isVisible);
@@ -138,10 +143,17 @@ public class ComappingRender extends MapRender {
 		public boolean isVisible() {
 			return visible;
 		}
+		
+		public void show()
+		{
+			setChildrenVisible(true);
+			if (parent != null)
+				parent.show();
+		}
 
 		private void setVisible(boolean _visible) {
 			visible = _visible;
-			for (Item i : children)
+			for (TopicView i : children)
 				i.setVisible(_visible);
 		}
 
@@ -184,9 +196,9 @@ public class ComappingRender extends MapRender {
 		 * Checks if point is over button
 		 * 
 		 * @param x
-		 *            x-coord of point in Item coordinate system
+		 *            x-coord of point in TopicView coordinate system
 		 * @param y
-		 *            y-coord of point in Item coordinate system
+		 *            y-coord of point in TopicView coordinate system
 		 * @return if point is over button
 		 */
 		public boolean isOverButton(int x, int y) {
@@ -202,9 +214,9 @@ public class ComappingRender extends MapRender {
 		 * Checks if point is over topic
 		 * 
 		 * @param x
-		 *            x-coord of point in Item coordinate system
+		 *            x-coord of point in TopicView coordinate system
 		 * @param y
-		 *            y-coord of point in Item coordinate system
+		 *            y-coord of point in TopicView coordinate system
 		 * @return if point is over topic
 		 */
 		public boolean isOverTopic(int x, int y) {
@@ -245,7 +257,7 @@ public class ComappingRender extends MapRender {
 		}
 
 		/**
-		 * Returns vertical offset from (0,0) (in Item coord system) to draw
+		 * Returns vertical offset from (0,0) (in TopicView coord system) to draw
 		 * topic centered in render zone
 		 * 
 		 * @return
@@ -287,7 +299,7 @@ public class ComappingRender extends MapRender {
 			if (lazyRenderZoneHeight == -1) {
 				int w = 0;
 				if (childrenVisible)
-					for (Item i : children) {
+					for (TopicView i : children) {
 						w += i.getRenderZoneHeight();
 					}
 				lazyRenderZoneHeight = Math.max(w, getTopicHeight());
@@ -304,7 +316,7 @@ public class ComappingRender extends MapRender {
 			if (lazyTreeWidth == -1) {
 				int w = 0;
 				if (childrenVisible)
-					for (Item i : children) {
+					for (TopicView i : children) {
 						w = Math.max(i.getTreeWidth(), w);
 					}
 				lazyTreeWidth = this.getRenderZoneWidth() + w;
@@ -315,11 +327,11 @@ public class ComappingRender extends MapRender {
 		/* ---------- Global positions code ---------- */
 
 		/**
-		 * Calculates absolute positions of Item
+		 * Calculates absolute positions of TopicView
 		 */
 		private void calcRenderZonePositions() {
 
-			// TODO: Must to do it in parent Item. Work time - O(n^2). Must be
+			// TODO: Must to do it in parent TopicView. Work time - O(n^2). Must be
 			// O(n).
 
 			if (parent == null) {
@@ -332,7 +344,7 @@ public class ComappingRender extends MapRender {
 			int baseY = this.parent.getRenderZoneY();
 			int dataLen = this.parent.getRenderZoneWidth();
 			int vertOffset = 0;
-			for (Item i : this.parent.children) {
+			for (TopicView i : this.parent.children) {
 
 				if (i == this) {
 					lazyAbsoluteX = baseX + dataLen;
@@ -409,7 +421,7 @@ public class ComappingRender extends MapRender {
 		/* ---------- Misc code ---------- */
 
 		/**
-		 * Returns index in parent.children array of this Item
+		 * Returns index in parent.children array of this TopicView
 		 * 
 		 * @return index in parent.children array
 		 */
@@ -419,7 +431,7 @@ public class ComappingRender extends MapRender {
 
 			// May be I should add buffering?
 			int index = -1;
-			ComappingRender.Item[] parentChildren = parent.children;
+			ComappingRender.TopicView[] parentChildren = parent.children;
 			for (int i = 0; i < parentChildren.length; i++) {
 				if (parentChildren[i] == selected) {
 					index = i;
@@ -453,16 +465,16 @@ public class ComappingRender extends MapRender {
 	private int xOffset = 0, yOffset = 0;
 
 	// Tree root
-	private Item root = null;
+	private TopicView root = null;
 
-	// Selected Item
-	private Item selected = null;
+	// Selected TopicView
+	private TopicView selected = null;
 
 	// Controller of scrolling
 	private ScrollController scrollController = null;
 	
 	//All items
-	private ArrayList<Item> items = new ArrayList<Item>();
+	private ArrayList<TopicView> items = new ArrayList<TopicView>();
 
 	// Execution context
 	private Context context;
@@ -489,9 +501,9 @@ public class ComappingRender extends MapRender {
 	 *            Parent item (null for root elements)
 	 * @return Tree or subtree
 	 */
-	private Item buildTree(Topic itm, Item parent) {
-		Item res = new Item(itm);
-		res.children = new Item[itm.getChildrenCount()];
+	private TopicView buildTree(Topic itm, TopicView parent) {
+		TopicView res = new TopicView(itm);
+		res.children = new TopicView[itm.getChildrenCount()];
 		res.parent = parent;
 		items.add(res);
 		int index = 0;
@@ -502,21 +514,21 @@ public class ComappingRender extends MapRender {
 	}
 	
 	/**
-	 * Checks is Item is on screen. (MUST BE CHANGED FOR BETTER DESIGN)
+	 * Checks is TopicView is on screen. (MUST BE CHANGED FOR BETTER DESIGN)
 	 * 
 	 * @param x
 	 *            Offset to x0 (Remove this)
 	 * @param y
 	 *            Offset to y0 (Remove this)
 	 * @param itm
-	 *            Item for checking
+	 *            TopicView for checking
 	 * @param width
 	 *            Screen width (Remove this)
 	 * @param height
 	 *            Screen height (Remove this)
 	 * @return
 	 */
-	private boolean isOnScreen(int x, int y, Item itm, int width, int height) {
+	private boolean isOnScreen(int x, int y, TopicView itm, int width, int height) {
 		y += itm.getTopicOffset();
 		if (x + itm.getTopicWidth() < 0)
 			return false;
@@ -534,14 +546,14 @@ public class ComappingRender extends MapRender {
 	}
 
 	/**
-	 * Draws Item and it's children (MUST BE CHANGED FOR BETTER DESIGN)
+	 * Draws TopicView and it's children (MUST BE CHANGED FOR BETTER DESIGN)
 	 * 
 	 * @param baseX
 	 *            basic x-offset for drawing
 	 * @param baseY
 	 *            basic y-offset for drawing
 	 * @param itm
-	 *            Item to draw
+	 *            TopicView to draw
 	 * @param width
 	 *            Screen width (Remove this)
 	 * @param height
@@ -549,7 +561,7 @@ public class ComappingRender extends MapRender {
 	 * @param c
 	 *            Canvas to drawing
 	 */
-	private void draw(int baseX, int baseY, Item itm, int width, int height,
+	private void draw(int baseX, int baseY, TopicView itm, int width, int height,
 			Canvas c) {
 
 		if (isOnScreen(baseX, baseY, itm, width, height)) {
@@ -562,7 +574,7 @@ public class ComappingRender extends MapRender {
 			int dataLen = itm.getTopicWidth();
 
 			int vertOffset = 0;
-			for (Item i : itm.children) {
+			for (TopicView i : itm.children) {
 				draw(baseX + dataLen, baseY + vertOffset, i, width, height, c);
 				vertOffset += i.getRenderZoneHeight();
 			}
@@ -571,8 +583,8 @@ public class ComappingRender extends MapRender {
 				Paint p = new Paint();
 				p.setColor(LINE_COLOR);
 
-				Item first = itm.children[0];
-				Item last = itm.children[itm.children.length - 1];
+				TopicView first = itm.children[0];
+				TopicView last = itm.children[itm.children.length - 1];
 
 				// Calculating offset for last child
 				vertOffset -= last.getRenderZoneHeight();
@@ -590,13 +602,13 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
-	private void initTree(Item itm) {
+	private void initTree(TopicView itm) {
 		if (itm.getRenderZoneX() + itm.getRenderZoneWidth() > renderZoneWidth) {
 			setChildrenVisible(itm, false);
 		} else {
 			setChildrenVisible(itm, true);
 		}
-		for (Item i : itm.children)
+		for (TopicView i : itm.children)
 			initTree(i);
 	}
 
@@ -661,14 +673,14 @@ public class ComappingRender extends MapRender {
 	 * @param baseY
 	 *            basic y-offset (remove it)
 	 * @param itm
-	 *            Item to check
+	 *            TopicView to check
 	 * @param destX
 	 *            destination x-coord
 	 * @param destY
 	 *            destination y-coord
 	 * @return if captured
 	 */
-	private boolean onTouch(int baseX, int baseY, Item itm, int destX, int destY) {
+	private boolean onTouch(int baseX, int baseY, TopicView itm, int destX, int destY) {
 		int yStart = itm.getTopicOffset() + baseY;
 		int xStart = baseX;
 
@@ -690,7 +702,7 @@ public class ComappingRender extends MapRender {
 			int dataLen = itm.getTopicWidth();
 
 			int vertOffset = 0;
-			for (Item i : itm.children) {
+			for (TopicView i : itm.children) {
 
 				if (onTouch(baseX + dataLen, baseY + vertOffset, i, destX,
 						destY))
@@ -721,12 +733,13 @@ public class ComappingRender extends MapRender {
 	 * Selecting topic
 	 * 
 	 * @param topic
-	 *            Item to select
+	 *            TopicView to select
 	 */
-	private final void selectTopic(Item topic) {
+	private final void selectTopic(TopicView topic) {
 		if (selected != null)
 			selected.render.setSelected(false);
 
+		topic.show();
 		topic.render.setSelected(true);
 		selected = topic;
 	}
@@ -735,9 +748,9 @@ public class ComappingRender extends MapRender {
 	 * Focusing on topic
 	 * 
 	 * @param topic
-	 *            Item to focus on
+	 *            TopicView to focus on
 	 */
-	private final void focusTopic(Item topic) {
+	private final void focusTopic(TopicView topic) {
 
 		selectTopic(topic);
 
@@ -798,7 +811,7 @@ public class ComappingRender extends MapRender {
 		scrollController.intermediateScroll(dx, dy);
 	}
 
-	private final void setChildrenVisible(Item topic, boolean isVisible) {
+	private final void setChildrenVisible(TopicView topic, boolean isVisible) {
 		int deltaY = topic.getRenderZoneY() + topic.getTopicOffset()
 				+ getVertOffset() - yOffset;
 
@@ -821,9 +834,9 @@ public class ComappingRender extends MapRender {
 	 * Show/Hide chldren
 	 * 
 	 * @param topic
-	 *            Parent Item
+	 *            Parent TopicView
 	 */
-	private final void changeChildVisibleStatus(Item topic) {
+	private final void changeChildVisibleStatus(TopicView topic) {
 
 		setChildrenVisible(topic, !topic.isChildrenVisible());
 	}
@@ -832,14 +845,14 @@ public class ComappingRender extends MapRender {
 	 * D-Pad functions.
 	 */
 
-	ArrayList<Item> searchResult = new ArrayList<Item>();
+	ArrayList<TopicView> searchResult = new ArrayList<TopicView>();
 
-	void search(Item parent, Rect zone) {
+	void search(TopicView parent, Rect zone) {
 		if (Rect.intersects(zone, parent.getTopicRectangle()))
 			searchResult.add(parent);
 
 		if (parent.isChildrenVisible())
-			for (Item i : parent.children)
+			for (TopicView i : parent.children)
 				search(i, zone);
 	}
 
@@ -885,7 +898,7 @@ public class ComappingRender extends MapRender {
 
 	private static final int SEARCH_EPS = 5;
 
-	Item searchUp(Item src) {
+	TopicView searchUp(TopicView src) {
 		searchResult.clear();
 		Rect zone = src.getTopicRectangle();
 		zone.bottom = zone.top;
@@ -896,10 +909,10 @@ public class ComappingRender extends MapRender {
 		if (searchResult.size() == 0)
 			return null;
 		else {
-			Item res = null;
+			TopicView res = null;
 			int maxY = searchResult.get(0).getUnderlineOffset()
 					+ searchResult.get(0).getRenderZoneY();
-			for (Item i : searchResult) {
+			for (TopicView i : searchResult) {
 				int offset_i = i.getUnderlineOffset() + i.getRenderZoneY();
 
 				if (maxY < offset_i)
@@ -933,7 +946,7 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
-	Item searchDown(Item src) {
+	TopicView searchDown(TopicView src) {
 		searchResult.clear();
 		Rect zone = src.getTopicRectangle();
 		zone.top = zone.bottom + 1;
@@ -944,10 +957,10 @@ public class ComappingRender extends MapRender {
 		if (searchResult.size() == 0)
 			return null;
 		else {
-			Item res = null;
+			TopicView res = null;
 			int minY = searchResult.get(0).getUnderlineOffset()
 					+ searchResult.get(0).getRenderZoneY();
-			for (Item i : searchResult) {
+			for (TopicView i : searchResult) {
 
 				int offset_i = i.getUnderlineOffset() + i.getRenderZoneY();
 
@@ -1014,7 +1027,7 @@ public class ComappingRender extends MapRender {
 			focusTopic(selected.parent.children[index - 1]);
 		} else {
 
-			Item itm = searchUp(selected);
+			TopicView itm = searchUp(selected);
 			if (itm != null) {
 				itm.down = selected;
 				focusTopic(itm);
@@ -1039,7 +1052,7 @@ public class ComappingRender extends MapRender {
 			return;
 
 		int index = selected.getIndex();
-		ComappingRender.Item[] parentChilds = selected.parent.children;
+		ComappingRender.TopicView[] parentChilds = selected.parent.children;
 
 		if (index == -1) {
 			Log.e(DEBUG_TAG, "Danger! Seems to be broken tree!");
@@ -1052,7 +1065,7 @@ public class ComappingRender extends MapRender {
 			focusTopic(parentChilds[index + 1]);
 		} else {
 
-			Item itm = searchDown(selected);
+			TopicView itm = searchDown(selected);
 			if (itm != null) {
 				itm.up = selected;
 				focusTopic(itm);
@@ -1146,7 +1159,7 @@ public class ComappingRender extends MapRender {
 
 	@Override
 	public void selectTopic(Topic topic) {
-		for(Item i : items)
+		for(TopicView i : items)
 		{
 			if (i.render.getTopic() == topic)
 			{
