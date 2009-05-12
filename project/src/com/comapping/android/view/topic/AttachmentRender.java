@@ -18,7 +18,7 @@ import com.comapping.android.communication.Client;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
-import com.comapping.android.model.Attachment;
+import com.comapping.android.model.map.Attachment;
 import com.comapping.android.storage.Storage;
 import com.comapping.android.view.Render;
 

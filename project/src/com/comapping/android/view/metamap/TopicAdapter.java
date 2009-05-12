@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
-import com.comapping.android.model.Topic;
+import com.comapping.android.model.map.Topic;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

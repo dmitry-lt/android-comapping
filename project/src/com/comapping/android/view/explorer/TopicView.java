@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.comapping.android.model.Topic;
+import com.comapping.android.model.map.Topic;
 import com.comapping.android.view.topic.TopicRender;
 
 public class TopicView implements Comparable<TopicView> {

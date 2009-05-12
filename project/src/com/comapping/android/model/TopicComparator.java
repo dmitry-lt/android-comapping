@@ -2,6 +2,8 @@ package com.comapping.android.model;
 
 import java.util.Comparator;
 
+import com.comapping.android.model.map.Topic;
+
 public class TopicComparator implements Comparator<Topic> {
 
 	@Override

@@ -4,7 +4,7 @@
  * @author Yuri Zemlyanskiy
  * 
  */
-package com.comapping.android.model;
+package com.comapping.android.model.map.builder;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -16,10 +16,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.DocumentBuilder;
 import com.comapping.android.model.exceptions.DateParsingException;
 import com.comapping.android.model.exceptions.EnumParsingException;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.model.map.Attachment;
+import com.comapping.android.model.map.Flag;
+import com.comapping.android.model.map.Icon;
+import com.comapping.android.model.map.Map;
+import com.comapping.android.model.map.Smiley;
+import com.comapping.android.model.map.Task;
+import com.comapping.android.model.map.TaskCompletion;
+import com.comapping.android.model.map.Topic;
+import com.comapping.android.model.map.User;
 
 public class DomMapBuilder extends MapBuilder {
 	/**

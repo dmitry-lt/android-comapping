@@ -1,9 +1,9 @@
 package com.comapping.android.view.topic;
 
 import com.comapping.android.Log;
-import com.comapping.android.model.FormattedText;
-import com.comapping.android.model.Task;
-import com.comapping.android.model.TextFormat;
+import com.comapping.android.model.map.Task;
+import com.comapping.android.model.text.FormattedText;
+import com.comapping.android.model.text.TextFormat;
 import com.comapping.android.view.Render;
 
 import android.app.AlertDialog;

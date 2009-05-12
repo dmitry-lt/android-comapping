@@ -1,4 +1,4 @@
-package com.comapping.android.model;
+package com.comapping.android.model.map.builder;
 
 import java.util.Date;
 
@@ -9,6 +9,15 @@ import org.xml.sax.SAXException;
 import com.comapping.android.Log;
 import com.comapping.android.model.exceptions.EnumParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.model.map.Attachment;
+import com.comapping.android.model.map.Flag;
+import com.comapping.android.model.map.Icon;
+import com.comapping.android.model.map.Map;
+import com.comapping.android.model.map.Smiley;
+import com.comapping.android.model.map.Task;
+import com.comapping.android.model.map.TaskCompletion;
+import com.comapping.android.model.map.Topic;
+import com.comapping.android.model.map.User;
 
 import android.sax.Element;
 import android.sax.EndElementListener;

@@ -1,4 +1,4 @@
-package com.comapping.android.model;
+package com.comapping.android.model.text;
 
 import java.io.Serializable;
 

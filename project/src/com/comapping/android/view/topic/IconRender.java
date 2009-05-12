@@ -3,8 +3,8 @@ package com.comapping.android.view.topic;
 import com.comapping.android.Log;
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
-import com.comapping.android.model.Icon;
-import com.comapping.android.model.Topic;
+import com.comapping.android.model.map.Icon;
+import com.comapping.android.model.map.Topic;
 import com.comapping.android.view.Render;
 
 import android.content.res.Resources;

@@ -1,4 +1,4 @@
-package com.comapping.android.model;
+package com.comapping.android.model.text.builder;
 
 import java.util.EmptyStackException;
 import java.util.NoSuchElementException;
@@ -11,6 +11,10 @@ import org.xml.sax.helpers.DefaultHandler;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.text.FormattedText;
+import com.comapping.android.model.text.TextBlock;
+import com.comapping.android.model.text.TextFormat;
+import com.comapping.android.model.text.TextParagraph;
 
 public class FormattedTextSaxHandler extends DefaultHandler {
 

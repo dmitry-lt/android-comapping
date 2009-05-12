@@ -1,4 +1,4 @@
-package com.comapping.android.model;
+package com.comapping.android.model.map;
 
 import com.comapping.android.model.exceptions.EnumParsingException;
 

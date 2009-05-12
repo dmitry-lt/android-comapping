@@ -1,4 +1,4 @@
-package com.comapping.android.model;
+package com.comapping.android.model.map;
 
 import java.io.Serializable;
 import java.util.Date;

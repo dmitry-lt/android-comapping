@@ -6,8 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
-import com.comapping.android.model.FormattedText;
-import com.comapping.android.model.TextFormat;
+import com.comapping.android.model.text.FormattedText;
+import com.comapping.android.model.text.TextFormat;
 import com.comapping.android.view.Render;
 
 public class NoteRender extends Render {

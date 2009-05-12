@@ -1,4 +1,4 @@
-package com.comapping.android.model;
+package com.comapping.android.model.text.builder;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -14,6 +14,8 @@ import org.xml.sax.SAXException;
 import com.comapping.android.Log;
 import com.comapping.android.model.exceptions.DocumentBuilderCreatingError;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.model.text.FormattedText;
+import com.comapping.android.model.text.TextFormat;
 
 public class FormattedTextSaxBuilder {
 

@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.comapping.android.model.Topic;
+import com.comapping.android.model.map.Topic;
 import com.comapping.android.view.PlusMinusRender;
 import com.comapping.android.view.topic.TopicRender;
 

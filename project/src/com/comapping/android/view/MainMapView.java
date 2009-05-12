@@ -3,7 +3,7 @@ package com.comapping.android.view;
 import java.util.ArrayList;
 
 import com.comapping.android.Options;
-import com.comapping.android.model.Topic;
+import com.comapping.android.model.map.Topic;
 
 import android.content.Context;
 import android.graphics.Canvas;

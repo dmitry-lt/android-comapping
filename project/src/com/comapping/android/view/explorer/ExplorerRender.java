@@ -2,8 +2,8 @@ package com.comapping.android.view.explorer;
 
 import java.util.ArrayList;
 
-import com.comapping.android.model.Map;
-import com.comapping.android.model.Topic;
+import com.comapping.android.model.map.Map;
+import com.comapping.android.model.map.Topic;
 import com.comapping.android.view.MapRender;
 import com.comapping.android.view.PlusMinusRender;
 import com.comapping.android.view.ScrollController;

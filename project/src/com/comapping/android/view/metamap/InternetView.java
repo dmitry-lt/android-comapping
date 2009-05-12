@@ -7,8 +7,8 @@ import android.widget.ImageButton;
 
 import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
-import com.comapping.android.model.Map;
-import com.comapping.android.model.Topic;
+import com.comapping.android.model.map.Map;
+import com.comapping.android.model.map.Topic;
 
 public class InternetView extends MetaMapView {
 	public static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open sdcard view";

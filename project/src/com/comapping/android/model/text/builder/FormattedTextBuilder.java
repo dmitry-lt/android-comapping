@@ -1,4 +1,4 @@
-package com.comapping.android.model;
+package com.comapping.android.model.text.builder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,12 @@ import org.w3c.dom.NodeList;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
+import com.comapping.android.model.DocumentBuilder;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.model.text.FormattedText;
+import com.comapping.android.model.text.TextBlock;
+import com.comapping.android.model.text.TextFormat;
+import com.comapping.android.model.text.TextParagraph;
 
 public class FormattedTextBuilder {
 	private static final String PARAGRAPH_TAG = "P";
