@@ -5,10 +5,11 @@
 		android:id="@+id/MapView" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
 	<ZoomControls android:id="@+id/Zoom" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_alignBottom="@+id/MapView" android:layout_centerHorizontal="true"></ZoomControls>
-	<LinearLayout android:id="@+id/FindView" android:orientation="horizontal"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_alignBottom="@+id/MapView">
+		android:layout_height="wrap_content" android:layout_alignBottom="@+id/MapView"
+		android:layout_centerHorizontal="true"></ZoomControls>
+	<LinearLayout android:id="@+id/FindView"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_alignBottom="@+id/MapView" android:background="#AAAAAAAA">
 		<ImageButton android:id="@+id/cancelButton"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:src="@drawable/deletebutton"></ImageButton>
@@ -17,6 +18,10 @@
 			android:src="@drawable/previous_button"></ImageButton>
 		<ImageButton android:id="@+id/nextButton"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:src="@drawable/nextbutton" android:clickable="true"></ImageButton>
+			android:src="@drawable/nextbutton" android:clickable="true">
+		</ImageButton>
+		<TextView android:id="@+id/query" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="SearchQuery" android:textSize="15px" android:textColor="#FF000000">
+		</TextView>
 	</LinearLayout>
 </RelativeLayout>

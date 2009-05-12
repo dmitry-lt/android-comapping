@@ -15,7 +15,9 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Scroller;
+import android.widget.TextView;
 import android.widget.ZoomControls;
 
 public class MainMapView extends View {
@@ -31,7 +33,7 @@ public class MainMapView extends View {
 	// Scrollbar constants
 	private static final int SCROLLBAR_WIDTH = 4;
 	private static final int SCROLLBAR_LINE_LEN = 15;
-
+	
 	// Drawing variables
 	public MapRender mRender;
 	public Scroller mScroller;
@@ -109,27 +111,36 @@ public class MainMapView extends View {
 	}
 
 	ImageButton cancel, next, prev;
+	TextView queryLabel;
+	String query;
+	LinearLayout findLayout;
 
 	public void showSearchUI() {
-		cancel.setVisibility(View.VISIBLE);
-		next.setVisibility(View.VISIBLE);
-		prev.setVisibility(View.VISIBLE);
+		findLayout.setVisibility(View.VISIBLE);
+		// cancel.setVisibility(View.VISIBLE);
+		// next.setVisibility(View.VISIBLE);
+		// prev.setVisibility(View.VISIBLE);
+		// queryLabel.setVisibility(View.VISIBLE);
 	}
 
 	public void hideSearchUI() {
-		cancel.setVisibility(View.INVISIBLE);
-		next.setVisibility(View.INVISIBLE);
-		prev.setVisibility(View.INVISIBLE);
+		findLayout.setVisibility(View.INVISIBLE);
+		// cancel.setVisibility(View.INVISIBLE);
+		// next.setVisibility(View.INVISIBLE);
+		// prev.setVisibility(View.INVISIBLE);
+		// queryLabel.setVisibility(View.INVISIBLE);
 	}
 
 	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
 	private int selectedSearchResult = 0;
 
-	public void setSearchUI(ImageButton cancel, ImageButton next,
-			ImageButton prev) {
+	public void setSearchUI(LinearLayout findLayout, ImageButton cancel,
+			ImageButton next, ImageButton prev, TextView queryLabel) {
 		this.cancel = cancel;
 		this.next = next;
 		this.prev = prev;
+		this.queryLabel = queryLabel;
+		this.findLayout = findLayout;
 
 		this.cancel.setOnClickListener(new OnClickListener() {
 			@Override
@@ -146,6 +157,8 @@ public class MainMapView extends View {
 
 				if (findTopics.size() > 0)
 					mRender.selectTopic(findTopics.get(selectedSearchResult));
+
+				updateLabel();
 			}
 		});
 
@@ -158,19 +171,41 @@ public class MainMapView extends View {
 
 				if (findTopics.size() > 0)
 					mRender.selectTopic(findTopics.get(selectedSearchResult));
+
+				updateLabel();
 			}
 		});
 
 		hideSearchUI();
 	}
 
-	public void onSearch(ArrayList<Topic> findTopics) {
+	public void onSearch(ArrayList<Topic> findTopics, String query) {
 
 		this.findTopics = findTopics;
+		this.query = query;
 		selectedSearchResult = 0;
-		if (findTopics.size() > 0)
+		if (findTopics.size() > 0) {
+			next.setEnabled(true);
+			prev.setEnabled(true);
 			mRender.selectTopic(findTopics.get(selectedSearchResult));
+		} else {
+			next.setEnabled(false);
+			prev.setEnabled(false);
+		}
+		updateLabel();
 		showSearchUI();
+	}
+
+	private void updateLabel() {
+		if (findTopics.size() > 0) {
+			queryLabel.setText((selectedSearchResult + 1) + "\\"
+					+ findTopics.size() + "\n" + query);
+		}
+		else
+		{
+			queryLabel.setText("Nothing founded!");
+		}
+			
 	}
 
 	// private LinearLayout layout;

@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.ZoomControls;
 
 import com.comapping.android.Log;
@@ -214,12 +215,16 @@ public class MapActivity extends Activity {
 							prev = (ImageButton) findViewById(R.id.previousButton);
 							next = (ImageButton) findViewById(R.id.nextButton);
 							cancel = (ImageButton) findViewById(R.id.cancelButton);
+							queryTextView =  (TextView) findViewById(R.id.query);
+							
+							LinearLayout findLayout =  (LinearLayout) findViewById(R.id.FindView);
+							
 							Topic topic = map.getRoot();
 							allTopicsTexts(topic);
 							allTopics(topic);
 
 							view = (MainMapView) findViewById(R.id.MapView);
-							view.setSearchUI(cancel, next, prev);
+							view.setSearchUI(findLayout, cancel, next, prev, queryTextView);
 							view.setRender(mapRender);
 							view.setZoom(zoom);
 							hideZoom();
@@ -296,18 +301,19 @@ public class MapActivity extends Activity {
 	ImageButton prev;
 	ImageButton next;
 	ImageButton cancel;
+	TextView queryTextView;
 	String searchQuery = "";
 
 	public void setQuery(String s) {
-		searchQuery = s;
+		searchQuery = s.toLowerCase();
 
 		ArrayList<Topic> searchResult = new ArrayList<Topic>();
 		for (Topic i : topics) {
-			if (i.getText().contains(s)) {
+			if (i.getText().toLowerCase().contains(searchQuery)) {
 				searchResult.add(i);
 			}
 		}
-		view.onSearch(searchResult);
+		view.onSearch(searchResult, s);
 	}
 
 	public MapRender initMapRender(Map map, ViewType viewType) {
@@ -352,41 +358,41 @@ public class MapActivity extends Activity {
 		return false;
 	}
 
-	@Override
-	public boolean onSearchRequested() {
-		// If your application absolutely must disable search, do it here.
-		// if (mMenuMode.getSelectedItemPosition() == MENUMODE_DISABLED) {
-		// return false;
-		// }
-
-		// It's possible to prefill the query string before launching the search
-		// UI. For this demo, we simply copy it from the user input field.
-		// For most applications, you can simply pass null to startSearch() to
-		// open the UI with an empty query string.
-		// final String queryPrefill = mQueryPrefill.getText().toString();
-
-		// Next, set up a bundle to send context-specific search data (if any)
-		// The bundle can contain any number of elements, using any number of
-		// keys;
-		// For this Api Demo we copy a string from the user input field, and
-		// store
-		// it in the bundle as a string with the key "demo_key".
-		// For most applications, you can simply pass null to startSearch().
-		Bundle appDataBundle = null;
-		// final String queryAppDataString = mQueryAppData.getText().toString();
-		// if (queryAppDataString != null) {
-		// appDataBundle = new Bundle();
-		// appDataBundle.putString("demo_key", queryAppDataString);
-		// }
-
-		// Now call the Activity member function that invokes the Search Manager
-		// UI.
-		startSearch(null, false, null, false);
-
-		// Returning true indicates that we did launch the search, instead of
-		// blocking it.
-		return true;
-	}
+//	@Override
+//	public boolean onSearchRequested() {
+//		// If your application absolutely must disable search, do it here.
+//		// if (mMenuMode.getSelectedItemPosition() == MENUMODE_DISABLED) {
+//		// return false;
+//		// }
+//
+//		// It's possible to prefill the query string before launching the search
+//		// UI. For this demo, we simply copy it from the user input field.
+//		// For most applications, you can simply pass null to startSearch() to
+//		// open the UI with an empty query string.
+//		// final String queryPrefill = mQueryPrefill.getText().toString();
+//
+//		// Next, set up a bundle to send context-specific search data (if any)
+//		// The bundle can contain any number of elements, using any number of
+//		// keys;
+//		// For this Api Demo we copy a string from the user input field, and
+//		// store
+//		// it in the bundle as a string with the key "demo_key".
+//		// For most applications, you can simply pass null to startSearch().
+//		Bundle appDataBundle = null;
+//		// final String queryAppDataString = mQueryAppData.getText().toString();
+//		// if (queryAppDataString != null) {
+//		// appDataBundle = new Bundle();
+//		// appDataBundle.putString("demo_key", queryAppDataString);
+//		// }
+//
+//		// Now call the Activity member function that invokes the Search Manager
+//		// UI.
+//		startSearch(null, false, null, false);
+//
+//		// Returning true indicates that we did launch the search, instead of
+//		// blocking it.
+//		return true;
+//	}
 
 	ArrayList<String> texts = new ArrayList<String>();
 	ArrayList<Topic> topics = new ArrayList<Topic>();
