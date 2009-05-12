@@ -103,10 +103,15 @@ class TopicView {
 		return visible;
 	}
 
-	public void show() {
+	public boolean show() {
+		if (childrenVisible)
+			return false;
+		
 		setChildrenVisible(true);
 		if (parent != null)
 			parent.show();
+		
+		return true;
 	}
 
 	private void setVisible(boolean _visible) {

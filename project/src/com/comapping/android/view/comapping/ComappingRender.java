@@ -336,7 +336,10 @@ public class ComappingRender extends MapRender {
 		if (selected != null)
 			selected.setSelected(false);
 
-		topic.show();
+		if (topic.parent != null)
+			if (topic.parent.show())
+				root.clearTree();
+				
 		topic.setSelected(true);
 		selected = topic;
 	}
