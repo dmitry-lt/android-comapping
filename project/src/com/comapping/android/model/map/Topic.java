@@ -44,7 +44,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 		this.parent = parent;
 	}
 
-	void setId(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
