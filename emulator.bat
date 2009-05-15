@@ -1,0 +1,1 @@
+call .\sdk\tools\emulator.exe -sdcard sdk\card.iso

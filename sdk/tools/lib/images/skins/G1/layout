@@ -1,0 +1,380 @@
+
+parts {
+
+    device {
+	display {
+		width  320
+		height 480
+	}
+
+
+    }
+
+    port {
+	background {
+		image back-vert.png
+	}
+	buttons {
+		soft-left {
+			image menu-horiz.png
+			x 152
+			y 665
+		}
+		home {
+			image button.png
+			x 102
+			y 724
+		}
+		back {
+			image button.png
+			x 253
+			y 724
+		}
+	
+		phone-dial {
+			image button.png
+			x 34
+			y 724
+		}
+		phone-hangup {
+			image button.png
+			x 321
+			y 724
+		}
+	
+	}
+    }
+
+
+    land {
+	background {
+		image back-horiz.png
+	}
+		buttons {
+		
+			soft-left {
+				image menu.png
+				x 683
+				y 454
+			}
+			home {
+				image button.png
+				x 740
+				y 556
+			}
+			back {
+				image button.png
+				x 740
+				y 404
+			}
+		
+			phone-dial {
+				image button.png
+				x 740
+				y 623
+			}
+			phone-hangup {
+				image button.png
+				x 740
+				y 336
+			}
+
+		1 {
+		   image  key.png
+		   x  143
+		   y  437
+		}
+		2 {
+		   image  key.png
+		   x 189
+		   y 437
+		}
+		3 {
+		   image  key.png
+		   x 236
+		   y 437
+		}
+		4 {
+		   image  key.png
+		   x 282
+		   y 437
+		}
+		5 {
+		   image  key.png
+		   x 329
+		   y 437
+		}
+		6 {
+		   image  key.png
+		   x 375
+		   y 437
+		}
+		7 {
+		   image  key.png
+		   x 422
+		   y 437
+		}
+		8 {
+		   image  key.png
+		   x 468
+		   y 437
+		}
+		9 {
+		   image  key.png
+		   x 515
+		   y 437
+		}
+		0 {
+		   image  key.png
+		   x 561
+		   y 437
+		}
+	
+	
+	
+		q {
+		   image  key.png
+		   x  120
+		   y  487
+		}
+		w {
+		   image  key.png
+		   x 167
+		   y 487
+		}
+		e {
+		   image  key.png
+		   x 213
+		   y 487
+		}
+		r {
+		   image  key.png
+		   x 260
+		   y 487
+		}
+		t {
+		   image  key.png
+		   x 306
+		   y 487
+		}
+		y {
+		   image  key.png
+		   x 353
+		   y 487
+		}
+		u {
+		   image  key.png
+		   x 399
+		   y 487
+		}
+		i {
+		   image  key.png
+		   x 446
+		   y 487
+		}
+		o {
+		   image  key.png
+		   x 492
+		   y 487
+		}
+		p {
+		   image  key.png
+		   x 539
+		   y 487
+		}
+	
+	
+	
+	
+	
+	
+		a {
+		   image  key.png
+		   x  143
+		   y 537
+		}
+		s {
+		   image  key.png
+		   x 189
+		   y 537
+		}
+		d {
+		   image  key.png
+		   x 236
+		   y 537
+		}
+		f {
+		   image  key.png
+		   x 282
+		   y 537
+		}
+		g {
+		   image  key.png
+		   x 329
+		   y 537
+		}
+		h {
+		   image  key.png
+		   x 375
+		   y 537
+		}
+		j {
+		   image  key.png
+		   x 422
+		   y 537
+		}
+		k {
+		   image  key.png
+		   x 468
+		   y 537
+		}
+		l {
+		   image  key.png
+		   x 515
+		   y 537
+		}
+		DEL {
+		   image  key.png
+		   x 561
+		   y 537
+		}
+	
+	
+	
+	
+	
+		CAP {
+		   image  key.png
+		   x  120
+		   y 586
+		}
+		z {
+		   image  key.png
+		   x 167
+		   y 586
+		}
+		x {
+		   image  key.png
+		   x 213
+		   y 586
+		}
+		c {
+		   image  key.png
+		   x 260
+		   y 586
+		}
+		v {
+		   image  key.png
+		   x 306
+		   y 586
+		}
+		b {
+		   image  key.png
+		   x 353
+		   y 586
+		}
+		n {
+		   image  key.png
+		   x 399
+		   y 586
+		}
+		m {
+		   image  key.png
+		   x 446
+		   y 586
+		}
+		COMMA {
+		   image  key.png
+		   x 492
+		   y 586
+		}
+	
+	
+	
+		ALT {
+		   image  key.png
+		   x  189
+		   y 637
+		}
+		SYM {
+		   image  key.png
+		   x 236
+		   y 637
+		}
+		AT {
+		   image  key.png
+		   x 282
+		   y 637
+		}
+		PERIOD {
+		   image  key.png
+		   x 435
+		   y 637
+		}
+		ALT2 {
+		   image  key.png
+		   x 482
+		   y 637
+		}
+	
+	
+			
+
+
+		}
+    }
+
+}
+
+
+layouts {
+    portrait {
+        width     408
+        height    843
+        color     0xe0e0e0
+        event     EV_SW:0:1
+
+        part2 {
+            name     port
+            x        0
+            y        0
+        }
+        part1 {
+            name    device
+	    x 47
+	    y 103
+        }
+
+    }
+
+    landscape {
+        width     878
+        height    721
+        color     0xe0e0e0
+        event     EV_SW:0:0
+
+        part2 {
+            name     land
+            x        0
+            y        0
+        }
+        part1 {
+            name    device
+	    x 121
+	    y 371
+            rotation  3
+        }
+
+    }
+}
+
+
+
+network {
+    speed  full
+    delay  none
+}
+
+keyboard {
+    charmap qwerty2
+}
