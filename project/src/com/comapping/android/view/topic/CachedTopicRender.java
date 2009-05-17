@@ -35,6 +35,7 @@ public class CachedTopicRender {
 	
 	public void setMaxWidth(int maxWidth) {
 		precalcMaxWidthSetting(maxWidth);
+		cache[CACHE_SIZE - 1].topicRender.setSelected(curTopicRender.isSelected());
 		curTopicRender = cache[CACHE_SIZE - 1].topicRender;
 	}
 	
