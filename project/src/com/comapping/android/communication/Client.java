@@ -44,9 +44,9 @@ public class Client implements MapProvider {
 
 	final static private char SALT_FLAG = '#';
 
-	final static private int MAX_READ_TIMEOUT = 5 * 1000; // 30 seconds in
+	final static private int MAX_READ_TIMEOUT = 30 * 1000; // 30 seconds in
 	// milliseconds
-	final static private int MAX_CONNECT_TIMEOUT = 30 * 1000; // 30 seconds in
+	final static private int MAX_CONNECT_TIMEOUT = 10 * 1000; // 5 seconds in
 	// milliseconds
 
 	// private variables

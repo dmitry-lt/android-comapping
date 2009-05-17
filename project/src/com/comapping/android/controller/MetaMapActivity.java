@@ -47,7 +47,8 @@ import com.comapping.android.view.metamap.SdcardView;
 public class MetaMapActivity extends Activity {
 	// constants
 	public static final int MAP_REQUEST = 5523;
-
+	private static final String LOADING_MESSAGE = "Loading map list";
+	
 	// public variables
 	public static CachingClient client = null;
 	public static FileMapProvider fileMapProvider = new FileMapProvider();
@@ -253,7 +254,7 @@ public class MetaMapActivity extends Activity {
 			public void run() {
 				String result = "";
 
-				splashActivate("Downloading map list");
+				splashActivate(LOADING_MESSAGE);
 				String error = null;
 				
 				try {
@@ -272,8 +273,6 @@ public class MetaMapActivity extends Activity {
 				Map metaMap = null;
 				if (error == null) {
 					// retrieving was successful
-					splashActivate("Loading map list");
-	
 					try {
 						if (result != null) {
 							metaMap = mapBuilder.buildMap(result);
