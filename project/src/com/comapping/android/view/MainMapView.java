@@ -300,16 +300,21 @@ public class MainMapView extends View {
 		// Scaling
 		canvas.scale(scale, scale);
 
-		final View mainMapView = this;
-		Thread setBoundsThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				mRender.setBounds(getScreenForRenderWidth(), getScreenForRenderHeight());
-				canDraw = true;
-				mainMapView.postInvalidate();
-			}
-		});
-		setBoundsThread.start();
+		if (!canDraw) {
+			final View mainMapView = this;
+			Thread setBoundsThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					mRender.onRotate();
+					mRender.setBounds(getScreenForRenderWidth(), getScreenForRenderHeight());
+					canDraw = true;
+					mainMapView.postInvalidate();
+				}
+			});
+			setBoundsThread.start();
+		} else {
+			mRender.setBounds(getScreenForRenderWidth(), getScreenForRenderHeight());
+		}
 
 		if (!canDraw) {
 			return;
@@ -505,5 +510,10 @@ public class MainMapView extends View {
 
 	private final int getScreenForRenderHeight() {
 		return (int) (this.getHeight() / scale) - SCROLLBAR_WIDTH;
+	}
+
+	public void onRotate() {
+		canDraw = false;
+		isInitialized = false;
 	}
 }

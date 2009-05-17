@@ -136,10 +136,15 @@ public class MapActivity extends Activity {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		mapRender.onRotate();
+		splashActivate("Loading map", false);
 		while (!mapRender.canRotate()) {
 
 		}
+		view.onRotate();
+		// while (!view.isInitialized()) {
+		//
+		// }
+		splashDeactivate();
 		super.onConfigurationChanged(newConfig);
 	}
 

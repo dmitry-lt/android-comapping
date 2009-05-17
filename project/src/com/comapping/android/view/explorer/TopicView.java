@@ -6,11 +6,11 @@ import java.util.HashMap;
 import android.content.Context;
 
 import com.comapping.android.model.map.Topic;
-import com.comapping.android.view.topic.TopicRender;
+import com.comapping.android.view.topic.CachedTopicRender;
 
 public class TopicView implements Comparable<TopicView> {
 	public boolean isOpen;
-	public TopicRender topicRender;
+	public CachedTopicRender topicRender;
 	public int topicRenderX, topicRenderY;
 	public ArrayList<TopicView> children;
 	public int x1, y1, x2, y2;
@@ -18,7 +18,7 @@ public class TopicView implements Comparable<TopicView> {
 
 	public TopicView(Topic topic, TopicView parent, Context context, HashMap<Topic, TopicView> allTopics) {
 		isOpen = true;
-		topicRender = new TopicRender(topic, context);
+		topicRender = new CachedTopicRender(topic, context);
 		children = new ArrayList<TopicView>();
 		for (int i = 0; i < topic.getChildrenCount(); i++) {
 			children.add(new TopicView(topic.getChildByIndex(i), this, context, allTopics));
@@ -73,7 +73,7 @@ public class TopicView implements Comparable<TopicView> {
 
 	@Override
 	public int compareTo(TopicView another) {
-		int y1 = this.topicRenderY + this.topicRender.getHeight();
+		int y1 = this.topicRenderY + this.topicRender.getCurTopicRender().getHeight();
 		int y2 = another.topicRenderY;
 		if (y1 < y2) {
 			return -1;

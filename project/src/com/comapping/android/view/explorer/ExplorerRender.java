@@ -120,7 +120,7 @@ public class ExplorerRender extends MapRender {
 			if (y > screenHeight) {
 				break;
 			}
-			TopicRender topicRender = topic.topicRender;
+			TopicRender topicRender = topic.topicRender.getCurTopicRender();
 			if (onScreen(x, y, x + topicRender.getWidth(), y + topicRender.getHeight())) {
 				topicRender.draw(x, y, 0, 0, c);
 			}
@@ -134,9 +134,9 @@ public class ExplorerRender extends MapRender {
 			return;
 		}
 		if (selectedTopic != null) {
-			selectedTopic.topicRender.setSelected(false);
+			selectedTopic.topicRender.getCurTopicRender().setSelected(false);
 		}
-		topic.topicRender.setSelected(true);
+		topic.topicRender.getCurTopicRender().setSelected(true);
 		selectedTopic = topic;
 		int x1 = topic.x1 + xOffset;
 		int y1 = topic.y1 + yOffset;
@@ -164,8 +164,8 @@ public class ExplorerRender extends MapRender {
 		// calculate sizes
 		topic.x1 = x;
 		topic.y1 = y;
-		TopicRender topicRender = topic.topicRender;
-		topicRender.setMaxWidth(screenWidth - radius - X_SHIFT - BLOCK_SHIFT);
+		topic.topicRender.setMaxWidth(screenWidth - radius - X_SHIFT - BLOCK_SHIFT);
+		TopicRender topicRender = topic.topicRender.getCurTopicRender();
 		int height = topicRender.getHeight();
 		if (topic.children.size() > 0) {
 			height = Math.max(height, radius * 2);
@@ -224,7 +224,7 @@ public class ExplorerRender extends MapRender {
 
 	private void expanding() {
 		for (TopicView topic : topics) {
-			if (topic.topicRenderX + topic.topicRender.getWidth() > screenWidth) {
+			if (topic.topicRenderX + topic.topicRender.getCurTopicRender().getWidth() > screenWidth) {
 				topic.parent.isOpen = false;
 			}
 		}
@@ -277,8 +277,9 @@ public class ExplorerRender extends MapRender {
 			if (cachingNeeded) {
 				new Thread(new Runnable() {
 					public void run() {
-						for (TopicView topicView : topics) {
-							topicView.topicRender.setMaxWidth(screenHeight - radius - X_SHIFT - BLOCK_SHIFT);
+						for (Topic topic : allTopics.keySet()) {
+							TopicView topicView = allTopics.get(topic);
+							topicView.topicRender.precalcMaxWidthSetting(screenHeight - radius - X_SHIFT - BLOCK_SHIFT);
 						}
 						canRotate = true;
 					}
@@ -331,10 +332,10 @@ public class ExplorerRender extends MapRender {
 		for (TopicView topic : topics) {
 			int x1 = topic.topicRenderX;
 			int y1 = topic.topicRenderY;
-			int x2 = x1 + topic.topicRender.getWidth();
-			int y2 = y1 + topic.topicRender.getHeight();
+			int x2 = x1 + topic.topicRender.getCurTopicRender().getWidth();
+			int y2 = y1 + topic.topicRender.getCurTopicRender().getHeight();
 			if (x1 <= x && x <= x2 && y1 <= y && y <= y2) {
-				topic.topicRender.onTouch(x - x1, y - y1);
+				topic.topicRender.getCurTopicRender().onTouch(x - x1, y - y1);
 				selectTopic(topic);
 				break;
 			}
