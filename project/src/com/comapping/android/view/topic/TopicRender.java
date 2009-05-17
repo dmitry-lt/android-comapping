@@ -164,6 +164,12 @@ public class TopicRender extends Render {
 		}
 	}
 
+	public void precalcMaxWidthSetting(int maxWidth) {
+		int curMaxWidth = lastMaxWidth;
+		setMaxWidth(maxWidth);
+		setMaxWidth(curMaxWidth);
+	}
+	
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty && maxWidth != lastMaxWidth) {
 			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
