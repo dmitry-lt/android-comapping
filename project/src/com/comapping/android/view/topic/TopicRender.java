@@ -163,12 +163,6 @@ public class TopicRender extends Render {
 			}
 		}
 	}
-
-	public void precalcMaxWidthSetting(int maxWidth) {
-		int curMaxWidth = lastMaxWidth;
-		setMaxWidth(maxWidth);
-		setMaxWidth(curMaxWidth);
-	}
 	
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty && maxWidth != lastMaxWidth) {
