@@ -1,6 +1,7 @@
 package com.comapping.android.view.explorer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.comapping.android.model.map.Map;
 import com.comapping.android.model.map.Topic;
@@ -29,10 +30,13 @@ public class ExplorerRender extends MapRender {
 	private boolean selectRootNeeded = true;
 	private boolean expandingNeeded = true;
 	private boolean setBoundsNeeded = true;
+	private boolean canRotate = false;
+	private boolean cachingNeeded = true;
 
 	private ArrayList<Expander> expanders = new ArrayList<Expander>();
 	private ArrayList<Rect> lines = new ArrayList<Rect>();
 	private ArrayList<TopicView> topics = new ArrayList<TopicView>();
+	private HashMap<Topic, TopicView> allTopics = new HashMap<Topic, TopicView>();
 
 	private int radius = plusMinusRender.getHeight() / 2;
 	private int xOffset, yOffset;
@@ -40,7 +44,7 @@ public class ExplorerRender extends MapRender {
 	private int screenWidth, screenHeight;
 
 	public ExplorerRender(Context context, Map map) {
-		root = new TopicView(map.getRoot(), null, context);
+		root = new TopicView(map.getRoot(), null, context, allTopics);
 		selectedTopic = null;
 	}
 
@@ -242,11 +246,16 @@ public class ExplorerRender extends MapRender {
 	// Public methods
 
 	public void selectTopic(Topic topic) {
-		for (int i = 0; i < topics.size(); i++) {
-			if (topics.get(i).topicRender.getTopic().equals(topic)) {
-				selectTopic(topics.get(i));
+		TopicView topicView = allTopics.get(topic);
+		while (topicView != null) {
+			topicView = topicView.parent;
+			if (topicView == null) {
+				break;
 			}
+			topicView.isOpen = true;
 		}
+		update();
+		selectTopic(allTopics.get(topic));
 	}
 
 	@Override
@@ -254,14 +263,10 @@ public class ExplorerRender extends MapRender {
 		return canRotate;
 	}
 
-	private boolean canRotate = false;
-
 	@Override
 	public void onRotate() {
 		setBoundsNeeded = true;
 	}
-
-	private boolean cachingNeeded = true;
 
 	@Override
 	public void setBounds(int width, int height) {
