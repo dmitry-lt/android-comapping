@@ -250,11 +250,36 @@ public class ExplorerRender extends MapRender {
 	}
 
 	@Override
+	public boolean canRotate() {
+		return canRotate;
+	}
+
+	private boolean canRotate = false;
+
+	@Override
+	public void onRotate() {
+		setBoundsNeeded = true;
+	}
+
+	private boolean cachingNeeded = true;
+
+	@Override
 	public void setBounds(int width, int height) {
 		screenWidth = width;
 		screenHeight = height;
 		if (setBoundsNeeded) {
 			update();
+			if (cachingNeeded) {
+				new Thread(new Runnable() {
+					public void run() {
+						for (TopicView topicView : topics) {
+							topicView.topicRender.setMaxWidth(screenHeight - radius - X_SHIFT - BLOCK_SHIFT);
+						}
+						canRotate = true;
+					}
+				}).start();
+				cachingNeeded = false;
+			}
 			setBoundsNeeded = false;
 		}
 	}
