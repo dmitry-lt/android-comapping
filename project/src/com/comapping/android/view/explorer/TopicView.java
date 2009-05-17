@@ -1,6 +1,7 @@
 package com.comapping.android.view.explorer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Context;
 
@@ -15,12 +16,12 @@ public class TopicView implements Comparable<TopicView> {
 	public int x1, y1, x2, y2;
 	public TopicView parent, nextSibling = null, prevSibling = null;
 
-	public TopicView(Topic topic, TopicView parent, Context context) {
+	public TopicView(Topic topic, TopicView parent, Context context, HashMap<Topic, TopicView> allTopics) {
 		isOpen = true;
 		topicRender = new TopicRender(topic, context);
 		children = new ArrayList<TopicView>();
 		for (int i = 0; i < topic.getChildrenCount(); i++) {
-			children.add(new TopicView(topic.getChildByIndex(i), this, context));
+			children.add(new TopicView(topic.getChildByIndex(i), this, context, allTopics));
 		}
 		this.parent = parent;
 		for (int i = 0; i < topic.getChildrenCount(); i++) {
@@ -31,6 +32,7 @@ public class TopicView implements Comparable<TopicView> {
 				children.get(i).nextSibling = children.get(i + 1);
 			}
 		}
+		allTopics.put(topic, this);
 	}
 
 	public TopicView getNextTopic() {
