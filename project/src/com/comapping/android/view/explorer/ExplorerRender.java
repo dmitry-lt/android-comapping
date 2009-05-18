@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.KeyEvent;
 
 public class ExplorerRender extends MapRender {
@@ -272,6 +273,7 @@ public class ExplorerRender extends MapRender {
 	public void setBounds(int width, int height) {
 		screenWidth = width;
 		screenHeight = height;
+		Log.v("Size", width + " " + height);
 		if (setBoundsNeeded) {
 			update();
 			if (cachingNeeded) {
@@ -279,7 +281,7 @@ public class ExplorerRender extends MapRender {
 					public void run() {
 						for (Topic topic : allTopics.keySet()) {
 							TopicView topicView = allTopics.get(topic);
-							topicView.topicRender.precalcMaxWidthSetting(screenHeight - radius - X_SHIFT - BLOCK_SHIFT);
+							topicView.topicRender.precalcMaxWidthSetting(screenHeight + 50 - radius - X_SHIFT - BLOCK_SHIFT);
 						}
 						canRotate = true;
 					}
