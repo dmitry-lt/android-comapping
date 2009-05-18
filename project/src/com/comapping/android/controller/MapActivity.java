@@ -137,17 +137,14 @@ public class MapActivity extends Activity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		Log.w(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
 		splashActivate("Loading map", false);
-//		view.onRotate();		
-//		while (!mapRender.canRotate()) {
-//
-//		}
-//		// while (!view.isInitialized()) {
-//		//
-//		// }
-//		Log.w(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged finish");
-//		splashDeactivate();
+		Log.w(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
+		while (!mapRender.canRotate()) {
+
+		}
+		splashDeactivate();
+		Log.w(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged finish");
+		view.onRotate();
 	}
 
 	@Override

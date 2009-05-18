@@ -287,9 +287,7 @@ public class MainMapView extends View {
 		while (!isDrawing) {
 
 		}
-		
-		
-		
+
 		invalidate();
 	}
 
@@ -303,32 +301,18 @@ public class MainMapView extends View {
 		// Scaling
 		canvas.scale(scale, scale);
 
-		canDraw = false;
-		if (!canDraw) {
-			final View mainMapView = this;
-			Thread setBoundsThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
+		final View mainMapView = this;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if (!canDraw) {
 					mRender.onRotate();
-					mRender.setBounds(getScreenForRenderWidth(), getScreenForRenderHeight());
-					canDraw = true;
-					mainMapView.postInvalidate();
 				}
-			});
-			setBoundsThread.start();
-		} else {
-			final View mainMapView = this;
-			Thread setBoundsThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					mRender.onRotate();
-					mRender.setBounds(getScreenForRenderWidth(), getScreenForRenderHeight());
-					canDraw = true;
-					mainMapView.postInvalidate();
-				}
-			});
-			setBoundsThread.start();
-		}
+				mRender.setBounds(getScreenForRenderWidth(), getScreenForRenderHeight());
+				canDraw = true;
+				mainMapView.postInvalidate();
+			}
+		}).start();
 
 		if (!canDraw) {
 			return;
