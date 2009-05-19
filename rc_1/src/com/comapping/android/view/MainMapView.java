@@ -3,8 +3,10 @@ package com.comapping.android.view;
 import java.util.ArrayList;
 
 import com.comapping.android.Options;
+import com.comapping.android.controller.MapActivity;
 import com.comapping.android.model.map.Topic;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -33,7 +35,7 @@ public class MainMapView extends View {
 	// Scrollbar constants
 	private static final int SCROLLBAR_WIDTH = 4;
 	private static final int SCROLLBAR_LINE_LEN = 15;
-	
+
 	// Drawing variables
 	public MapRender mRender;
 	public Scroller mScroller;
@@ -66,8 +68,7 @@ public class MainMapView extends View {
 			int vx = mScroller.getCurrX() - destX;
 			int vy = mScroller.getCurrY() - destY;
 
-			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
-					-vx, -vy, 0);
+			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), -vx, -vy, 0);
 			mScroller.computeScrollOffset();
 		}
 
@@ -75,8 +76,7 @@ public class MainMapView extends View {
 		public void smoothScroll(int destX, int destY) {
 			int vx = mScroller.getCurrX() - destX;
 			int vy = mScroller.getCurrY() - destY;
-			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
-					-vx, -vy);
+			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), -vx, -vy);
 		}
 
 	};
@@ -134,8 +134,8 @@ public class MainMapView extends View {
 	private ArrayList<Topic> findTopics = new ArrayList<Topic>();
 	private int selectedSearchResult = 0;
 
-	public void setSearchUI(LinearLayout findLayout, ImageButton cancel,
-			ImageButton next, ImageButton prev, TextView queryLabel) {
+	public void setSearchUI(LinearLayout findLayout, ImageButton cancel, ImageButton next, ImageButton prev,
+			TextView queryLabel) {
 		this.cancel = cancel;
 		this.next = next;
 		this.prev = prev;
@@ -152,8 +152,7 @@ public class MainMapView extends View {
 		this.next.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectedSearchResult = (selectedSearchResult + 1)
-						% findTopics.size();
+				selectedSearchResult = (selectedSearchResult + 1) % findTopics.size();
 
 				if (findTopics.size() > 0)
 					mRender.selectTopic(findTopics.get(selectedSearchResult));
@@ -165,9 +164,7 @@ public class MainMapView extends View {
 		this.prev.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectedSearchResult = (selectedSearchResult
-						+ findTopics.size() - 1)
-						% findTopics.size();
+				selectedSearchResult = (selectedSearchResult + findTopics.size() - 1) % findTopics.size();
 
 				if (findTopics.size() > 0)
 					mRender.selectTopic(findTopics.get(selectedSearchResult));
@@ -198,14 +195,11 @@ public class MainMapView extends View {
 
 	private void updateLabel() {
 		if (findTopics.size() > 0) {
-			queryLabel.setText((selectedSearchResult + 1) + "\\"
-					+ findTopics.size() + "\n" + query);
-		}
-		else
-		{
+			queryLabel.setText((selectedSearchResult + 1) + "\\" + findTopics.size() + "\n" + query);
+		} else {
 			queryLabel.setText("Nothing founded!");
 		}
-			
+
 	}
 
 	// private LinearLayout layout;
@@ -284,7 +278,6 @@ public class MainMapView extends View {
 			scale = MAX_SCALE;
 		}
 		if (scale < MIN_SCALE) {
-
 			scale = MIN_SCALE;
 		}
 		zoom.setIsZoomInEnabled(Math.abs(scale - MAX_SCALE) > eps);
@@ -296,11 +289,38 @@ public class MainMapView extends View {
 		while (!isDrawing) {
 
 		}
+
 		invalidate();
 	}
 
+	private MapActivity activity;
+
+	public void setActivity(MapActivity activity) {
+		this.activity = activity;
+	}
+
+	private boolean isFinished = true;
+
 	@Override
 	protected void onDraw(Canvas canvas) {
+		new Thread() {
+			@Override
+			public void run() {
+				isFinished = false;
+				while (!activity.canDraw()) {
+					try {
+						sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				isFinished = true;
+				postInvalidate();
+			}
+		}.start();
+		if (!isFinished) {
+			return;
+		}
 		isDrawing = false;
 
 		// Save matrix
@@ -310,16 +330,17 @@ public class MainMapView extends View {
 		canvas.scale(scale, scale);
 
 		final View mainMapView = this;
-		Thread setBoundsThread = new Thread(new Runnable() {
+		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mRender.setBounds(getScreenForRenderWidth(),
-						getScreenForRenderHeight());
+				if (!canDraw) {
+					mRender.onRotate();
+				}
+				mRender.setBounds(getScreenForRenderWidth(), getScreenForRenderHeight());
 				canDraw = true;
 				mainMapView.postInvalidate();
 			}
-		});
-		setBoundsThread.start();
+		}).start();
 
 		if (!canDraw) {
 			return;
@@ -329,8 +350,8 @@ public class MainMapView extends View {
 		canvas.drawARGB(255, 255, 255, 255);
 
 		// Draw map
-		mRender.draw(mScroller.getCurrX(), mScroller.getCurrY(),
-				getScreenForRenderWidth(), getScreenForRenderHeight(), canvas);
+		mRender.draw(mScroller.getCurrX(), mScroller.getCurrY(), getScreenForRenderWidth(), getScreenForRenderHeight(),
+				canvas);
 
 		// Restore matrix
 		canvas.restore();
@@ -356,8 +377,7 @@ public class MainMapView extends View {
 
 	void debugFrameTick() {
 		if (System.currentTimeMillis() - lastFPSCalcTime > 1000) {
-			fps = (1000 * frameCount)
-					/ (System.currentTimeMillis() - lastFPSCalcTime);
+			fps = (1000 * frameCount) / (System.currentTimeMillis() - lastFPSCalcTime);
 			lastFPSCalcTime = System.currentTimeMillis();
 			frameCount = 0;
 		}
@@ -374,40 +394,36 @@ public class MainMapView extends View {
 
 	void drawScrollBars(Canvas c) {
 		// Horizontal
-		c.drawRect(0, getHeight() - SCROLLBAR_WIDTH, getWidth(), getHeight(),
-				scrollBarBackgroundPaint);
+		c.drawRect(0, getHeight() - SCROLLBAR_WIDTH, getWidth(), getHeight(), scrollBarBackgroundPaint);
 
-		float horBarAlpha = (float) getScreenForRenderWidth()
-				/ (float) mRender.getWidth();
+		float horBarAlpha = (float) getScreenForRenderWidth() / (float) mRender.getWidth();
 		float horBarLen = horBarAlpha * this.getWidth();
 		if (horBarLen < SCROLLBAR_LINE_LEN)
 			horBarLen = SCROLLBAR_LINE_LEN;
 
 		float horLen = getWidth() - horBarLen;
-		float horLinePos = (float) mScroller.getCurrX()
-				/ (float) getScrollWidth();
+		float horLinePos = (float) mScroller.getCurrX() / (float) getScrollWidth();
 
-		c.drawRect(horLen * horLinePos, getHeight() - SCROLLBAR_WIDTH, horLen
-				* horLinePos + horBarLen, getHeight(), scrollBarPaint);
+		c.drawRect(horLen * horLinePos, getHeight() - SCROLLBAR_WIDTH, horLen * horLinePos + horBarLen, getHeight(),
+				scrollBarPaint);
 
 		// Vertical
 		// Not "getHeight()"!!
 		// Should be "getHeight() - SCROLLBAR_WIDTH" because of intersection
-		c.drawRect(getWidth() - SCROLLBAR_WIDTH, 0, getWidth(), getHeight()
-				- SCROLLBAR_WIDTH, scrollBarBackgroundPaint);
+		c
+				.drawRect(getWidth() - SCROLLBAR_WIDTH, 0, getWidth(), getHeight() - SCROLLBAR_WIDTH,
+						scrollBarBackgroundPaint);
 
-		float vertBarAlpha = (float) getScreenForRenderHeight()
-				/ (float) mRender.getHeight();
+		float vertBarAlpha = (float) getScreenForRenderHeight() / (float) mRender.getHeight();
 		float vertBarLen = vertBarAlpha * this.getHeight();
 		if (vertBarLen < SCROLLBAR_LINE_LEN)
 			vertBarLen = SCROLLBAR_LINE_LEN;
 
 		float vertLen = getHeight() - vertBarLen;
-		float vertLinePos = (float) mScroller.getCurrY()
-				/ (float) getScrollHeight();
+		float vertLinePos = (float) mScroller.getCurrY() / (float) getScrollHeight();
 
-		c.drawRect(getWidth() - SCROLLBAR_WIDTH, vertLen * vertLinePos,
-				getWidth(), vertLen * vertLinePos + vertBarLen, scrollBarPaint);
+		c.drawRect(getWidth() - SCROLLBAR_WIDTH, vertLen * vertLinePos, getWidth(), vertLen * vertLinePos + vertBarLen,
+				scrollBarPaint);
 
 	}
 
@@ -427,8 +443,7 @@ public class MainMapView extends View {
 			return true;
 		}
 		case MotionEvent.ACTION_MOVE: {
-			int pathLen = (startX - (int) ev.getX())
-					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
+			int pathLen = (startX - (int) ev.getX()) * (startX - (int) ev.getX()) + (startY - (int) ev.getY())
 					* (startY - (int) ev.getY());
 			long timeDelta = System.currentTimeMillis() - touchStartTime;
 
@@ -453,8 +468,7 @@ public class MainMapView extends View {
 				if (mScroller.getCurrY() + deltaY < 0)
 					deltaY = -mScroller.getCurrY();
 
-				mScroller.startScroll(mScroller.getCurrX(), mScroller
-						.getCurrY(), deltaX, deltaY, 0);
+				mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), deltaX, deltaY, 0);
 
 				refresh();
 			}
@@ -462,14 +476,12 @@ public class MainMapView extends View {
 		}
 		case MotionEvent.ACTION_UP: {
 			long timeDelta = System.currentTimeMillis() - touchStartTime;
-			int pathLen = (startX - (int) ev.getX())
-					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
+			int pathLen = (startX - (int) ev.getX()) * (startX - (int) ev.getX()) + (startY - (int) ev.getY())
 					* (startY - (int) ev.getY());
 
 			if (pathLen < BLOCK_PATH_LEN) {
 				if (timeDelta < TAP_MAX_TIME) {
-					mRender.onTouch(mScroller.getCurrX()
-							+ (int) (ev.getX() / scale), mScroller.getCurrY()
+					mRender.onTouch(mScroller.getCurrX() + (int) (ev.getX() / scale), mScroller.getCurrY()
 							+ (int) (ev.getY() / scale));
 				}
 				refresh();
@@ -484,8 +496,8 @@ public class MainMapView extends View {
 				vx = vx * 3 / 4;
 				vy = vy * 3 / 4;
 
-				mScroller.fling(mScroller.getCurrX(), mScroller.getCurrY(),
-						-vx, -vy, 0, getScrollWidth(), 0, getScrollHeight());
+				mScroller.fling(mScroller.getCurrX(), mScroller.getCurrY(), -vx, -vy, 0, getScrollWidth(), 0,
+						getScrollHeight());
 
 				mVelocityTracker.recycle();
 
@@ -511,13 +523,11 @@ public class MainMapView extends View {
 	}
 
 	private final int getScrollWidth() {
-		return mRender.getWidth() - (int) (this.getWidth() / scale)
-				+ SCROLLBAR_WIDTH;
+		return mRender.getWidth() - (int) (this.getWidth() / scale) + SCROLLBAR_WIDTH;
 	}
 
 	private final int getScrollHeight() {
-		return mRender.getHeight() - (int) (this.getHeight() / scale)
-				+ SCROLLBAR_WIDTH;
+		return mRender.getHeight() - (int) (this.getHeight() / scale) + SCROLLBAR_WIDTH;
 	}
 
 	private final int getScreenForRenderWidth() {
@@ -526,5 +536,10 @@ public class MainMapView extends View {
 
 	private final int getScreenForRenderHeight() {
 		return (int) (this.getHeight() / scale) - SCROLLBAR_WIDTH;
+	}
+
+	public void onRotate() {
+		canDraw = false;
+		isInitialized = false;
 	}
 }

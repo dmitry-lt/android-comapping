@@ -38,6 +38,10 @@ public class SqliteMapCache {
 
 	public void set(String mapId, String data) {
 		Log.d(Log.SQLITE_CACHE_TAG, "set ["+mapId+"] = "+data);
+		
+		if (data == null) {
+			return;
+		}
 		if (database == null) {
 			return;
 		}

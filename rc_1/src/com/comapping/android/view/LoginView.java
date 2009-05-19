@@ -1,6 +1,8 @@
 package com.comapping.android.view;
 
 import android.app.ProgressDialog;
+import android.graphics.Shader.TileMode;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -61,6 +63,12 @@ public class LoginView {
 
 	public void load() {
 		loginActivity.setContentView(R.layout.login);
+		
+		BitmapDrawable dr =(BitmapDrawable)loginActivity.getResources().getDrawable(R.drawable.login_bg);
+		dr.setTileModeX(TileMode.REPEAT);
+		dr.setTileModeY(TileMode.REPEAT);
+		loginActivity.findViewById(R.id.loginLayout).setBackgroundDrawable(dr);
+		//@drawable/login_bg
 		
 		String email = Storage.getInstance().get(Storage.EMAIL_KEY, null);
 		if (email != null) {

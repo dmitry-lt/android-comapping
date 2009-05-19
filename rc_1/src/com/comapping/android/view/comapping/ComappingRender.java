@@ -753,7 +753,6 @@ public class ComappingRender extends MapRender {
 
 	@Override
 	public void setBounds(int width, int height) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -765,5 +764,15 @@ public class ComappingRender extends MapRender {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public boolean canRotate() {
+		return true;
+	}
+
+	@Override
+	public void onRotate() {
+
 	}
 }

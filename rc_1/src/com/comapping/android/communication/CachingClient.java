@@ -74,7 +74,11 @@ public class CachingClient implements MapProvider {
 		}
 
 		if ((result == null) && (!ignoreInternet)) {
-			result = client.getComap(mapId, context);
+			try {
+				result = client.getComap(mapId, context);
+			} catch (Exception e) {
+				result = cache.get(mapId); // if map not retrieved return cached map
+			}
 			// save result to cache
 			cache.set(mapId, result);
 		}

@@ -7,4 +7,6 @@ public abstract class MapRender extends Render {
 	public abstract void onKeyDown(int keyCode);
 	public abstract void setBounds(int width, int height);
 	public abstract void selectTopic(Topic topic);
+	public abstract boolean canRotate();
+	public abstract void onRotate();
 }

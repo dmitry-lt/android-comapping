@@ -22,24 +22,8 @@ public class TextRender extends Render {
 	private static final int MIN_MAX_WIDTH = 100;
 	// private static final int MIN_MAX_WIDTH = calcWidth(new TextBlock("ù", new
 	// TextFormat(22, 0, "", false)));
-	private static final int CACHE_ITEMS_COUNT = 2;
 
 	private boolean isEmpty;
-
-	// cache
-	private static class CacheItem {
-		int maxWidth;
-		int linesCount;
-		FormattedText textToDraw;
-
-		public CacheItem(int maxWidth, int linesCount, FormattedText textToDraw) {
-			this.maxWidth = maxWidth;
-			this.linesCount = linesCount;
-			this.textToDraw = textToDraw;
-		}
-	}
-
-	private CacheItem[] cache = new CacheItem[CACHE_ITEMS_COUNT];
 
 	private FormattedText text;
 	private FormattedText textToDraw;
@@ -163,15 +147,6 @@ public class TextRender extends Render {
 		if (!isEmpty && linesCount > 0) {
 			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " linesCount=" + linesCount + " in " + this);
 
-			// try to take it from cache
-			for (int i = 0; i < CACHE_ITEMS_COUNT; i++) {
-				if (cache[i] != null && cache[i].maxWidth == maxWidth && cache[i].linesCount == linesCount) {
-					textToDraw = cache[i].textToDraw;
-					recalcDrawingData();
-					return;
-				}
-			}
-
 			maxWidth -= leftBorder + rightBorder;
 
 			maxWidth = Math.max(maxWidth, MIN_MAX_WIDTH);
@@ -245,12 +220,6 @@ public class TextRender extends Render {
 			if (!fitIn) {
 				addThreeDots(textToDraw, lastLineWidth, curMaxWidth);
 			}
-
-			// add to cache
-			for (int i = 0; i < CACHE_ITEMS_COUNT - 1; i++) {
-				cache[i] = cache[i + 1];
-			}
-			cache[CACHE_ITEMS_COUNT - 1] = new CacheItem(maxWidth, linesCount, textToDraw);
 
 			recalcDrawingData();
 		}
