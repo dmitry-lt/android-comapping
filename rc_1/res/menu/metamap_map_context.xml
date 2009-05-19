@@ -1,0 +1,4 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Open with explorer view" android:id="@+id/openWithExplorerView"/>
+    <item android:icon="@drawable/logout_menu_icon" android:title="Open with comapping view" android:id="@+id/openWithComappingView"/>
+</menu>
