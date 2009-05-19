@@ -3,8 +3,10 @@ package com.comapping.android.view;
 import java.util.ArrayList;
 
 import com.comapping.android.Options;
+import com.comapping.android.controller.MapActivity;
 import com.comapping.android.model.map.Topic;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -291,8 +293,34 @@ public class MainMapView extends View {
 		invalidate();
 	}
 
+	private MapActivity activity;
+
+	public void setActivity(MapActivity activity) {
+		this.activity = activity;
+	}
+
+	private boolean isFinished = true;
+
 	@Override
 	protected void onDraw(Canvas canvas) {
+		new Thread() {
+			@Override
+			public void run() {
+				isFinished = false;
+				while (!activity.canDraw()) {
+					try {
+						sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				isFinished = true;
+				postInvalidate();
+			}
+		}.start();
+		if (!isFinished) {
+			return;
+		}
 		isDrawing = false;
 
 		// Save matrix

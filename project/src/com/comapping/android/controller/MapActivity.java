@@ -134,17 +134,34 @@ public class MapActivity extends Activity {
 
 	MapRender mapRender;
 
+	private boolean canDraw = true;
+
+	public boolean canDraw() {
+		return canDraw;
+	}
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		splashActivate("Loading map", false);
-		Log.w(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
-		while (!mapRender.canRotate()) {
-
-		}
-		splashDeactivate();
-		Log.w(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged finish");
-		view.onRotate();
+		new Thread() {
+			@Override
+			public void run() {
+				splashActivate("Loading map", false);
+				canDraw = false;
+				Log.w(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
+				while (!mapRender.canRotate()) {
+					try {
+						sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				splashDeactivate();
+				Log.w(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged finish");
+				view.onRotate();
+				canDraw = true;
+			}
+		}.start();
 	}
 
 	@Override
@@ -174,6 +191,7 @@ public class MapActivity extends Activity {
 		currentViewType = viewType;
 
 		final Activity current = this;
+		final MapActivity activity = this;
 
 		mapProcessingThread = new Thread() {
 			public void run() {
@@ -232,6 +250,7 @@ public class MapActivity extends Activity {
 							view.setSearchUI(findLayout, cancel, next, prev, queryTextView);
 							view.setRender(mapRender);
 							view.setZoom(zoom);
+							view.setActivity(activity);
 							hideZoom();
 							zoom.setIsZoomInEnabled(false);
 							zoom.setOnZoomInClickListener(new OnClickListener() {
