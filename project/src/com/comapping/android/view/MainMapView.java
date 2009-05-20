@@ -106,7 +106,7 @@ public class MainMapView extends View {
 		initScrolling(context);
 		setFocusable(true);
 
-		background = context.getResources().getDrawable(R.drawable.logo);
+		background = context.getResources().getDrawable(R.drawable.logo_background);
 		background.setBounds(0, 0, background.getIntrinsicWidth(), background
 				.getIntrinsicHeight());
 		background.setAlpha(127);
