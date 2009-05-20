@@ -298,7 +298,8 @@ public class MainMapView extends View {
 
 		// Clear screen
 		
-		canvas.drawARGB(255, 213, 255, 251);
+		//canvas.drawARGB(255, 213, 255, 251);
+		canvas.drawARGB(255, 255, 255, 255);
 
 		// Draw logo
 		Rect size = background.getBounds();
