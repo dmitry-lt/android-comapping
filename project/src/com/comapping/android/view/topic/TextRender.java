@@ -273,7 +273,7 @@ public class TextRender extends Render {
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
-			if ((bgColor != 0)&&(bgColor != Color.WHITE)) {
+			if (bgColor != 0) {
 				paint.setColor(bgColor);
 				paint.setAlpha(255);
 				c.drawRect(x, y, x + getWidth(), y + getHeight(), paint);
