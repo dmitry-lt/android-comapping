@@ -1,6 +1,8 @@
 package com.comapping.android.view;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
@@ -25,6 +27,7 @@ public class LoginView {
 			public void run() {
 				if (splash == null) {
 					splash = ProgressDialog.show(loginActivity, "Comapping", message);
+					
 				} else {
 					splash.setMessage(message);
 				}

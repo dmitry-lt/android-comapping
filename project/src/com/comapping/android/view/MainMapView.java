@@ -7,11 +7,11 @@ import com.comapping.android.controller.MapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.map.Topic;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -295,15 +295,20 @@ public class MainMapView extends View {
 		// Save matrix
 		canvas.save();
 
-		// Scaling
-		canvas.scale(scale, scale);
 
 		// Clear screen
-		// canvas.drawARGB(255, 255, 255, 255);
+		
 		canvas.drawARGB(255, 213, 255, 251);
 
 		// Draw logo
+		Rect size = background.getBounds();
+		canvas.translate(this.getWidth() - size.right, this.getHeight() - size.bottom);
 		background.draw(canvas);
+		
+		// Scaling
+		canvas.restore();
+		canvas.scale(scale, scale);
+
 
 		// Draw map
 		mRender.draw(mScroller.getCurrX(), mScroller.getCurrY(),

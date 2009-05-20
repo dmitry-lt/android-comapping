@@ -12,7 +12,7 @@ public class Options {
 	public static final String DEFAULT_VIEW_TYPE = ViewType.COMAPPING_VIEW.toString();
 	public static final boolean DEFAULT_USE_PROXY = false;
 
-	public static final boolean DEBUG_RENDERING = true;
+	public static final boolean DEBUG_RENDERING = false;
 	public static final boolean DEBUG_LOG = true;
 
 }

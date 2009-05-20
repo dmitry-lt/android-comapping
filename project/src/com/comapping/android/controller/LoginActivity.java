@@ -33,13 +33,15 @@ public class LoginActivity extends Activity {
 
 	private LoginView loginView;
 
-	CachingClient client = null;
+	private static boolean isWorking = false;
+	private static Thread workThread = null;
+	private static String stateMsg = "";
 
 	private void finishLoginAttempt(final String errorMsg) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (client.isLoggedIn()) {
+				if (MetaMapActivity.client.isLoggedIn()) {
 					setResult(RESULT_LOGIN_SUCCESSFUL);
 					finish();
 				} else {
@@ -50,85 +52,133 @@ public class LoginActivity extends Activity {
 		});
 	}
 
-	public void loginClick(final String email, final String password) {
-		loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
+	void startWork(final String email, final String password,
+			final boolean remember) {
+		if (isWorking)
+		{
+			loginView.splashDeactivate();
+			workThread.stop();
+		}
 
-		new Thread() {
+		workThread = new Thread() {
 			public void run() {
-				String errorMsg = UNKNOWN_RESULT_MESSAGE;
-
-				CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
+				isWorking = true;
+				stateMsg = UNKNOWN_RESULT_MESSAGE;
 
 				try {
-					client.login(email, password, remember.isChecked());
+					MetaMapActivity.client.login(email, password, remember);
 				} catch (ConnectionException e) {
 					Log.e(Log.LOGIN_TAG, "connection exception");
-					errorMsg = CONNECTION_ERROR_MESSAGE;
+					stateMsg = CONNECTION_ERROR_MESSAGE;
 				} catch (LoginInterruptedException e) {
 					Log.e(Log.LOGIN_TAG, "login interrupted");
 				} catch (InvalidCredentialsException e) {
 					Log.e(Log.LOGIN_TAG, "invalid credentails");
-					errorMsg = EMAIL_OR_PASSWORD_INCORRECT_MESSAGE;
+					stateMsg = EMAIL_OR_PASSWORD_INCORRECT_MESSAGE;
 				}
 
-				finishLoginAttempt(errorMsg);
+				finishLoginAttempt(stateMsg);
 
-				if (!client.isLoggedIn()) {
+				loginView.splashDeactivate();
+
+				isWorking = false;
+				workThread = null;
+			}
+		};
+		workThread.start();
+	}
+
+	void startAutologin() {
+		if (isWorking)
+		{
+			loginView.splashDeactivate();
+			workThread.stop();
+		}
+		
+		workThread = new Thread() {
+			public void run() {
+				isWorking = true;
+				stateMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
+
+				try {
+					MetaMapActivity.client.autologin();
+				} catch (ConnectionException e) {
+					Log.e(Log.LOGIN_TAG, "connection exception");
+					stateMsg = CONNECTION_ERROR_MESSAGE;
+				} catch (LoginInterruptedException e) {
+					Log.e(Log.LOGIN_TAG, "login interrupted");
+				} catch (InvalidCredentialsException e) {
+					Log.e(Log.LOGIN_TAG, "invalid credentails");
+				}
+
+				finishLoginAttempt(stateMsg);
+
+				if (!MetaMapActivity.client.isLoggedIn()) {
 					loginView.splashDeactivate();
 				}
+
+				isWorking = false;
+				workThread = null;
 			}
-		}.start();
+		};
+		workThread.start();
+	}
+
+	public void loginClick(final String email, final String password) {
+		loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
+		CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
+		startWork(email, password, remember.isChecked());
 	}
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		client = MetaMapActivity.client;
+		if (MetaMapActivity.client.isLoggedIn()) {
+			setResult(RESULT_LOGIN_SUCCESSFUL);
+			finish();
+			return;
+		}
 
 		loginView = new LoginView(this);
 		loginView.load();
-
-		if (client.isAutologinPossible()) {
-			// autologin attempt
-			loginView.setPasswordText("******");
-
+		if (isWorking) {
 			loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
-
-			new Thread() {
-				public void run() {
-					String errorMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
-
-					try {
-						client.autologin();
-					} catch (ConnectionException e) {
-						Log.e(Log.LOGIN_TAG, "connection exception");
-						errorMsg = CONNECTION_ERROR_MESSAGE;
-					} catch (LoginInterruptedException e) {
-						Log.e(Log.LOGIN_TAG, "login interrupted");
-					} catch (InvalidCredentialsException e) {
-						Log.e(Log.LOGIN_TAG, "invalid credentails");
-					}
-
-					finishLoginAttempt(errorMsg);
-
-					if (!client.isLoggedIn()) {
-						loginView.splashDeactivate();
-					}
-				}
-			}.start();
 		} else {
-			// manual login
+			loginView.setErrorText(stateMsg);
+			if (MetaMapActivity.client.isAutologinPossible()) {
+				// autologin attempt
+				loginView.setPasswordText("******");
+
+				loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
+
+				startAutologin();
+			} else {
+				// manual login
+			}
 		}
 	}
-
+	
+//	@Override
+//	protected void onPause() {
+//		loginView.splashDeactivate();
+//
+//		super.onDestroy();
+//
+//		if (!MetaMapActivity.client.isLoggedIn()) {
+//			stateMsg = "widow is paused";
+//			MetaMapActivity.client.interruptLogin();
+//		}
+//	}
+//
 	@Override
 	protected void onDestroy() {
 		loginView.splashDeactivate();
 
 		super.onDestroy();
 
-		if (!client.isLoggedIn()) {
-			client.interruptLogin();
-		}
+//		if (!MetaMapActivity.client.isLoggedIn()) {
+//			stateMsg = "widow is destroyed";
+//			MetaMapActivity.client.interruptLogin();
+//		}
 	}
 }
