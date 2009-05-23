@@ -222,6 +222,10 @@ public class MapActivity extends Activity {
 							// TODO: ???
 						}
 
+						if (result == null) {
+							result = "";
+						}
+						
 						splashActivate("Parsing map", true);
 						map = MetaMapActivity.mapBuilder.buildMap(result);
 
