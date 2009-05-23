@@ -117,14 +117,24 @@ public class MapActivity extends Activity {
 		lastZoomPress = System.currentTimeMillis();
 		if (!zoomVisible) {
 			zoomVisible = true;
-			zoom.show();
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					zoom.show();
+				}
+			});
 		}
 	}
 
 	public void hideZoom() {
 		if (zoomVisible) {
 			zoomVisible = false;
-			zoom.hide();
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					zoom.hide();
+				}
+			});
 		}
 	}
 
@@ -284,12 +294,7 @@ public class MapActivity extends Activity {
 
 					while (true) {
 						if (System.currentTimeMillis() - lastZoomPress > TIME_TO_HIDE) {
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									hideZoom();
-								}
-							});
+							hideZoom();
 						}
 						sleep(100);
 					}
@@ -354,13 +359,7 @@ public class MapActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.zoom:
-			// view.isVisible(View.INVISIBLE);
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					showZoom();
-				}
-			});
+			showZoom();
 			return true;
 		case R.id.find:
 			// view.showSearchButtins();
