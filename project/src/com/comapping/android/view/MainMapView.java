@@ -205,7 +205,7 @@ public class MainMapView extends View {
 			queryLabel.setText((selectedSearchResult + 1) + "\\"
 					+ findTopics.size() + "\n" + query);
 		} else {
-			queryLabel.setText("Nothing founded!");
+			queryLabel.setText("Nothing found!");
 		}
 
 	}
