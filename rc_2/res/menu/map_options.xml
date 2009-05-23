@@ -1,0 +1,5 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:icon="@drawable/zoom" android:title="Zoom" android:id="@+id/zoom" />
+	<item android:icon="@drawable/find" android:title="Find" android:id="@+id/find" />
+	<item android:icon="@drawable/reload_metamap_menu_icon" android:title="Synchronize" android:id="@+id/mapSynchronizeButton" />
+</menu>
