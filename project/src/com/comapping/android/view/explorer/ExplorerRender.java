@@ -15,7 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
+import com.comapping.android.Log;
 import android.view.KeyEvent;
 
 public class ExplorerRender extends MapRender {
@@ -273,7 +273,7 @@ public class ExplorerRender extends MapRender {
 	public void setBounds(int width, int height) {
 		screenWidth = width;
 		screenHeight = height;
-		Log.v("Size", width + " " + height);
+		Log.d(Log.EXPLORER_RENDER_TAG,"Size" + width + " " + height);
 		if (setBoundsNeeded) {
 			update();
 			if (cachingNeeded) {
