@@ -40,7 +40,7 @@ public class NoteRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			textRender.draw(x, y, width, height, c);
@@ -49,17 +49,17 @@ public class NoteRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public int getHeight() {
 		return height;
 	}
 
-	@Override
+	
 	public int getWidth() {
 		return width;
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 		if (!isEmpty) {
 			if (dialog == null) {
@@ -82,7 +82,7 @@ public class NoteRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public String toString() {
 		if (!isEmpty) {
 			return "[NoteRender: note=\"" + textRender.getSimpleText() + "\" width=" + getWidth() + " height="

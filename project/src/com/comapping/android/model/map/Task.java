@@ -39,7 +39,7 @@ public class Task implements Serializable {
 		this.responsible = (responsible != null) ? responsible : "";
 	}
 
-	@Override
+	
 	public String toString() {
 		return "[Task: deadline=" + deadline + ", responsible=\"" + "\"]";
 	}

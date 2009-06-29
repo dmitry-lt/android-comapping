@@ -22,7 +22,7 @@ public class PlusMinusRender  extends Render {
 		p.setAntiAlias(true);
 	}
 	
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		drawCircle(x + OUTER_SIZE, y + OUTER_SIZE, c);
 	}
@@ -41,17 +41,17 @@ public class PlusMinusRender  extends Render {
 					+ PLUS_LENGTH, p);
 	}
 
-	@Override
+	
 	public int getHeight() {
 		return HEIGHT;
 	}
 
-	@Override
+	
 	public int getWidth() {
 		return WIDTH;
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 	}
 

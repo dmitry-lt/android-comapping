@@ -66,7 +66,7 @@ public class MainMapView extends View {
 
 	ScrollController scrollController = new ScrollController() {
 
-		@Override
+		
 		public void intermediateScroll(int destX, int destY) {
 
 			int vx = mScroller.getCurrX() - destX;
@@ -77,7 +77,7 @@ public class MainMapView extends View {
 			mScroller.computeScrollOffset();
 		}
 
-		@Override
+		
 		public void smoothScroll(int destX, int destY) {
 			int vx = mScroller.getCurrX() - destX;
 			int vy = mScroller.getCurrY() - destY;
@@ -147,14 +147,14 @@ public class MainMapView extends View {
 		this.findLayout = findLayout;
 
 		this.cancel.setOnClickListener(new OnClickListener() {
-			@Override
+			
 			public void onClick(View v) {
 				hideSearchUI();
 			}
 		});
 
 		this.next.setOnClickListener(new OnClickListener() {
-			@Override
+			
 			public void onClick(View v) {
 				selectedSearchResult = (selectedSearchResult + 1)
 						% findTopics.size();
@@ -167,7 +167,7 @@ public class MainMapView extends View {
 		});
 
 		this.prev.setOnClickListener(new OnClickListener() {
-			@Override
+			
 			public void onClick(View v) {
 				selectedSearchResult = (selectedSearchResult
 						+ findTopics.size() - 1)
@@ -252,10 +252,10 @@ public class MainMapView extends View {
 
 	private boolean isFinished = true;
 
-	@Override
+	
 	protected void onDraw(Canvas canvas) {
 		new Thread() {
-			@Override
+			
 			public void run() {
 				isFinished = false;
 				while (!activity.canDraw()) {
@@ -276,7 +276,7 @@ public class MainMapView extends View {
 
 		final View mainMapView = this;
 		new Thread(new Runnable() {
-			@Override
+			
 			public void run() {
 				if (!canDraw) {
 					mRender.onRotate();
@@ -394,7 +394,7 @@ public class MainMapView extends View {
 
 	}
 
-	@Override
+	
 	public boolean onTouchEvent(MotionEvent ev) {
 
 		switch (ev.getAction()) {
@@ -482,7 +482,7 @@ public class MainMapView extends View {
 		return true;
 	}
 
-	@Override
+	
 	public boolean onKeyDown(int keyCode, KeyEvent msg) {
 
 		// Back button fix

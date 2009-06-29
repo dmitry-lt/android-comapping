@@ -71,7 +71,7 @@ public class TopicView implements Comparable<TopicView> {
 		topicRenderY = y;
 	}
 
-	@Override
+	
 	public int compareTo(TopicView another) {
 		int y1 = this.topicRenderY + this.topicRender.getCurTopicRender().getHeight();
 		int y2 = another.topicRenderY;

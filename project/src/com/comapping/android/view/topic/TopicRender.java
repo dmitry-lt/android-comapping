@@ -71,7 +71,7 @@ public class TopicRender extends Render {
 		Log.d(Log.TOPIC_RENDER_TAG, "created " + this);
 	}
 
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			iconRender.draw(x + iconRect.left, y + iconRect.top, 0, 0, c);
@@ -114,17 +114,17 @@ public class TopicRender extends Render {
 		return topic;
 	}
 	
-	@Override
+	
 	public int getWidth() {
 		return width;
 	}
 
-	@Override
+	
 	public int getHeight() {
 		return height;
 	}
 
-	@Override
+	
 	public String toString() {
 		if (!isEmpty) {
 			return "[TopicRender: width=" + getWidth() + " height=" + getHeight() + "\n\t" + iconRender + "\n\t"
@@ -134,7 +134,7 @@ public class TopicRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 		Log.d(Log.TOPIC_RENDER_TAG, "Touch on " + this);
 

@@ -84,7 +84,7 @@ public class LoginView {
 		Button loginButton = (Button) loginActivity.findViewById(R.id.login);
 
 		loginButton.setOnClickListener(new OnClickListener() {
-			@Override
+			
 			public void onClick(View v) {
 				final String email = ((TextView) loginActivity.findViewById(R.id.email)).getText().toString();
 				final String password = ((TextView) loginActivity.findViewById(R.id.password)).getText().toString();

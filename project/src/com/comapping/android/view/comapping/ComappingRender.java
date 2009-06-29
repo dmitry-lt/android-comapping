@@ -233,7 +233,7 @@ public class ComappingRender extends MapRender {
 			return (renderZoneHeight - getHeight()) / 2;
 	}
 
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 
 		if (renderZoneWidth == -1) {
@@ -255,7 +255,7 @@ public class ComappingRender extends MapRender {
 
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 		onTouch(0, getVertOffset(), root, x, y);
 	}
@@ -310,7 +310,7 @@ public class ComappingRender extends MapRender {
 		return false;
 	}
 
-	@Override
+	
 	public void setScrollController(ScrollController scroll) {
 		scrollController = scroll;
 	}
@@ -730,7 +730,7 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
-	@Override
+	
 	public void onKeyDown(int keyCode) {
 		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
 			moveLeft();
@@ -751,12 +751,12 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
-	@Override
+	
 	public void setBounds(int width, int height) {
 
 	}
 
-	@Override
+	
 	public void selectTopic(Topic topic) {
 		for (TopicView i : items) {
 			if (i.getTopic() == topic) {
@@ -766,12 +766,12 @@ public class ComappingRender extends MapRender {
 		}
 	}
 
-	@Override
+	
 	public boolean canRotate() {
 		return true;
 	}
 
-	@Override
+	
 	public void onRotate() {
 
 	}

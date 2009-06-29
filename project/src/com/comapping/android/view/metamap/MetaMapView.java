@@ -47,7 +47,7 @@ public class MetaMapView {
 		listView.setAdapter(new TopicAdapter(metaMapActivity, childTopics));
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
+			
 			public void onItemClick(AdapterView<?> apapterView, View view, int position, long arg3) {
 				// get viewType
 				String viewType = Storage.getInstance().get(Storage.VIEW_TYPE_KEY, Options.DEFAULT_VIEW_TYPE);
@@ -65,7 +65,7 @@ public class MetaMapView {
 			setButtonsDisabled();
 		} else {
 			metaMapActivity.findViewById(R.id.upLevelButton).setOnClickListener(new OnClickListener() {
-				@Override
+				
 				public void onClick(View v) {
 					metaMapActivity.loadMetaMapTopic(topic.getParent());
 				}
@@ -114,7 +114,7 @@ public class MetaMapView {
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 		
 		homeButton.setOnClickListener(new OnClickListener() {
-			@Override
+			
 			public void onClick(View v) {
 				metaMapActivity.loadMetaMapTopic(map.getRoot());
 			}

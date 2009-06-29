@@ -70,7 +70,7 @@ public class IconRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			int curX = x;
@@ -123,7 +123,7 @@ public class IconRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public String toString() {
 		if (!isEmpty) {
 			return "[IconRender: width=" + getWidth() + " height=" + getHeight() + "]";
@@ -132,17 +132,17 @@ public class IconRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public int getHeight() {
 		return height;
 	}
 
-	@Override
+	
 	public int getWidth() {
 		return width;
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 		// TODO Auto-generated method stub
 

@@ -68,7 +68,7 @@ public class MetaMapActivity extends Activity {
 	private Topic[] currentTopicChildren;
 
 	// activity methods
-	@Override
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instance = this;
@@ -95,7 +95,7 @@ public class MetaMapActivity extends Activity {
 	}
 
 	/* Creates the menu items */
-	@Override
+	
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		Integer currentMenu = currentView.getOptionsMenu();
 		Log.d(Log.META_MAP_CONTROLLER_TAG, "On create options menu. Current menu: "+currentMenu);
@@ -165,7 +165,7 @@ public class MetaMapActivity extends Activity {
 		return true;
 	}
 
-	@Override
+	
 	protected void onDestroy() {
 		splashDeactivate();
 
@@ -178,7 +178,7 @@ public class MetaMapActivity extends Activity {
 		super.onDestroy();
 	}
 
-	@Override
+	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == MAP_REQUEST) {
 			currentView.activate(this);
@@ -294,7 +294,7 @@ public class MetaMapActivity extends Activity {
 				}
 				
 				runOnUiThread(new Runnable() {
-					@Override
+					
 					public void run() {
 						switchView(internetView);
 					}

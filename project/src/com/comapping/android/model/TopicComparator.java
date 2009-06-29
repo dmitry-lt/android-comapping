@@ -6,7 +6,7 @@ import com.comapping.android.model.map.Topic;
 
 public class TopicComparator implements Comparator<Topic> {
 
-	@Override
+	
 	public int compare(Topic topic1, Topic topic2) {
 		if ((topic1.isFolder() && topic2.isFolder()) || 
 			(!topic1.isFolder() && !topic2.isFolder())) {

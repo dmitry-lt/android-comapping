@@ -69,7 +69,7 @@ public class MapActivity extends Activity {
 				if (splash == null) {
 					splash = ProgressDialog.show(context, "Comapping", message);
 					splash.setOnCancelListener(new OnCancelListener() {
-						@Override
+						
 						public void onCancel(DialogInterface dialog) {
 							mapProcessingThread.interrupt();
 							mapProcessingThread.setPriority(Thread.MIN_PRIORITY);
@@ -100,7 +100,7 @@ public class MapActivity extends Activity {
 			public void run() {
 				Dialog dialog = (new AlertDialog.Builder(activity).setTitle("Error").setMessage(message)
 						.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-							@Override
+							
 							public void onClick(DialogInterface dialog, int which) {
 								activity.finish();
 							}
@@ -118,7 +118,7 @@ public class MapActivity extends Activity {
 		if (!zoomVisible) {
 			zoomVisible = true;
 			runOnUiThread(new Runnable() {
-				@Override
+				
 				public void run() {
 					zoom.show();
 				}
@@ -130,7 +130,7 @@ public class MapActivity extends Activity {
 		if (zoomVisible) {
 			zoomVisible = false;
 			runOnUiThread(new Runnable() {
-				@Override
+				
 				public void run() {
 					zoom.hide();
 				}
@@ -150,11 +150,11 @@ public class MapActivity extends Activity {
 		return canDraw;
 	}
 
-	@Override
+	
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		new Thread() {
-			@Override
+			
 			public void run() {
 				splashActivate("Loading map", false);
 				canDraw = false;
@@ -174,7 +174,7 @@ public class MapActivity extends Activity {
 		}.start();
 	}
 
-	@Override
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -243,7 +243,7 @@ public class MapActivity extends Activity {
 					mapRender = initMapRender(map, viewType);
 
 					runOnUiThread(new Runnable() {
-						@Override
+						
 						public void run() {
 
 							setContentView(R.layout.map);
@@ -268,7 +268,7 @@ public class MapActivity extends Activity {
 							hideZoom();
 							zoom.setIsZoomInEnabled(false);
 							zoom.setOnZoomInClickListener(new OnClickListener() {
-								@Override
+								
 								public void onClick(View v) {
 									view.setScale(view.getScale() + 0.1f);
 									lastZoomPress = System.currentTimeMillis();
@@ -276,7 +276,7 @@ public class MapActivity extends Activity {
 								}
 							});
 							zoom.setOnZoomOutClickListener(new OnClickListener() {
-								@Override
+								
 								public void onClick(View v) {
 									view.setScale(view.getScale() - 0.1f);
 									lastZoomPress = System.currentTimeMillis();
@@ -378,7 +378,7 @@ public class MapActivity extends Activity {
 		return false;
 	}
 
-	// @Override
+	// 
 	// public boolean onSearchRequested() {
 	// // If your application absolutely must disable search, do it here.
 	// // if (mMenuMode.getSelectedItemPosition() == MENUMODE_DISABLED) {
@@ -432,7 +432,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
-	@Override
+	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
 				|| (resultCode == Options.RESULT_CHAIN_CLOSE)) {
@@ -444,7 +444,7 @@ public class MapActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	@Override
+	
 	protected void onDestroy() {
 		splashDeactivate();
 		super.onDestroy();

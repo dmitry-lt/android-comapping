@@ -68,7 +68,7 @@ public class AttachmentRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			c.drawBitmap(attachmentIcon, x, y, null);
@@ -77,7 +77,7 @@ public class AttachmentRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public String toString() {
 		if (!isEmpty) {
 			return "[AttachmentRender: width=" + getWidth() + " height=" + getHeight() + "]";
@@ -86,17 +86,17 @@ public class AttachmentRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public int getHeight() {
 		return height;
 	}
 
-	@Override
+	
 	public int getWidth() {
 		return width;
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 		if (dialog == null) {
 			downloadFolder = Storage.getInstance().get(Storage.DOWNLOAD_FOLDER_KEY, Options.DEFAULT_DOWNLOAD_FOLDER);
@@ -108,17 +108,17 @@ public class AttachmentRender extends Render {
 									+ formatFileSize(attachment.getSize()) + "\n\n"
 									+ "Save in " + downloadFolder + " ?").setNegativeButton("No",
 							new DialogInterface.OnClickListener() {
-								@Override
+								
 								public void onClick(DialogInterface dialog, int which) {
 
 								}
 							}).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				@Override
+				
 				public void onClick(DialogInterface dialog, int which) {
 					downloadProgressDialog = new ProgressDialog(context);
 					downloadProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 					downloadProgressDialog.setOnDismissListener(new OnDismissListener() {
-						@Override
+						
 						public void onDismiss(DialogInterface dialog) {
 							if (!downloadedSuccessfully) {
 								(new AlertDialog.Builder(context).setMessage("Error while downloading and saving file")
@@ -130,7 +130,7 @@ public class AttachmentRender extends Render {
 					downloadProgressDialog.setProgress(0);
 
 					final Thread downloadAndSaveThread = new Thread(new Runnable() {
-						@Override
+						
 						public void run() {
 							try {
 								downloadAndSaveAttachment();
@@ -145,7 +145,7 @@ public class AttachmentRender extends Render {
 					downloadAndSaveThread.start();
 
 					downloadProgressDialog.setOnCancelListener(new OnCancelListener() {
-						@Override
+						
 						public void onCancel(DialogInterface dialog) {
 							downloadAndSaveThread.interrupt();
 						}

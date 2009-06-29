@@ -21,7 +21,7 @@ public class SaxMapBuilder extends MapBuilder {
 
 	SaxHandler handler;
 
-	@Override
+	
 	public Map buildMap(String xmlDocument) throws StringToXMLConvertionException, MapParsingException {
 		try {
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();

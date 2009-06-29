@@ -50,7 +50,7 @@ public class Attachment implements Serializable {
 		this.size = size;
 	}
 
-	@Override
+	
 	public String toString() {
 		return "[Attachment: date=" + date + " filename=\"" + "\" key=\"" + key + "\" size=" + size + "]";
 	}

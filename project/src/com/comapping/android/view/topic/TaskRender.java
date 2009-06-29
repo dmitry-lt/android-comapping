@@ -87,7 +87,7 @@ public class TaskRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			responsibleRender.draw(x + responsibleCoords.x, y + responsibleCoords.y, 0, 0, c);
@@ -98,7 +98,7 @@ public class TaskRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public String toString() {
 		if (!isEmpty) {
 			return "[TaskRender: width=" + getWidth() + " height=" + getHeight() + " linesCount=" + linesCount
@@ -109,17 +109,17 @@ public class TaskRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public int getHeight() {
 		return height;
 	}
 
-	@Override
+	
 	public int getWidth() {
 		return width;
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 		if (!isEmpty) {
 			if (dialog == null) {

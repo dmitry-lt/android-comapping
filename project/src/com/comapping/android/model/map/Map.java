@@ -71,7 +71,7 @@ public class Map implements Serializable {
 		return result + 1;
 	}
 
-	@Override
+	
 	public String toString() {
 		return "[Map: id=" + this.getId() + ", name=\"" + this.getName() + "\"]";
 	}

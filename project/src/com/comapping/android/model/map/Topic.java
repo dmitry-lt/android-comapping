@@ -232,13 +232,13 @@ public class Topic implements Iterable<Topic>, Serializable {
 		children = new ArrayList<Topic>();
 	}
 
-	@Override
+	
 	public String toString() {
 		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText() + "\"]";
 	}
 
 
-	@Override
+	
 	public TopicIterator iterator() {
 		return new TopicIterator(this);
 	}
@@ -253,17 +253,17 @@ class TopicIterator implements Iterator<Topic> {
 		this.topic = topic;
 	}
 
-	@Override
+	
 	public boolean hasNext() {
 		return index < topic.getChildrenCount();
 	}
 
-	@Override
+	
 	public Topic next() throws IndexOutOfBoundsException {
 		return topic.getChildByIndex(index++);
 	}
 
-	@Override
+	
 	public void remove() throws IndexOutOfBoundsException {
 		topic.removeChildByIndex(index);
 	}

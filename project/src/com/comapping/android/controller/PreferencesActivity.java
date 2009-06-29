@@ -17,7 +17,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		preference.setSummary(defaultValue);
 		
 		preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
+			
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				preference.setSummary((CharSequence) newValue);
 

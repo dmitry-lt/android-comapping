@@ -270,7 +270,7 @@ public class TextRender extends Render {
 		formattedText.update();
 	}
 
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			if (bgColor != 0) {
@@ -305,7 +305,7 @@ public class TextRender extends Render {
 		return isEmpty;
 	}
 
-	@Override
+	
 	public String toString() {
 		if (!isEmpty) {
 			return "[TextRender: width=" + getWidth() + " height=" + getHeight() + " text="
@@ -315,17 +315,17 @@ public class TextRender extends Render {
 		}
 	}
 
-	@Override
+	
 	public int getHeight() {
 		return height;
 	}
 
-	@Override
+	
 	public int getWidth() {
 		return width;
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 		if (!isEmpty) {
 			Point touchPoint = new Point(x, y);

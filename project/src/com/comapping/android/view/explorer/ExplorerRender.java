@@ -259,17 +259,17 @@ public class ExplorerRender extends MapRender {
 		selectTopic(allTopics.get(topic));
 	}
 
-	@Override
+	
 	public boolean canRotate() {
 		return canRotate;
 	}
 
-	@Override
+	
 	public void onRotate() {
 		setBoundsNeeded = true;
 	}
 
-	@Override
+	
 	public void setBounds(int width, int height) {
 		screenWidth = width;
 		screenHeight = height;
@@ -292,7 +292,7 @@ public class ExplorerRender extends MapRender {
 		}
 	}
 
-	@Override
+	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		xOffset = -x;
 		yOffset = -y;
@@ -308,17 +308,17 @@ public class ExplorerRender extends MapRender {
 		draw(c);
 	}
 
-	@Override
+	
 	public int getHeight() {
 		return height;
 	}
 
-	@Override
+	
 	public int getWidth() {
 		return width;
 	}
 
-	@Override
+	
 	public void onTouch(int x, int y) {
 		// touch circles
 		for (Expander expander : expanders) {
@@ -344,12 +344,12 @@ public class ExplorerRender extends MapRender {
 		}
 	}
 
-	@Override
+	
 	public void setScrollController(ScrollController scroll) {
 		this.scroll = scroll;
 	}
 
-	@Override
+	
 	public void onKeyDown(int keyCode) {
 		if (selectedTopic == null) {
 			return;

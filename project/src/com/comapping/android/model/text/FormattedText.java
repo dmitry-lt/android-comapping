@@ -75,7 +75,7 @@ public class FormattedText implements Serializable {
 		this.simpleText = text.toString();
 	}
 	
-	@Override
+	
 	public String toString() {
 		return getSimpleText();
 	}

@@ -10,7 +10,7 @@ public class Expander implements Comparable<Expander> {
 		this.topic = topic;
 	}
 
-	@Override
+	
 	public int compareTo(Expander another) {
 		if (this.y < another.y) {
 			return -1;

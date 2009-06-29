@@ -16,7 +16,7 @@ import com.comapping.android.communication.exceptions.LoginInterruptedException;
 
 public class FileMapProvider implements MapProvider {
 
-	@Override
+	
 	public String getComap(String mapId, Activity context) throws ConnectionException, LoginInterruptedException,
 			InvalidCredentialsException {
 		String response = "";

@@ -39,7 +39,7 @@ public class LoginActivity extends Activity {
 
 	private void finishLoginAttempt(final String errorMsg) {
 		runOnUiThread(new Runnable() {
-			@Override
+			
 			public void run() {
 				if (MetaMapActivity.client.isLoggedIn()) {
 					setResult(RESULT_LOGIN_SUCCESSFUL);
@@ -158,7 +158,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 	
-//	@Override
+//	
 //	protected void onPause() {
 //		loginView.splashDeactivate();
 //
@@ -170,7 +170,7 @@ public class LoginActivity extends Activity {
 //		}
 //	}
 //
-	@Override
+	
 	protected void onDestroy() {
 		loginView.splashDeactivate();
 
