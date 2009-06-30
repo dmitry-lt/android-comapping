@@ -26,5 +26,5 @@
 <string name="proxy_name_preference_key">proxyName</string>
 <string name="proxy_name_title">Proxy User Name</string>
 <string name="proxy_password_preference_key">proxyPassword</string>
-<string name="proxy_password_title"></string>
+<string name="proxy_password_title">Proxy Password</string>
 </resources>
