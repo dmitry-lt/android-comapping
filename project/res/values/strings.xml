@@ -21,4 +21,10 @@
 	<string name="proxy_port_title">Proxy port</string>
 <string name="search_label">Comapping</string>
 <string name="search_hint">Search in the current map</string>
+<string name="use_proxy_auth_key">useProxyAuth</string>
+<string name="use_proxy_auth_title">Use proxy auth</string>
+<string name="proxy_name_preference_key">proxyName</string>
+<string name="proxy_name_title">Proxy User Name</string>
+<string name="proxy_password_preference_key">proxyPassword</string>
+<string name="proxy_password_title"></string>
 </resources>

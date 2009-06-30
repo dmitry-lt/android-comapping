@@ -212,7 +212,7 @@ public class Client implements MapProvider {
 		loginInterrupted = true;
 	} 
 
-	public static Proxy getProxy() throws ConnectionException {
+	public static HttpURLConnection getHttpURLConnection(URL url) throws ConnectionException, IOException {
 		if (Storage.getInstance().getBoolean(Storage.USE_PROXY, Options.DEFAULT_USE_PROXY)) {
 			String proxyHost = Storage.getInstance().get(Storage.PROXY_HOST, "");
 			int proxyPort = 0;
@@ -223,9 +223,23 @@ public class Client implements MapProvider {
 				throw new ConnectionException();
 			}
 			
-			return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
+			
+			// TODO: wrong work after login with wrong proxy name and password :-(
+			if (Storage.getInstance().getBoolean(Storage.USE_PROXY_AUTH, Options.DEFAULT_USE_PROXY_AUTH)) {
+				String proxyUser = Storage.getInstance().get(Storage.PROXY_NAME, "");
+				String proxyPassword = Storage.getInstance().get(Storage.PROXY_PASSWORD, "");;
+				StringBuilder encodedInfo = new StringBuilder();
+				for (byte b : Base64Encoder.encodeBase64((proxyUser + ":" + proxyPassword).getBytes())) {
+					encodedInfo.append((char) b);
+				}
+				connection.setRequestProperty("Proxy-Authorization", "Basic "+encodedInfo);
+			}
+			
+			return connection;
 		} else {
-			return Proxy.NO_PROXY;
+			return (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);			
 		}
 	}
 	
@@ -245,9 +259,8 @@ public class Client implements MapProvider {
 		}
 
 		try {
-			HttpURLConnection connection = null;
+			HttpURLConnection connection = getHttpURLConnection(url);
 			
-			connection = (HttpURLConnection) url.openConnection(getProxy());
 			connection.setReadTimeout(MAX_READ_TIMEOUT);
 			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
 

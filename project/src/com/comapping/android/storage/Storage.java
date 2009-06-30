@@ -20,9 +20,15 @@ public class Storage {
 	public static final String DOWNLOAD_FOLDER_KEY = "downloadFolder";
 	public static final String AUTOLOGIN_KEY = "autologin";
 	public static final String EMAIL_KEY = "email";	
+	
 	public static final String USE_PROXY = "useProxy";	
 	public static final String PROXY_HOST = "proxyHost";
 	public static final String PROXY_PORT = "proxyPort";
+	
+	public static final String USE_PROXY_AUTH = "useProxyAuth";	
+	public static final String PROXY_NAME = "proxyName";
+	public static final String PROXY_PASSWORD = "proxyPassword";
+	
 
 	// Singleton
 	private Storage() {

@@ -62,5 +62,11 @@ public class PreferencesActivity extends PreferenceActivity {
 		
 		// proxy port
 		initTextPreference((EditTextPreference) findPreference("proxyPort"), "");
+		
+		// proxy name
+		initTextPreference((EditTextPreference) findPreference("proxyName"), "");
+		
+		// proxy password
+		initTextPreference((EditTextPreference) findPreference("proxyPassword"), "");
 	}
 }

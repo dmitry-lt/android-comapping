@@ -198,7 +198,7 @@ public class AttachmentRender extends Render {
 
 		HttpURLConnection connection = null;
 		try {
-			connection = (HttpURLConnection) url.openConnection(Client.getProxy());
+			connection = Client.getHttpURLConnection(url);
 			
 			connection.setDoOutput(true);
 
