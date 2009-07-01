@@ -17,18 +17,18 @@
 			android:src="@drawable/logo">
 		</ImageView>
 		<TableLayout 
-			android:id="@+id/TableLayout01"
+			android:id="@+id/LoginTableLayout"
 			android:layout_height="wrap_content" 
 			android:layout_marginLeft="20px"
 			android:layout_marginRight="20px" 
 			android:layout_width="fill_parent"
 			android:stretchColumns="1">
 			<TableRow 
-				android:id="@+id/TableRow01" 
+				android:id="@+id/EMailTableRow" 
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
 				<TextView 
-					android:id="@+id/TextView01"
+					android:id="@+id/EMailTextView"
 					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content"
 					android:text="E-mail">
@@ -43,11 +43,11 @@
 				</EditText>
 			</TableRow>
 			<TableRow 
-				android:id="@+id/TableRow02" 
+				android:id="@+id/PassswordTableRow" 
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
 				<TextView 
-					android:id="@+id/TextView02"
+					android:id="@+id/PasswordTextView"
 					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content"
 					android:text="Password">
@@ -64,21 +64,21 @@
 			</TableRow>
 		</TableLayout>
 		<RelativeLayout 
-			android:id="@+id/RelativeLayout01"
+			android:id="@+id/RememberUserLayout"
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content"
 			android:layout_gravity="center">
 			<CheckBox 
-				android:id="@+id/CheckBox01" 
+				android:id="@+id/RememberUserCheckBox" 
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
 			</CheckBox>
 			<TextView 
-				android:id="@+id/TextView03" 
+				android:id="@+id/RememberUserTextView" 
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" 
-				android:layout_toRightOf="@+id/CheckBox01"
-				android:layout_alignBaseline="@+id/CheckBox01" 
+				android:layout_toRightOf="@+id/RememberUserCheckBox"
+				android:layout_alignBaseline="@+id/RememberUserCheckBox" 
 				android:text="Remember me">
 			</TextView>
 		</RelativeLayout>
