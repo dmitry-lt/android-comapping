@@ -1,1 +1,0 @@
-jarsigner -verbose -keystore my-release-key.keystore app-build/TranslateActivity-unsigned.apk mykey
