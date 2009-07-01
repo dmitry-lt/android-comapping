@@ -248,19 +248,19 @@ public class MapActivity extends Activity {
 
 							setContentView(R.layout.map);
 
-							zoom = (ZoomControls) findViewById(R.id.Zoom);
+							zoom = (ZoomControls) findViewById(R.id.zoom);
 							prev = (ImageButton) findViewById(R.id.previousButton);
 							next = (ImageButton) findViewById(R.id.nextButton);
 							cancel = (ImageButton) findViewById(R.id.cancelButton);
 							queryTextView = (TextView) findViewById(R.id.query);
 
-							LinearLayout findLayout = (LinearLayout) findViewById(R.id.FindView);
+							LinearLayout findLayout = (LinearLayout) findViewById(R.id.findView);
 
 							Topic topic = map.getRoot();
 							allTopicsTexts(topic);
 							allTopics(topic);
 
-							view = (MainMapView) findViewById(R.id.MapView);
+							view = (MainMapView) findViewById(R.id.mapView);
 							view.setSearchUI(findLayout, cancel, next, prev, queryTextView);
 							view.setRender(mapRender);
 							view.setZoom(zoom);
