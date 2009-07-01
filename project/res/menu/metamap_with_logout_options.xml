@@ -1,6 +1,13 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Preferences" android:id="@+id/preferences" android:icon="@drawable/preferences_menu_icon"/>
-    <item android:title="Logout" android:icon="@drawable/logout_menu_icon" android:id="@+id/logout"/>
-
-
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+    	android:title="Preferences"
+    	android:id="@+id/preferences"
+    	android:icon="@drawable/preferences_menu_icon"
+    />
+    <item
+    	android:title="Logout"
+    	android:icon="@drawable/logout_menu_icon"
+    	android:id="@+id/logout"
+    />
 </menu>
