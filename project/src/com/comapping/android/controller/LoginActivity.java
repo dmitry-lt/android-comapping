@@ -126,7 +126,7 @@ public class LoginActivity extends Activity {
 
 	public void loginClick(final String email, final String password) {
 		loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
-		CheckBox remember = (CheckBox) findViewById(R.id.CheckBox01);
+		CheckBox remember = (CheckBox) findViewById(R.id.rememberUserCheckBox);
 		startWork(email, password, remember.isChecked());
 	}
 

@@ -47,7 +47,7 @@ public class LoginView {
 	}
 
 	public void setEmailText(final String email) {
-		final TextView emailText = (TextView) loginActivity.findViewById(R.id.email);
+		final TextView emailText = (TextView) loginActivity.findViewById(R.id.eMail);
 
 		emailText.setText(email);
 	}
@@ -86,7 +86,7 @@ public class LoginView {
 		loginButton.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				final String email = ((TextView) loginActivity.findViewById(R.id.email)).getText().toString();
+				final String email = ((TextView) loginActivity.findViewById(R.id.eMail)).getText().toString();
 				final String password = ((TextView) loginActivity.findViewById(R.id.password)).getText().toString();
 
 				loginActivity.loginClick(email, password);
