@@ -15,7 +15,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-public class Storage {
+public class PreferencesStorage {
 	public static final String VIEW_TYPE_KEY = "viewType";
 	public static final String DOWNLOAD_FOLDER_KEY = "downloadFolder";
 	public static final String AUTOLOGIN_KEY = "autologin";
@@ -30,17 +30,17 @@ public class Storage {
 	public static final String PROXY_PASSWORD = "proxyPassword";
 	
 
-	// Singleton
-	private Storage() {
-	}
+//	// Singleton
+//	private Storage() {
+//	}
+//
+//	public static Storage instance = new Storage();
+//
+//	public static Storage getInstance() {
+//		return instance;
+//	}
 
-	public static Storage instance = new Storage();
-
-	public static Storage getInstance() {
-		return instance;
-	}
-
-	public void set(String key, String value) {
+	public static void set(String key, String value) {
 		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
 
 		Editor edit = preferances.edit();
@@ -51,7 +51,7 @@ public class Storage {
 		Log.i(Log.STORAGE_TAG, "[" + key + "] = " + value);
 	}
 
-	public String get(String key, String defaultValue) {
+	public static String get(String key, String defaultValue) {
 		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
 
 		String value = preferances.getString(key, defaultValue);
@@ -61,7 +61,7 @@ public class Storage {
 		return value;
 	}
 	
-	public boolean getBoolean(String key, boolean defaultValue) {
+	public static boolean getBoolean(String key, boolean defaultValue) {
 		// false if not created
 		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
 

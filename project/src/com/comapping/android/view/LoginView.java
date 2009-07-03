@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.controller.R;
-import com.comapping.android.storage.Storage;
+import com.comapping.android.storage.PreferencesStorage;
 
 public class LoginView {
 	private LoginActivity loginActivity;
@@ -73,7 +73,7 @@ public class LoginView {
 		loginActivity.findViewById(R.id.loginLayout).setBackgroundDrawable(dr);
 		//@drawable/login_bg
 		
-		String email = Storage.getInstance().get(Storage.EMAIL_KEY, null);
+		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, null);
 		if (email != null) {
 			setEmailText(email);
 			TextView passwordText = (TextView) loginActivity.findViewById(R.id.password);

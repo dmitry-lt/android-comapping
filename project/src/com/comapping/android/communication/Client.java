@@ -30,7 +30,7 @@ import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.LoginActivity;
-import com.comapping.android.storage.Storage;
+import com.comapping.android.storage.PreferencesStorage;
 
 public class Client implements MapProvider {
 	final static String MetaMapId = "meta";
@@ -71,7 +71,7 @@ public class Client implements MapProvider {
 		clientSideLogout(true);
 
 		// anyway save email
-		Storage.getInstance().set(Storage.EMAIL_KEY, email);
+		PreferencesStorage.set(PreferencesStorage.EMAIL_KEY, email);
 
 		String passwordHash = md5Encode(password);
 		String loginResponse = loginRequest(email, passwordHash, SIMPLE_LOGIN_METHOD);
@@ -98,7 +98,7 @@ public class Client implements MapProvider {
 
 		if (isLoggedIn() && remember) {
 			// save autologin key
-			Storage.getInstance().set(Storage.AUTOLOGIN_KEY, autoLoginKey);
+			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, autoLoginKey);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class Client implements MapProvider {
 	 * @return autologin possibility
 	 */
 	public boolean isAutologinPossible() {
-		return !Storage.getInstance().get(Storage.AUTOLOGIN_KEY, "").equals("");
+		return !PreferencesStorage.get(PreferencesStorage.AUTOLOGIN_KEY, "").equals("");
 	}
 
 	/**
@@ -122,8 +122,8 @@ public class Client implements MapProvider {
 	 * @throws LoginInterruptedException
 	 */
 	public void autologin() throws ConnectionException, InvalidCredentialsException, LoginInterruptedException {
-		String email = Storage.getInstance().get(Storage.EMAIL_KEY, "");
-		String autologinKey = Storage.getInstance().get(Storage.AUTOLOGIN_KEY, "");
+		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, "");
+		String autologinKey = PreferencesStorage.get(PreferencesStorage.AUTOLOGIN_KEY, "");
 
 		clientSideLogout(true);
 
@@ -133,7 +133,7 @@ public class Client implements MapProvider {
 			throw new InvalidCredentialsException(); // TODO: ???
 		} else {
 			// reSet autologin key
-			Storage.getInstance().set(Storage.AUTOLOGIN_KEY, autologinKey);
+			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, autologinKey);
 		}
 	}
 
@@ -153,7 +153,7 @@ public class Client implements MapProvider {
 		clientId = null;
 
 		if (isToEmptyAutologin) {
-			Storage.getInstance().set(Storage.AUTOLOGIN_KEY, "");
+			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, "");
 		}
 	}
 
@@ -213,12 +213,12 @@ public class Client implements MapProvider {
 	} 
 
 	public static HttpURLConnection getHttpURLConnection(URL url) throws ConnectionException, IOException {
-		if (Storage.getInstance().getBoolean(Storage.USE_PROXY, Options.DEFAULT_USE_PROXY)) {
-			String proxyHost = Storage.getInstance().get(Storage.PROXY_HOST, "");
+		if (PreferencesStorage.getBoolean(PreferencesStorage.USE_PROXY, Options.DEFAULT_USE_PROXY)) {
+			String proxyHost = PreferencesStorage.get(PreferencesStorage.PROXY_HOST, "");
 			int proxyPort = 0;
 			
 			try {
-				proxyPort = Integer.parseInt(Storage.getInstance().get(Storage.PROXY_PORT, ""));
+				proxyPort = Integer.parseInt(PreferencesStorage.get(PreferencesStorage.PROXY_PORT, ""));
 			} catch(Exception e) {
 				throw new ConnectionException();
 			}
@@ -227,9 +227,9 @@ public class Client implements MapProvider {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
 			
 			// TODO: wrong work after login with wrong proxy name and password :-(
-			if (Storage.getInstance().getBoolean(Storage.USE_PROXY_AUTH, Options.DEFAULT_USE_PROXY_AUTH)) {
-				String proxyUser = Storage.getInstance().get(Storage.PROXY_NAME, "");
-				String proxyPassword = Storage.getInstance().get(Storage.PROXY_PASSWORD, "");;
+			if (PreferencesStorage.getBoolean(PreferencesStorage.USE_PROXY_AUTH, Options.DEFAULT_USE_PROXY_AUTH)) {
+				String proxyUser = PreferencesStorage.get(PreferencesStorage.PROXY_NAME, "");
+				String proxyPassword = PreferencesStorage.get(PreferencesStorage.PROXY_PASSWORD, "");;
 				StringBuilder encodedInfo = new StringBuilder();
 				for (byte b : Base64Encoder.encodeBase64((proxyUser + ":" + proxyPassword).getBytes())) {
 					encodedInfo.append((char) b);

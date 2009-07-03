@@ -19,7 +19,7 @@ import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.R;
 import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.model.map.Attachment;
-import com.comapping.android.storage.Storage;
+import com.comapping.android.storage.PreferencesStorage;
 import com.comapping.android.view.Render;
 
 import android.app.AlertDialog;
@@ -99,7 +99,7 @@ public class AttachmentRender extends Render {
 	
 	public void onTouch(int x, int y) {
 		if (dialog == null) {
-			downloadFolder = Storage.getInstance().get(Storage.DOWNLOAD_FOLDER_KEY, Options.DEFAULT_DOWNLOAD_FOLDER);
+			downloadFolder = PreferencesStorage.get(PreferencesStorage.DOWNLOAD_FOLDER_KEY, Options.DEFAULT_DOWNLOAD_FOLDER);
 			
 			dialog = (new AlertDialog.Builder(context).setTitle("Attachment")
 					.setMessage(

@@ -44,7 +44,7 @@ import com.comapping.android.model.map.Topic;
 import com.comapping.android.model.map.builder.MapBuilder;
 import com.comapping.android.model.map.builder.SaxMapBuilder;
 import com.comapping.android.storage.SqliteMapCache;
-import com.comapping.android.storage.Storage;
+import com.comapping.android.storage.PreferencesStorage;
 
 public class MetaMapActivity extends Activity {
 	// constants
@@ -330,7 +330,7 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public void logout() {
-		Storage.getInstance().set("key", "");
+		PreferencesStorage.set("key", "");
 
 		try {
 			client.logout(this);
