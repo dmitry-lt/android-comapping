@@ -160,7 +160,7 @@ public class AttachmentRender extends Render {
 
 	private void loadIcon() {
 		Resources r = MetaMapActivity.getInstance().getResources();
-		attachmentIcon = getBitmap(r.getDrawable(R.drawable.attachment), ICON_SIZE);
+		attachmentIcon = getBitmap(r.getDrawable(R.drawable.topic_attachment), ICON_SIZE);
 	}
 
 	private String formatFileSize(int size) {

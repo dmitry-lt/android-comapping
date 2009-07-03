@@ -67,7 +67,7 @@ public class LoginView {
 	public void load() {
 		loginActivity.setContentView(R.layout.login);
 		
-		BitmapDrawable dr =(BitmapDrawable)loginActivity.getResources().getDrawable(R.drawable.login_bg);
+		BitmapDrawable dr =(BitmapDrawable)loginActivity.getResources().getDrawable(R.drawable.login_background);
 		dr.setTileModeX(TileMode.REPEAT);
 		dr.setTileModeY(TileMode.REPEAT);
 		loginActivity.findViewById(R.id.loginLayout).setBackgroundDrawable(dr);

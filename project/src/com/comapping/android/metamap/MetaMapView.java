@@ -124,16 +124,16 @@ public class MetaMapView {
 		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 
-		enableImageButton(upLevelButton, R.drawable.up_level_button);
-		enableImageButton(homeButton, R.drawable.home_button);
+		enableImageButton(upLevelButton, R.drawable.metamap_up);
+		enableImageButton(homeButton, R.drawable.metamap_home);
 	}
 
 	private void setButtonsDisabled() {
 		ImageButton upLevelButton = (ImageButton) metaMapActivity.findViewById(R.id.upLevelButton);
 		ImageButton homeButton = (ImageButton) metaMapActivity.findViewById(R.id.homeButton);
 
-		disableImageButton(upLevelButton, R.drawable.up_level_button_grey);
-		disableImageButton(homeButton, R.drawable.home_button_grey);
+		disableImageButton(upLevelButton, R.drawable.metamap_up_grey);
+		disableImageButton(homeButton, R.drawable.metamap_home_grey);
 	}
 
 	private void bindSwitchViewButton() {

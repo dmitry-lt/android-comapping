@@ -3,6 +3,6 @@
     <item
     	android:title="Preferences"
     	android:id="@+id/preferences"
-    	android:icon="@drawable/preferences_menu_icon"
+    	android:icon="@drawable/metamap_preferences"
     />
 </menu>

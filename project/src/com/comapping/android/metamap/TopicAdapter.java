@@ -30,7 +30,7 @@ class TopicAdapter extends ArrayAdapter<String> {
 	}
 
 	TopicAdapter(Activity context, Topic[] topics) {
-		super(context, R.layout.row, getTopicsNames(topics));
+		super(context, R.layout.metamap_row, getTopicsNames(topics));
 
 		this.topics = topics;
 		this.context = context;
@@ -38,7 +38,7 @@ class TopicAdapter extends ArrayAdapter<String> {
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = context.getLayoutInflater();
-		View row = inflater.inflate(R.layout.row, null);
+		View row = inflater.inflate(R.layout.metamap_row, null);
 		TextView mapName = (TextView) row.findViewById(R.id.name);
 
 		mapName.setText(topics[position].getText());
@@ -48,10 +48,10 @@ class TopicAdapter extends ArrayAdapter<String> {
 		TextView description = (TextView) row.findViewById(R.id.description);
 
 		if (topics[position].isFolder()) {
-			icon.setImageResource(R.drawable.folder_icon);
+			icon.setImageResource(R.drawable.metamap_folder);
 			description.setText(MetaMapActivity.getInstance().getFolderDescription(topics[position]));
 		} else {
-			icon.setImageResource(R.drawable.map_icon);
+			icon.setImageResource(R.drawable.metamap_map);
 			description.setText(MetaMapActivity.getInstance().getMapDescription(topics[position]));
 		}
 

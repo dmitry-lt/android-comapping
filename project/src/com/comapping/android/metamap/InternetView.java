@@ -36,11 +36,11 @@ public class InternetView extends MetaMapView {
 
 		// change button to switch
 		ImageButton switchButton = (ImageButton) metaMapActivity.findViewById(R.id.viewSwitcher);
-		switchButton.setImageResource(R.drawable.sdcard_icon);
+		switchButton.setImageResource(R.drawable.metamap_sdcard);
 		
 		// activate synchronize button
 		ImageButton synchronizeButton = (ImageButton) metaMapActivity.findViewById(R.id.synchronizeButton);
-		enableImageButton(synchronizeButton, R.drawable.reload_metamap_menu_icon);
+		enableImageButton(synchronizeButton, R.drawable.ui_reload);
 	}
 	
 	public String getMapDescription(Topic topic) {

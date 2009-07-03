@@ -14,7 +14,7 @@
 			android:layout_height="wrap_content" 
 			android:layout_gravity="center"
 			android:paddingBottom="10px" 
-			android:src="@drawable/logo">
+			android:src="@drawable/login_logo">
 		</ImageView>
 		<TableLayout 
 			android:id="@+id/loginTableLayout"

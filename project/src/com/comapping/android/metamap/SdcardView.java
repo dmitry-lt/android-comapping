@@ -50,10 +50,10 @@ public class SdcardView extends MetaMapView {
 		drawMetaMap();
 		// change button to switch
 		ImageButton switchButton = (ImageButton) metaMapActivity.findViewById(R.id.viewSwitcher);
-		switchButton.setImageResource(R.drawable.internet_icon);
+		switchButton.setImageResource(R.drawable.metamap_internet);
 
 		// deactivate synchronize button
 		ImageButton synchronizeButton = (ImageButton) metaMapActivity.findViewById(R.id.synchronizeButton);
-		disableImageButton(synchronizeButton, R.drawable.reload_metamap_menu_icon_grey);
+		disableImageButton(synchronizeButton, R.drawable.ui_reload_grey);
 	}
 }

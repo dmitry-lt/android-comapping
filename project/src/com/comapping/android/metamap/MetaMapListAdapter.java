@@ -36,7 +36,7 @@ class MetaMapListAdapter extends ArrayAdapter<String> {
 	}
 
 	MetaMapListAdapter(Activity context, MetaMapItem[] topics) {
-		super(context, R.layout.row, getTopicsNames(topics));
+		super(context, R.layout.metamap_row, getTopicsNames(topics));
 
 		this.topics = topics;
 	}
@@ -48,7 +48,7 @@ class MetaMapListAdapter extends ArrayAdapter<String> {
 		if (row == null)
 		{
 			LayoutInflater inflater = ((Activity)getContext()).getLayoutInflater();
-			row = inflater.inflate(R.layout.row, null);
+			row = inflater.inflate(R.layout.metamap_row, null);
 		}
 		
 		// map name
@@ -58,9 +58,9 @@ class MetaMapListAdapter extends ArrayAdapter<String> {
 		// icon
 		ImageView icon = (ImageView) row.findViewById(R.id.icon);
 		if (topics[position].isFolder) {
-			icon.setImageResource(R.drawable.folder_icon);
+			icon.setImageResource(R.drawable.metamap_folder);
 		} else {
-			icon.setImageResource(R.drawable.map_icon);
+			icon.setImageResource(R.drawable.metamap_map);
 		}
 
 		// description

@@ -16,26 +16,26 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/upLevelButton"
-				android:src="@drawable/up_level_button_grey">
+				android:src="@drawable/metamap_up_grey">
 			</ImageButton>
 			<ImageButton
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/homeButton"
-				android:src="@drawable/home_button_grey">
+				android:src="@drawable/metamap_home_grey">
 			</ImageButton>
 			<ImageButton
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/synchronizeButton"
-				android:src="@drawable/reload_metamap_menu_icon"
+				android:src="@drawable/ui_reload"
 				android:visibility="visible">
 			</ImageButton>
-			<ImageButton
+			<ImageButton 
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/viewSwitcher"
-				android:src="@drawable/sdcard_icon">
+				android:src="@drawable/metamap_sdcard">
 			</ImageButton>
 		</LinearLayout>
 		<ListView

@@ -3,11 +3,11 @@
     <item
     	android:title="Preferences"
     	android:id="@+id/preferences"
-    	android:icon="@drawable/preferences_menu_icon"
+    	android:icon="@drawable/metamap_preferences"
     />
     <item
     	android:title="Logout"
-    	android:icon="@drawable/logout_menu_icon"
+    	android:icon="@drawable/metamap_logout"
     	android:id="@+id/logout"
     />
 </menu>

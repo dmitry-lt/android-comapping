@@ -172,33 +172,33 @@ public class IconRender extends Render {
 	private void loadIcons() {
 		Resources r = MetaMapActivity.getInstance().getResources();
 
-		priorityIcons = new Bitmap[] { null, getBitmap(r.getDrawable(R.drawable.priority1)),
-				getBitmap(r.getDrawable(R.drawable.priority2)), getBitmap(r.getDrawable(R.drawable.priority3)),
-				getBitmap(r.getDrawable(R.drawable.priority4)), getBitmap(r.getDrawable(R.drawable.priority5)),
-				getBitmap(r.getDrawable(R.drawable.priority6)), getBitmap(r.getDrawable(R.drawable.priority7)),
-				getBitmap(r.getDrawable(R.drawable.priority8)), getBitmap(r.getDrawable(R.drawable.priority9)) };
+		priorityIcons = new Bitmap[] { null, getBitmap(r.getDrawable(R.drawable.topic_priority1)),
+				getBitmap(r.getDrawable(R.drawable.topic_priority2)), getBitmap(r.getDrawable(R.drawable.topic_priority3)),
+				getBitmap(r.getDrawable(R.drawable.topic_priority4)), getBitmap(r.getDrawable(R.drawable.topic_priority5)),
+				getBitmap(r.getDrawable(R.drawable.topic_priority6)), getBitmap(r.getDrawable(R.drawable.topic_priority7)),
+				getBitmap(r.getDrawable(R.drawable.topic_priority8)), getBitmap(r.getDrawable(R.drawable.topic_priority9)) };
 
-		smileyIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.smiley_happy)),
-				getBitmap(r.getDrawable(R.drawable.smiley_normal)), getBitmap(r.getDrawable(R.drawable.smiley_sad)),
-				getBitmap(r.getDrawable(R.drawable.smiley_furious)) };
+		smileyIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_smiley_happy)),
+				getBitmap(r.getDrawable(R.drawable.topic_smiley_normal)), getBitmap(r.getDrawable(R.drawable.topic_smiley_sad)),
+				getBitmap(r.getDrawable(R.drawable.topic_smiley_furious)) };
 
-		taskCompletionIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.task_completion_todo)),
-				getBitmap(r.getDrawable(R.drawable.task_completion_25)),
-				getBitmap(r.getDrawable(R.drawable.task_completion_50)),
-				getBitmap(r.getDrawable(R.drawable.task_completion_75)),
-				getBitmap(r.getDrawable(R.drawable.task_completion_complete)) };
+		taskCompletionIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_task_completion_todo)),
+				getBitmap(r.getDrawable(R.drawable.topic_task_completion_25)),
+				getBitmap(r.getDrawable(R.drawable.topic_task_completion_50)),
+				getBitmap(r.getDrawable(R.drawable.topic_task_completion_75)),
+				getBitmap(r.getDrawable(R.drawable.topic_task_completion_complete)) };
 
-		flagIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.flag_go)),
-				getBitmap(r.getDrawable(R.drawable.flag_for_discussion)),
-				getBitmap(r.getDrawable(R.drawable.flag_possibility)), getBitmap(r.getDrawable(R.drawable.flag_risk)),
-				getBitmap(r.getDrawable(R.drawable.flag_progress)), getBitmap(r.getDrawable(R.drawable.flag_carefull)),
-				getBitmap(r.getDrawable(R.drawable.flag_caution)) };
+		flagIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_flag_go)),
+				getBitmap(r.getDrawable(R.drawable.topic_flag_for_discussion)),
+				getBitmap(r.getDrawable(R.drawable.topic_flag_possibility)), getBitmap(r.getDrawable(R.drawable.topic_flag_risk)),
+				getBitmap(r.getDrawable(R.drawable.topic_flag_progress)), getBitmap(r.getDrawable(R.drawable.topic_flag_carefull)),
+				getBitmap(r.getDrawable(R.drawable.topic_flag_caution)) };
 
-		icons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.icon_question_mark)),
-				getBitmap(r.getDrawable(R.drawable.icon_exclamation_mark)),
-				getBitmap(r.getDrawable(R.drawable.icon_bomb)), getBitmap(r.getDrawable(R.drawable.icon_thumbs_up)),
-				getBitmap(r.getDrawable(R.drawable.icon_thumbs_down)),
-				getBitmap(r.getDrawable(R.drawable.icon_magnifier)), getBitmap(r.getDrawable(R.drawable.icon_dollar)),
-				getBitmap(r.getDrawable(R.drawable.icon_heart)), getBitmap(r.getDrawable(R.drawable.icon_clock)) };
+		icons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_question)),
+				getBitmap(r.getDrawable(R.drawable.topic_exclamation)),
+				getBitmap(r.getDrawable(R.drawable.topic_bomb)), getBitmap(r.getDrawable(R.drawable.topic_thumbs_up)),
+				getBitmap(r.getDrawable(R.drawable.topic_thumbs_down)),
+				getBitmap(r.getDrawable(R.drawable.topic_magnifier)), getBitmap(r.getDrawable(R.drawable.topic_dollar)),
+				getBitmap(r.getDrawable(R.drawable.topic_heart)), getBitmap(r.getDrawable(R.drawable.topic_clock)) };
 	}
 }

@@ -5,7 +5,7 @@
     	android:id="@+id/openWithExplorerView"
     />
     <item
-    	android:icon="@drawable/logout_menu_icon"
+    	android:icon="@drawable/metamap_logout"
     	android:title="Open with comapping view"
     	android:id="@+id/openWithComappingView"
     />
