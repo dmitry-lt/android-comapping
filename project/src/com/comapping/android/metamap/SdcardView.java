@@ -1,11 +1,10 @@
-package com.comapping.android.view.metamap;
+package com.comapping.android.metamap;
 
 import java.io.File;
 import java.io.FilenameFilter;
 
 import android.widget.ImageButton;
 
-import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.map.Map;
 import com.comapping.android.model.map.Topic;

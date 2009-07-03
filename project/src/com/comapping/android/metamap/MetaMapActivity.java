@@ -6,7 +6,7 @@
  * Class implements MetaMapView controller
  */
 
-package com.comapping.android.controller;
+package com.comapping.android.metamap;
 
 import java.util.Arrays;
 
@@ -31,6 +31,11 @@ import com.comapping.android.communication.MapProvider;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.controller.MapActivity;
+import com.comapping.android.controller.PreferencesActivity;
+import com.comapping.android.controller.R;
+import com.comapping.android.controller.R.id;
+import com.comapping.android.controller.R.menu;
 import com.comapping.android.model.TopicComparator;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
@@ -40,9 +45,6 @@ import com.comapping.android.model.map.builder.MapBuilder;
 import com.comapping.android.model.map.builder.SaxMapBuilder;
 import com.comapping.android.storage.SqliteMapCache;
 import com.comapping.android.storage.Storage;
-import com.comapping.android.view.metamap.InternetView;
-import com.comapping.android.view.metamap.MetaMapView;
-import com.comapping.android.view.metamap.SdcardView;
 
 public class MetaMapActivity extends Activity {
 	// constants

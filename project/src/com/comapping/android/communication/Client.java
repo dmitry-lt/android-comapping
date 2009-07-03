@@ -1,7 +1,7 @@
 /**
  * Class implements client for comapping server.
  * 
- * @author Abishev Timur
+ * @author Non-Abishev Timur
  * @version 1.0
  */
 package com.comapping.android.communication;

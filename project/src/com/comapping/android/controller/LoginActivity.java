@@ -17,6 +17,7 @@ import com.comapping.android.communication.CachingClient;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.view.LoginView;
 
 public class LoginActivity extends Activity {

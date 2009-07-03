@@ -9,7 +9,7 @@
 package com.comapping.android.storage;
 
 import com.comapping.android.Log;
-import com.comapping.android.controller.MetaMapActivity;
+import com.comapping.android.metamap.*;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

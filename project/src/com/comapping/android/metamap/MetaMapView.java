@@ -1,4 +1,4 @@
-package com.comapping.android.view.metamap;
+package com.comapping.android.metamap;
 
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,7 +10,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
-import com.comapping.android.controller.MetaMapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.map.Map;
 import com.comapping.android.model.map.Topic;
