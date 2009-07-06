@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 class MetaMapListAdapter extends ArrayAdapter<String> {
 	
-	public class MetaMapItem
+	static public class MetaMapItem
 	{
 		public String name;
 		public String description;

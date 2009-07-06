@@ -39,6 +39,7 @@ public class MetaMapView {
 		MetaMapListAdapter.MetaMapItem[] res = new MetaMapListAdapter.MetaMapItem[topics.length];
 
 		for (int i = 0; i < topics.length; i++) {
+			res[i] = new MetaMapListAdapter.MetaMapItem();
 			res[i].name = topics[i].getText();
 
 			res[i].isFolder = topics[i].isFolder();
