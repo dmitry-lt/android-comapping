@@ -11,28 +11,28 @@
 	<PreferenceCategory android:title="Proxy">
 		<CheckBoxPreference 
 			android:key="@string/use_proxy_preference_key"
-			android:title="@string/use_proxy_title" />
+			android:title="@string/use_proxy_preference_title" />
 		<EditTextPreference 
 			android:key="@string/proxy_host_preference_key"
-			android:title="@string/proxy_host_title"
+			android:title="@string/proxy_host_preference_title"
 			android:dependency = "@string/use_proxy_preference_key" />
 		<EditTextPreference 
 			android:key="@string/proxy_port_preference_key"
-			android:title="@string/proxy_port_title" 
+			android:title="@string/proxy_port_preference_title" 
 			android:dependency = "@string/use_proxy_preference_key" />		
 	</PreferenceCategory>
 	<PreferenceCategory android:title="Proxy">
 			<CheckBoxPreference 
-				android:key="@string/use_proxy_auth_key"
-				android:title="@string/use_proxy_auth_title" />
+				android:key="@string/use_proxy_auth_preference_key"
+				android:title="@string/use_proxy_auth_preference_title" />
 			<EditTextPreference 
 				android:key="@string/proxy_name_preference_key"
-				android:title="@string/proxy_name_title"
-				android:dependency = "@string/use_proxy_auth_key" />
+				android:title="@string/proxy_name_preference_title"
+				android:dependency = "@string/use_proxy_auth_preference_key" />
 			<EditTextPreference 
 				android:key="@string/proxy_password_preference_key"
-				android:title="@string/proxy_password_title" 
-				android:dependency = "@string/use_proxy_auth_key" />
+				android:title="@string/proxy_password_preference_title" 
+				android:dependency = "@string/use_proxy_auth_preference_key" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="Attachment">
 		<EditTextPreference 

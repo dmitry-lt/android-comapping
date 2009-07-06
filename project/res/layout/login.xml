@@ -77,8 +77,8 @@
 				android:id="@+id/rememberUserTextView" 
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" 
-				android:layout_toRightOf="@+id/RememberUserCheckBox"
-				android:layout_alignBaseline="@+id/RememberUserCheckBox" 
+				android:layout_toRightOf="@+id/rememberUserCheckBox"
+				android:layout_alignBaseline="@+id/rememberUserCheckBox" 
 				android:text="Remember me">
 			</TextView>
 		</RelativeLayout>
