@@ -2,7 +2,7 @@ package com.comapping.android;
 
 public class Log {
 	private static final String APPLICATION_TAG = "Comapping";
-
+ 
 	public static final String CONNECTION_TAG = "Communication";
 	public static final String MODEL_TAG = "Model";
 	public static final String META_MAP_CONTROLLER_TAG = "MetaMapController";
