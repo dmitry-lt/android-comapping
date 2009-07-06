@@ -1,46 +1,44 @@
 package com.comapping.android.provider;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
+import static com.comapping.android.communication.ClientHelper.getBytesSum;
+import static com.comapping.android.communication.ClientHelper.getTextFromInputStream;
 
-public class FileMapProvider extends MapProvider {
-	public static final Uri CONTENT_URI = Uri.parse("content://com.comapping.android.provider.filemapprovider");
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
+import com.comapping.android.Log;
+
+import android.app.Activity;
+
+public class FileMapProvider implements IMapProvider {
+
+	public void close(Activity context) {
 		// TODO Auto-generated method stub
-		return 0;
+
 	}
 
-	@Override
-	public String getType(Uri uri) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getComap(String mapId, boolean ignoreCache, Activity context) {
+		String response = null;
+
+		try {
+			response = getTextFromInputStream(new FileInputStream(mapId));
+		} catch (FileNotFoundException e) {
+			Log.e(Log.CONNECTION_TAG, "map file not found");
+		} catch (IOException e) {
+			Log.e(Log.CONNECTION_TAG, "map file IO exception");
+		}
+
+		Log.d(Log.CONNECTION_TAG, "file comap provider response: " + response);
+		Log.d(Log.CONNECTION_TAG, "file comap provider check sum: "
+				+ getBytesSum(response));
+
+		return response;
 	}
 
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
+	public void logout(Activity context) {
 		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public boolean onCreate() {
-		// TODO Auto-generated method stub
-		return false;
 	}
-
-	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+	
 }

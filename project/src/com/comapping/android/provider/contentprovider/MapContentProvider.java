@@ -1,4 +1,4 @@
-package com.comapping.android.provider;
+package com.comapping.android.provider.contentprovider;
 
 import android.app.Activity;
 import android.content.ContentProvider;
@@ -6,7 +6,7 @@ import android.database.AbstractCursor;
 import android.database.Cursor;
 import android.net.Uri;
 
-public abstract class MapProvider extends ContentProvider {
+public abstract class MapContentProvider extends ContentProvider {
 	public static final String ID = "id";
 	public static final String TEXT = "content";
 	

@@ -37,9 +37,9 @@
 				android:resource="@xml/searchable" />
 		</activity>
 
-		<provider android:name="com.comapping.android.provider.InternetMapProvider" 
+		<provider android:name="com.comapping.android.provider.contentprovider.InternetMapContentProvider" 
 				  android:authorities="com.comapping.android.provider.internetmapprovider" /> 
-  		<provider android:name="com.comapping.android.provider.FileMapProvider" 
+  		<provider android:name="com.comapping.android.provider.contentprovider.FileMapContentProvider" 
   				  android:authorities="com.comapping.android.provider.filemapprovider" /> 
 
 	</application>
