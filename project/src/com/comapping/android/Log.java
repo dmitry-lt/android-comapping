@@ -11,7 +11,7 @@ public class Log {
 	public static final String TOPIC_RENDER_TAG = "TopicRender";
 	public static final String LOGIN_TAG = "Login";
 	public static final String STORAGE_TAG = "Storage";
-	public static final String SQLITE_CACHE_TAG = "SQLite";
+	public static final String SQLITE_CACHE_TAG = "SQLite"; 
 
 	public static void v(String module, String msg) {
 		android.util.Log.v(APPLICATION_TAG, combine(module, msg));
