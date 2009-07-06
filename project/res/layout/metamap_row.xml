@@ -16,7 +16,7 @@
         android:layout_marginLeft="35px"
         android:textSize="19sp"
         android:textStyle="bold" 
-        android:text="Sonic the Hedgehog"
+        android:text="Sonic the Hedgehog!WTF?"
         android:textColor="#ffffffff"/>
     <TextView android:id="@+id/description"
         android:layout_width="wrap_content"
