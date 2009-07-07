@@ -13,7 +13,7 @@ public class InternetMapProvider implements IMapProvider {
 	private CachingClient cachingClient;
 	
 	public InternetMapProvider(Activity context) {
-		cachingClient = new CachingClient(new Client(), new SqliteMapCache(context));
+		cachingClient = Client.getClient(context);
 	}
 	
 	public String getComap(String mapId, boolean ignoreCache, Activity context) {

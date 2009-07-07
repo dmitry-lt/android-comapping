@@ -22,28 +22,29 @@ import com.comapping.android.model.map.builder.SaxMapBuilder;
 import com.comapping.android.storage.SqliteMapCache;
 
 public class ComappingProvider extends MetaMapProvider {
-	
+
 	private static final String LAST_SYNCHRONIZATION = "Last synchronization";
-	
+
 	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	
+
 	private static final String MAP_DESCRIPTION = "Map";
 	private static final String FOLDER_DESCRIPTION = "Folder";
-	
+
 	Map metamap;
 	Topic currentLevel;
 	Activity activity;
-	
-	public ComappingProvider(Activity _activity, Map _metamap)
-	{
+
+	public ComappingProvider(Activity _activity) {
 		activity = _activity;
-		metamap = _metamap;
+		metamap = null;
+
+		metaMapRefresh(false);
+
 		if (metamap == null)
 			return;
-		
 		currentLevel = metamap.getRoot();
 	}
-	
+
 	MetaMapItem[] getItems(Topic[] topics) {
 		MetaMapItem[] res = new MetaMapItem[topics.length];
 
@@ -52,45 +53,44 @@ public class ComappingProvider extends MetaMapProvider {
 			res[i].name = topics[i].getText();
 
 			res[i].isFolder = topics[i].isFolder();
-			
-			if (res[i].isFolder)
-			{
+
+			if (res[i].isFolder) {
 				res[i].description = getFolderDescription(topics[i]);
-			}
-			else
-			{
+			} else {
 				res[i].description = getMapDescription(topics[i]);
 			}
-			
+
 			res[i].reference = topics[i].getMapRef();
 		}
 
 		return res;
 	}
-	
+
 	public String getMapDescription(Topic topic) {
 		CachingClient client = Client.getClient(activity);
-		Timestamp lastSynchronizationDate = client.getLastSynchronizationDate(topic.getMapRef());
-		
+		Timestamp lastSynchronizationDate = client
+				.getLastSynchronizationDate(topic.getMapRef());
+
 		if (lastSynchronizationDate == null) {
 			return MAP_DESCRIPTION;
 		} else {
 			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-			
-			return LAST_SYNCHRONIZATION+": "+dateFormat.format(lastSynchronizationDate);
+
+			return LAST_SYNCHRONIZATION + ": "
+					+ dateFormat.format(lastSynchronizationDate);
 		}
 	}
-	
+
 	public String getFolderDescription(Topic topic) {
 		return FOLDER_DESCRIPTION;
 	}
-	
+
 	@Override
 	public MetaMapItem[] getCurrentLevel() {
-		
+
 		if (metamap == null)
 			return new MetaMapItem[0];
-		
+
 		return getItems(currentLevel.getChildTopics());
 	}
 
@@ -98,63 +98,62 @@ public class ComappingProvider extends MetaMapProvider {
 	public void goHome() {
 		if (metamap == null)
 			return;
-		
+
 		currentLevel = metamap.getRoot();
 	}
 
 	@Override
 	public void goUp() {
-		
+
 		if (metamap == null)
 			return;
-		
+
 		currentLevel = currentLevel.getParent();
 	}
 
 	@Override
 	public void gotoFolder(int index) {
-		
+
 		if (metamap == null)
 			return;
-		
-		if (currentLevel.getChildByIndex(index).isFolder())
-		{
+
+		if (currentLevel.getChildByIndex(index).isFolder()) {
 			currentLevel = currentLevel.getChildByIndex(index);
 		}
 	}
 
 	@Override
 	public boolean canGoHome() {
-		
+
 		if (metamap == null)
 			return false;
-		
+
 		return currentLevel != metamap.getRoot();
 	}
-	
+
 	@Override
 	public boolean canGoUp() {
-		
+
 		if (metamap == null)
 			return false;
-		
+
 		return currentLevel != metamap.getRoot();
 	}
 
 	@Override
 	public boolean canSync() {
-		
+
 		return true;
 	}
-	
+
 	public static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open sdcard view";
 	public static final String PROBLEMS_WHILE_RETRIEVING_MESSAGE = "There are some problem while map list retrieving.";
 	public static final String PROBLEMS_WITH_MAP_MESSAGE = "There are some problem while map list parsing.";
-	
+
 	private static final String LOADING_MESSAGE = "Loading map list";
-	
+
 	private ProgressDialog splash = null;
-	
+
 	public void splashActivate(final String message) {
 		final Activity context = activity;
 
@@ -179,17 +178,15 @@ public class ComappingProvider extends MetaMapProvider {
 			}
 		});
 	}
-	
 
 	private void metaMapRefresh(final boolean ignoreCache) {
 		final Activity context = activity;
 
 		new Thread() {
 			public void run() {
-				
+
 				CachingClient client = Client.getClient(context);
-				
-				
+
 				String result = "";
 
 				splashActivate(LOADING_MESSAGE);
@@ -200,25 +197,25 @@ public class ComappingProvider extends MetaMapProvider {
 							!ignoreCache);
 				} catch (ConnectionException e) {
 					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
-																// different
-																// messages
+					// different
+					// messages
 					Log.e(Log.META_MAP_CONTROLLER_TAG,
 							"connection error in metamap retrieving");
 				} catch (LoginInterruptedException e) {
 					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
-																// different
-																// messages
+					// different
+					// messages
 					Log.e(Log.META_MAP_CONTROLLER_TAG,
 							"login interrupted in metamap retrieving");
 				} catch (InvalidCredentialsException e) {
 					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
-																// different
-																// messages
+					// different
+					// messages
 					Log.e(Log.META_MAP_CONTROLLER_TAG,
 							"invalid credentails while getting comap oO");
 				}
 
-				//Map metaMap = null;
+				// Map metaMap = null;
 				if (error == null) {
 					// retrieving was successful
 					try {
@@ -237,9 +234,10 @@ public class ComappingProvider extends MetaMapProvider {
 					}
 				}
 
+				currentLevel = metamap.getRoot();
+
 				splashDeactivate();
 
-				
 			}
 		}.start();
 	}

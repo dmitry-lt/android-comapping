@@ -1,5 +1,6 @@
 package com.comapping.android.metamap;
 
+import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -134,10 +135,9 @@ public class MetaMapView {
 		ImageButton synchronizeButton = (ImageButton) activity
 				.findViewById(R.id.synchronizeButton);
 
-		final MetaMapActivity act = activity;
 		synchronizeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				act.synchronize();
+				provider.sync();
 			}
 		});
 
@@ -195,6 +195,8 @@ public class MetaMapView {
 	void initListView(MetaMapActivity activity) {
 		ListView listView = (ListView) activity.findViewById(R.id.listView);
 		activity.registerForContextMenu(listView);
+		
+		final Activity context = activity;
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> apapterView, View view,
@@ -210,9 +212,9 @@ public class MetaMapView {
 							PreferencesStorage.VIEW_TYPE_KEY,
 							Options.DEFAULT_VIEW_TYPE);
 
-					metaMapActivity.loadMap(
+					MetaMapActivity.loadMap(
 							provider.getCurrentLevel()[position].reference,
-							ViewType.getViewTypeFromString(viewType), false);
+							ViewType.getViewTypeFromString(viewType), false, context);
 				}
 			}
 		});

@@ -41,7 +41,7 @@ public class PreferencesStorage {
 //	}
 
 	public static void set(String key, String value) {
-		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
+		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
 
 		Editor edit = preferances.edit();
 
@@ -52,7 +52,7 @@ public class PreferencesStorage {
 	}
 
 	public static String get(String key, String defaultValue) {
-		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
+		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
 
 		String value = preferances.getString(key, defaultValue);
 
@@ -63,7 +63,7 @@ public class PreferencesStorage {
 	
 	public static boolean getBoolean(String key, boolean defaultValue) {
 		// false if not created
-		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.getInstance());
+		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
 
 		return preferances.getBoolean(key, defaultValue);
 	}

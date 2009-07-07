@@ -159,7 +159,7 @@ public class AttachmentRender extends Render {
 	}
 
 	private void loadIcon() {
-		Resources r = MetaMapActivity.getInstance().getResources();
+		Resources r = MetaMapActivity.instance.getResources();
 		attachmentIcon = getBitmap(r.getDrawable(R.drawable.topic_attachment), ICON_SIZE);
 	}
 

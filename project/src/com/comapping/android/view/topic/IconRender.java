@@ -170,7 +170,7 @@ public class IconRender extends Render {
 	}
 
 	private void loadIcons() {
-		Resources r = MetaMapActivity.getInstance().getResources();
+		Resources r = MetaMapActivity.instance.getResources();
 
 		priorityIcons = new Bitmap[] { null, getBitmap(r.getDrawable(R.drawable.topic_priority1)),
 				getBitmap(r.getDrawable(R.drawable.topic_priority2)), getBitmap(r.getDrawable(R.drawable.topic_priority3)),

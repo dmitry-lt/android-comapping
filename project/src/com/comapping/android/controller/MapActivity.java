@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ZoomControls;
 
+import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
@@ -35,6 +36,9 @@ import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.model.map.Map;
 import com.comapping.android.model.map.Topic;
+import com.comapping.android.provider.IMapProvider;
+import com.comapping.android.provider.InternetMapProvider;
+import com.comapping.android.provider.contentprovider.FileMapContentProvider;
 import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.view.comapping.ComappingRender;
 import com.comapping.android.view.explorer.ExplorerRender;
@@ -54,6 +58,8 @@ public class MapActivity extends Activity {
 	public static final String EXT_VIEW_TYPE = "viewType";
 	public static final String EXT_MAP_ID = "mapId";
 	public static final String EXT_IS_IGNORE_CACHE = "ignoreCache";
+	public static final String EXT_DATA_SOURCE = "dataSource";
+
 	private static final long TIME_TO_HIDE = 2000;
 
 	private ProgressDialog splash = null;
@@ -70,10 +76,11 @@ public class MapActivity extends Activity {
 				if (splash == null) {
 					splash = ProgressDialog.show(context, "Comapping", message);
 					splash.setOnCancelListener(new OnCancelListener() {
-						
+
 						public void onCancel(DialogInterface dialog) {
 							mapProcessingThread.interrupt();
-							mapProcessingThread.setPriority(Thread.MIN_PRIORITY);
+							mapProcessingThread
+									.setPriority(Thread.MIN_PRIORITY);
 							finish();
 						}
 					});
@@ -99,10 +106,12 @@ public class MapActivity extends Activity {
 	private void onError(final String message, final Activity activity) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				Dialog dialog = (new AlertDialog.Builder(activity).setTitle("Error").setMessage(message)
-						.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-							
-							public void onClick(DialogInterface dialog, int which) {
+				Dialog dialog = (new AlertDialog.Builder(activity).setTitle(
+						"Error").setMessage(message).setNeutralButton("Ok",
+						new DialogInterface.OnClickListener() {
+
+							public void onClick(DialogInterface dialog,
+									int which) {
 								activity.finish();
 							}
 						})).create();
@@ -119,7 +128,7 @@ public class MapActivity extends Activity {
 		if (!zoomVisible) {
 			zoomVisible = true;
 			runOnUiThread(new Runnable() {
-				
+
 				public void run() {
 					zoom.show();
 				}
@@ -131,7 +140,7 @@ public class MapActivity extends Activity {
 		if (zoomVisible) {
 			zoomVisible = false;
 			runOnUiThread(new Runnable() {
-				
+
 				public void run() {
 					zoom.hide();
 				}
@@ -142,6 +151,7 @@ public class MapActivity extends Activity {
 	static private ViewType viewType;
 	static private String mapId;
 	static private boolean ignoreCache;
+	static private String dataSource;
 
 	MapRender mapRender;
 
@@ -151,11 +161,10 @@ public class MapActivity extends Activity {
 		return canDraw;
 	}
 
-	
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		new Thread() {
-			
+
 			public void run() {
 				splashActivate("Loading map", false);
 				canDraw = false;
@@ -175,7 +184,6 @@ public class MapActivity extends Activity {
 		}.start();
 	}
 
-	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -194,6 +202,7 @@ public class MapActivity extends Activity {
 			viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
 			mapId = extras.getString(EXT_MAP_ID);
 			ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
+			dataSource =  extras.getString(EXT_DATA_SOURCE);
 		} catch (Exception e) {
 
 		}
@@ -212,12 +221,16 @@ public class MapActivity extends Activity {
 						splashActivate("Downloading map", false);
 						String result = "";
 						try {
-							if (MetaMapActivity.getCurrentMapProvider() instanceof CachingClient) {
-								result = ((CachingClient) MetaMapActivity.getCurrentMapProvider()).getComap(mapId,
+							if (dataSource == Constants.DATA_SOURCE_COMAPPING)
+							{
+								result = Client.getClient(current).getComap(mapId,
 										current, ignoreCache, false);
-							} else {
-								result = MetaMapActivity.getCurrentMapProvider().getComap(mapId, current);
 							}
+							else
+							{
+								result = new InternetMapProvider(current).getComap(mapId, false, current);	
+							}
+
 						} catch (InvalidCredentialsException e) {
 							Log.e(Log.MAP_CONTROLLER_TAG, "invalid credentials while map getting");
 							// TODO: ???
@@ -373,7 +386,7 @@ public class MapActivity extends Activity {
 			return true;
 		case R.id.mapSynchronizeButton:
 			finish();
-			MetaMapActivity.getInstance().loadMap(currentMapId, currentViewType, true);
+			MetaMapActivity.loadMap(currentMapId, currentViewType, true, this);
 			return true;
 		}
 		return false;
@@ -433,7 +446,6 @@ public class MapActivity extends Activity {
 		}
 	}
 
-	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
 				|| (resultCode == Options.RESULT_CHAIN_CLOSE)) {
@@ -445,7 +457,6 @@ public class MapActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	
 	protected void onDestroy() {
 		splashDeactivate();
 		super.onDestroy();
