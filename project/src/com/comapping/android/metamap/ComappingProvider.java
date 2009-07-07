@@ -13,8 +13,8 @@ public class ComappingProvider extends MetaMapProvider {
 	
 	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	
-	protected static final String MAP_DESCRIPTION = "Map";
-	protected static final String FOLDER_DESCRIPTION = "Folder";
+	private static final String MAP_DESCRIPTION = "Map";
+	private static final String FOLDER_DESCRIPTION = "Folder";
 	
 	Map metamap;
 	Topic currentLevel;
@@ -22,6 +22,9 @@ public class ComappingProvider extends MetaMapProvider {
 	public ComappingProvider(Map _metamap)
 	{
 		metamap = _metamap;
+		if (metamap == null)
+			return;
+		
 		currentLevel = metamap.getRoot();
 	}
 	
@@ -67,16 +70,26 @@ public class ComappingProvider extends MetaMapProvider {
 	
 	@Override
 	public MetaMapItem[] getCurrentLevel() {
+		
+		if (metamap == null)
+			return new MetaMapItem[0];
+		
 		return getItems(currentLevel.getChildTopics());
 	}
 
 	@Override
 	public void goHome() {
+		if (metamap == null)
+			return;
+		
 		currentLevel = metamap.getRoot();
 	}
 
 	@Override
 	public void goUp() {
+		
+		if (metamap == null)
+			return;
 		
 		// TODO Fix it now i'm too lazy
 		
@@ -85,9 +98,44 @@ public class ComappingProvider extends MetaMapProvider {
 
 	@Override
 	public void gotoFolder(int index) {
+		
+		if (metamap == null)
+			return;
+		
 		if (currentLevel.getChildByIndex(index).isFolder())
 		{
 			currentLevel = currentLevel.getChildByIndex(index);
 		}
+	}
+
+	@Override
+	public boolean canGoHome() {
+		
+		if (metamap == null)
+			return false;
+		
+		return currentLevel != metamap.getRoot();
+	}
+
+	
+	@Override
+	public boolean canGoUp() {
+		
+		if (metamap == null)
+			return false;
+		
+		return currentLevel != metamap.getRoot();
+	}
+
+	
+	
+	@Override
+	public boolean canSync() {
+		return false;
+	}
+
+	@Override
+	public boolean sync() {
+		return false;
 	}
 }

@@ -57,13 +57,12 @@ public class MetaMapActivity extends Activity {
 	// views
 	private static MetaMapView currentView = null;
 
-	private static InternetView internetView = null;
+	private static MetaMapView internetView = null;
 	private static MetaMapView sdcardView = new MetaMapView(new SdCardProvider());
 
 	//
 	private static MetaMapActivity instance;
 	private ProgressDialog splash = null;
-//	private Topic[] currentTopicChildren;
 
 	// activity methods
 	
@@ -190,7 +189,7 @@ public class MetaMapActivity extends Activity {
 	
 	// MetaMap methods
 	public static MapProvider getCurrentMapProvider() {
-		return (currentView instanceof InternetView) ? client : fileMapProvider;
+		return (currentView == internetView) ? client : fileMapProvider;
 	}
 
 	public static MetaMapActivity getInstance() {
@@ -204,7 +203,7 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public void switchView() {
-		if (currentView == sdcardView) {
+		if (currentView != sdcardView) {
 			switchView(sdcardView);
 		} else {
 			switchView(internetView);
@@ -240,6 +239,10 @@ public class MetaMapActivity extends Activity {
 		metaMapRefresh(true);
 	}
 
+	public static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open sdcard view";
+    public static final String PROBLEMS_WHILE_RETRIEVING_MESSAGE = "There are some problem while map list retrieving.";
+    public static final String PROBLEMS_WITH_MAP_MESSAGE = "There are some problem while map list parsing.";
+
 	private void metaMapRefresh(final boolean ignoreCache) {
 		final MetaMapActivity context = this;
 
@@ -253,13 +256,13 @@ public class MetaMapActivity extends Activity {
 				try {
 					result = client.getComap("meta", context, ignoreCache, !ignoreCache);
 				} catch (ConnectionException e) {
-					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
+					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
 					Log.e(Log.META_MAP_CONTROLLER_TAG, "connection error in metamap retrieving");
 				} catch (LoginInterruptedException e) {
-					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
+					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
 					Log.e(Log.META_MAP_CONTROLLER_TAG, "login interrupted in metamap retrieving");
 				} catch (InvalidCredentialsException e) {
-					error = InternetView.PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
+					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
 					Log.e(Log.META_MAP_CONTROLLER_TAG, "invalid credentails while getting comap oO");
 				}
 
@@ -272,19 +275,19 @@ public class MetaMapActivity extends Activity {
 						}
 					} catch (StringToXMLConvertionException e) {
 						Log.e(Log.META_MAP_CONTROLLER_TAG, "xml convertion exception");
-						error = InternetView.PROBLEMS_WITH_MAP_MESSAGE;
+						error = PROBLEMS_WITH_MAP_MESSAGE;
 					} catch (MapParsingException e) {
 						Log.e(Log.META_MAP_CONTROLLER_TAG, "map parsing exception");
-						error = InternetView.PROBLEMS_WITH_MAP_MESSAGE;
+						error = PROBLEMS_WITH_MAP_MESSAGE;
 					}
 					}
 				
 				splashDeactivate();
 
-				internetView = new InternetView(metaMap);
-				if (error != null) {
-					internetView.setError(error);
-				}
+				internetView = new MetaMapView(new ComappingProvider(metaMap));
+//				if (error != null) {
+//					internetView.setError(error);
+//				}
 				
 				runOnUiThread(new Runnable() {
 					
@@ -315,7 +318,7 @@ public class MetaMapActivity extends Activity {
 			Log.e(Log.META_MAP_CONTROLLER_TAG, "connection exception in logout");
 		}
 
-		metaMapRefresh(false);
+		//metaMapRefresh(false);
 	}
 
 	public void preferences() {

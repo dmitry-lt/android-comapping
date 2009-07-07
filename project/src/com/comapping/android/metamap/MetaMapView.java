@@ -133,6 +133,17 @@ public class MetaMapView {
 				updateMetaMap();
 			}
 		});
+
+		ImageButton backButton = (ImageButton) metaMapActivity
+				.findViewById(R.id.upLevelButton);
+
+		backButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				provider.goUp();
+				updateMetaMap();
+			}
+		});
 	}
 
 	private void setButtonsEnabled() {

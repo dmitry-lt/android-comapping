@@ -76,4 +76,24 @@ public class SdCardProvider extends MetaMapProvider {
 			updateCurtrentLevel();
 		}
 	}
+
+	@Override
+	public boolean canGoHome() {
+		return currentPath != root;
+	}
+
+	@Override
+	public boolean canGoUp() {
+		return currentPath != root;
+	}
+
+	@Override
+	public boolean canSync() {
+		return false;
+	}
+
+	@Override
+	public boolean sync() {
+		return false;
+	}
 }
