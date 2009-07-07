@@ -1,4 +1,4 @@
-package com.comapping.android.metamap;
+package com.comapping.android.metamap.provider;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -12,7 +12,7 @@ import com.comapping.android.communication.Client;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
-import com.comapping.android.metamap.MetaMapListAdapter.MetaMapItem;
+import com.comapping.android.metamap.MetaMapItem;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.model.map.Map;
@@ -44,11 +44,11 @@ public class ComappingProvider extends MetaMapProvider {
 		currentLevel = metamap.getRoot();
 	}
 	
-	MetaMapListAdapter.MetaMapItem[] getItems(Topic[] topics) {
-		MetaMapListAdapter.MetaMapItem[] res = new MetaMapListAdapter.MetaMapItem[topics.length];
+	MetaMapItem[] getItems(Topic[] topics) {
+		MetaMapItem[] res = new MetaMapItem[topics.length];
 
 		for (int i = 0; i < topics.length; i++) {
-			res[i] = new MetaMapListAdapter.MetaMapItem();
+			res[i] = new MetaMapItem();
 			res[i].name = topics[i].getText();
 
 			res[i].isFolder = topics[i].isFolder();

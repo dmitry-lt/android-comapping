@@ -16,14 +16,7 @@ import android.widget.TextView;
 
 class MetaMapListAdapter extends ArrayAdapter<String> {
 	
-	static public class MetaMapItem
-	{
-		public String name;
-		public String description;
-		public boolean isFolder;
-		public String reference;
-	}
-	
+
 	private MetaMapItem[] topics;
 
 	private static List<String> getTopicsNames(MetaMapItem[] topics) {

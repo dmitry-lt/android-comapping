@@ -11,6 +11,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 import com.comapping.android.controller.R;
+import com.comapping.android.metamap.provider.MetaMapProvider;
+import com.comapping.android.metamap.provider.SdCardProvider;
 import com.comapping.android.storage.PreferencesStorage;
 
 public class MetaMapView {
@@ -41,7 +43,7 @@ public class MetaMapView {
 		ListView listView = (ListView) metaMapActivity
 				.findViewById(R.id.listView);
 
-		MetaMapListAdapter.MetaMapItem[] items = provider.getCurrentLevel();
+		MetaMapItem[] items = provider.getCurrentLevel();
 		listView.setAdapter(new MetaMapListAdapter(metaMapActivity, items));
 
 		// Buttons

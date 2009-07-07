@@ -1,9 +1,9 @@
-package com.comapping.android.metamap;
+package com.comapping.android.metamap.provider;
 
 import java.io.File;
 import java.io.FilenameFilter;
 
-import com.comapping.android.metamap.MetaMapListAdapter.MetaMapItem;
+import com.comapping.android.metamap.MetaMapItem;
 
 public class SdCardProvider extends MetaMapProvider {
 
