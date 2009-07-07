@@ -72,7 +72,7 @@ public class SdCardProvider extends MetaMapProvider {
 	@Override
 	public void gotoFolder(int index) {
 		if (currentLevel[index].isFolder) {
-			currentPath += File.pathSeparator + currentLevel[index].name;
+			currentPath += File.separator + currentLevel[index].name;
 			updateCurtrentLevel();
 		}
 	}
