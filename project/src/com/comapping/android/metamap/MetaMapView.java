@@ -123,27 +123,6 @@ public class MetaMapView {
 		button.setImageResource(resource);
 	}
 
-	protected void drawMetaMapMessage(String message) {
-		ListView mapList = (ListView) metaMapActivity
-				.findViewById(R.id.listView);
-		mapList.setVisibility(ListView.GONE);
-
-		TextView textViewMessage = (TextView) metaMapActivity
-				.findViewById(R.id.textViewMessage);
-		textViewMessage.setText(message);
-		textViewMessage.setVisibility(TextView.VISIBLE);
-	}
-
-	protected void drawMetaMap() {
-		ListView mapList = (ListView) metaMapActivity
-				.findViewById(R.id.listView);
-		mapList.setVisibility(ListView.VISIBLE);
-
-		TextView textViewMessage = (TextView) metaMapActivity
-				.findViewById(R.id.textViewMessage);
-		textViewMessage.setVisibility(TextView.GONE);
-	}
-
 	void initButtons(MetaMapActivity activity) {
 
 		// Sync
@@ -220,6 +199,10 @@ public class MetaMapView {
 				}
 			}
 		});
+		
+		TextView text = new TextView(activity);
+		text.setText("Test text");
+		listView.setEmptyView(text);
 	}
 
 	public void activate(MetaMapActivity _metaMapActivity) {
@@ -236,8 +219,6 @@ public class MetaMapView {
 		initButtons(metaMapActivity);
 		initListView(metaMapActivity);
 
-		// metaMapActivity.loadMetaMapTopic(currentTopic);
-		drawMetaMap();
 		updateMetaMap();
 	}
 
