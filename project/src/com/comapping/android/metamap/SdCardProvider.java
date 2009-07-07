@@ -64,8 +64,7 @@ public class SdCardProvider extends MetaMapProvider {
 
 	@Override
 	public void goUp() {
-		// TODO FIX IT
-		currentPath = root;
+		currentPath = new File(currentPath).getParent();
 		updateCurtrentLevel();
 	}
 

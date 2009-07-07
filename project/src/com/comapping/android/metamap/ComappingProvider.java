@@ -108,9 +108,7 @@ public class ComappingProvider extends MetaMapProvider {
 		if (metamap == null)
 			return;
 		
-		// TODO Fix it now i'm too lazy
-		
-		currentLevel = metamap.getRoot();
+		currentLevel = currentLevel.getParent();
 	}
 
 	@Override
