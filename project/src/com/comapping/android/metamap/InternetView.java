@@ -14,46 +14,34 @@ public class InternetView extends MetaMapView {
 	public static final String PROBLEMS_WHILE_RETRIEVING_MESSAGE = "There are some problem while map list retrieving.";
 	public static final String PROBLEMS_WITH_MAP_MESSAGE = "There are some problem while map list parsing.";
 	
-	private static final String LAST_SYNCHRONIZATION = "Last synchronization";
-	
-	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	
 	private String error = PLEASE_SYNCHRONIZE_MESSAGE;
 	
+	Map map;
 	public InternetView(Map _map) {
-		super(_map);
+		super(new ComappingProvider(_map));
+		map = _map;
 	}
 	
-	public void activate(MetaMapActivity _metaMapActivity) {
-		super.activate(_metaMapActivity);
-		
-		// if metamap not synchronize
-		if (map == null) {
-			drawMetaMapMessage(error);
-		} else {
-			drawMetaMap();
-		}
-
-		// change button to switch
-		ImageButton switchButton = (ImageButton) metaMapActivity.findViewById(R.id.viewSwitcher);
-		switchButton.setImageResource(R.drawable.metamap_sdcard);
-		
-		// activate synchronize button
-		ImageButton synchronizeButton = (ImageButton) metaMapActivity.findViewById(R.id.synchronizeButton);
-		enableImageButton(synchronizeButton, R.drawable.ui_reload);
-	}
-	
-	public String getMapDescription(Topic topic) {
-		Timestamp lastSynchronizationDate = MetaMapActivity.client.getLastSynchronizationDate(topic.getMapRef());
-		
-		if (lastSynchronizationDate == null) {
-			return MAP_DESCRIPTION;
-		} else {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-			
-			return LAST_SYNCHRONIZATION+": "+dateFormat.format(lastSynchronizationDate);
-		}
-	}
+//	public void activate(MetaMapActivity _metaMapActivity) {
+//		super.activate(_metaMapActivity);
+//		
+//		drawMetaMap();
+//		
+//		// if metamap not synchronize
+//		if (map == null) {
+//			drawMetaMapMessage(error);
+//		} else {
+//			drawMetaMap();
+//		}
+//
+//		// change button to switch
+//		ImageButton switchButton = (ImageButton) metaMapActivity.findViewById(R.id.viewSwitcher);
+//		switchButton.setImageResource(R.drawable.metamap_sdcard);
+//		
+//		// activate synchronize button
+//		ImageButton synchronizeButton = (ImageButton) metaMapActivity.findViewById(R.id.synchronizeButton);
+//		enableImageButton(synchronizeButton, R.drawable.menu_reload);
+//	}
 	
 	public void setError(String _error) {
 		error = _error;

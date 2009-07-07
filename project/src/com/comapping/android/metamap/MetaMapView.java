@@ -21,93 +21,66 @@ public class MetaMapView {
 
 	protected MetaMapActivity metaMapActivity;
 
-	protected Map map;
 	private Topic currentTopic;
 
-	public MetaMapView(Map _map) {
-		map = _map;
-		if (map != null) {
-			currentTopic = map.getRoot();
-		} else {
-			currentTopic = null;
-		}
+	public MetaMapProvider provider;
+
+	public MetaMapView(MetaMapProvider _provider) {
+
+		provider = _provider;
 	}
 
-	// Temp code
-
-	MetaMapListAdapter.MetaMapItem[] getItems(Topic[] topics) {
-		MetaMapListAdapter.MetaMapItem[] res = new MetaMapListAdapter.MetaMapItem[topics.length];
-
-		for (int i = 0; i < topics.length; i++) {
-			res[i] = new MetaMapListAdapter.MetaMapItem();
-			res[i].name = topics[i].getText();
-
-			res[i].isFolder = topics[i].isFolder();
-			
-			if (res[i].isFolder)
-			{
-				res[i].description = getFolderDescription(topics[i]);
-			}
-			else
-			{
-				res[i].description = getMapDescription(topics[i]);
-			}
-		}
-
-		return res;
-	}
-
-	// End temp code
-
-	public void drawMetaMapTopic(final Topic topic, final Topic[] childTopics) {
-		
-		currentTopic = topic;
+	public void updateMetaMap() {
 
 		// title
-		metaMapActivity.setTitle("Comapping: " + currentTopic.getText());
+		// metaMapActivity.setTitle("Comapping: " + currentTopic.getText());
 
 		// list view
 		ListView listView = (ListView) metaMapActivity
 				.findViewById(R.id.listView);
+
 		metaMapActivity.registerForContextMenu(listView);
-		
-		
-		MetaMapListAdapter.MetaMapItem[] items = getItems(childTopics);
+
+		MetaMapListAdapter.MetaMapItem[] items = provider.getCurrentLevel();
 		listView.setAdapter(new MetaMapListAdapter(metaMapActivity, items));
-		
-		//listView.setAdapter(new TopicAdapter(metaMapActivity, childTopics));
+
+		// listView.setAdapter(new TopicAdapter(metaMapActivity, childTopics));
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> apapterView, View view,
 					int position, long arg3) {
 				// get viewType
-				String viewType = PreferencesStorage.get(
-						PreferencesStorage.VIEW_TYPE_KEY,
-						Options.DEFAULT_VIEW_TYPE);
 
-				if (childTopics[position].isFolder()) {
-					metaMapActivity.loadMetaMapTopic(childTopics[position]);
+				if (provider.getCurrentLevel()[position].isFolder) {
+					provider.gotoFolder(position);
+					updateMetaMap();
 				} else {
-					metaMapActivity.loadMap(childTopics[position].getMapRef(),
+
+					String viewType = PreferencesStorage.get(
+							PreferencesStorage.VIEW_TYPE_KEY,
+							Options.DEFAULT_VIEW_TYPE);
+
+					metaMapActivity.loadMap(
+							provider.getCurrentLevel()[position].reference,
 							ViewType.getViewTypeFromString(viewType), false);
 				}
 			}
 		});
 
-		if (topic.isRoot()) {
-			setButtonsDisabled();
-		} else {
-			metaMapActivity.findViewById(R.id.upLevelButton)
-					.setOnClickListener(new OnClickListener() {
-
-						public void onClick(View v) {
-							metaMapActivity.loadMetaMapTopic(topic.getParent());
-						}
-					});
-
-			setButtonsEnabled();
-		}
+		// if (topic.isRoot()) {
+		// setButtonsDisabled();
+		// } else {
+		// metaMapActivity.findViewById(R.id.upLevelButton)
+		// .setOnClickListener(new OnClickListener() {
+		//
+		// public void onClick(View v) {
+		// metaMapActivity.loadMetaMapTopic(topic.getParent());
+		// }
+		// });
+		//
+		// setButtonsEnabled();
+		// }
 	}
 
 	public Integer getOptionsMenu() {
@@ -156,7 +129,8 @@ public class MetaMapView {
 		homeButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				metaMapActivity.loadMetaMapTopic(map.getRoot());
+				provider.goHome();
+				updateMetaMap();
 			}
 		});
 	}
@@ -221,7 +195,11 @@ public class MetaMapView {
 		bindHomeButton();
 		bindSwitchViewButton();
 
-		metaMapActivity.loadMetaMapTopic(currentTopic);
+		setButtonsEnabled();
+
+		// metaMapActivity.loadMetaMapTopic(currentTopic);
+		drawMetaMap();
+		updateMetaMap();
 	}
 
 	public static void loadLayout(MetaMapActivity activity) {
@@ -229,9 +207,6 @@ public class MetaMapView {
 
 		// bing synchronize button
 		bindSynchronizeButton(activity);
-	}
-
-	public void prepareTopic(Topic topic) {
 	}
 
 	public String getMapDescription(Topic topic) {

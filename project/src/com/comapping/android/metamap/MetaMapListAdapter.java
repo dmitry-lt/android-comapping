@@ -21,6 +21,7 @@ class MetaMapListAdapter extends ArrayAdapter<String> {
 		public String name;
 		public String description;
 		public boolean isFolder;
+		public String reference;
 	}
 	
 	private MetaMapItem[] topics;

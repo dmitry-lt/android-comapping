@@ -8,8 +8,6 @@
 
 package com.comapping.android.metamap;
 
-import java.util.Arrays;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -34,9 +32,7 @@ import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.MapActivity;
 import com.comapping.android.controller.PreferencesActivity;
 import com.comapping.android.controller.R;
-import com.comapping.android.controller.R.id;
-import com.comapping.android.controller.R.menu;
-import com.comapping.android.model.TopicComparator;
+import com.comapping.android.metamap.MetaMapListAdapter.MetaMapItem;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.model.map.Map;
@@ -62,12 +58,12 @@ public class MetaMapActivity extends Activity {
 	private static MetaMapView currentView = null;
 
 	private static InternetView internetView = null;
-	private static SdcardView sdcardView = new SdcardView();
+	private static MetaMapView sdcardView = new MetaMapView(new SdCardProvider());
 
 	//
 	private static MetaMapActivity instance;
 	private ProgressDialog splash = null;
-	private Topic[] currentTopicChildren;
+//	private Topic[] currentTopicChildren;
 
 	// activity methods
 	
@@ -85,13 +81,13 @@ public class MetaMapActivity extends Activity {
 		if (internetView == null) {
 			metaMapRefresh(false);
 		} else {
-			if (currentView instanceof InternetView) {
+			if (currentView == internetView) {
 				switchView(internetView);
 			}
 		}
 
 		// activate sdcardView if needed
-		if ((currentView != null) && (currentView instanceof SdcardView)) {
+		if (currentView == sdcardView) {
 			switchView(sdcardView);
 		}
 	}
@@ -121,7 +117,7 @@ public class MetaMapActivity extends Activity {
 
 		int toInflate = R.menu.metamap_map_context; // default value
 
-		if (!currentTopicChildren[info.position].isFolder()) {
+		if (!currentView.provider.getCurrentLevel()[info.position].isFolder) {
 			toInflate = R.menu.metamap_map_context;
 		} else {
 			toInflate = R.menu.metamap_folder_context;
@@ -147,21 +143,24 @@ public class MetaMapActivity extends Activity {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
-		int itemId = (int) info.id;
+		int itemId = info.position;
 
-		if (!currentTopicChildren[itemId].isFolder()) {
-			String mapId = currentTopicChildren[itemId].getMapRef();
-
-			switch (item.getItemId()) {
-			case R.id.openWithComappingView:
-				loadMap(mapId, ViewType.COMAPPING_VIEW, false);
-				break;
-			case R.id.openWithExplorerView:
-				loadMap(mapId, ViewType.EXPLORER_VIEW, false);
-				break;
-			}
+		MetaMapItem itm = currentView.provider.getCurrentLevel()[itemId];
+		if (!itm.isFolder) {
+//			String mapId = itm.name;
+//
+//			switch (item.getItemId()) {
+//			case R.id.openWithComappingView:
+//				loadMap(mapId, ViewType.COMAPPING_VIEW, false);
+//				break;
+//			case R.id.openWithExplorerView:
+//				loadMap(mapId, ViewType.EXPLORER_VIEW, false);
+//				break;
+//			}
 		} else {
-			loadMetaMapTopic(currentTopicChildren[itemId]);
+			currentView.provider.gotoFolder(itemId);
+			currentView.updateMetaMap();
+			//loadMetaMapTopic(currentTopicChildren[itemId]);
 		}
 
 		return true;
@@ -198,14 +197,6 @@ public class MetaMapActivity extends Activity {
 		return instance;
 	}
 
-	public String getFolderDescription(Topic topic) {
-		return currentView.getFolderDescription(topic);
-	}
-	
-	public String getMapDescription(Topic topic) {
-		return currentView.getMapDescription(topic);
-	}
-	
 	public void switchView(MetaMapView view) {
 		currentView = view;
 
@@ -213,10 +204,10 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public void switchView() {
-		if (currentView instanceof SdcardView) {
-			switchView(internetView);
-		} else {
+		if (currentView == sdcardView) {
 			switchView(sdcardView);
+		} else {
+			switchView(internetView);
 		}
 	}
 
@@ -303,20 +294,6 @@ public class MetaMapActivity extends Activity {
 				});
 			}
 		}.start();
-	}
-
-	public void loadMetaMapTopic(final Topic topic) {
-		if (topic == null) {
-			return;
-		}
-		
-		currentView.prepareTopic(topic);
-
-		currentTopicChildren = topic.getChildTopics();
-
-		Arrays.sort(currentTopicChildren, new TopicComparator());
-
-		currentView.drawMetaMapTopic(topic, currentTopicChildren);
 	}
 
 	public void loadMap(final String mapId, final ViewType viewType, boolean ignoreCache) {
