@@ -11,17 +11,19 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 import com.comapping.android.controller.R;
-import com.comapping.android.model.map.Map;
 import com.comapping.android.model.map.Topic;
 import com.comapping.android.storage.PreferencesStorage;
 
 public class MetaMapView {
+
+	private static final int UP_LEVEL = 1;
+	private static final int HOME = 2;
+	private static final int SYNC = 3;
+
 	protected static final String MAP_DESCRIPTION = "Map";
 	protected static final String FOLDER_DESCRIPTION = "Folder";
 
 	protected MetaMapActivity metaMapActivity;
-
-	private Topic currentTopic;
 
 	public MetaMapProvider provider;
 
@@ -32,59 +34,93 @@ public class MetaMapView {
 
 	public void updateMetaMap() {
 
-		// title
-		// metaMapActivity.setTitle("Comapping: " + currentTopic.getText());
-
 		// list view
 		ListView listView = (ListView) metaMapActivity
 				.findViewById(R.id.listView);
 
-		metaMapActivity.registerForContextMenu(listView);
-
 		MetaMapListAdapter.MetaMapItem[] items = provider.getCurrentLevel();
 		listView.setAdapter(new MetaMapListAdapter(metaMapActivity, items));
 
-		// listView.setAdapter(new TopicAdapter(metaMapActivity, childTopics));
-
-		listView.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> apapterView, View view,
-					int position, long arg3) {
-				// get viewType
-
-				if (provider.getCurrentLevel()[position].isFolder) {
-					provider.gotoFolder(position);
-					updateMetaMap();
-				} else {
-
-					String viewType = PreferencesStorage.get(
-							PreferencesStorage.VIEW_TYPE_KEY,
-							Options.DEFAULT_VIEW_TYPE);
-
-					metaMapActivity.loadMap(
-							provider.getCurrentLevel()[position].reference,
-							ViewType.getViewTypeFromString(viewType), false);
-				}
-			}
-		});
-
-		// if (topic.isRoot()) {
-		// setButtonsDisabled();
-		// } else {
-		// metaMapActivity.findViewById(R.id.upLevelButton)
-		// .setOnClickListener(new OnClickListener() {
-		//
-		// public void onClick(View v) {
-		// metaMapActivity.loadMetaMapTopic(topic.getParent());
-		// }
-		// });
-		//
-		// setButtonsEnabled();
-		// }
+		// Buttons
+		
+		if (provider.canGoHome())
+			enableButton(HOME);
+		else
+			disableButton(HOME);
+		
+		
+		if (provider.canGoUp())
+			enableButton(UP_LEVEL);
+		else
+			disableButton(UP_LEVEL);
+		
+		if (provider.canSync())
+			enableButton(SYNC);
+		else
+			disableButton(SYNC);
+			
 	}
 
-	public Integer getOptionsMenu() {
-		return null;
+	void enableButton(int id) {
+		int resource = 0;
+		ImageButton button = null;
+
+		switch (id) {
+		case UP_LEVEL:
+			button = (ImageButton) metaMapActivity
+					.findViewById(R.id.upLevelButton);
+			resource = R.drawable.metamap_up;
+			break;
+		case HOME:
+			button = (ImageButton) metaMapActivity
+					.findViewById(R.id.homeButton);
+			resource = R.drawable.metamap_home;
+			break;
+		case SYNC:
+			button = (ImageButton) metaMapActivity
+					.findViewById(R.id.synchronizeButton);
+			resource = R.drawable.menu_reload;
+			break;
+
+		default:
+			return;
+		}
+		
+		button.setEnabled(true);
+		button.setFocusable(true);
+
+		button.setImageResource(resource);
+	}
+	
+	void disableButton(int id) {
+		int resource = 0;
+		ImageButton button = null;
+
+		switch (id) {
+		case UP_LEVEL:
+			button = (ImageButton) metaMapActivity
+					.findViewById(R.id.upLevelButton);
+			resource = R.drawable.metamap_up_grey;
+			break;
+		case HOME:
+			button = (ImageButton) metaMapActivity
+					.findViewById(R.id.homeButton);
+			resource = R.drawable.metamap_home_grey;
+			break;
+		case SYNC:
+			button = (ImageButton) metaMapActivity
+					.findViewById(R.id.synchronizeButton);
+			resource = R.drawable.menu_reload_grey;
+			break;
+
+		default:
+			return;
+		}
+		
+		button.setEnabled(false);
+		button.setFocusable(false);
+
+		button.setImageResource(resource);
 	}
 
 	protected void drawMetaMapMessage(String message) {
@@ -108,21 +144,33 @@ public class MetaMapView {
 		textViewMessage.setVisibility(TextView.GONE);
 	}
 
-	protected void enableImageButton(ImageButton button, int resource) {
-		button.setEnabled(true);
-		button.setFocusable(true);
+	void initButtons(MetaMapActivity activity) {
 
-		button.setImageResource(resource);
-	}
+		// Sync
 
-	protected void disableImageButton(ImageButton button, int resource) {
-		button.setEnabled(false);
-		button.setFocusable(false);
+		ImageButton synchronizeButton = (ImageButton) activity
+				.findViewById(R.id.synchronizeButton);
 
-		button.setImageResource(resource);
-	}
+		final MetaMapActivity act = activity;
+		synchronizeButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				act.synchronize();
+			}
+		});
 
-	private void bindHomeButton() {
+		// Switch view
+
+		ImageButton switchButton = (ImageButton) activity
+				.findViewById(R.id.viewSwitcher);
+
+		switchButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				metaMapActivity.switchView();
+			}
+		});
+
+		// Home
+
 		ImageButton homeButton = (ImageButton) metaMapActivity
 				.findViewById(R.id.homeButton);
 
@@ -134,10 +182,12 @@ public class MetaMapView {
 			}
 		});
 
-		ImageButton backButton = (ImageButton) metaMapActivity
+		// Up level
+
+		ImageButton upLevelButton = (ImageButton) metaMapActivity
 				.findViewById(R.id.upLevelButton);
 
-		backButton.setOnClickListener(new OnClickListener() {
+		upLevelButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				provider.goUp();
@@ -146,44 +196,28 @@ public class MetaMapView {
 		});
 	}
 
-	private void setButtonsEnabled() {
-		ImageButton upLevelButton = (ImageButton) metaMapActivity
-				.findViewById(R.id.upLevelButton);
-		ImageButton homeButton = (ImageButton) metaMapActivity
-				.findViewById(R.id.homeButton);
+	void initListView(MetaMapActivity activity) {
+		ListView listView = (ListView) activity.findViewById(R.id.listView);
+		activity.registerForContextMenu(listView);
+		listView.setOnItemClickListener(new OnItemClickListener() {
 
-		enableImageButton(upLevelButton, R.drawable.metamap_up);
-		enableImageButton(homeButton, R.drawable.metamap_home);
-	}
+			public void onItemClick(AdapterView<?> apapterView, View view,
+					int position, long arg3) {
+				// get viewType
 
-	private void setButtonsDisabled() {
-		ImageButton upLevelButton = (ImageButton) metaMapActivity
-				.findViewById(R.id.upLevelButton);
-		ImageButton homeButton = (ImageButton) metaMapActivity
-				.findViewById(R.id.homeButton);
+				if (provider.getCurrentLevel()[position].isFolder) {
+					provider.gotoFolder(position);
+					updateMetaMap();
+				} else {
 
-		disableImageButton(upLevelButton, R.drawable.metamap_up_grey);
-		disableImageButton(homeButton, R.drawable.metamap_home_grey);
-	}
+					String viewType = PreferencesStorage.get(
+							PreferencesStorage.VIEW_TYPE_KEY,
+							Options.DEFAULT_VIEW_TYPE);
 
-	private void bindSwitchViewButton() {
-		ImageButton switchButton = (ImageButton) metaMapActivity
-				.findViewById(R.id.viewSwitcher);
-
-		switchButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				metaMapActivity.switchView();
-			}
-		});
-	}
-
-	private static void bindSynchronizeButton(final MetaMapActivity activity) {
-		ImageButton synchronizeButton = (ImageButton) activity
-				.findViewById(R.id.synchronizeButton);
-
-		synchronizeButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				activity.synchronize();
+					metaMapActivity.loadMap(
+							provider.getCurrentLevel()[position].reference,
+							ViewType.getViewTypeFromString(viewType), false);
+				}
 			}
 		});
 	}
@@ -191,22 +225,16 @@ public class MetaMapView {
 	public void activate(MetaMapActivity _metaMapActivity) {
 		metaMapActivity = _metaMapActivity;
 
-		if (currentTopic != null) {
-			metaMapActivity.setTitle("Comapping: " + currentTopic.getText());
-		} else {
-			metaMapActivity.setTitle("Comapping");
-		}
+		// metaMapActivity.setTitle("Comapping");
 
-		if ((currentTopic == null) || (currentTopic.isRoot())) {
-			setButtonsDisabled();
-		} else {
-			setButtonsEnabled();
-		}
+		// if ((currentTopic == null) || (currentTopic.isRoot())) {
+		// setButtonsDisabled();
+		// } else {
+		// setButtonsEnabled();
+		// }
 
-		bindHomeButton();
-		bindSwitchViewButton();
-
-		setButtonsEnabled();
+		initButtons(metaMapActivity);
+		initListView(metaMapActivity);
 
 		// metaMapActivity.loadMetaMapTopic(currentTopic);
 		drawMetaMap();
@@ -215,16 +243,5 @@ public class MetaMapView {
 
 	public static void loadLayout(MetaMapActivity activity) {
 		activity.setContentView(R.layout.metamap);
-
-		// bing synchronize button
-		bindSynchronizeButton(activity);
-	}
-
-	public String getMapDescription(Topic topic) {
-		return MAP_DESCRIPTION;
-	}
-
-	public String getFolderDescription(Topic topic) {
-		return FOLDER_DESCRIPTION;
 	}
 }

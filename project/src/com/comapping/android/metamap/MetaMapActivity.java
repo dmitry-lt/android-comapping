@@ -93,20 +93,21 @@ public class MetaMapActivity extends Activity {
 
 	/* Creates the menu items */
 	
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		Integer currentMenu = currentView.getOptionsMenu();
-		Log.d(Log.META_MAP_CONTROLLER_TAG, "On create options menu. Current menu: "+currentMenu);
-		
-		if (currentMenu != null) {
-			menu.clear();
-			
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(currentMenu, menu);
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		Integer currentMenu = currentView.getOptionsMenu();
+//		
+//		Log.d(Log.META_MAP_CONTROLLER_TAG, "On create options menu. Current menu: "+currentMenu);
+//		
+//		if (currentMenu != null) {
+//			menu.clear();
+//			
+//			MenuInflater inflater = getMenuInflater();
+//			inflater.inflate(currentMenu, menu);
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 	
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
