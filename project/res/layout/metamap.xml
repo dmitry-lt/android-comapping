@@ -42,17 +42,18 @@
 			android:id="@+id/listView"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:layout_below="@+id/metaMapButtons"
-			android:visibility="gone">
+			android:layout_below="@+id/metaMapButtons">
+			
+		
 		</ListView>
 	</RelativeLayout>
-	<TextView
-		android:gravity="center"
-		android:layout_height="fill_parent"
-		android:width="200px"
-		android:layout_width="wrap_content"
-		android:layout_gravity="center"
-		android:visibility="invisible"
-		android:id="@+id/textViewMessage">
-	</TextView>
+				<TextView
+					android:gravity="center"
+					android:layout_height="fill_parent"
+					android:width="200px"
+					android:layout_width="wrap_content"
+					android:layout_gravity="center"
+					android:text="Try to syncronize or open SD-card or other folder"
+					android:id="@+id/textViewMessage">
+				</TextView>
 </LinearLayout>
