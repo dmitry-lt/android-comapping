@@ -1,14 +1,12 @@
 package com.comapping.android.view;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.controller.R;
@@ -46,24 +44,6 @@ public class LoginView {
 		});
 	}
 
-	public void setEmailText(final String email) {
-		final EditText emailText = (EditText) loginActivity.findViewById(R.id.eMail);
-
-		emailText.setText(email);
-	}
-
-	public void setPasswordText(final String password) {
-		final EditText passwordText = (EditText) loginActivity.findViewById(R.id.password);
-
-		passwordText.setText(password);
-	}
-
-	public void setErrorText(final String error) {
-		final EditText errorText = (EditText) loginActivity.findViewById(R.id.error);
-
-		errorText.setText(error);
-	}
-
 	public void load() {
 		loginActivity.setContentView(R.layout.login);
 		
@@ -75,8 +55,9 @@ public class LoginView {
 		
 		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, null);
 		if (email != null) {
-			setEmailText(email);
-			EditText passwordText = (EditText) loginActivity.findViewById(R.id.password);
+			TextView emailText = (TextView) loginActivity.findViewById(R.id.eMail);
+			emailText.setText(email);
+			TextView passwordText = (TextView) loginActivity.findViewById(R.id.password);
 			passwordText.requestFocus();
 		} 
 		
@@ -86,17 +67,10 @@ public class LoginView {
 		loginButton.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				final String email = ((EditText) loginActivity.findViewById(R.id.eMail)).getText().toString();
-				final String password = ((EditText) loginActivity.findViewById(R.id.password)).getText().toString();
 
-				loginActivity.loginClick(email, password);
+				loginActivity.loginClick();
 			}
 		});
 
-	}
-
-	public void load(final String error) {
-		load();
-		setErrorText(error);
 	}
 }

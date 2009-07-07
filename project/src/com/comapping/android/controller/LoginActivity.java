@@ -11,9 +11,9 @@ package com.comapping.android.controller;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.comapping.android.Log;
-import com.comapping.android.communication.CachingClient;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
@@ -41,13 +41,13 @@ public class LoginActivity extends Activity {
 	private void finishLoginAttempt(final String errorMsg) {
 		runOnUiThread(new Runnable() {
 			
-			public void run() {
+			public void run() {	
 				if (MetaMapActivity.client.isLoggedIn()) {
 					setResult(RESULT_LOGIN_SUCCESSFUL);
 					finish();
 				} else {
-					loginView.setErrorText(errorMsg);
-					loginView.setPasswordText("");
+					((TextView)findViewById(R.id.error)).setText(errorMsg);
+					((TextView)findViewById(R.id.password)).setText("");
 				}
 			}
 		});
@@ -125,10 +125,13 @@ public class LoginActivity extends Activity {
 		workThread.start();
 	}
 
-	public void loginClick(final String email, final String password) {
+	public void loginClick() {
 		loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
-		CheckBox remember = (CheckBox) findViewById(R.id.rememberUserCheckBox);
-		startWork(email, password, remember.isChecked());
+		final String email = ((TextView) findViewById(R.id.eMail)).getText().toString();
+		final String password = ((TextView) findViewById(R.id.password)).getText().toString();
+		final Boolean remember = ((CheckBox) findViewById(R.id.rememberUserCheckBox)).isChecked();
+
+		startWork(email, password, remember);
 	}
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -145,11 +148,10 @@ public class LoginActivity extends Activity {
 		if (isWorking) {
 			loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
 		} else {
-			loginView.setErrorText(stateMsg);
+			((TextView)findViewById(R.id.error)).setText(stateMsg);
 			if (MetaMapActivity.client.isAutologinPossible()) {
 				// autologin attempt
-				loginView.setPasswordText("******");
-
+				((TextView)findViewById(R.id.password)).setText("******");				
 				loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
 
 				startAutologin();
@@ -159,27 +161,8 @@ public class LoginActivity extends Activity {
 		}
 	}
 	
-//	
-//	protected void onPause() {
-//		loginView.splashDeactivate();
-//
-//		super.onDestroy();
-//
-//		if (!MetaMapActivity.client.isLoggedIn()) {
-//			stateMsg = "widow is paused";
-//			MetaMapActivity.client.interruptLogin();
-//		}
-//	}
-//
-	
 	protected void onDestroy() {
 		loginView.splashDeactivate();
-
 		super.onDestroy();
-
-//		if (!MetaMapActivity.client.isLoggedIn()) {
-//			stateMsg = "widow is destroyed";
-//			MetaMapActivity.client.interruptLogin();
-//		}
 	}
 }
