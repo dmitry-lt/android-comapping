@@ -46,9 +46,9 @@ public class MetaMapActivity extends Activity {
 	// constants
 	public static final int MAP_REQUEST = 5523;
 	private static final String LOADING_MESSAGE = "Loading map list";
-	
+
 	// public variables
-	public static CachingClient client = null;
+	// public static CachingClient client = null;
 	public static FileMapProvider fileMapProvider = new FileMapProvider();
 
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
@@ -58,21 +58,18 @@ public class MetaMapActivity extends Activity {
 	private static MetaMapView currentView = null;
 
 	private static MetaMapView internetView = null;
-	private static MetaMapView sdcardView = new MetaMapView(new SdCardProvider());
+	private static MetaMapView sdcardView = new MetaMapView(
+			new SdCardProvider());
 
 	//
 	private static MetaMapActivity instance;
 	private ProgressDialog splash = null;
 
 	// activity methods
-	
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instance = this;
-
-		if (client == null) {
-			client = new CachingClient(new Client(), new SqliteMapCache(this));
-		}
 
 		MetaMapView.loadLayout(this);
 
@@ -92,24 +89,25 @@ public class MetaMapActivity extends Activity {
 	}
 
 	/* Creates the menu items */
-	
-//	public boolean onPrepareOptionsMenu(Menu menu) {
-//		Integer currentMenu = currentView.getOptionsMenu();
-//		
-//		Log.d(Log.META_MAP_CONTROLLER_TAG, "On create options menu. Current menu: "+currentMenu);
-//		
-//		if (currentMenu != null) {
-//			menu.clear();
-//			
-//			MenuInflater inflater = getMenuInflater();
-//			inflater.inflate(currentMenu, menu);
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
-	
-	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+
+	// public boolean onPrepareOptionsMenu(Menu menu) {
+	// Integer currentMenu = currentView.getOptionsMenu();
+	//		
+	// Log.d(Log.META_MAP_CONTROLLER_TAG,
+	// "On create options menu. Current menu: "+currentMenu);
+	//		
+	// if (currentMenu != null) {
+	// menu.clear();
+	//			
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(currentMenu, menu);
+	// return true;
+	// } else {
+	// return false;
+	// }
+	// }
+	public void onCreateContextMenu(ContextMenu menu, View view,
+			ContextMenuInfo menuInfo) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 
 		MenuInflater inflater = getMenuInflater();
@@ -141,56 +139,59 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
 
 		int itemId = info.position;
 
 		MetaMapItem itm = currentView.provider.getCurrentLevel()[itemId];
 		if (!itm.isFolder) {
-//			String mapId = itm.name;
-//
-//			switch (item.getItemId()) {
-//			case R.id.openWithComappingView:
-//				loadMap(mapId, ViewType.COMAPPING_VIEW, false);
-//				break;
-//			case R.id.openWithExplorerView:
-//				loadMap(mapId, ViewType.EXPLORER_VIEW, false);
-//				break;
-//			}
+			// String mapId = itm.name;
+			//
+			switch (item.getItemId()) {
+			case R.id.openWithComappingView:
+				loadMap(itm.reference, ViewType.COMAPPING_VIEW, false);
+				break;
+			case R.id.openWithExplorerView:
+				loadMap(itm.reference, ViewType.EXPLORER_VIEW, false);
+				break;
+			}
 		} else {
 			currentView.provider.gotoFolder(itemId);
 			currentView.updateMetaMap();
-			//loadMetaMapTopic(currentTopicChildren[itemId]);
+			// loadMetaMapTopic(currentTopicChildren[itemId]);
 		}
 
 		return true;
 	}
 
-	
 	protected void onDestroy() {
 		splashDeactivate();
 
 		try {
+			CachingClient client = Client.getClient(this);
 			client.applicationClose(this);
 		} catch (ConnectionException e) {
-			Log.e(Log.META_MAP_CONTROLLER_TAG, "Connection exception in logout");
+			Log
+					.e(Log.META_MAP_CONTROLLER_TAG,
+							"Connection exception in logout");
 		}
 
 		super.onDestroy();
 	}
 
-	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == MAP_REQUEST) {
 			currentView.activate(this);
 		}
-		
+
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	// MetaMap methods
 	public static MapProvider getCurrentMapProvider() {
-		return (currentView == internetView) ? client : fileMapProvider;
+		return (currentView == internetView) ? Client.getClient(null)
+				: fileMapProvider;
 	}
 
 	public static MetaMapActivity getInstance() {
@@ -205,8 +206,11 @@ public class MetaMapActivity extends Activity {
 
 	public void switchView() {
 		if (currentView != sdcardView) {
+
 			switchView(sdcardView);
+
 		} else {
+
 			switchView(internetView);
 		}
 	}
@@ -241,8 +245,8 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open sdcard view";
-    public static final String PROBLEMS_WHILE_RETRIEVING_MESSAGE = "There are some problem while map list retrieving.";
-    public static final String PROBLEMS_WITH_MAP_MESSAGE = "There are some problem while map list parsing.";
+	public static final String PROBLEMS_WHILE_RETRIEVING_MESSAGE = "There are some problem while map list retrieving.";
+	public static final String PROBLEMS_WITH_MAP_MESSAGE = "There are some problem while map list parsing.";
 
 	private void metaMapRefresh(final boolean ignoreCache) {
 		final MetaMapActivity context = this;
@@ -253,18 +257,29 @@ public class MetaMapActivity extends Activity {
 
 				splashActivate(LOADING_MESSAGE);
 				String error = null;
-				
+
 				try {
-					result = client.getComap("meta", context, ignoreCache, !ignoreCache);
+					CachingClient client = Client.getClient(context);
+					result = client.getComap("meta", context, ignoreCache,
+							!ignoreCache);
 				} catch (ConnectionException e) {
-					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
-					Log.e(Log.META_MAP_CONTROLLER_TAG, "connection error in metamap retrieving");
+					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
+					// different
+					// messages
+					Log.e(Log.META_MAP_CONTROLLER_TAG,
+							"connection error in metamap retrieving");
 				} catch (LoginInterruptedException e) {
-					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
-					Log.e(Log.META_MAP_CONTROLLER_TAG, "login interrupted in metamap retrieving");
+					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
+					// different
+					// messages
+					Log.e(Log.META_MAP_CONTROLLER_TAG,
+							"login interrupted in metamap retrieving");
 				} catch (InvalidCredentialsException e) {
-					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO: different messages
-					Log.e(Log.META_MAP_CONTROLLER_TAG, "invalid credentails while getting comap oO");
+					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
+					// different
+					// messages
+					Log.e(Log.META_MAP_CONTROLLER_TAG,
+							"invalid credentails while getting comap oO");
 				}
 
 				Map metaMap = null;
@@ -275,23 +290,26 @@ public class MetaMapActivity extends Activity {
 							metaMap = mapBuilder.buildMap(result);
 						}
 					} catch (StringToXMLConvertionException e) {
-						Log.e(Log.META_MAP_CONTROLLER_TAG, "xml convertion exception");
+						Log.e(Log.META_MAP_CONTROLLER_TAG,
+								"xml convertion exception");
 						error = PROBLEMS_WITH_MAP_MESSAGE;
 					} catch (MapParsingException e) {
-						Log.e(Log.META_MAP_CONTROLLER_TAG, "map parsing exception");
+						Log.e(Log.META_MAP_CONTROLLER_TAG,
+								"map parsing exception");
 						error = PROBLEMS_WITH_MAP_MESSAGE;
 					}
-					}
-				
+				}
+
 				splashDeactivate();
 
-				internetView = new MetaMapView(new ComappingProvider(metaMap));
-//				if (error != null) {
-//					internetView.setError(error);
-//				}
-				
+				internetView = new MetaMapView(new ComappingProvider(context,
+						metaMap));
+				// if (error != null) {
+				// internetView.setError(error);
+				// }
+
 				runOnUiThread(new Runnable() {
-					
+
 					public void run() {
 						switchView(internetView);
 					}
@@ -300,7 +318,8 @@ public class MetaMapActivity extends Activity {
 		}.start();
 	}
 
-	public void loadMap(final String mapId, final ViewType viewType, boolean ignoreCache) {
+	public void loadMap(final String mapId, final ViewType viewType,
+			boolean ignoreCache) {
 		Intent intent = new Intent(MapActivity.MAP_ACTIVITY_INTENT);
 
 		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
@@ -314,15 +333,19 @@ public class MetaMapActivity extends Activity {
 		PreferencesStorage.set("key", "");
 
 		try {
+			CachingClient client = Client.getClient(this);
 			client.logout(this);
 		} catch (ConnectionException e) {
-			Log.e(Log.META_MAP_CONTROLLER_TAG, "connection exception in logout");
+			Log
+					.e(Log.META_MAP_CONTROLLER_TAG,
+							"connection exception in logout");
 		}
 
-		//metaMapRefresh(false);
+		// metaMapRefresh(false);
 	}
 
 	public void preferences() {
-		startActivity(new Intent(PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
+		startActivity(new Intent(
+				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 }

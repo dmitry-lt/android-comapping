@@ -11,10 +11,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
 import com.comapping.android.controller.R;
-import com.comapping.android.model.map.Topic;
 import com.comapping.android.storage.PreferencesStorage;
 
 public class MetaMapView {
+
+	// Button id's
 
 	private static final int UP_LEVEL = 1;
 	private static final int HOME = 2;
@@ -26,6 +27,8 @@ public class MetaMapView {
 	protected MetaMapActivity metaMapActivity;
 
 	public MetaMapProvider provider;
+
+	private MetaMapProvider sdCardProvider = new SdCardProvider();
 
 	public MetaMapView(MetaMapProvider _provider) {
 
@@ -42,23 +45,22 @@ public class MetaMapView {
 		listView.setAdapter(new MetaMapListAdapter(metaMapActivity, items));
 
 		// Buttons
-		
+
 		if (provider.canGoHome())
 			enableButton(HOME);
 		else
 			disableButton(HOME);
-		
-		
+
 		if (provider.canGoUp())
 			enableButton(UP_LEVEL);
 		else
 			disableButton(UP_LEVEL);
-		
+
 		if (provider.canSync())
 			enableButton(SYNC);
 		else
 			disableButton(SYNC);
-			
+
 	}
 
 	void enableButton(int id) {
@@ -85,13 +87,13 @@ public class MetaMapView {
 		default:
 			return;
 		}
-		
+
 		button.setEnabled(true);
 		button.setFocusable(true);
 
 		button.setImageResource(resource);
 	}
-	
+
 	void disableButton(int id) {
 		int resource = 0;
 		ImageButton button = null;
@@ -116,7 +118,7 @@ public class MetaMapView {
 		default:
 			return;
 		}
-		
+
 		button.setEnabled(false);
 		button.setFocusable(false);
 
@@ -173,6 +175,19 @@ public class MetaMapView {
 				updateMetaMap();
 			}
 		});
+
+		// Sync
+
+		ImageButton syncButton = (ImageButton) metaMapActivity
+				.findViewById(R.id.synchronizeButton);
+
+		syncButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				provider.sync();
+				updateMetaMap();
+			}
+		});
 	}
 
 	void initListView(MetaMapActivity activity) {
@@ -199,7 +214,7 @@ public class MetaMapView {
 				}
 			}
 		});
-		
+
 		TextView text = new TextView(activity);
 		text.setText("Test text");
 		listView.setEmptyView(text);
@@ -207,14 +222,6 @@ public class MetaMapView {
 
 	public void activate(MetaMapActivity _metaMapActivity) {
 		metaMapActivity = _metaMapActivity;
-
-		// metaMapActivity.setTitle("Comapping");
-
-		// if ((currentTopic == null) || (currentTopic.isRoot())) {
-		// setButtonsDisabled();
-		// } else {
-		// setButtonsEnabled();
-		// }
 
 		initButtons(metaMapActivity);
 		initListView(metaMapActivity);

@@ -19,6 +19,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.comapping.android.Log;
+import com.comapping.android.communication.CachingClient;
+import com.comapping.android.communication.Client;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
@@ -45,10 +47,13 @@ public class LoginActivity extends Activity {
 	private static String stateMsg = "";
 
 	private void finishLoginAttempt(final String errorMsg) {
+		
+		final Activity context = this;
 		runOnUiThread(new Runnable() {
 			
 			public void run() {	
-				if (MetaMapActivity.client.isLoggedIn()) {
+				CachingClient client = Client.getClient(context);
+				if (client.isLoggedIn()) {
 					setResult(RESULT_LOGIN_SUCCESSFUL);
 					finish();
 				} else {
@@ -66,14 +71,17 @@ public class LoginActivity extends Activity {
 			loginView.splashDeactivate();
 			workThread.stop();
 		}
+		
+		final Activity context = this;
 
 		workThread = new Thread() {
 			public void run() {
 				isWorking = true;
 				stateMsg = UNKNOWN_RESULT_MESSAGE;
+				CachingClient client = Client.getClient(context);
 
 				try {
-					MetaMapActivity.client.login(email, password, remember);
+					client.login(email, password, remember);
 				} catch (ConnectionException e) {
 					Log.e(Log.LOGIN_TAG, "connection exception");
 					stateMsg = CONNECTION_ERROR_MESSAGE;
@@ -102,13 +110,16 @@ public class LoginActivity extends Activity {
 			workThread.stop();
 		}
 		
+		final Activity context = this;
 		workThread = new Thread() {
 			public void run() {
 				isWorking = true;
 				stateMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
-
+				CachingClient client = Client.getClient(context);
+				
 				try {
-					MetaMapActivity.client.autologin();
+					
+					client.autologin();
 				} catch (ConnectionException e) {
 					Log.e(Log.LOGIN_TAG, "connection exception");
 					stateMsg = CONNECTION_ERROR_MESSAGE;
@@ -120,7 +131,7 @@ public class LoginActivity extends Activity {
 
 				finishLoginAttempt(stateMsg);
 
-				if (!MetaMapActivity.client.isLoggedIn()) {
+				if (!client.isLoggedIn()) {
 					loginView.splashDeactivate();
 				}
 
@@ -143,7 +154,8 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (MetaMapActivity.client.isLoggedIn()) {
+		CachingClient client = Client.getClient(this);
+		if (client.isLoggedIn()) {
 			setResult(RESULT_LOGIN_SUCCESSFUL);
 			finish();
 			return;
@@ -178,7 +190,7 @@ public class LoginActivity extends Activity {
 			loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
 		} else {
 			((TextView)findViewById(R.id.error)).setText(stateMsg);
-			if (MetaMapActivity.client.isAutologinPossible()) {
+			if (client.isAutologinPossible()) {
 				// autologin attempt
 				((TextView)findViewById(R.id.password)).setText("******");				
 				loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);

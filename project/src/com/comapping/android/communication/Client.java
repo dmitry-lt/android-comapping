@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.comapping.android.Log;
@@ -31,8 +32,24 @@ import com.comapping.android.communication.exceptions.InvalidCredentialsExceptio
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.controller.LoginActivity;
 import com.comapping.android.storage.PreferencesStorage;
+import com.comapping.android.storage.SqliteMapCache;
 
 public class Client implements MapProvider {
+	
+	private static CachingClient client;
+	public static CachingClient getClient(Context context)
+	{
+		if (client == null)
+		{
+			if (context == null)
+				return null;
+			
+			client = new CachingClient(new Client(), new SqliteMapCache(context));
+		}
+		
+		return client;
+	}
+	
 	final static String MetaMapId = "meta";
 	// constants
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
