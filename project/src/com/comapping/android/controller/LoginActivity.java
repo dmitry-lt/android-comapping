@@ -9,7 +9,12 @@
 package com.comapping.android.controller;
 
 import android.app.Activity;
+import android.graphics.Shader.TileMode;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -18,6 +23,7 @@ import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.metamap.MetaMapActivity;
+import com.comapping.android.storage.PreferencesStorage;
 import com.comapping.android.view.LoginView;
 
 public class LoginActivity extends Activity {
@@ -142,9 +148,32 @@ public class LoginActivity extends Activity {
 			finish();
 			return;
 		}
+		
+		// set Login Layout
+		setContentView(R.layout.login);
 
+		// bind login button
 		loginView = new LoginView(this);
-		loginView.load();
+		
+		((Button)findViewById(R.id.login)).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				loginClick();
+			}
+		});
+		
+		// try to make autologin
+		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, null);
+		if (email != null) {
+			((TextView)findViewById(R.id.eMail)).setText(email);
+			((TextView)findViewById(R.id.password)).requestFocus();
+		} 		
+		
+		// set background
+		BitmapDrawable background =(BitmapDrawable)getResources().getDrawable(R.drawable.login_background);
+		background.setTileModeX(TileMode.REPEAT);
+		background.setTileModeY(TileMode.REPEAT);
+		findViewById(R.id.loginLayout).setBackgroundDrawable(background);		
+		
 		if (isWorking) {
 			loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
 		} else {
