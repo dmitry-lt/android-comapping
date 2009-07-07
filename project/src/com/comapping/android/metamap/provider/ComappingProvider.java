@@ -38,7 +38,7 @@ public class ComappingProvider extends MetaMapProvider {
 		activity = _activity;
 		metamap = null;
 
-		metaMapRefresh(false);
+		update(false);
 
 		if (metamap == null)
 			return;
@@ -178,66 +178,69 @@ public class ComappingProvider extends MetaMapProvider {
 			}
 		});
 	}
+	
+	private void update(boolean ignoreCache)
+	{
+		CachingClient client = Client.getClient(activity);
+
+		String result = "";
+
+		splashActivate(LOADING_MESSAGE);
+		String error = null;
+
+		try {
+			result = client.getComap("meta", activity, ignoreCache,
+					!ignoreCache);
+		} catch (ConnectionException e) {
+			error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
+			// different
+			// messages
+			Log.e(Log.META_MAP_CONTROLLER_TAG,
+					"connection error in metamap retrieving");
+		} catch (LoginInterruptedException e) {
+			error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
+			// different
+			// messages
+			Log.e(Log.META_MAP_CONTROLLER_TAG,
+					"login interrupted in metamap retrieving");
+		} catch (InvalidCredentialsException e) {
+			error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
+			// different
+			// messages
+			Log.e(Log.META_MAP_CONTROLLER_TAG,
+					"invalid credentails while getting comap oO");
+		}
+
+		// Map metaMap = null;
+		if (error == null) {
+			// retrieving was successful
+			try {
+				if (result != null) {
+					MapBuilder mapBuilder = new SaxMapBuilder();
+					metamap = mapBuilder.buildMap(result);
+				}
+			} catch (StringToXMLConvertionException e) {
+				Log.e(Log.META_MAP_CONTROLLER_TAG,
+						"xml convertion exception");
+				error = PROBLEMS_WITH_MAP_MESSAGE;
+			} catch (MapParsingException e) {
+				Log.e(Log.META_MAP_CONTROLLER_TAG,
+						"map parsing exception");
+				error = PROBLEMS_WITH_MAP_MESSAGE;
+			}
+		}
+
+		currentLevel = metamap.getRoot();
+
+		splashDeactivate();
+
+	}
 
 	private void metaMapRefresh(final boolean ignoreCache) {
-		final Activity context = activity;
-
 		new Thread() {
 			public void run() {
-
-				CachingClient client = Client.getClient(context);
-
-				String result = "";
-
-				splashActivate(LOADING_MESSAGE);
-				String error = null;
-
-				try {
-					result = client.getComap("meta", context, ignoreCache,
-							!ignoreCache);
-				} catch (ConnectionException e) {
-					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
-					// different
-					// messages
-					Log.e(Log.META_MAP_CONTROLLER_TAG,
-							"connection error in metamap retrieving");
-				} catch (LoginInterruptedException e) {
-					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
-					// different
-					// messages
-					Log.e(Log.META_MAP_CONTROLLER_TAG,
-							"login interrupted in metamap retrieving");
-				} catch (InvalidCredentialsException e) {
-					error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
-					// different
-					// messages
-					Log.e(Log.META_MAP_CONTROLLER_TAG,
-							"invalid credentails while getting comap oO");
-				}
-
-				// Map metaMap = null;
-				if (error == null) {
-					// retrieving was successful
-					try {
-						if (result != null) {
-							MapBuilder mapBuilder = new SaxMapBuilder();
-							metamap = mapBuilder.buildMap(result);
-						}
-					} catch (StringToXMLConvertionException e) {
-						Log.e(Log.META_MAP_CONTROLLER_TAG,
-								"xml convertion exception");
-						error = PROBLEMS_WITH_MAP_MESSAGE;
-					} catch (MapParsingException e) {
-						Log.e(Log.META_MAP_CONTROLLER_TAG,
-								"map parsing exception");
-						error = PROBLEMS_WITH_MAP_MESSAGE;
-					}
-				}
-
-				currentLevel = metamap.getRoot();
-
-				splashDeactivate();
-
+				update(ignoreCache);
+	
 			}
 		}.start();
 	}

@@ -32,6 +32,7 @@ import com.comapping.android.controller.MapActivity;
 import com.comapping.android.controller.PreferencesActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.metamap.provider.ComappingProvider;
+import com.comapping.android.metamap.provider.MetaMapProvider;
 import com.comapping.android.metamap.provider.SdCardProvider;
 import com.comapping.android.model.map.builder.MapBuilder;
 import com.comapping.android.model.map.builder.SaxMapBuilder;
@@ -52,11 +53,12 @@ public class MetaMapActivity extends Activity {
 
 	// private variables
 	// views
-	private static MetaMapView currentView = null;
-
-	private static MetaMapView internetView = null;
-	private static MetaMapView sdcardView = new MetaMapView(
-			new SdCardProvider());
+	
+	private static SdCardProvider sdCardProvider;
+	private static ComappingProvider comappingProvider;
+	private static MetaMapProvider currentProvider;
+	
+	private static MetaMapView currentView = new MetaMapView();
 
 	// activity methods
 
@@ -67,13 +69,13 @@ public class MetaMapActivity extends Activity {
 
 		MetaMapView.loadLayout(this);
 
-		if (internetView == null)
-			internetView = new MetaMapView(new ComappingProvider(this));
+		if (comappingProvider == null)
+			comappingProvider = new ComappingProvider(this);
 
-		if (currentView == internetView) {
-			switchView(internetView);
+		if (currentProvider == comappingProvider) {
+			switchView(comappingProvider);
 		} else {
-			switchView(sdcardView);
+			switchView(sdCardProvider);
 		}
 	}
 
@@ -173,16 +175,20 @@ public class MetaMapActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	public void switchView(MetaMapView view) {
-		currentView = view;
+	public void switchView(MetaMapProvider prov) {
+		//currentView = view;
+		currentProvider = prov;
+		
+		currentView.provider = prov;
+		currentView.updateMetaMap();
 		currentView.activate(this);
 	}
 
 	public void switchView() {
-		if (currentView != sdcardView) {
-			switchView(sdcardView);
+		if (currentProvider != sdCardProvider) {
+			switchView(sdCardProvider);
 		} else {
-			switchView(internetView);
+			switchView(comappingProvider);
 		}
 	}
 
@@ -194,7 +200,7 @@ public class MetaMapActivity extends Activity {
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
 		intent.putExtra(MapActivity.EXT_IS_IGNORE_CACHE, ignoreCache);
 
-		if (currentView == internetView) {
+		if (currentProvider == comappingProvider) {
 			intent.putExtra(MapActivity.EXT_DATA_SOURCE,
 					Constants.DATA_SOURCE_COMAPPING);
 		} else {

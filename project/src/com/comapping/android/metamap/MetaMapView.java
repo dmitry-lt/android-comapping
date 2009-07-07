@@ -29,16 +29,16 @@ public class MetaMapView {
 
 	protected MetaMapActivity metaMapActivity;
 
-	public MetaMapProvider provider;
+	public MetaMapProvider provider = null;
 
-	private MetaMapProvider sdCardProvider = new SdCardProvider();
+	public MetaMapView() {
 
-	public MetaMapView(MetaMapProvider _provider) {
-
-		provider = _provider;
 	}
 
 	public void updateMetaMap() {
+
+		if (provider == null)
+			return;
 
 		// list view
 		ListView listView = (ListView) metaMapActivity
@@ -137,6 +137,10 @@ public class MetaMapView {
 
 		synchronizeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
+				
+				if (provider == null)
+					return;
+				
 				provider.sync();
 			}
 		});
@@ -160,6 +164,10 @@ public class MetaMapView {
 		homeButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
+				
+				if (provider == null)
+					return;
+				
 				provider.goHome();
 				updateMetaMap();
 			}
@@ -173,6 +181,10 @@ public class MetaMapView {
 		upLevelButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
+				
+				if (provider == null)
+					return;
+				
 				provider.goUp();
 				updateMetaMap();
 			}
@@ -186,6 +198,10 @@ public class MetaMapView {
 		syncButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
+				
+				if (provider == null)
+					return;
+				
 				provider.sync();
 				updateMetaMap();
 			}
@@ -195,14 +211,17 @@ public class MetaMapView {
 	void initListView(MetaMapActivity activity) {
 		ListView listView = (ListView) activity.findViewById(R.id.listView);
 		activity.registerForContextMenu(listView);
-		
+
 		final Activity context = activity;
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> apapterView, View view,
 					int position, long arg3) {
+				
+				if (provider == null)
+					return;
 				// get viewType
-
+				
 				if (provider.getCurrentLevel()[position].isFolder) {
 					provider.gotoFolder(position);
 					updateMetaMap();
@@ -214,7 +233,8 @@ public class MetaMapView {
 
 					MetaMapActivity.loadMap(
 							provider.getCurrentLevel()[position].reference,
-							ViewType.getViewTypeFromString(viewType), false, context);
+							ViewType.getViewTypeFromString(viewType), false,
+							context);
 				}
 			}
 		});
