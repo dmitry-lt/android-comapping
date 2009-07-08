@@ -1,9 +1,9 @@
 /*
  * MetaMapView Controller
  * Android Comapping, 2009
- * Last change: Abishev Timur
+ * Korshakov Stepan
  * 
- * Class implements MetaMapView controller
+ * Class implements MetaMapActivity
  */
 
 package com.comapping.android.metamap;
@@ -61,11 +61,10 @@ public class MetaMapActivity extends Activity {
 	private static ComappingProvider comappingProvider = null;
 	private static MetaMapProvider currentProvider = null;
 
-	/**
-	* ====================================================
-	* Live cycle
-	* ====================================================
-	*/
+	
+	// ====================================================
+	// Live cycle
+	// ====================================================
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -146,7 +145,7 @@ public class MetaMapActivity extends Activity {
 		new Thread() {
 			public void run() {
 				currentProvider.sync();
-				
+
 				runOnUiThread(new Runnable() {
 					public void run() {
 						updateMetaMap();
@@ -156,12 +155,10 @@ public class MetaMapActivity extends Activity {
 		}.start();
 	}
 
-	/**
-	* ====================================================
-	* View Logic
-	* ====================================================
-	*/
-
+	// ====================================================
+	// View Logic
+	// ====================================================
+	
 	public void updateMetaMap() {
 
 		if (currentProvider == null)
@@ -207,12 +204,10 @@ public class MetaMapActivity extends Activity {
 			enableProvider(comappingProvider);
 		}
 	}
-	
-	/**
-	* ====================================================
-	* View Controls Manipulation
-	* ====================================================
-	*/
+
+	// ====================================================
+	// View Controls Manipulation 
+	// ====================================================
 
 	void enableButton(int id) {
 		int resource = 0;
@@ -269,14 +264,11 @@ public class MetaMapActivity extends Activity {
 
 		updateMetaMap();
 	}
-	
-	
-	/**
-	* ====================================================
-	* View Controls Init
-	* ====================================================
-	*/
 
+	// ====================================================
+	// View Controls Init
+	// ====================================================
+	
 	void initControls() {
 		initButtons();
 		initListView();
@@ -390,12 +382,10 @@ public class MetaMapActivity extends Activity {
 		});
 	}
 
-	/**
-	* ====================================================
-	* Context Menu
-	* ====================================================
-	*/
-	
+	// ====================================================
+	// Context Menu
+	// ====================================================
+
 	public void onCreateContextMenu(ContextMenu menu, View view,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
@@ -439,11 +429,9 @@ public class MetaMapActivity extends Activity {
 		return true;
 	}
 
-	/**
-	* ====================================================
-	* Options Menu
-	* ====================================================
-	*/
+	// ====================================================
+	// Options Menu
+	// ====================================================
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
