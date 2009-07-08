@@ -425,7 +425,7 @@ public class MetaMapActivity extends Activity {
 		menu.clear();
 
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.metamap_without_logout_options, menu);
+		inflater.inflate(R.menu.metamap_with_logout_options, menu);
 		return true;
 	}
 
