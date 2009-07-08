@@ -21,12 +21,11 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.comapping.android.Log;
-import com.comapping.android.communication.CachingClient;
-import com.comapping.android.communication.Client;
-import com.comapping.android.communication.exceptions.ConnectionException;
-import com.comapping.android.communication.exceptions.InvalidCredentialsException;
-import com.comapping.android.communication.exceptions.LoginInterruptedException;
-import com.comapping.android.metamap.MetaMapActivity;
+import com.comapping.android.provider.communication.CachingClient;
+import com.comapping.android.provider.communication.Client;
+import com.comapping.android.provider.communication.exceptions.ConnectionException;
+import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.storage.PreferencesStorage;
 
 public class LoginActivity extends Activity {

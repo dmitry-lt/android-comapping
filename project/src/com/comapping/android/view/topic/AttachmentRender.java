@@ -14,10 +14,9 @@ import java.util.Date;
 
 import com.comapping.android.Log;
 import com.comapping.android.Options;
-import com.comapping.android.communication.Client;
-import com.comapping.android.communication.exceptions.ConnectionException;
+import com.comapping.android.provider.communication.Client;
+import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.R;
-import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.model.map.Attachment;
 import com.comapping.android.storage.PreferencesStorage;
 import com.comapping.android.view.Render;

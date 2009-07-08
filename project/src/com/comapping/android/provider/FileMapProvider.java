@@ -1,7 +1,7 @@
 package com.comapping.android.provider;
 
-import static com.comapping.android.communication.ClientHelper.getBytesSum;
-import static com.comapping.android.communication.ClientHelper.getTextFromInputStream;
+import static com.comapping.android.provider.communication.ClientHelper.getBytesSum;
+import static com.comapping.android.provider.communication.ClientHelper.getTextFromInputStream;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

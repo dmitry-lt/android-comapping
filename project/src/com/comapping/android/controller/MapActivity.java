@@ -26,11 +26,11 @@ import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.ViewType;
-import com.comapping.android.communication.CachingClient;
-import com.comapping.android.communication.Client;
-import com.comapping.android.communication.exceptions.ConnectionException;
-import com.comapping.android.communication.exceptions.InvalidCredentialsException;
-import com.comapping.android.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.provider.communication.CachingClient;
+import com.comapping.android.provider.communication.Client;
+import com.comapping.android.provider.communication.exceptions.ConnectionException;
+import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
@@ -39,6 +39,8 @@ import com.comapping.android.model.map.Topic;
 import com.comapping.android.provider.IMapProvider;
 import com.comapping.android.provider.InternetMapProvider;
 import com.comapping.android.provider.contentprovider.FileMapContentProvider;
+import com.comapping.android.provider.contentprovider.InternetMapContentProvider;
+import com.comapping.android.provider.contentprovider.MapContentProvider;
 import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.view.comapping.ComappingRender;
 import com.comapping.android.view.explorer.ExplorerRender;
@@ -233,20 +235,20 @@ public class MapActivity extends Activity {
 					if (!MemoryCache.has(mapId) || (ignoreCache)) {
 						splashActivate("Downloading map", false);
 						String result = "";
-						try {
-							if (dataSource == Constants.DATA_SOURCE_COMAPPING) {
-								result = Client.getClient(current).getComap(
-										mapId, current, ignoreCache, false);
-							} else {
-								result = new InternetMapProvider(current)
-										.getComap(mapId, false, current);
-							}
-
-						} catch (InvalidCredentialsException e) {
-							Log.e(Log.MAP_CONTROLLER_TAG,
-									"invalid credentials while map getting");
-							// TODO: ???
-						}
+//						try {
+//							if (dataSource == Constants.DATA_SOURCE_COMAPPING)
+//							{
+//								result = Client.getClient(current).getComap(mapId,
+//										current, ignoreCache, false);
+								result = MapContentProvider.getComap(mapId, InternetMapContentProvider.CONTENT_URI, current);
+//							} else
+//							{
+//								result = new InternetMapProvider(current).getComap(mapId, false, current);	
+//							}
+//						} catch (InvalidCredentialsException e) {
+//							Log.e(Log.MAP_CONTROLLER_TAG, "invalid credentials while map getting");
+//							// TODO: ???
+//						}
 
 						if (result == null) {
 							result = "";
@@ -335,12 +337,12 @@ public class MapActivity extends Activity {
 						}
 						sleep(100);
 					}
-				} catch (LoginInterruptedException e) {
-					Log.e(Log.MAP_CONTROLLER_TAG, "login interrupted");
-					onError("login interrupted", current);
-				} catch (ConnectionException e) {
-					Log.e(Log.MAP_CONTROLLER_TAG, "connection exception");
-					onError("Connection error", current);
+//				} catch (LoginInterruptedException e) {
+//					Log.e(Log.MAP_CONTROLLER_TAG, "login interrupted");
+//					onError("login interrupted", current);
+//				} catch (ConnectionException e) {
+//					Log.e(Log.MAP_CONTROLLER_TAG, "connection exception");
+//					onError("Connection error", current);
 				} catch (StringToXMLConvertionException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
 					onError("Wrong file format", current);
