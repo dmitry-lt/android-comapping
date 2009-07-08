@@ -9,6 +9,8 @@
 package com.comapping.android.controller;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -40,12 +42,13 @@ public class LoginActivity extends Activity {
 	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "E-mail or password is incorrect";
 	private static final String UNKNOWN_RESULT_MESSAGE = "Unknown result";
 
-	private LoginView loginView;
+	//private LoginView loginView;
+	private ProgressDialog splash = null;	
 
 	private static boolean isWorking = false;
 	private static Thread workThread = null;
 	private static String stateMsg = "";
-
+	
 	private void finishLoginAttempt(final String errorMsg) {
 		
 		final Activity context = this;
@@ -68,7 +71,7 @@ public class LoginActivity extends Activity {
 			final boolean remember) {
 		if (isWorking)
 		{
-			loginView.splashDeactivate();
+			splashDeactivate();
 			workThread.stop();
 		}
 		
@@ -94,7 +97,7 @@ public class LoginActivity extends Activity {
 
 				finishLoginAttempt(stateMsg);
 
-				loginView.splashDeactivate();
+				splashDeactivate();
 
 				isWorking = false;
 				workThread = null;
@@ -106,7 +109,7 @@ public class LoginActivity extends Activity {
 	void startAutologin() {
 		if (isWorking)
 		{
-			loginView.splashDeactivate();
+			splashDeactivate();
 			workThread.stop();
 		}
 		
@@ -132,7 +135,7 @@ public class LoginActivity extends Activity {
 				finishLoginAttempt(stateMsg);
 
 				if (!client.isLoggedIn()) {
-					loginView.splashDeactivate();
+					splashDeactivate();
 				}
 
 				isWorking = false;
@@ -143,7 +146,10 @@ public class LoginActivity extends Activity {
 	}
 
 	public void loginClick() {
-		loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
+		
+		Log.d("Logic Activity", "splash activate start");
+		splashActivate(LOGIN_ATTEMPT_MESSAGE);
+		Log.d("Logic Activity", "splash activate end");
 		final String email = ((TextView) findViewById(R.id.eMail)).getText().toString();
 		final String password = ((TextView) findViewById(R.id.password)).getText().toString();
 		final Boolean remember = ((CheckBox) findViewById(R.id.rememberUserCheckBox)).isChecked();
@@ -161,11 +167,11 @@ public class LoginActivity extends Activity {
 			return;
 		}
 		
-		// set Login Layout
+		// set login Layout
 		setContentView(R.layout.login);
 
 		// bind login button
-		loginView = new LoginView(this);
+		//loginView = new LoginView(this);
 		
 		((Button)findViewById(R.id.login)).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -173,7 +179,7 @@ public class LoginActivity extends Activity {
 			}
 		});
 		
-		// try to make autologin
+		// set auto login
 		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, null);
 		if (email != null) {
 			((TextView)findViewById(R.id.eMail)).setText(email);
@@ -187,13 +193,17 @@ public class LoginActivity extends Activity {
 		findViewById(R.id.loginLayout).setBackgroundDrawable(background);		
 		
 		if (isWorking) {
-			loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
+			Log.d("Logic Activity", "splash activate start");			
+			splashActivate(LOGIN_ATTEMPT_MESSAGE);
+			Log.d("Logic Activity", "splash activate end");
 		} else {
 			((TextView)findViewById(R.id.error)).setText(stateMsg);
 			if (client.isAutologinPossible()) {
 				// autologin attempt
-				((TextView)findViewById(R.id.password)).setText("******");				
-				loginView.splashActivate(LOGIN_ATTEMPT_MESSAGE);
+				((TextView)findViewById(R.id.password)).setText("******");
+				Log.d("Logic Activity", "splash activate start");
+				splashActivate(LOGIN_ATTEMPT_MESSAGE);
+				Log.d("Logic Activity", "splash activate end");
 
 				startAutologin();
 			} else {
@@ -203,7 +213,31 @@ public class LoginActivity extends Activity {
 	}
 	
 	protected void onDestroy() {
-		loginView.splashDeactivate();
+		splashDeactivate();
 		super.onDestroy();
+	}
+	
+	private void splashActivate(final String message) {
+		final LoginActivity thisActivity = this;
+		runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash == null) {
+					splash = ProgressDialog.show(thisActivity, "Comapping", message);
+				} else {
+					splash.setMessage(message);
+				}
+			}
+		});
+	}
+	
+	private void splashDeactivate() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash != null) {
+					splash.dismiss();
+					splash = null;
+				}
+			}
+		});
 	}
 }
