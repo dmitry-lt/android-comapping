@@ -212,8 +212,16 @@ public class LoginActivity extends Activity {
 	}
 	
 	protected void onDestroy() {
-		splashDeactivate();
 		super.onDestroy();
+		
+		splashDeactivate();
+		
+		CachingClient client = Client.getClient(this);
+		
+		if (!client.isLoggedIn())
+		{
+			client.interruptLogin();
+		}
 	}
 	
 	private void splashActivate(final String message) {
