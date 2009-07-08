@@ -11,6 +11,7 @@ package com.comapping.android.storage;
 import com.comapping.android.Log;
 import com.comapping.android.metamap.*;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
@@ -39,7 +40,36 @@ public class PreferencesStorage {
 //	public static Storage getInstance() {
 //		return instance;
 //	}
+	public static void set(String key, String value, Context context) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+		Editor edit = preferences.edit();
+
+		edit.putString(key, value);
+		edit.commit();
+
+		Log.i(Log.STORAGE_TAG, "[" + key + "] = " + value);
+	}
+
+	public static String get(String key, String defaultValue, Context context) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+		String value = preferences.getString(key, defaultValue);
+
+		Log.i(Log.STORAGE_TAG, "get [" + key + "] = " + value);
+
+		return value;
+	}
+	
+	public static boolean getBoolean(String key, boolean defaultValue, Context context) {
+		// false if not created
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+		return preferences.getBoolean(key, defaultValue);
+	}
+	
+	//******
+	// old
 	public static void set(String key, String value) {
 		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
 
