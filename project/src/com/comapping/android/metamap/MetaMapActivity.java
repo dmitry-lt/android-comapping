@@ -61,9 +61,8 @@ public class MetaMapActivity extends Activity {
 	private static ComappingProvider comappingProvider = null;
 	private static MetaMapProvider currentProvider = null;
 
-	
 	// ====================================================
-	// Live cycle
+	// Live Cycle
 	// ====================================================
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +112,10 @@ public class MetaMapActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	// ====================================================
+	// Menu Functions
+	// ====================================================
+
 	public void preferences() {
 		startActivity(new Intent(
 				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
@@ -120,12 +123,10 @@ public class MetaMapActivity extends Activity {
 
 	void openMap(final String mapId, final ViewType viewType,
 			boolean ignoreCache) {
-		if (currentProvider == comappingProvider)
-			MapActivity.openMap(mapId, viewType, ignoreCache, this,
-					Constants.DATA_SOURCE_COMAPPING);
-		else
-			MapActivity.openMap(mapId, viewType, ignoreCache, this,
-					Constants.DATA_SOURCE_SD);
+		String dataSource = (currentProvider == comappingProvider) ? Constants.DATA_SOURCE_COMAPPING
+				: Constants.DATA_SOURCE_SD;
+
+		MapActivity.openMap(mapId, viewType, ignoreCache, this, dataSource);
 	}
 
 	public void logout() {
@@ -158,7 +159,7 @@ public class MetaMapActivity extends Activity {
 	// ====================================================
 	// View Logic
 	// ====================================================
-	
+
 	public void updateMetaMap() {
 
 		if (currentProvider == null)
@@ -206,7 +207,7 @@ public class MetaMapActivity extends Activity {
 	}
 
 	// ====================================================
-	// View Controls Manipulation 
+	// View Controls Manipulation
 	// ====================================================
 
 	void enableButton(int id) {
@@ -268,7 +269,7 @@ public class MetaMapActivity extends Activity {
 	// ====================================================
 	// View Controls Init
 	// ====================================================
-	
+
 	void initControls() {
 		initButtons();
 		initListView();
