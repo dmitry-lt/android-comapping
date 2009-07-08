@@ -77,14 +77,20 @@ public class MetaMapActivity extends Activity {
 		
 		initControls();
 
+		// Init providers
+		
 		if (comappingProvider == null)
 			comappingProvider = new ComappingProvider(this);
+		
+		if (sdCardProvider == null)
+			sdCardProvider = new SdCardProvider();
 
-		if (currentProvider == comappingProvider) {
+		// set provider
+		
+		if (currentProvider == null)
 			enableProvider(comappingProvider);
-		} else {
-			enableProvider(sdCardProvider);
-		}
+		else
+			enableProvider(currentProvider);
 	}
 	
 	protected void onDestroy() {
@@ -143,6 +149,15 @@ public class MetaMapActivity extends Activity {
 			enableButton(SYNC);
 		else
 			disableButton(SYNC);
+		
+		if (currentProvider == comappingProvider)
+		{
+			((ImageButton) findViewById(R.id.viewSwitcher)).setImageResource(R.drawable.metamap_sdcard);
+		}
+		else
+		{
+			((ImageButton) findViewById(R.id.viewSwitcher)).setImageResource(R.drawable.metamap_internet);
+		}
 
 	}
 	
