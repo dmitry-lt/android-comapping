@@ -278,20 +278,6 @@ public class MetaMapActivity extends Activity {
 
 	void initButtons() {
 
-		// Sync
-
-		ImageButton synchronizeButton = (ImageButton) findViewById(R.id.synchronizeButton);
-
-		synchronizeButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-
-				if (currentProvider == null)
-					return;
-
-				currentProvider.sync();
-			}
-		});
-
 		// Switch view
 
 		ImageButton switchButton = (ImageButton) findViewById(R.id.viewSwitcher);
@@ -345,8 +331,7 @@ public class MetaMapActivity extends Activity {
 				if (currentProvider == null)
 					return;
 
-				currentProvider.sync();
-				updateMetaMap();
+				sync();
 			}
 		});
 	}
