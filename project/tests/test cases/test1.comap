@@ -1,0 +1,22 @@
+<mindmap escape="false">
+  <metadata>
+    <id><![CDATA[61975]]></id>
+    <name><![CDATA[test1]]></name>
+    <owner>
+      <id><![CDATA[8790]]></id>
+      <name><![CDATA[Vladimir Kulikov]]></name>
+      <email><![CDATA[vldimir.kulikov@gmail.com]]></email>
+    </owner>
+    <access><![CDATA[Private]]></access>
+    <source><![CDATA[Server]]></source>
+    <collaborators><![CDATA[]]></collaborators>
+    <watchers><![CDATA[]]></watchers>
+    <isTemplate><![CDATA[false]]></isTemplate>
+    <params/>
+  </metadata>
+  <presentation/>
+  <node id="9438022" locked="false">
+    <text><![CDATA[test1]]></text>
+    <node flag="risk" id="9438028" locked="false"><text><![CDATA[Topic]]></text></node>
+  </node>
+</mindmap>
