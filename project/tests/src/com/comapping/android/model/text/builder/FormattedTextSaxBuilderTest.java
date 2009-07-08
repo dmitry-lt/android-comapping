@@ -3,11 +3,13 @@ package com.comapping.android.model.text.builder;
 import java.util.List;
 
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
-import com.comapping.android.model.text.FormattedText;
-import com.comapping.android.model.text.TextBlock;
-import com.comapping.android.model.text.TextFormat;
-import com.comapping.android.model.text.TextParagraph;
 
+import com.comapping.android.model.text.TextParagraph;
+import com.comapping.android.model.text.FormattedText;
+import com.comapping.android.model.text.TextFormat;
+
+
+import android.graphics.Color;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -25,17 +27,23 @@ public class FormattedTextSaxBuilderTest extends AndroidTestCase {
 		String[] xml = new String[] {
 				"<TEXT><P><FONT>Hello world!</FONT></P></TEXT>",
 				"<P><FONT>Hello world!</FONT></P>",
-				"<FONT>Hello world!</FONT>", "Hello world!" };
+				"<FONT>Hello world!</FONT>", "Hello world!",
+				"<PHello World!",
+				"<FONT>   </FONT>"};
 		FormattedTextSaxBuilder builder = new FormattedTextSaxBuilder();
 		
 		assertEquals(text,builder.buildFormattedText(xml[0]).toString());
 		assertEquals(text,builder.buildFormattedText(xml[1]).toString());
 		assertEquals(text,builder.buildFormattedText(xml[2]).toString());
 		assertEquals(text,builder.buildFormattedText(xml[3]).toString());
+		assertFalse("String is not right format",text == builder.buildFormattedText(xml[4]).toString());
+		assertTrue("Spaces are also symbols","" != builder.buildFormattedText(xml[5]).toString());
 	}
-	
+
+
 	@SmallTest
-	public void test2() throws StringToXMLConvertionException {
+	public void test2() throws StringToXMLConvertionException 
+	{
 		String xmlTestString = "<FONT SIZE=\"16\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"1\">Hello, world!</FONT>";
 		FormattedText formattedText = FormattedTextSaxBuilder.buildFormattedText(xmlTestString);
 		assertEquals("Error with parsing text", "Hello, world!", formattedText.getSimpleText());
@@ -44,7 +52,8 @@ public class FormattedTextSaxBuilderTest extends AndroidTestCase {
 		assertEquals("Error with number of text blocks", 1, paragraphs.get(0).getTextBlocks().size());
 		TextFormat format = paragraphs.get(0).getTextBlocks().get(0).getFormat();
 		assertEquals("Error with format - size", 16, format.getFontSize());
-		assertEquals("Error with format - color", 0, format.getFontColor());
+		assertEquals("Error with format - color",Color.BLACK, format.getFontColor());
 		assertEquals("Error with format - underling", false, format.isUnderlined());
 	}
+
 }
