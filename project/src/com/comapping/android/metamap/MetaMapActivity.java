@@ -61,9 +61,11 @@ public class MetaMapActivity extends Activity {
 	private static ComappingProvider comappingProvider = null;
 	private static MetaMapProvider currentProvider = null;
 
-	// /////////////////////////////////////////////////////////////////////////////////
-	// Live cycle
-	// /////////////////////////////////////////////////////////////////////////////////
+	/**
+	* ====================================================
+	* Live cycle
+	* ====================================================
+	*/
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -126,7 +128,7 @@ public class MetaMapActivity extends Activity {
 			MapActivity.openMap(mapId, viewType, ignoreCache, this,
 					Constants.DATA_SOURCE_SD);
 	}
-	
+
 	public void logout() {
 		PreferencesStorage.set("key", "");
 
@@ -140,9 +142,25 @@ public class MetaMapActivity extends Activity {
 		}
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
-	// View Logic
-	// /////////////////////////////////////////////////////////////////////////////////
+	public void sync() {
+		new Thread() {
+			public void run() {
+				currentProvider.sync();
+				
+				runOnUiThread(new Runnable() {
+					public void run() {
+						updateMetaMap();
+					}
+				});
+			}
+		}.start();
+	}
+
+	/**
+	* ====================================================
+	* View Logic
+	* ====================================================
+	*/
 
 	public void updateMetaMap() {
 
@@ -189,10 +207,12 @@ public class MetaMapActivity extends Activity {
 			enableProvider(comappingProvider);
 		}
 	}
-
-	// /////////////////////////////////////////////////////////////////////////////////
-	// View Controls Manipulation
-	// /////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	* ====================================================
+	* View Controls Manipulation
+	* ====================================================
+	*/
 
 	void enableButton(int id) {
 		int resource = 0;
@@ -222,7 +242,6 @@ public class MetaMapActivity extends Activity {
 	void disableButton(int id) {
 		int resource = 0;
 		ImageButton button = (ImageButton) findViewById(id);
-		;
 
 		switch (id) {
 		case UP_LEVEL:
@@ -250,10 +269,13 @@ public class MetaMapActivity extends Activity {
 
 		updateMetaMap();
 	}
-
-	// /////////////////////////////////////////////////////////////////////////////////
-	// View Controls Init
-	// /////////////////////////////////////////////////////////////////////////////////
+	
+	
+	/**
+	* ====================================================
+	* View Controls Init
+	* ====================================================
+	*/
 
 	void initControls() {
 		initButtons();
@@ -368,10 +390,12 @@ public class MetaMapActivity extends Activity {
 		});
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
-	// Context Menu
-	// /////////////////////////////////////////////////////////////////////////////////
-
+	/**
+	* ====================================================
+	* Context Menu
+	* ====================================================
+	*/
+	
 	public void onCreateContextMenu(ContextMenu menu, View view,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
@@ -415,11 +439,11 @@ public class MetaMapActivity extends Activity {
 		return true;
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
-	// Options Menu
-	// /////////////////////////////////////////////////////////////////////////////////
-
-	/* Creates the menu items */
+	/**
+	* ====================================================
+	* Options Menu
+	* ====================================================
+	*/
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();

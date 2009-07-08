@@ -234,18 +234,9 @@ public class ComappingProvider extends MetaMapProvider {
 
 	}
 
-	private void metaMapRefresh(final boolean ignoreCache) {
-		new Thread() {
-			public void run() {
-				update(ignoreCache);
-
-			}
-		}.start();
-	}
-
 	@Override
 	public boolean sync() {
-		metaMapRefresh(true);
+		update(true);
 		return false;
 	}
 }
