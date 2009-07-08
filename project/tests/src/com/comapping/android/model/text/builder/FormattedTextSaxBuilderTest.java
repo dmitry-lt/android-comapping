@@ -32,12 +32,12 @@ public class FormattedTextSaxBuilderTest extends AndroidTestCase {
 				"<FONT>   </FONT>"};
 		FormattedTextSaxBuilder builder = new FormattedTextSaxBuilder();
 		
-		assertEquals(text,builder.buildFormattedText(xml[0]).toString());
-		assertEquals(text,builder.buildFormattedText(xml[1]).toString());
-		assertEquals(text,builder.buildFormattedText(xml[2]).toString());
-		assertEquals(text,builder.buildFormattedText(xml[3]).toString());
-		assertFalse("String is not right format",text == builder.buildFormattedText(xml[4]).toString());
-		assertTrue("Spaces are also symbols","" != builder.buildFormattedText(xml[5]).toString());
+		assertEquals("Error:String is not right format",text,builder.buildFormattedText(xml[0]).toString());
+		assertEquals("Error:String is not right format",text,builder.buildFormattedText(xml[1]).toString());
+		assertEquals("Error:String is not right format",text,builder.buildFormattedText(xml[2]).toString());
+		assertEquals("Error:String is not right format",text,builder.buildFormattedText(xml[3]).toString());
+		assertFalse("Error:String is not right format",text == builder.buildFormattedText(xml[4]).toString());
+		assertTrue("Error:Spaces are also symbols","" != builder.buildFormattedText(xml[5]).toString());
 	}
 
 
