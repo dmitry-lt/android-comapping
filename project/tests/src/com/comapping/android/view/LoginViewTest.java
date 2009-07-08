@@ -25,7 +25,6 @@ public class LoginViewTest extends AndroidTestCase{
     private EditText eMail;
     private EditText password;
     private CheckBox check;
-    private TextView eMailView;
     private TextView passwordView;
     
     @Override
@@ -46,7 +45,6 @@ public class LoginViewTest extends AndroidTestCase{
         login = (Button) mRoot.findViewById(R.id.login);
         eMail = (EditText) mRoot.findViewById(R.id.eMail);
         password = (EditText) mRoot.findViewById(R.id.password);
-        eMailView = (TextView) mRoot.findViewById(R.id.eMailTextView);
         passwordView = (TextView) mRoot.findViewById(R.id.passwordTextView);
         check = (CheckBox) mRoot.findViewById(R.id.rememberUserCheckBox);
         
