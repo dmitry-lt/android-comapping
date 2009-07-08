@@ -7,6 +7,7 @@ import com.comapping.android.model.map.Icon;
 import com.comapping.android.model.map.Topic;
 import com.comapping.android.view.Render;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -28,17 +29,20 @@ public class IconRender extends Render {
 	private static Bitmap[] flagIcons;
 	private static Bitmap[] icons;
 
+	private Context context;
+	
 	private Topic topic;
 	private int iconsCount;
 	private int width, height;
 
-	public IconRender(Topic topic) {
+	public IconRender(Topic topic, Context context) {		
+		this.topic = topic;
+		this.context = context;
+		
 		if (!iconsLoaded) {
 			loadIcons();
 			iconsLoaded = true;
 		}
-
-		this.topic = topic;
 
 		iconsCount = 0;
 		if (topic.getPriority() != 0) {
@@ -170,7 +174,7 @@ public class IconRender extends Render {
 	}
 
 	private void loadIcons() {
-		Resources r = MetaMapActivity.instance.getResources();
+		Resources r = context.getResources();
 
 		priorityIcons = new Bitmap[] { null, getBitmap(r.getDrawable(R.drawable.topic_priority1)),
 				getBitmap(r.getDrawable(R.drawable.topic_priority2)), getBitmap(r.getDrawable(R.drawable.topic_priority3)),

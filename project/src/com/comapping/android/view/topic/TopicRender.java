@@ -51,7 +51,7 @@ public class TopicRender extends Render {
 		
 		if (!isEmpty) {
 			textRender = new TextRender(topic.getFormattedText(), topic.getBgColor(), context);
-			iconRender = new IconRender(topic);
+			iconRender = new IconRender(topic, context);
 			taskRender = new TaskRender(topic.getTask(), context);
 			noteRender = new NoteRender(topic.getNote(), context);
 			attachmentRender = new AttachmentRender(topic.getAttachment(), context);

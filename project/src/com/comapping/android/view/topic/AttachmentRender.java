@@ -53,12 +53,12 @@ public class AttachmentRender extends Render {
 		isEmpty = (attachment == null);
 
 		if (!isEmpty) {
+			this.context = context;
+			this.attachment = attachment;
+			
 			if (attachmentIcon == null) {
 				loadIcon();
 			}
-
-			this.context = context;
-			this.attachment = attachment;
 
 			width = ICON_SIZE;
 			height = ICON_SIZE;
@@ -159,7 +159,7 @@ public class AttachmentRender extends Render {
 	}
 
 	private void loadIcon() {
-		Resources r = MetaMapActivity.instance.getResources();
+		Resources r = context.getResources();
 		attachmentIcon = getBitmap(r.getDrawable(R.drawable.topic_attachment), ICON_SIZE);
 	}
 
