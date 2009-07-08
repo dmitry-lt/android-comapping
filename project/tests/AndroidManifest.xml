@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.comapping.android.tests">
+    
+    <application>
+        <uses-library android:name="android.test.runner" />
+    </application>
+
+	<!--
+    This declares that this app uses the instrumentation test runner targeting
+    the package of com.comapping.android.  To run the tests use the command:
+    "adb shell am instrument -w com.comapping.android.tests/android.test.InstrumentationTestRunner"
+    -->
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+                     android:targetPackage="com.comapping.android.controller"
+                     android:label="Tests for Model."/>
+
+</manifest>
