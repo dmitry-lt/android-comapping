@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.comapping.android.communication.CachingClient;
 import com.comapping.android.communication.Client;
 import com.comapping.android.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.MapActivity;
+import com.comapping.android.controller.PreferencesActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.metamap.provider.ComappingProvider;
 import com.comapping.android.metamap.provider.MetaMapProvider;
@@ -41,7 +43,7 @@ import com.comapping.android.model.map.builder.SaxMapBuilder;
 import com.comapping.android.storage.PreferencesStorage;
 
 public class MetaMapActivity extends Activity {
-	
+
 	// Button id's
 
 	private static final int UP_LEVEL = R.id.upLevelButton;
@@ -51,48 +53,43 @@ public class MetaMapActivity extends Activity {
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
 
-	
 	public static MetaMapActivity instance = null;
-
-
 
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
 
-	
 	private static SdCardProvider sdCardProvider = null;
 	private static ComappingProvider comappingProvider = null;
 	private static MetaMapProvider currentProvider = null;
-	
-	
-	///////////////////////////////////////////////////////////////////////////////////
-	//                               Live cycle
-	///////////////////////////////////////////////////////////////////////////////////
+
+	// /////////////////////////////////////////////////////////////////////////////////
+	// Live cycle
+	// /////////////////////////////////////////////////////////////////////////////////
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instance = this;
-		
+
 		setContentView(R.layout.metamap);
-		
+
 		initControls();
 
 		// Init providers
-		
+
 		if (comappingProvider == null)
 			comappingProvider = new ComappingProvider(this);
-		
+
 		if (sdCardProvider == null)
 			sdCardProvider = new SdCardProvider();
 
 		// set provider
-		
+
 		if (currentProvider == null)
 			enableProvider(comappingProvider);
 		else
 			enableProvider(currentProvider);
 	}
-	
+
 	protected void onDestroy() {
 
 		try {
@@ -106,8 +103,7 @@ public class MetaMapActivity extends Activity {
 
 		super.onDestroy();
 	}
-	
-	
+
 	// WTF?
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == Constants.ACTION_MAP_REQUEST) {
@@ -117,18 +113,17 @@ public class MetaMapActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	///////////////////////////////////////////////////////////////////////////////////
-	//                              View Logic
-	///////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////
+	// View Logic
+	// /////////////////////////////////////////////////////////////////////////////////
 
-	
 	public void updateMetaMap() {
 
 		if (currentProvider == null)
 			return;
 
 		// list view
-		ListView listView = (ListView)findViewById(R.id.listView);
+		ListView listView = (ListView) findViewById(R.id.listView);
 
 		MetaMapItem[] items = currentProvider.getCurrentLevel();
 		listView.setAdapter(new MetaMapListAdapter(this, items));
@@ -149,18 +144,17 @@ public class MetaMapActivity extends Activity {
 			enableButton(SYNC);
 		else
 			disableButton(SYNC);
-		
-		if (currentProvider == comappingProvider)
-		{
-			((ImageButton) findViewById(R.id.viewSwitcher)).setImageResource(R.drawable.metamap_sdcard);
-		}
-		else
-		{
-			((ImageButton) findViewById(R.id.viewSwitcher)).setImageResource(R.drawable.metamap_internet);
+
+		if (currentProvider == comappingProvider) {
+			((ImageButton) findViewById(R.id.viewSwitcher))
+					.setImageResource(R.drawable.metamap_sdcard);
+		} else {
+			((ImageButton) findViewById(R.id.viewSwitcher))
+					.setImageResource(R.drawable.metamap_internet);
 		}
 
 	}
-	
+
 	public void switchProvider() {
 		if (currentProvider != sdCardProvider) {
 			enableProvider(sdCardProvider);
@@ -169,11 +163,10 @@ public class MetaMapActivity extends Activity {
 		}
 	}
 
-	///////////////////////////////////////////////////////////////////////////////////
-	//                     View Controls Manipulation
-	///////////////////////////////////////////////////////////////////////////////////
-	
-	
+	// /////////////////////////////////////////////////////////////////////////////////
+	// View Controls Manipulation
+	// /////////////////////////////////////////////////////////////////////////////////
+
 	void enableButton(int id) {
 		int resource = 0;
 		ImageButton button = (ImageButton) findViewById(id);
@@ -201,7 +194,8 @@ public class MetaMapActivity extends Activity {
 
 	void disableButton(int id) {
 		int resource = 0;
-		ImageButton button = (ImageButton)findViewById(id);;
+		ImageButton button = (ImageButton) findViewById(id);
+		;
 
 		switch (id) {
 		case UP_LEVEL:
@@ -226,22 +220,21 @@ public class MetaMapActivity extends Activity {
 
 	void enableProvider(MetaMapProvider prov) {
 		currentProvider = prov;
-		
+
 		updateMetaMap();
 	}
 
-	///////////////////////////////////////////////////////////////////////////////////
-	//                          View Controls Init
-	///////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////
+	// View Controls Init
+	// /////////////////////////////////////////////////////////////////////////////////
 
-	void initControls()
-	{
+	void initControls() {
 		initButtons();
 		initListView();
 
 		updateMetaMap();
 	}
-	
+
 	void initButtons() {
 
 		// Sync
@@ -250,10 +243,10 @@ public class MetaMapActivity extends Activity {
 
 		synchronizeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				
-//				if (currentProvider == null)
-//					return;
-				
+
+				if (currentProvider == null)
+					return;
+
 				currentProvider.sync();
 			}
 		});
@@ -275,10 +268,10 @@ public class MetaMapActivity extends Activity {
 		homeButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				
+
 				if (currentProvider == null)
 					return;
-				
+
 				currentProvider.goHome();
 				updateMetaMap();
 			}
@@ -291,10 +284,10 @@ public class MetaMapActivity extends Activity {
 		upLevelButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				
+
 				if (currentProvider == null)
 					return;
-				
+
 				currentProvider.goUp();
 				updateMetaMap();
 			}
@@ -307,10 +300,10 @@ public class MetaMapActivity extends Activity {
 		syncButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				
+
 				if (currentProvider == null)
 					return;
-				
+
 				currentProvider.sync();
 				updateMetaMap();
 			}
@@ -326,11 +319,11 @@ public class MetaMapActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> apapterView, View view,
 					int position, long arg3) {
-				
+
 				if (currentProvider == null)
 					return;
 				// get viewType
-				
+
 				if (currentProvider.getCurrentLevel()[position].isFolder) {
 					currentProvider.gotoFolder(position);
 					updateMetaMap();
@@ -340,23 +333,24 @@ public class MetaMapActivity extends Activity {
 							PreferencesStorage.VIEW_TYPE_KEY,
 							Options.DEFAULT_VIEW_TYPE);
 
-					MetaMapActivity.loadMap(
-							currentProvider.getCurrentLevel()[position].reference,
-							ViewType.getViewTypeFromString(viewType), false,
-							context);
+					MetaMapActivity
+							.loadMap(
+									currentProvider.getCurrentLevel()[position].reference,
+									ViewType.getViewTypeFromString(viewType),
+									false, context);
 				}
 			}
 		});
 	}
-	
-	///////////////////////////////////////////////////////////////////////////////////
-	//                            Context Menu
-	///////////////////////////////////////////////////////////////////////////////////
+
+	// /////////////////////////////////////////////////////////////////////////////////
+	// Context Menu
+	// /////////////////////////////////////////////////////////////////////////////////
 
 	public void onCreateContextMenu(ContextMenu menu, View view,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
-		
+
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		MenuInflater inflater = getMenuInflater();
 
@@ -370,7 +364,7 @@ public class MetaMapActivity extends Activity {
 
 		inflater.inflate(toInflate, menu);
 	}
-	
+
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -395,49 +389,33 @@ public class MetaMapActivity extends Activity {
 
 		return true;
 	}
-	
-	///////////////////////////////////////////////////////////////////////////////////
-	//                              Options Menu
-	///////////////////////////////////////////////////////////////////////////////////
+
+	// /////////////////////////////////////////////////////////////////////////////////
+	// Options Menu
+	// /////////////////////////////////////////////////////////////////////////////////
 
 	/* Creates the menu items */
 
-	// public boolean onPrepareOptionsMenu(Menu menu) {
-	// Integer currentMenu = currentView.getOptionsMenu();
-	//		
-	// Log.d(Log.META_MAP_CONTROLLER_TAG,
-	// "On create options menu. Current menu: "+currentMenu);
-	//		
-	// if (currentMenu != null) {
-	// menu.clear();
-	//			
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(currentMenu, menu);
-	// return true;
-	// } else {
-	// return false;
-	// }
-	// }
-	
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// switch (item.getItemId()) {
-	// case R.id.preferences:
-	// preferences();
-	// return true;
-	// case R.id.logout:
-	// logout();
-	// return true;
-	// }
-	//
-	// return false;
-	// }
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
 
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.metamap_without_logout_options, menu);
+		return true;
+	}
 
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.preferences:
+			preferences();
+			return true;
+		case R.id.logout:
+			logout();
+			return true;
+		}
 
-
-
-
-
+		return false;
+	}
 
 	public static void loadMap(final String mapId, final ViewType viewType,
 			boolean ignoreCache, Activity parent) {
@@ -458,21 +436,21 @@ public class MetaMapActivity extends Activity {
 		parent.startActivityForResult(intent, Constants.ACTION_MAP_REQUEST);
 	}
 
-	// public void logout() {
-	// PreferencesStorage.set("key", "");
-	//
-	// try {
-	// CachingClient client = Client.getClient(this);
-	// client.logout(this);
-	// } catch (ConnectionException e) {
-	// Log
-	// .e(Log.META_MAP_CONTROLLER_TAG,
-	// "connection exception in logout");
-	// }
-	// }
-	//
-	// public void preferences() {
-	// startActivity(new Intent(
-	// PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
-	// }
+	public void logout() {
+		PreferencesStorage.set("key", "");
+
+		try {
+			CachingClient client = Client.getClient(this);
+			client.logout(this);
+		} catch (ConnectionException e) {
+			Log
+					.e(Log.META_MAP_CONTROLLER_TAG,
+							"connection exception in logout");
+		}
+	}
+
+	public void preferences() {
+		startActivity(new Intent(
+				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
+	}
 }
