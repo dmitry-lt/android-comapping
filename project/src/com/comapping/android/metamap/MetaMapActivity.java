@@ -44,8 +44,8 @@ public class MetaMapActivity extends Activity {
 	
 	// Button id's
 
-	private static final int UP_LEVEL = R.drawable.metamap_up;
-	private static final int HOME = R.drawable.metamap_home;
+	private static final int UP_LEVEL = R.id.upLevelButton;
+	private static final int HOME = R.id.homeButton;
 	private static final int SYNC = R.id.synchronizeButton;
 
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
@@ -236,8 +236,8 @@ public class MetaMapActivity extends Activity {
 		synchronizeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				
-				if (currentProvider == null)
-					return;
+//				if (currentProvider == null)
+//					return;
 				
 				currentProvider.sync();
 			}
