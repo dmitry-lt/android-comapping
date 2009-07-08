@@ -1,15 +1,15 @@
 package com.comapping.android.provider.contentprovider;
 
 import com.comapping.android.Log;
-import com.comapping.android.communication.CachingClient;
-import com.comapping.android.communication.Client;
-import com.comapping.android.communication.exceptions.ConnectionException;
-import com.comapping.android.communication.exceptions.InvalidCredentialsException;
-import com.comapping.android.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.provider.communication.CachingClient;
+import com.comapping.android.provider.communication.Client;
+import com.comapping.android.provider.communication.exceptions.ConnectionException;
+import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.storage.SqliteMapCache;
 
-import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,9 +17,10 @@ import android.net.Uri;
 public class InternetMapContentProvider extends MapContentProvider {
 	public static final String PROVIDER_NAME = "com.comapping.android.provider.internetmapprovider";
 
-	public static final Uri CONTENT_URI = Uri.parse("content://" + PROVIDER_NAME);
-	
-	public static boolean ignoreCache = false;
+	public static final Uri CONTENT_URI = Uri.parse("content://"
+			+ PROVIDER_NAME);
+
+	public static boolean ignoreCache = true;
 
 	private static final int MAP = 1;
 	private static final int META_MAP = 2;
@@ -30,8 +31,9 @@ public class InternetMapContentProvider extends MapContentProvider {
 		uriMatcher.addURI(PROVIDER_NAME, "/#####", MAP);
 		uriMatcher.addURI(PROVIDER_NAME, "/meta", META_MAP);
 	}
-	
+
 	private CachingClient client;
+	private Context context;
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -52,43 +54,49 @@ public class InternetMapContentProvider extends MapContentProvider {
 	}
 
 	@Override
-	public boolean onCreate() {		
+	public boolean onCreate() {
+		context = getContext();
+
+		// prepare client
+		if (client == null) {
+			client = Client.getClient(context);
+		}
+
 		return true;
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		// prepare client
-		if (client == null) {
-			client = new CachingClient(new Client(), new SqliteMapCache(MapContentProvider.currentContext));
-		}
-		
-		return new InternetMapCursor(uri.getLastPathSegment(), client, MapContentProvider.currentContext);
-//		
-//		// parse uri
-//		switch (uriMatcher.match(uri)) {
-//			case META_MAP:
-//			case MAP:
-//				return new InternetMapCursor(uri.getLastPathSegment(), client, MapProvider.currentContext);
-//			default:
-//				throw new IllegalArgumentException("Unsupported URI: " + uri);
-//		}	
-//		
+	public Cursor query(Uri uri, String[] projection, String selection,
+			String[] selectionArgs, String sortOrder) {
+		return new InternetMapCursor(uri.getLastPathSegment(), client, context);
+		//		
+		// // parse uri
+		// switch (uriMatcher.match(uri)) {
+		// case META_MAP:
+		// case MAP:
+		// return new InternetMapCursor(uri.getLastPathSegment(), client,
+		// MapProvider.currentContext);
+		// default:
+		// throw new IllegalArgumentException("Unsupported URI: " + uri);
+		// }
+		//		
 	}
 
 	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	public int update(Uri uri, ContentValues values, String selection,
+			String[] selectionArgs) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	private class InternetMapCursor extends MapCursor {		
-		public InternetMapCursor(String mapId, CachingClient client, Activity context) {
+
+	private class InternetMapCursor extends MapCursor {
+		public InternetMapCursor(String mapId, CachingClient client,
+				Context context) {
 			this.id = mapId;
-			
+
 			try {
 				this.text = client.getComap(mapId, context, ignoreCache, false);
-				Log.d("InternetMapProvider", "text reveived");
+				Log.d("InternetMapContentProvider", "text received: " + text);
 			} catch (ConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -99,7 +107,7 @@ public class InternetMapContentProvider extends MapContentProvider {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}		
+		}
 	}
-	
+
 }
