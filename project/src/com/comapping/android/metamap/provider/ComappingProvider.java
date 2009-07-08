@@ -178,9 +178,8 @@ public class ComappingProvider extends MetaMapProvider {
 			}
 		});
 	}
-	
-	private void update(boolean ignoreCache)
-	{
+
+	private void update(boolean ignoreCache) {
 		CachingClient client = Client.getClient(activity);
 
 		String result = "";
@@ -220,17 +219,16 @@ public class ComappingProvider extends MetaMapProvider {
 					metamap = mapBuilder.buildMap(result);
 				}
 			} catch (StringToXMLConvertionException e) {
-				Log.e(Log.META_MAP_CONTROLLER_TAG,
-						"xml convertion exception");
+				Log.e(Log.META_MAP_CONTROLLER_TAG, "xml convertion exception");
 				error = PROBLEMS_WITH_MAP_MESSAGE;
 			} catch (MapParsingException e) {
-				Log.e(Log.META_MAP_CONTROLLER_TAG,
-						"map parsing exception");
+				Log.e(Log.META_MAP_CONTROLLER_TAG, "map parsing exception");
 				error = PROBLEMS_WITH_MAP_MESSAGE;
 			}
 		}
 
-		currentLevel = metamap.getRoot();
+		if (metamap != null)
+			currentLevel = metamap.getRoot();
 
 		splashDeactivate();
 
@@ -240,7 +238,7 @@ public class ComappingProvider extends MetaMapProvider {
 		new Thread() {
 			public void run() {
 				update(ignoreCache);
-	
+
 			}
 		}.start();
 	}

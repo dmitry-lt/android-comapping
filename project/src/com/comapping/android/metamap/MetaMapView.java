@@ -31,10 +31,6 @@ public class MetaMapView {
 
 	public MetaMapProvider provider = null;
 
-	public MetaMapView() {
-
-	}
-
 	public void updateMetaMap() {
 
 		if (provider == null)
@@ -152,7 +148,7 @@ public class MetaMapView {
 
 		switchButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				metaMapActivity.switchView();
+				metaMapActivity.switchProvider();
 			}
 		});
 

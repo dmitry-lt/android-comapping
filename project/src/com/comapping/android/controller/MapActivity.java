@@ -53,8 +53,6 @@ public class MapActivity extends Activity {
 		return currentActivity;
 	}
 
-	public static final String MAP_ACTIVITY_INTENT = "com.comapping.android.intent.MAP";
-
 	public static final String EXT_VIEW_TYPE = "viewType";
 	public static final String EXT_MAP_ID = "mapId";
 	public static final String EXT_IS_IGNORE_CACHE = "ignoreCache";
