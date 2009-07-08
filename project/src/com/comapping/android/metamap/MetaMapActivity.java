@@ -21,7 +21,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -111,6 +110,34 @@ public class MetaMapActivity extends Activity {
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public void preferences() {
+		startActivity(new Intent(
+				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
+	}
+
+	void openMap(final String mapId, final ViewType viewType,
+			boolean ignoreCache) {
+		if (currentProvider == comappingProvider)
+			MapActivity.openMap(mapId, viewType, ignoreCache, this,
+					Constants.DATA_SOURCE_COMAPPING);
+		else
+			MapActivity.openMap(mapId, viewType, ignoreCache, this,
+					Constants.DATA_SOURCE_SD);
+	}
+	
+	public void logout() {
+		PreferencesStorage.set("key", "");
+
+		try {
+			CachingClient client = Client.getClient(this);
+			client.logout(this);
+		} catch (ConnectionException e) {
+			Log
+					.e(Log.META_MAP_CONTROLLER_TAG,
+							"connection exception in logout");
+		}
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -314,7 +341,6 @@ public class MetaMapActivity extends Activity {
 		ListView listView = (ListView) findViewById(R.id.listView);
 		registerForContextMenu(listView);
 
-		final Activity context = this;
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> apapterView, View view,
@@ -333,11 +359,10 @@ public class MetaMapActivity extends Activity {
 							PreferencesStorage.VIEW_TYPE_KEY,
 							Options.DEFAULT_VIEW_TYPE);
 
-					MetaMapActivity
-							.loadMap(
-									currentProvider.getCurrentLevel()[position].reference,
-									ViewType.getViewTypeFromString(viewType),
-									false, context);
+					openMap(
+							currentProvider.getCurrentLevel()[position].reference,
+							ViewType.getViewTypeFromString(viewType), false);
+
 				}
 			}
 		});
@@ -376,10 +401,10 @@ public class MetaMapActivity extends Activity {
 
 			switch (item.getItemId()) {
 			case R.id.openWithComappingView:
-				loadMap(itm.reference, ViewType.COMAPPING_VIEW, false, this);
+				openMap(itm.reference, ViewType.COMAPPING_VIEW, false);
 				break;
 			case R.id.openWithExplorerView:
-				loadMap(itm.reference, ViewType.EXPLORER_VIEW, false, this);
+				openMap(itm.reference, ViewType.EXPLORER_VIEW, false);
 				break;
 			}
 		} else {
@@ -415,42 +440,5 @@ public class MetaMapActivity extends Activity {
 		}
 
 		return false;
-	}
-
-	public static void loadMap(final String mapId, final ViewType viewType,
-			boolean ignoreCache, Activity parent) {
-		Intent intent = new Intent(Constants.MAP_ACTIVITY_INTENT);
-
-		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
-		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
-		intent.putExtra(MapActivity.EXT_IS_IGNORE_CACHE, ignoreCache);
-
-		if (currentProvider == comappingProvider) {
-			intent.putExtra(MapActivity.EXT_DATA_SOURCE,
-					Constants.DATA_SOURCE_COMAPPING);
-		} else {
-			intent.putExtra(MapActivity.EXT_DATA_SOURCE,
-					Constants.DATA_SOURCE_SD);
-		}
-
-		parent.startActivityForResult(intent, Constants.ACTION_MAP_REQUEST);
-	}
-
-	public void logout() {
-		PreferencesStorage.set("key", "");
-
-		try {
-			CachingClient client = Client.getClient(this);
-			client.logout(this);
-		} catch (ConnectionException e) {
-			Log
-					.e(Log.META_MAP_CONTROLLER_TAG,
-							"connection exception in logout");
-		}
-	}
-
-	public void preferences() {
-		startActivity(new Intent(
-				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 }

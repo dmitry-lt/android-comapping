@@ -53,6 +53,18 @@ public class MapActivity extends Activity {
 		return currentActivity;
 	}
 
+	public static void openMap(final String mapId, final ViewType viewType,
+			boolean ignoreCache, Activity parent, String dataSource) {
+		Intent intent = new Intent(Constants.MAP_ACTIVITY_INTENT);
+
+		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
+		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
+		intent.putExtra(MapActivity.EXT_IS_IGNORE_CACHE, ignoreCache);
+		intent.putExtra(MapActivity.EXT_DATA_SOURCE, dataSource);
+		
+		parent.startActivityForResult(intent, Constants.ACTION_MAP_REQUEST);
+	}
+
 	public static final String EXT_VIEW_TYPE = "viewType";
 	public static final String EXT_MAP_ID = "mapId";
 	public static final String EXT_IS_IGNORE_CACHE = "ignoreCache";
@@ -65,6 +77,8 @@ public class MapActivity extends Activity {
 
 	private String currentMapId = null;
 	private ViewType currentViewType = null;
+	
+	
 
 	public void splashActivate(final String message, final boolean cancelable) {
 		final Activity context = this;
@@ -197,10 +211,11 @@ public class MapActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 
 		try {
-			viewType = ViewType.getViewTypeFromString(extras.getString(EXT_VIEW_TYPE));
+			viewType = ViewType.getViewTypeFromString(extras
+					.getString(EXT_VIEW_TYPE));
 			mapId = extras.getString(EXT_MAP_ID);
 			ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
-			dataSource =  extras.getString(EXT_DATA_SOURCE);
+			dataSource = extras.getString(EXT_DATA_SOURCE);
 		} catch (Exception e) {
 
 		}
@@ -219,25 +234,24 @@ public class MapActivity extends Activity {
 						splashActivate("Downloading map", false);
 						String result = "";
 						try {
-							if (dataSource == Constants.DATA_SOURCE_COMAPPING)
-							{
-								result = Client.getClient(current).getComap(mapId,
-										current, ignoreCache, false);
-							}
-							else
-							{
-								result = new InternetMapProvider(current).getComap(mapId, false, current);	
+							if (dataSource == Constants.DATA_SOURCE_COMAPPING) {
+								result = Client.getClient(current).getComap(
+										mapId, current, ignoreCache, false);
+							} else {
+								result = new InternetMapProvider(current)
+										.getComap(mapId, false, current);
 							}
 
 						} catch (InvalidCredentialsException e) {
-							Log.e(Log.MAP_CONTROLLER_TAG, "invalid credentials while map getting");
+							Log.e(Log.MAP_CONTROLLER_TAG,
+									"invalid credentials while map getting");
 							// TODO: ???
 						}
 
 						if (result == null) {
 							result = "";
 						}
-						
+
 						splashActivate("Parsing map", true);
 						map = MetaMapActivity.mapBuilder.buildMap(result);
 
@@ -255,7 +269,7 @@ public class MapActivity extends Activity {
 					mapRender = initMapRender(map, viewType);
 
 					runOnUiThread(new Runnable() {
-						
+
 						public void run() {
 
 							setContentView(R.layout.map);
@@ -273,28 +287,35 @@ public class MapActivity extends Activity {
 							allTopics(topic);
 
 							view = (MainMapView) findViewById(R.id.mapView);
-							view.setSearchUI(findLayout, cancel, next, prev, queryTextView);
+							view.setSearchUI(findLayout, cancel, next, prev,
+									queryTextView);
 							view.setRender(mapRender);
 							view.setZoom(zoom);
 							view.setActivity(activity);
 							hideZoom();
 							zoom.setIsZoomInEnabled(false);
-							zoom.setOnZoomInClickListener(new OnClickListener() {
-								
-								public void onClick(View v) {
-									view.setScale(view.getScale() + 0.1f);
-									lastZoomPress = System.currentTimeMillis();
-									view.refresh();
-								}
-							});
-							zoom.setOnZoomOutClickListener(new OnClickListener() {
-								
-								public void onClick(View v) {
-									view.setScale(view.getScale() - 0.1f);
-									lastZoomPress = System.currentTimeMillis();
-									view.refresh();
-								}
-							});
+							zoom
+									.setOnZoomInClickListener(new OnClickListener() {
+
+										public void onClick(View v) {
+											view
+													.setScale(view.getScale() + 0.1f);
+											lastZoomPress = System
+													.currentTimeMillis();
+											view.refresh();
+										}
+									});
+							zoom
+									.setOnZoomOutClickListener(new OnClickListener() {
+
+										public void onClick(View v) {
+											view
+													.setScale(view.getScale() - 0.1f);
+											lastZoomPress = System
+													.currentTimeMillis();
+											view.refresh();
+										}
+									});
 						};
 					});
 
@@ -384,7 +405,7 @@ public class MapActivity extends Activity {
 			return true;
 		case R.id.mapSynchronizeButton:
 			finish();
-			MetaMapActivity.loadMap(currentMapId, currentViewType, true, this);
+			openMap(currentMapId, currentViewType, true, this, dataSource);
 			return true;
 		}
 		return false;

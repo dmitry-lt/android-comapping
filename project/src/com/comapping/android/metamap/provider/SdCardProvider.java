@@ -78,12 +78,12 @@ public class SdCardProvider extends MetaMapProvider {
 
 	@Override
 	public boolean canGoHome() {
-		return currentPath != root;
+		return currentPath.compareTo(root) != 0;
 	}
 
 	@Override
 	public boolean canGoUp() {
-		return currentPath != root;
+		return currentPath.compareTo(root) != 0;
 	}
 
 	@Override
