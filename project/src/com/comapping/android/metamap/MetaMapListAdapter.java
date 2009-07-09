@@ -13,12 +13,8 @@ import android.widget.TextView;
 class MetaMapListAdapter extends ArrayAdapter<MetaMapItem> {
 	
 
-	private MetaMapItem[] topics;
-
 	MetaMapListAdapter(Activity context, MetaMapItem[] topics) {
 		super(context, R.layout.metamap_row, topics);
-		
-		this.topics = topics;
 	}
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -33,11 +29,11 @@ class MetaMapListAdapter extends ArrayAdapter<MetaMapItem> {
 		
 		// map name
 		TextView mapName = (TextView) row.findViewById(R.id.name);
-		mapName.setText(topics[position].name);
+		mapName.setText(getItem(position).name);
 
 		// icon
 		ImageView icon = (ImageView) row.findViewById(R.id.icon);
-		if (topics[position].isFolder) {
+		if (getItem(position).isFolder) {
 			icon.setImageResource(R.drawable.metamap_folder);
 		} else {
 			icon.setImageResource(R.drawable.metamap_map);
@@ -45,7 +41,7 @@ class MetaMapListAdapter extends ArrayAdapter<MetaMapItem> {
 
 		// description
 		TextView description = (TextView) row.findViewById(R.id.description);
-		description.setText(topics[position].description);
+		description.setText(getItem(position).description);
 
 		return row;
 	}

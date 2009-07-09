@@ -2,6 +2,7 @@ package com.comapping.android.metamap.provider;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
 
 import com.comapping.android.metamap.MetaMapItem;
 
@@ -49,6 +50,8 @@ public class SdCardProvider extends MetaMapProvider {
 			else
 				currentLevel[i].description = MAP_DESCR;
 		}
+		
+		Arrays.sort(currentLevel, new MetaMapProvider.MetaMapItemComparator());
 	}
 
 	@Override

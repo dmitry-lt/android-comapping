@@ -2,6 +2,7 @@ package com.comapping.android.metamap.provider;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -33,6 +34,7 @@ public class ComappingProvider extends MetaMapProvider {
 	Map metamap;
 	Topic currentLevel;
 	Activity activity;
+	MetaMapItem[] cachedLevel;
 
 	public ComappingProvider(Activity _activity) {
 		activity = _activity;
@@ -42,9 +44,24 @@ public class ComappingProvider extends MetaMapProvider {
 
 		if (metamap == null)
 			return;
+		
 		currentLevel = metamap.getRoot();
+		
+		updateCache();
 	}
 
+	void updateCache() {
+		if (metamap == null)
+			cachedLevel = new MetaMapItem[0];
+		else
+			cachedLevel = getItems(currentLevel.getChildTopics());
+		
+		Arrays.sort(cachedLevel, new MetaMapProvider.MetaMapItemComparator());
+	}
+	
+	// =========================================
+	// Topic conversion
+	// =========================================
 	MetaMapItem[] getItems(Topic[] topics) {
 		MetaMapItem[] res = new MetaMapItem[topics.length];
 
@@ -84,14 +101,11 @@ public class ComappingProvider extends MetaMapProvider {
 	public String getFolderDescription(Topic topic) {
 		return FOLDER_DESCRIPTION;
 	}
-
+	
+	
 	@Override
 	public MetaMapItem[] getCurrentLevel() {
-
-		if (metamap == null)
-			return new MetaMapItem[0];
-
-		return getItems(currentLevel.getChildTopics());
+		return cachedLevel;
 	}
 
 	@Override
@@ -100,6 +114,7 @@ public class ComappingProvider extends MetaMapProvider {
 			return;
 
 		currentLevel = metamap.getRoot();
+		updateCache();
 	}
 
 	@Override
@@ -109,6 +124,7 @@ public class ComappingProvider extends MetaMapProvider {
 			return;
 
 		currentLevel = currentLevel.getParent();
+		updateCache();
 	}
 
 	@Override
@@ -120,6 +136,7 @@ public class ComappingProvider extends MetaMapProvider {
 		if (currentLevel.getChildByIndex(index).isFolder()) {
 			currentLevel = currentLevel.getChildByIndex(index);
 		}
+		updateCache();
 	}
 
 	@Override
@@ -237,6 +254,7 @@ public class ComappingProvider extends MetaMapProvider {
 	@Override
 	public boolean sync() {
 		update(true);
+		updateCache();
 		return false;
 	}
 }
