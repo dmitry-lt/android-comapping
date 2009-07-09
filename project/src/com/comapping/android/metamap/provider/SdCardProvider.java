@@ -25,10 +25,10 @@ public class SdCardProvider extends MetaMapProvider {
 
 	public SdCardProvider() {
 		currentPath = root;
-		updateCurtrentLevel();
+		updateCurrentLevel();
 	}
 
-	void updateCurtrentLevel() {
+	void updateCurrentLevel() {
 		File directory = new File(currentPath);
 		File[] fileList = directory.listFiles(filter);
 		if (fileList == null)
@@ -59,20 +59,20 @@ public class SdCardProvider extends MetaMapProvider {
 	@Override
 	public void goHome() {
 		currentPath = root;
-		updateCurtrentLevel();
+		updateCurrentLevel();
 	}
 
 	@Override
 	public void goUp() {
 		currentPath = new File(currentPath).getParent();
-		updateCurtrentLevel();
+		updateCurrentLevel();
 	}
 
 	@Override
 	public void gotoFolder(int index) {
 		if (currentLevel[index].isFolder) {
 			currentPath += File.separator + currentLevel[index].name;
-			updateCurtrentLevel();
+			updateCurrentLevel();
 		}
 	}
 
