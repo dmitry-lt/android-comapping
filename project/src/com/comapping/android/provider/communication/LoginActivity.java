@@ -6,7 +6,7 @@
  * Class implements LoginView controller
  */
 
-package com.comapping.android.login;
+package com.comapping.android.provider.communication;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -25,8 +25,6 @@ import com.comapping.android.controller.R;
 import com.comapping.android.controller.R.drawable;
 import com.comapping.android.controller.R.id;
 import com.comapping.android.controller.R.layout;
-import com.comapping.android.provider.communication.CachingClient;
-import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;

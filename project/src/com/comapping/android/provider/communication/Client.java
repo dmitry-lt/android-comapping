@@ -27,7 +27,6 @@ import android.content.Intent;
 
 import com.comapping.android.Log;
 import com.comapping.android.Options;
-import com.comapping.android.login.LoginActivity;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;

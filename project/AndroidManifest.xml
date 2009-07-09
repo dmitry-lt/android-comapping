@@ -9,7 +9,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="com.comapping.android.login.LoginActivity"  android:configChanges="orientation|keyboardHidden">
+		<activity android:name="com.comapping.android.provider.communication.LoginActivity"  android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
 				<action android:name="com.comapping.android.intent.LOGIN"></action>
 				<category android:name="android.intent.category.DEFAULT"></category>
