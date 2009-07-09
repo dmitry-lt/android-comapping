@@ -36,7 +36,8 @@ import com.comapping.android.storage.SqliteMapCache;
 
 public class Client {
 
-	private Client() {
+	private Client(Context context) {
+		this.context = context;
 	}
 
 	private static CachingClient client;
@@ -46,8 +47,8 @@ public class Client {
 			if (context == null)
 				return null;
 
-			client = new CachingClient(new Client(),
-					new SqliteMapCache(context));
+			client = new CachingClient(new Client(context), new SqliteMapCache(
+					context));
 		}
 
 		return client;
@@ -70,6 +71,8 @@ public class Client {
 	// milliseconds
 
 	// private variables
+	private Context context;
+
 	private String clientId = null;
 
 	private String email = null;
@@ -92,7 +95,7 @@ public class Client {
 		clientSideLogout(true);
 
 		// anyway save email
-		PreferencesStorage.set(PreferencesStorage.EMAIL_KEY, email);
+		PreferencesStorage.set(PreferencesStorage.EMAIL_KEY, email, context);
 
 		String passwordHash = md5Encode(password);
 		String loginResponse = loginRequest(email, passwordHash,
@@ -121,7 +124,7 @@ public class Client {
 		if (isLoggedIn() && remember) {
 			// save autologin key
 			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY,
-					autoLoginKey);
+					autoLoginKey, context);
 		}
 	}
 
@@ -131,8 +134,8 @@ public class Client {
 	 * @return autologin possibility
 	 */
 	public boolean isAutologinPossible() {
-		return !PreferencesStorage.get(PreferencesStorage.AUTOLOGIN_KEY, "")
-				.equals("");
+		return !PreferencesStorage.get(PreferencesStorage.AUTOLOGIN_KEY, "",
+				context).equals("");
 	}
 
 	/**
@@ -147,9 +150,10 @@ public class Client {
 	 */
 	public void autologin() throws ConnectionException,
 			InvalidCredentialsException, LoginInterruptedException {
-		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, "");
+		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, "",
+				context);
 		String autologinKey = PreferencesStorage.get(
-				PreferencesStorage.AUTOLOGIN_KEY, "");
+				PreferencesStorage.AUTOLOGIN_KEY, "", context);
 
 		clientSideLogout(true);
 
@@ -160,7 +164,7 @@ public class Client {
 		} else {
 			// reSet autologin key
 			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY,
-					autologinKey);
+					autologinKey, context);
 		}
 	}
 
@@ -180,7 +184,7 @@ public class Client {
 		clientId = null;
 
 		if (isToEmptyAutologin) {
-			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, "");
+			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, "", context);
 		}
 	}
 
@@ -241,17 +245,17 @@ public class Client {
 		loginInterrupted = true;
 	}
 
-	public static HttpURLConnection getHttpURLConnection(URL url)
+	public HttpURLConnection getHttpURLConnection(URL url)
 			throws ConnectionException, IOException {
 		if (PreferencesStorage.getBoolean(PreferencesStorage.USE_PROXY,
-				Options.DEFAULT_USE_PROXY)) {
+				Options.DEFAULT_USE_PROXY, context)) {
 			String proxyHost = PreferencesStorage.get(
-					PreferencesStorage.PROXY_HOST, "");
+					PreferencesStorage.PROXY_HOST, "", context);
 			int proxyPort = 0;
 
 			try {
 				proxyPort = Integer.parseInt(PreferencesStorage.get(
-						PreferencesStorage.PROXY_PORT, ""));
+						PreferencesStorage.PROXY_PORT, "", context));
 			} catch (Exception e) {
 				throw new ConnectionException();
 			}
@@ -265,11 +269,11 @@ public class Client {
 			// :-(
 			if (PreferencesStorage.getBoolean(
 					PreferencesStorage.USE_PROXY_AUTH,
-					Options.DEFAULT_USE_PROXY_AUTH)) {
+					Options.DEFAULT_USE_PROXY_AUTH, context)) {
 				String proxyUser = PreferencesStorage.get(
-						PreferencesStorage.PROXY_NAME, "");
+						PreferencesStorage.PROXY_NAME, "", context);
 				String proxyPassword = PreferencesStorage.get(
-						PreferencesStorage.PROXY_PASSWORD, "");
+						PreferencesStorage.PROXY_PASSWORD, "", context);
 				;
 				StringBuilder encodedInfo = new StringBuilder();
 				for (byte b : Base64Encoder

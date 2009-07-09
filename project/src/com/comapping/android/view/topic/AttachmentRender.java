@@ -98,7 +98,7 @@ public class AttachmentRender extends Render {
 	
 	public void onTouch(int x, int y) {
 		if (dialog == null) {
-			downloadFolder = PreferencesStorage.get(PreferencesStorage.DOWNLOAD_FOLDER_KEY, Options.DEFAULT_DOWNLOAD_FOLDER);
+			downloadFolder = PreferencesStorage.get(PreferencesStorage.DOWNLOAD_FOLDER_KEY, Options.DEFAULT_DOWNLOAD_FOLDER, context);
 			
 			dialog = (new AlertDialog.Builder(context).setTitle("Attachment")
 					.setMessage(
@@ -197,7 +197,7 @@ public class AttachmentRender extends Render {
 
 		HttpURLConnection connection = null;
 		try {
-			connection = Client.getHttpURLConnection(url);
+			connection = Client.getClient(context).getHttpURLConnection(url);
 			
 			connection.setDoOutput(true);
 

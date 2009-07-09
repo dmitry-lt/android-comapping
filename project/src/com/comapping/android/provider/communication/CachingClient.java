@@ -7,6 +7,9 @@
 
 package com.comapping.android.provider.communication;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
 
 import android.app.Activity;
@@ -106,5 +109,9 @@ public class CachingClient {
 
 	public Timestamp getLastSynchronizationDate(String mapId) {
 		return cache.getLastSynchronizationDate(mapId);
+	}
+
+	public HttpURLConnection getHttpURLConnection(URL url) throws ConnectionException, IOException {
+		return client.getHttpURLConnection(url);
 	}
 }

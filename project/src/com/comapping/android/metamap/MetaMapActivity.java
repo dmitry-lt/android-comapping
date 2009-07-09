@@ -9,6 +9,7 @@
 package com.comapping.android.metamap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -51,8 +52,6 @@ public class MetaMapActivity extends Activity {
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
 
-	public static MetaMapActivity instance = null;
-
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
 
@@ -66,7 +65,6 @@ public class MetaMapActivity extends Activity {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		instance = this;
 
 		setContentView(R.layout.metamap);
 
@@ -129,7 +127,7 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public void logout() {
-		PreferencesStorage.set("key", "");
+		PreferencesStorage.set("key", "", this);
 
 		try {
 			CachingClient client = Client.getClient(this);
@@ -340,6 +338,8 @@ public class MetaMapActivity extends Activity {
 		ListView listView = (ListView) findViewById(R.id.listView);
 		registerForContextMenu(listView);
 
+		final Context context = this;
+		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> apapterView, View view,
@@ -356,7 +356,7 @@ public class MetaMapActivity extends Activity {
 
 					String viewType = PreferencesStorage.get(
 							PreferencesStorage.VIEW_TYPE_KEY,
-							Options.DEFAULT_VIEW_TYPE);
+							Options.DEFAULT_VIEW_TYPE, context);
 
 					openMap(
 							currentProvider.getCurrentLevel()[position].reference,

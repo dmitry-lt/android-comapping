@@ -178,7 +178,7 @@ public class LoginActivity extends Activity {
 		});
 		
 		// set auto login
-		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, null);
+		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, null, this);
 		if (email != null) {
 			((TextView)findViewById(R.id.eMail)).setText(email);
 			((TextView)findViewById(R.id.password)).requestFocus();

@@ -70,31 +70,31 @@ public class PreferencesStorage {
 	
 	//******
 	// old
-	public static void set(String key, String value) {
-		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
-
-		Editor edit = preferances.edit();
-
-		edit.putString(key, value);
-		edit.commit();
-
-		Log.i(Log.STORAGE_TAG, "[" + key + "] = " + value);
-	}
-
-	public static String get(String key, String defaultValue) {
-		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
-
-		String value = preferances.getString(key, defaultValue);
-
-		Log.i(Log.STORAGE_TAG, "get [" + key + "] = " + value);
-
-		return value;
-	}
-	
-	public static boolean getBoolean(String key, boolean defaultValue) {
-		// false if not created
-		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
-
-		return preferances.getBoolean(key, defaultValue);
-	}
+//	public static void set(String key, String value) {
+//		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
+//
+//		Editor edit = preferances.edit();
+//
+//		edit.putString(key, value);
+//		edit.commit();
+//
+//		Log.i(Log.STORAGE_TAG, "[" + key + "] = " + value);
+//	}
+//
+//	public static String get(String key, String defaultValue) {
+//		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
+//
+//		String value = preferances.getString(key, defaultValue);
+//
+//		Log.i(Log.STORAGE_TAG, "get [" + key + "] = " + value);
+//
+//		return value;
+//	}
+//	
+//	public static boolean getBoolean(String key, boolean defaultValue) {
+//		// false if not created
+//		SharedPreferences preferances = PreferenceManager.getDefaultSharedPreferences(MetaMapActivity.instance);
+//
+//		return preferances.getBoolean(key, defaultValue);
+//	}
 }
