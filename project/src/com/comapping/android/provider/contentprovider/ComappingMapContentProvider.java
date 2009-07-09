@@ -13,10 +13,10 @@ import android.database.Cursor;
 import android.net.Uri;
 
 public class ComappingMapContentProvider extends MapContentProvider {
-	public static final String PROVIDER_NAME = "comapping.com/maps";
+	public static final String PROVIDER_NAME = "comapping.com";
 
 	public static final Uri CONTENT_URI = Uri.parse("content://"
-			+ PROVIDER_NAME);
+			+ PROVIDER_NAME + "/maps");
 
 	public static boolean ignoreCache = true;
 
@@ -26,8 +26,8 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(PROVIDER_NAME, "/#####", MAP);
-		uriMatcher.addURI(PROVIDER_NAME, "/*/", META_MAP);
+		uriMatcher.addURI(PROVIDER_NAME, "maps/#####", MAP);
+		uriMatcher.addURI(PROVIDER_NAME, "*/", META_MAP);
 	}
 
 	private CachingClient client;
