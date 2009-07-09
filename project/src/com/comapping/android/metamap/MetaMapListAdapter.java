@@ -1,10 +1,6 @@
 package com.comapping.android.metamap;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.comapping.android.controller.R;
-import com.comapping.android.model.map.Topic;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -14,24 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-class MetaMapListAdapter extends ArrayAdapter<String> {
+class MetaMapListAdapter extends ArrayAdapter<MetaMapItem> {
 	
 
 	private MetaMapItem[] topics;
 
-	private static List<String> getTopicsNames(MetaMapItem[] topics) {
-		List<String> names = new ArrayList<String>();
-
-		for (MetaMapItem topic : topics) {
-			names.add(topic.name);
-		}
-
-		return names;
-	}
-
 	MetaMapListAdapter(Activity context, MetaMapItem[] topics) {
-		super(context, R.layout.metamap_row, getTopicsNames(topics));
-
+		super(context, R.layout.metamap_row, topics);
+		
 		this.topics = topics;
 	}
 	
