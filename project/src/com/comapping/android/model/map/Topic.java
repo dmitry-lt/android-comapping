@@ -38,6 +38,13 @@ public class Topic implements Iterable<Topic>, Serializable {
 	private Task task;
 	private Attachment attachment;
 
+	public boolean simpleEquals(Object o) {
+		Topic topic = (Topic) o;
+		return bgColor == topic.getBgColor() && flag.equals(topic.getFlag())
+				&& priority == topic.getPriority()
+				&& text.equals(topic.getText());
+	}
+
 	private String mapRef;
 
 	public Topic(Topic parent) {
@@ -72,7 +79,8 @@ public class Topic implements Iterable<Topic>, Serializable {
 		return (mapRef == null);
 	}
 
-	public void setHtmlText(String htmlText) throws StringToXMLConvertionException {
+	public void setHtmlText(String htmlText)
+			throws StringToXMLConvertionException {
 		setFormattedText(FormattedTextSaxBuilder.buildFormattedText(htmlText));
 		String unescText = getFormattedText().getSimpleText();
 
@@ -80,7 +88,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 
 		this.text = unescText;
 	}
-	
+
 	public void setText(String text) {
 		setFormattedText(new FormattedText(text, new TextFormat()));
 		this.text = text;
@@ -145,7 +153,8 @@ public class Topic implements Iterable<Topic>, Serializable {
 	public void setTaskCompletion(TaskCompletion taskCompletion) {
 		this.taskCompletion = taskCompletion;
 
-		Log.d(Log.MODEL_TAG, "set taskCompletion=\"" + taskCompletion + "\" in " + this);
+		Log.d(Log.MODEL_TAG, "set taskCompletion=\"" + taskCompletion
+				+ "\" in " + this);
 	}
 
 	public void addIcon(Icon icon) {
@@ -215,7 +224,7 @@ public class Topic implements Iterable<Topic>, Serializable {
 		children.toArray(result);
 		return result;
 	}
-	
+
 	public void addChild(Topic child) {
 		children.add(child);
 
@@ -223,7 +232,8 @@ public class Topic implements Iterable<Topic>, Serializable {
 	}
 
 	public void removeChildByIndex(int index) throws IndexOutOfBoundsException {
-		Log.d(Log.MODEL_TAG, "remove " + getChildByIndex(index) + " from " + this);
+		Log.d(Log.MODEL_TAG, "remove " + getChildByIndex(index) + " from "
+				+ this);
 
 		children.remove(index);
 	}
@@ -232,13 +242,11 @@ public class Topic implements Iterable<Topic>, Serializable {
 		children = new ArrayList<Topic>();
 	}
 
-	
 	public String toString() {
-		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText() + "\"]";
+		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText()
+				+ "\"]";
 	}
 
-
-	
 	public TopicIterator iterator() {
 		return new TopicIterator(this);
 	}
@@ -253,17 +261,14 @@ class TopicIterator implements Iterator<Topic> {
 		this.topic = topic;
 	}
 
-	
 	public boolean hasNext() {
 		return index < topic.getChildrenCount();
 	}
 
-	
 	public Topic next() throws IndexOutOfBoundsException {
 		return topic.getChildByIndex(index++);
 	}
 
-	
 	public void remove() throws IndexOutOfBoundsException {
 		topic.removeChildByIndex(index);
 	}

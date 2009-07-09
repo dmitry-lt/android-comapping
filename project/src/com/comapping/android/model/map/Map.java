@@ -71,6 +71,30 @@ public class Map implements Serializable {
 		return result + 1;
 	}
 
+	private boolean treeEquals(Topic topic1, Topic topic2) {
+		if (topic1 == null && topic2 == null) {
+			return true;
+		}
+		if (topic1 == null || topic2 == null) {
+			return false;
+		}
+		if (topic1.getChildrenCount() != topic2.getChildrenCount()) {
+			return false;
+		}
+		if (!topic1.simpleEquals(topic2)) {
+			return false;
+		}
+		for (int i = 0; i < topic1.getChildrenCount(); i++) {
+			if (!treeEquals(topic1.getChildByIndex(i), topic2.getChildByIndex(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean simpleEquals(Object o) {
+		return treeEquals(root, ((Map) o).getRoot());
+	}
 	
 	public String toString() {
 		return "[Map: id=" + this.getId() + ", name=\"" + this.getName() + "\"]";
