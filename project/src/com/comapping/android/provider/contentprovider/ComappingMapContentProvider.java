@@ -14,8 +14,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
-public class InternetMapContentProvider extends MapContentProvider {
-	public static final String PROVIDER_NAME = "com.comapping.android.provider.internetmapprovider";
+public class ComappingMapContentProvider extends MapContentProvider {
+	public static final String PROVIDER_NAME = "comapping.com/maps";
 
 	public static final Uri CONTENT_URI = Uri.parse("content://"
 			+ PROVIDER_NAME);

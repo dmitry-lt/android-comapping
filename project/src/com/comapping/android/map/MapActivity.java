@@ -42,7 +42,7 @@ import com.comapping.android.model.map.Topic;
 import com.comapping.android.provider.IMapProvider;
 import com.comapping.android.provider.InternetMapProvider;
 import com.comapping.android.provider.contentprovider.FileMapContentProvider;
-import com.comapping.android.provider.contentprovider.InternetMapContentProvider;
+import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
 import com.comapping.android.provider.contentprovider.MapContentProvider;
 import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.view.comapping.ComappingRender;
@@ -241,7 +241,7 @@ public class MapActivity extends Activity {
 						// current, ignoreCache, false);
 						result = MapContentProvider
 								.getComap(mapId,
-										InternetMapContentProvider.CONTENT_URI,
+										ComappingMapContentProvider.CONTENT_URI,
 										current);
 						// } else
 						// {

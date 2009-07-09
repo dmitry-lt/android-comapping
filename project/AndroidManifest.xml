@@ -37,10 +37,8 @@
 				android:resource="@xml/searchable" />
 		</activity>
 
-		<provider android:name="com.comapping.android.provider.contentprovider.InternetMapContentProvider" 
-				  android:authorities="com.comapping.android.provider.internetmapprovider" /> 
-  		<provider android:name="com.comapping.android.provider.contentprovider.FileMapContentProvider" 
-  				  android:authorities="com.comapping.android.provider.filemapprovider" /> 
+		<provider android:name="com.comapping.android.provider.contentprovider.ComappingMapContentProvider" android:authorities="comapping.com"/> 
+  		<provider android:name="com.comapping.android.provider.contentprovider.FileMapContentProvider" android:authorities="sdcard"/> 
 
 	</application>
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
