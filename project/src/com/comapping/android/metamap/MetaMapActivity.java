@@ -8,6 +8,8 @@
 
 package com.comapping.android.metamap;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +50,9 @@ public class MetaMapActivity extends Activity {
 	private static final int UP_LEVEL = R.id.upLevelButton;
 	private static final int HOME = R.id.homeButton;
 	private static final int SYNC = R.id.synchronizeButton;
+	private static final int SWITCHER = R.id.viewSwitcher;
 	private static final int LOGOUT = R.id.logout;
+
 
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
@@ -119,8 +123,7 @@ public class MetaMapActivity extends Activity {
 				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 
-	void openMap(final String mapId, final String viewType,
-			boolean ignoreCache) {
+	void openMap(final String mapId, final String viewType, boolean ignoreCache) {
 		String dataSource = (currentProvider == comappingProvider) ? Constants.DATA_SOURCE_COMAPPING
 				: Constants.DATA_SOURCE_SD;
 
@@ -189,6 +192,8 @@ public class MetaMapActivity extends Activity {
 		if (currentProvider == comappingProvider) {
 			((ImageButton) findViewById(R.id.viewSwitcher))
 					.setImageResource(R.drawable.metamap_sdcard);
+			if (!hasSDCard())
+				disableButton(SWITCHER);
 		} else {
 			((ImageButton) findViewById(R.id.viewSwitcher))
 					.setImageResource(R.drawable.metamap_internet);
@@ -198,10 +203,19 @@ public class MetaMapActivity extends Activity {
 
 	public void switchProvider() {
 		if (currentProvider != sdCardProvider) {
-			enableProvider(sdCardProvider);
+			if (hasSDCard())
+				enableProvider(sdCardProvider);
 		} else {
 			enableProvider(comappingProvider);
 		}
+	}
+
+	private boolean hasSDCard() {
+		final String sdCardPath = "/sdcard";
+		File directory = new File(sdCardPath);
+		if (directory.exists())
+			return true;
+		return false;
 	}
 
 	// ====================================================
@@ -340,7 +354,7 @@ public class MetaMapActivity extends Activity {
 		registerForContextMenu(listView);
 
 		final Context context = this;
-		
+
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> apapterView, View view,
