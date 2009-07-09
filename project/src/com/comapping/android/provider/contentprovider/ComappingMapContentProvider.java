@@ -6,8 +6,6 @@ import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
-import com.comapping.android.storage.SqliteMapCache;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;

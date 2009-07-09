@@ -32,7 +32,7 @@ import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.model.map.Map;
 import com.comapping.android.model.map.Topic;
-import com.comapping.android.provider.contentprovider.InternetMapContentProvider;
+import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
 import com.comapping.android.provider.contentprovider.MapContentProvider;
 import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.view.comapping.ComappingRender;
@@ -227,7 +227,7 @@ public class MapActivity extends Activity {
 			splashActivate("Downloading map", false);
 			String result = "";
 			result = MapContentProvider.getComap(mapId,
-					InternetMapContentProvider.CONTENT_URI, this);
+					ComappingMapContentProvider.CONTENT_URI, this);
 
 			if (result == null) {
 				result = "";
