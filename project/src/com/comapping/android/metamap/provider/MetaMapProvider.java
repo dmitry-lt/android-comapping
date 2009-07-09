@@ -34,4 +34,7 @@ public abstract class MetaMapProvider {
 	
 	public abstract boolean canSync();
 	public abstract boolean sync();
+	
+	public abstract boolean canLogout();
+	public abstract void logout();
 }

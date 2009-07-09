@@ -257,4 +257,21 @@ public class ComappingProvider extends MetaMapProvider {
 		updateCache();
 		return false;
 	}
+
+	@Override
+	public boolean canLogout() {
+		CachingClient client = Client.getClient(activity);
+		return client.isLoggedIn();
+	}
+
+	@Override
+	public void logout() {
+		CachingClient client = Client.getClient(activity);
+		try {
+			client.logout(activity);
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

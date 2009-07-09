@@ -98,4 +98,13 @@ public class SdCardProvider extends MetaMapProvider {
 	public boolean sync() {
 		return false;
 	}
+
+	@Override
+	public boolean canLogout() {
+		return false;
+	}
+
+	@Override
+	public void logout() {
+	}
 }
