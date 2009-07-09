@@ -471,7 +471,7 @@ public class MapActivity extends Activity {
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.map_options, menu);
+		inflater.inflate(R.menu.map, menu);
 		return true;
 	}
 

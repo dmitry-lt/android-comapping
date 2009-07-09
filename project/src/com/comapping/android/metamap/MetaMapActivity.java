@@ -48,6 +48,7 @@ public class MetaMapActivity extends Activity {
 	private static final int UP_LEVEL = R.id.upLevelButton;
 	private static final int HOME = R.id.homeButton;
 	private static final int SYNC = R.id.synchronizeButton;
+	private static final int LOGOUT = R.id.logout;
 
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
@@ -184,7 +185,7 @@ public class MetaMapActivity extends Activity {
 			enableButton(SYNC);
 		else
 			disableButton(SYNC);
-
+		
 		if (currentProvider == comappingProvider) {
 			((ImageButton) findViewById(R.id.viewSwitcher))
 					.setImageResource(R.drawable.metamap_sdcard);
@@ -422,7 +423,10 @@ public class MetaMapActivity extends Activity {
 		menu.clear();
 
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.metamap_with_logout_options, menu);
+		inflater.inflate(R.menu.metamap, menu);
+		
+		menu.getItem(1).setEnabled(currentProvider.canLogout());
+		
 		return true;
 	}
 

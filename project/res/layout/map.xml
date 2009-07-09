@@ -25,19 +25,19 @@
 			android:id="@+id/cancelButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/deletebutton">
+			android:src="@drawable/search_cancel_button">
 		</ImageButton>
 		<ImageButton
 			android:id="@+id/previousButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/previous_button">
+			android:src="@drawable/search_previous_button">
 		</ImageButton>
 		<ImageButton
 			android:id="@+id/nextButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/nextbutton"
+			android:src="@drawable/search_next_button"
 			android:clickable="true">
 		</ImageButton>
 		<TextView
