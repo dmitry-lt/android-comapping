@@ -1,0 +1,30 @@
+<mindmap escape="false">
+  <metadata>
+    <id><![CDATA[62049]]></id>
+    <name><![CDATA[change]]></name>
+    <owner>
+      <id><![CDATA[8790]]></id>
+      <name><![CDATA[Vladimir Kulikov]]></name>
+      <email><![CDATA[vldimir.kulikov@gmail.com]]></email>
+    </owner>
+    <access><![CDATA[Private]]></access>
+    <source><![CDATA[Server]]></source>
+    <collaborators><![CDATA[]]></collaborators>
+    <watchers><![CDATA[]]></watchers>
+    <isTemplate><![CDATA[false]]></isTemplate>
+    <params/>
+  </metadata>
+  <presentation/>
+  <node id="9460059" locked="false">
+    <text><![CDATA[change]]></text>
+    <node arrow="blue" flag="go" id="9460060" locked="false" priority="1" smiley="happy" star="yellow" taskCompletion="0"><text><![CDATA[t]]></text></node>
+    <node arrow="purple" flag="for_discussion" id="9460094" locked="false" priority="2" smiley="neutral" star="green" taskCompletion="25"><text><![CDATA[t]]></text></node>
+    <node arrow="black" flag="possibility" id="9460096" locked="false" priority="3" smiley="sad" star="blue" taskCompletion="50"><text><![CDATA[t]]></text></node>
+    <node arrow="red" flag="risk" id="9460097" locked="false" priority="4" smiley="furious" star="purple" taskCompletion="75"><text><![CDATA[t]]></text></node>
+    <node arrow="orange" flag="progress" id="9460098" locked="false" priority="5" smiley="happy" star="black" taskCompletion="100"><text><![CDATA[t]]></text></node>
+    <node arrow="yellow" flag="careful" id="9460099" locked="false" priority="6" smiley="happy" star="red" taskCompletion="-1"><text><![CDATA[t]]></text></node>
+    <node arrow="green" flag="caution" id="9460100" locked="false" priority="7" smiley="happy" star="orange" taskCompletion="0"><text><![CDATA[t]]></text></node>
+    <node arrow="blue" flag="go" id="9460101" locked="false" priority="8" smiley="happy" star="yellow" taskCompletion="0"><text><![CDATA[t]]></text></node>
+    <node arrow="blue" flag="go" id="9460102" locked="false" priority="9" smiley="happy" star="yellow" taskCompletion="0"><text><![CDATA[t]]></text></node>
+  </node>
+</mindmap>

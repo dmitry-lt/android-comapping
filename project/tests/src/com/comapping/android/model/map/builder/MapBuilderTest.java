@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static com.comapping.android.provider.communication.ClientHelper.getTextFromInputStream;
+import static com.comapping.android.TestHelper.mapSimpleEquals;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.model.map.Flag;
@@ -37,7 +38,7 @@ public class MapBuilderTest extends AndroidTestCase {
 		Topic topic1 = new Topic(null);
 		topic1.setText("test0");
 		mapE.setRoot(topic1);
-		assertEquals(map.simpleEquals(mapE), true);
+		assertTrue(mapSimpleEquals(map, mapE));
 	}
 
 	public void test1() throws StringToXMLConvertionException,
@@ -56,7 +57,7 @@ public class MapBuilderTest extends AndroidTestCase {
 		topic2.setFlag(Flag.RISK);
 		mapE.setRoot(topic1);
 		topic1.addChild(topic2);
-		assertEquals(map.simpleEquals(mapE), true);
+		assertTrue(mapSimpleEquals(map, mapE));
 	}
 
 	public void test2() throws StringToXMLConvertionException,
@@ -86,7 +87,7 @@ public class MapBuilderTest extends AndroidTestCase {
 		topicA.addChild(topicC);
 		topicC.addChild(topicD);
 		topicC.addChild(topicE);
-		assertEquals(map.simpleEquals(mapE), true);
+		assertTrue(mapSimpleEquals(map, mapE));
 	}
 
 	public void test3() throws StringToXMLConvertionException,
@@ -109,7 +110,7 @@ public class MapBuilderTest extends AndroidTestCase {
 		topic.addIcon(Icon.HEART);
 		mapE.setRoot(topic1);
 		topic1.addChild(topic);
-		assertEquals(map.simpleEquals(mapE), true);
+		assertTrue(mapSimpleEquals(map, mapE));
 	}
 
 	public void test4() throws StringToXMLConvertionException,
@@ -128,7 +129,7 @@ public class MapBuilderTest extends AndroidTestCase {
 		topic.setNote("qqqqq");
 		mapE.setRoot(topic1);
 		topic1.addChild(topic);
-		assertEquals(map.simpleEquals(mapE), true);
+		assertTrue(mapSimpleEquals(map, mapE));
 	}
 
 }
