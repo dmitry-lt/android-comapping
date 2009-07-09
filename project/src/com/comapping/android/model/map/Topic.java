@@ -38,11 +38,44 @@ public class Topic implements Iterable<Topic>, Serializable {
 	private Task task;
 	private Attachment attachment;
 
+	private boolean objectEquals(Object o1, Object o2) {
+		if (o1 == null && o2 == null) {
+			return true;
+		}
+		if (o1 == null || o2 == null) {
+			return false;
+		}
+		return o1.equals(o2);
+	}
+	
 	public boolean simpleEquals(Object o) {
 		Topic topic = (Topic) o;
-		return bgColor == topic.getBgColor() && flag.equals(topic.getFlag())
-				&& priority == topic.getPriority()
-				&& text.equals(topic.getText());
+		if (bgColor != topic.getBgColor()) {
+			return false;
+		}
+		if (!objectEquals(flag, topic.getFlag())) {
+			return false;
+		}
+		if (priority != topic.getPriority()) {
+			return false;
+		}
+		if (!objectEquals(smiley, topic.getSmiley())) {
+			return false;
+		}
+		if (!objectEquals(taskCompletion, topic.getTaskCompletion())) {
+			return false;
+		}
+		if (!objectEquals(text, topic.getText())) {
+			return false;
+		}
+		if (!objectEquals(icons, topic.icons)) {
+			return false;
+		}
+		if (!objectEquals(note, topic.getNote())) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	private String mapRef;

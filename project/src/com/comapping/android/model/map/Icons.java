@@ -38,4 +38,13 @@ public class Icons implements Serializable {
 
 		return result;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		}
+		Icons icons = (Icons) o;
+		return mask == icons.mask;
+	}
 }
