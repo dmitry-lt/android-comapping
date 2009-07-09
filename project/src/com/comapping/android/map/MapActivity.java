@@ -1,4 +1,4 @@
-package com.comapping.android.controller;
+package com.comapping.android.map;
 
 import java.util.ArrayList;
 
@@ -30,6 +30,10 @@ import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.controller.R;
+import com.comapping.android.controller.R.id;
+import com.comapping.android.controller.R.layout;
+import com.comapping.android.controller.R.menu;
 import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
@@ -43,7 +47,6 @@ import com.comapping.android.provider.contentprovider.MapContentProvider;
 import com.comapping.android.storage.MemoryCache;
 import com.comapping.android.view.comapping.ComappingRender;
 import com.comapping.android.view.explorer.ExplorerRender;
-import com.comapping.android.view.MainMapView;
 import com.comapping.android.view.MapRender;
 
 public class MapActivity extends Activity {
@@ -290,7 +293,7 @@ public class MapActivity extends Activity {
 							allTopicsTexts(topic);
 							allTopics(topic);
 
-							view = (MainMapView) findViewById(R.id.mapView);
+							view = (MapView) findViewById(R.id.mapView);
 							view.setSearchUI(findLayout, cancel, next, prev,
 									queryTextView);
 							view.setRender(mapRender);
@@ -361,7 +364,7 @@ public class MapActivity extends Activity {
 	}
 
 	ZoomControls zoom;
-	MainMapView view;
+	MapView view;
 	ImageButton prev;
 	ImageButton next;
 	ImageButton cancel;

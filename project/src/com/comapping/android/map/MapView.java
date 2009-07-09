@@ -1,11 +1,12 @@
-package com.comapping.android.view;
+package com.comapping.android.map;
 
 import java.util.ArrayList;
 
 import com.comapping.android.Options;
-import com.comapping.android.controller.MapActivity;
 import com.comapping.android.controller.R;
 import com.comapping.android.model.map.Topic;
+import com.comapping.android.view.MapRender;
+import com.comapping.android.view.ScrollController;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -24,7 +25,7 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.ZoomControls;
 
-public class MainMapView extends View {
+public class MapView extends View {
 
 	// Zoom constants
 	private static final float MAX_SCALE = 1.0f;
@@ -100,7 +101,7 @@ public class MainMapView extends View {
 	String query;
 	LinearLayout findLayout;
 
-	public MainMapView(Context context, AttributeSet attrs) {
+	public MapView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		initScrolling(context);

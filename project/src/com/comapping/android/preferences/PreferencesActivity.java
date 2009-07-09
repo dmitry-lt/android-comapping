@@ -1,7 +1,9 @@
-package com.comapping.android.controller;
+package com.comapping.android.preferences;
 
 import com.comapping.android.Constants;
 import com.comapping.android.Options;
+import com.comapping.android.controller.R;
+import com.comapping.android.controller.R.layout;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
