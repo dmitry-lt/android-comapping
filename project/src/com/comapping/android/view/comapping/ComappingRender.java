@@ -103,8 +103,11 @@ public class ComappingRender extends MapRender {
 		res.parent = parent;
 		items.add(res);
 		int index = 0;
-		for (Topic i : itm) {
-			res.children[index++] = buildTree(i, res);
+		int childrenCount = itm.getChildrenCount();
+	
+		for (int i = 0; i < childrenCount; i++) {
+			Topic child = itm.getChildByIndex(i);
+			res.children[index++] = buildTree(child, res);
 		}
 		return res;
 	}

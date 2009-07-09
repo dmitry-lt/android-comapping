@@ -17,7 +17,7 @@ import com.comapping.android.model.text.builder.FormattedTextSaxBuilder;
  * @author Passichenko Victor and Yuri Zemlyanskiy
  * 
  */
-public class Topic implements Iterable<Topic>, Serializable {
+public class Topic implements Serializable {
 	private static final long serialVersionUID = 9028218616007509606L;
 
 	private int id;
@@ -280,29 +280,4 @@ public class Topic implements Iterable<Topic>, Serializable {
 				+ "\"]";
 	}
 
-	public TopicIterator iterator() {
-		return new TopicIterator(this);
-	}
-}
-
-class TopicIterator implements Iterator<Topic> {
-
-	private int index = 0;
-	private Topic topic;
-
-	public TopicIterator(Topic topic) {
-		this.topic = topic;
-	}
-
-	public boolean hasNext() {
-		return index < topic.getChildrenCount();
-	}
-
-	public Topic next() throws IndexOutOfBoundsException {
-		return topic.getChildByIndex(index++);
-	}
-
-	public void remove() throws IndexOutOfBoundsException {
-		topic.removeChildByIndex(index);
-	}
 }
