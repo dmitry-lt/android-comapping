@@ -27,7 +27,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		uriMatcher.addURI(PROVIDER_NAME, "/#####", MAP);
-		uriMatcher.addURI(PROVIDER_NAME, "/meta", META_MAP);
+		uriMatcher.addURI(PROVIDER_NAME, "/*/", META_MAP);
 	}
 
 	private CachingClient client;
@@ -65,19 +65,17 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
-		return new InternetMapCursor(uri.getLastPathSegment(), client, context);
-		//		
-		// // parse uri
-		// switch (uriMatcher.match(uri)) {
-		// case META_MAP:
-		// case MAP:
-		// return new InternetMapCursor(uri.getLastPathSegment(), client,
-		// MapProvider.currentContext);
-		// default:
-		// throw new IllegalArgumentException("Unsupported URI: " + uri);
-		// }
-		//		
+			String[] selectionArgs, String sortOrder) {						
+		 // parse uri
+		 switch (uriMatcher.match(uri)) {
+		 	case META_MAP:
+		 		
+		 	case MAP:
+		 		return new ComappingMapCursor(uri.getLastPathSegment(), client, context);
+		 	default:
+		 		throw new IllegalArgumentException("Unsupported URI: " + uri);
+		 }
+				
 	}
 
 	@Override
@@ -87,8 +85,12 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		return 0;
 	}
 
-	private class InternetMapCursor extends MapCursor {
-		public InternetMapCursor(String mapId, CachingClient client,
+	private class ComappingMetamapCursor extends MetamapCursor {
+		
+	}
+	
+	private class ComappingMapCursor extends MapCursor {
+		public ComappingMapCursor(String mapId, CachingClient client,
 				Context context) {
 			this.id = mapId;
 
