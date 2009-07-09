@@ -27,7 +27,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
-import com.comapping.android.ViewType;
 import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
@@ -121,7 +120,7 @@ public class MetaMapActivity extends Activity {
 				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 
-	void openMap(final String mapId, final ViewType viewType,
+	void openMap(final String mapId, final String viewType,
 			boolean ignoreCache) {
 		String dataSource = (currentProvider == comappingProvider) ? Constants.DATA_SOURCE_COMAPPING
 				: Constants.DATA_SOURCE_SD;
@@ -361,7 +360,7 @@ public class MetaMapActivity extends Activity {
 
 					openMap(
 							currentProvider.getCurrentLevel()[position].reference,
-							ViewType.getViewTypeFromString(viewType), false);
+							viewType, false);
 
 				}
 			}
@@ -401,10 +400,10 @@ public class MetaMapActivity extends Activity {
 
 			switch (item.getItemId()) {
 			case R.id.openWithComappingView:
-				openMap(itm.reference, ViewType.COMAPPING_VIEW, false);
+				openMap(itm.reference, Constants.VIEW_TYPE_COMAPPING, false);
 				break;
 			case R.id.openWithExplorerView:
-				openMap(itm.reference, ViewType.EXPLORER_VIEW, false);
+				openMap(itm.reference, Constants.VIEW_TYPE_EXPLORER, false);
 				break;
 			}
 		} else {

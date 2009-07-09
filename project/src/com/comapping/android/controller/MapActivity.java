@@ -25,7 +25,6 @@ import android.widget.ZoomControls;
 import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
-import com.comapping.android.ViewType;
 import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
@@ -55,7 +54,7 @@ public class MapActivity extends Activity {
 		return currentActivity;
 	}
 
-	public static void openMap(final String mapId, final ViewType viewType,
+	public static void openMap(final String mapId, final String viewType,
 			boolean ignoreCache, Activity parent, String dataSource) {
 		Intent intent = new Intent(Constants.MAP_ACTIVITY_INTENT);
 
@@ -63,7 +62,7 @@ public class MapActivity extends Activity {
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
 		intent.putExtra(MapActivity.EXT_IS_IGNORE_CACHE, ignoreCache);
 		intent.putExtra(MapActivity.EXT_DATA_SOURCE, dataSource);
-		
+
 		parent.startActivityForResult(intent, Constants.ACTION_MAP_REQUEST);
 	}
 
@@ -78,9 +77,7 @@ public class MapActivity extends Activity {
 	private Thread mapProcessingThread;
 
 	private String currentMapId = null;
-	private ViewType currentViewType = null;
-	
-	
+	private String currentViewType = null;
 
 	public void splashActivate(final String message, final boolean cancelable) {
 		final Activity context = this;
@@ -162,7 +159,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
-	static private ViewType viewType;
+	static private String viewType;
 	static private String mapId;
 	static private boolean ignoreCache;
 	static private String dataSource;
@@ -213,8 +210,7 @@ public class MapActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 
 		try {
-			viewType = ViewType.getViewTypeFromString(extras
-					.getString(EXT_VIEW_TYPE));
+			viewType = extras.getString(EXT_VIEW_TYPE);
 			mapId = extras.getString(EXT_MAP_ID);
 			ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
 			dataSource = extras.getString(EXT_DATA_SOURCE);
@@ -235,20 +231,26 @@ public class MapActivity extends Activity {
 					if (!MemoryCache.has(mapId) || (ignoreCache)) {
 						splashActivate("Downloading map", false);
 						String result = "";
-//						try {
-//							if (dataSource == Constants.DATA_SOURCE_COMAPPING)
-//							{
-//								result = Client.getClient(current).getComap(mapId,
-//										current, ignoreCache, false);
-								result = MapContentProvider.getComap(mapId, InternetMapContentProvider.CONTENT_URI, current);
-//							} else
-//							{
-//								result = new InternetMapProvider(current).getComap(mapId, false, current);	
-//							}
-//						} catch (InvalidCredentialsException e) {
-//							Log.e(Log.MAP_CONTROLLER_TAG, "invalid credentials while map getting");
-//							// TODO: ???
-//						}
+						// try {
+						// if (dataSource == Constants.DATA_SOURCE_COMAPPING)
+						// {
+						// result = Client.getClient(current).getComap(mapId,
+						// current, ignoreCache, false);
+						result = MapContentProvider
+								.getComap(mapId,
+										InternetMapContentProvider.CONTENT_URI,
+										current);
+						// } else
+						// {
+						// result = new
+						// InternetMapProvider(current).getComap(mapId, false,
+						// current);
+						// }
+						// } catch (InvalidCredentialsException e) {
+						// Log.e(Log.MAP_CONTROLLER_TAG,
+						// "invalid credentials while map getting");
+						// // TODO: ???
+						// }
 
 						if (result == null) {
 							result = "";
@@ -337,12 +339,12 @@ public class MapActivity extends Activity {
 						}
 						sleep(100);
 					}
-//				} catch (LoginInterruptedException e) {
-//					Log.e(Log.MAP_CONTROLLER_TAG, "login interrupted");
-//					onError("login interrupted", current);
-//				} catch (ConnectionException e) {
-//					Log.e(Log.MAP_CONTROLLER_TAG, "connection exception");
-//					onError("Connection error", current);
+					// } catch (LoginInterruptedException e) {
+					// Log.e(Log.MAP_CONTROLLER_TAG, "login interrupted");
+					// onError("login interrupted", current);
+					// } catch (ConnectionException e) {
+					// Log.e(Log.MAP_CONTROLLER_TAG, "connection exception");
+					// onError("Connection error", current);
 				} catch (StringToXMLConvertionException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
 					onError("Wrong file format", current);
@@ -378,15 +380,13 @@ public class MapActivity extends Activity {
 		view.onSearch(searchResult, s);
 	}
 
-	public MapRender initMapRender(Map map, ViewType viewType) {
-		switch (viewType) {
-		case EXPLORER_VIEW:
+	public MapRender initMapRender(Map map, String viewType) {
+		if (viewType.equals(Constants.VIEW_TYPE_EXPLORER))
 			return new ExplorerRender(this, map);
-		case COMAPPING_VIEW:
+		else if (viewType.equals(Constants.VIEW_TYPE_COMAPPING))
 			return new ComappingRender(this, map);
-		default:
+		else
 			return null;
-		}
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {

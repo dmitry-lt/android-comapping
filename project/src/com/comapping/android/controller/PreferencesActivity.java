@@ -1,7 +1,7 @@
 package com.comapping.android.controller;
 
+import com.comapping.android.Constants;
 import com.comapping.android.Options;
-import com.comapping.android.ViewType;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -51,7 +51,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		addPreferencesFromResource(R.layout.preferences);
 		
 		// init view type preference
-		initListPreference((ListPreference) findPreference("viewType"), ViewType.COMAPPING_VIEW.toString());
+		initListPreference((ListPreference) findPreference("viewType"), Constants.VIEW_TYPE_COMAPPING);
 		
 		// init download preference
 		initTextPreference((EditTextPreference) findPreference("downloadFolder"), Options.DEFAULT_DOWNLOAD_FOLDER);
