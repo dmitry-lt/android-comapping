@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.provider.MediaStore.Images.Thumbnails;
 
 public class IconRender extends Render {
 
@@ -193,15 +194,29 @@ public class IconRender extends Render {
 
 		flagIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_flag_go)),
 				getBitmap(r.getDrawable(R.drawable.topic_flag_for_discussion)),
-				getBitmap(r.getDrawable(R.drawable.topic_flag_possibility)), getBitmap(r.getDrawable(R.drawable.topic_flag_risk)),
-				getBitmap(r.getDrawable(R.drawable.topic_flag_progress)), getBitmap(r.getDrawable(R.drawable.topic_flag_carefull)),
+				getBitmap(r.getDrawable(R.drawable.topic_flag_possibility)),
+				getBitmap(r.getDrawable(R.drawable.topic_flag_risk)),
+				getBitmap(r.getDrawable(R.drawable.topic_flag_progress)),
+				getBitmap(r.getDrawable(R.drawable.topic_flag_carefull)),
 				getBitmap(r.getDrawable(R.drawable.topic_flag_caution)) };
-
-		icons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_question)),
-				getBitmap(r.getDrawable(R.drawable.topic_exclamation)),
-				getBitmap(r.getDrawable(R.drawable.topic_bomb)), getBitmap(r.getDrawable(R.drawable.topic_thumbs_up)),
-				getBitmap(r.getDrawable(R.drawable.topic_thumbs_down)),
-				getBitmap(r.getDrawable(R.drawable.topic_magnifier)), getBitmap(r.getDrawable(R.drawable.topic_dollar)),
-				getBitmap(r.getDrawable(R.drawable.topic_heart)), getBitmap(r.getDrawable(R.drawable.topic_clock)) };
+				
+		icons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_icon_question_mark)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_exclamation_mark)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_lock)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_tea_time)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_puzzle)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_magnifier)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_thumbs_up)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_thumbs_down)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_idea)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_dollar)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_heart)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_needs_chat)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_clock)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_reminder)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_bomb)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_test)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_homework)),
+				getBitmap(r.getDrawable(R.drawable.topic_icon_needs_feedback)) };
 	}
 }
