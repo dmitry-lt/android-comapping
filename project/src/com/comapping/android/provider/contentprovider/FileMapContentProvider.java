@@ -20,7 +20,7 @@ public class FileMapContentProvider extends MapContentProvider {
 	public static final Uri CONTENT_URI = Uri
 			.parse("content://" + PROVIDER_NAME);
 
-	public static final int PREFIX_LENGTH = 16;
+	public static final int PREFIX_LENGTH = 2;
 	
 	
 
@@ -111,6 +111,7 @@ public class FileMapContentProvider extends MapContentProvider {
 			String response = null;
 
 			try {
+				Log.e(Log.CONNECTION_TAG,mapId );
 				response = getTextFromInputStream(new FileInputStream(mapId));
 			} catch (FileNotFoundException e) {
 				Log.e(Log.CONNECTION_TAG, "map file not found");
@@ -120,8 +121,8 @@ public class FileMapContentProvider extends MapContentProvider {
 
 			Log.d(Log.CONNECTION_TAG, "file comap provider response: "
 					+ response);
-			Log.d(Log.CONNECTION_TAG, "file comap provider check sum: "
-					+ getBytesSum(response));
+		//	Log.d(Log.CONNECTION_TAG, "file comap provider check sum: "
+		//			+ getBytesSum(response));
 
 			this.text = response;
 

@@ -36,6 +36,7 @@ import com.comapping.android.map.render.comapping.ComappingRender;
 import com.comapping.android.map.render.explorer.ExplorerRender;
 import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
+import com.comapping.android.provider.contentprovider.FileMapContentProvider;
 import com.comapping.android.provider.contentprovider.MapContentProvider;
 import com.comapping.android.storage.MemoryCache;
 
@@ -226,13 +227,13 @@ public class MapActivity extends Activity {
 		if (!MemoryCache.has(mapId) || (ignoreCache)) {
 			splashActivate("Downloading map", false);
 			String result = "";
-			result = MapContentProvider.getComap(mapId,
-					ComappingMapContentProvider.CONTENT_URI, this);
+			result = FileMapContentProvider.getComap(mapId,
+					FileMapContentProvider.CONTENT_URI, this);
 
 			if (result == null) {
 				result = "";
 			}
-
+			Log.e(Log.CONNECTION_TAG, result);
 			splashActivate("Parsing map", true);
 			map = MetaMapActivity.mapBuilder.buildMap(result);
 
