@@ -132,4 +132,14 @@ public class MapBuilderTest extends AndroidTestCase {
 		assertTrue(mapSimpleEquals(map, mapE));
 	}
 
+	public void testAllFiles() throws StringToXMLConvertionException,
+			MapParsingException, IOException {
+		Map map;
+		map = getMapFromSD("sdcard\\test0.comap");
+		map = getMapFromSD("sdcard\\test1.comap");
+		map = getMapFromSD("sdcard\\test2.comap");
+		map = getMapFromSD("sdcard\\test3.comap");
+		map = getMapFromSD("sdcard\\test4.comap");
+	}
+
 }
