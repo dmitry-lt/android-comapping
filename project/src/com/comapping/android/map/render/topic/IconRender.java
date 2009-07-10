@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.provider.MediaStore.Images.Thumbnails;
 
 public class IconRender extends Render {
 
@@ -28,6 +27,8 @@ public class IconRender extends Render {
 	private static Bitmap[] taskCompletionIcons;
 	private static Bitmap[] flagIcons;
 	private static Bitmap[] icons;
+	private static Bitmap[] arrows;
+	private static Bitmap[] stars;
 
 	private Context context;
 	
@@ -57,6 +58,15 @@ public class IconRender extends Render {
 		if (topic.getFlag() != null) {
 			iconsCount++;
 		}
+		
+		if (topic.getArrow() != null) {
+			iconsCount++;
+		}
+
+		if (topic.getStar() != null) {
+			iconsCount++;
+		}
+		
 		iconsCount += topic.getIconCount();
 
 		if (iconsCount > 0) {
@@ -112,6 +122,26 @@ public class IconRender extends Render {
 
 			if (topic.getFlag() != null) {
 				c.drawBitmap(flagIcons[topic.getFlag().ordinal()], curX, curY, null);
+				curX += ICON_SIZE + HORISONTAL_MERGING;
+			}
+
+			if (curX - x + ICON_SIZE > this.width) {
+				curX = x;
+				curY += ICON_SIZE + VERTICAL_MERGING;
+			}
+			
+			if (topic.getStar() != null) {
+				c.drawBitmap(stars[topic.getStar().ordinal()], curX, curY, null);
+				curX += ICON_SIZE + HORISONTAL_MERGING;
+			}
+			
+			if (curX - x + ICON_SIZE > this.width) {
+				curX = x;
+				curY += ICON_SIZE + VERTICAL_MERGING;
+			}
+			
+			if (topic.getArrow() != null) {
+				c.drawBitmap(arrows[topic.getArrow().ordinal()], curX, curY, null);
 				curX += ICON_SIZE + HORISONTAL_MERGING;
 			}
 
@@ -190,7 +220,8 @@ public class IconRender extends Render {
 				getBitmap(r.getDrawable(R.drawable.topic_task_completion_25)),
 				getBitmap(r.getDrawable(R.drawable.topic_task_completion_50)),
 				getBitmap(r.getDrawable(R.drawable.topic_task_completion_75)),
-				getBitmap(r.getDrawable(R.drawable.topic_task_completion_complete)) };
+				getBitmap(r.getDrawable(R.drawable.topic_task_completion_complete)),
+				getBitmap(r.getDrawable(R.drawable.topic_task_completion_cancelled)) };
 
 		flagIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_flag_go)),
 				getBitmap(r.getDrawable(R.drawable.topic_flag_for_discussion)),
@@ -218,5 +249,21 @@ public class IconRender extends Render {
 				getBitmap(r.getDrawable(R.drawable.topic_icon_test)),
 				getBitmap(r.getDrawable(R.drawable.topic_icon_homework)),
 				getBitmap(r.getDrawable(R.drawable.topic_icon_needs_feedback)) };
+
+		arrows = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_arrow_blue)),
+				getBitmap(r.getDrawable(R.drawable.topic_arrow_purple)),
+				getBitmap(r.getDrawable(R.drawable.topic_arrow_black)),
+				getBitmap(r.getDrawable(R.drawable.topic_arrow_red)),
+				getBitmap(r.getDrawable(R.drawable.topic_arrow_orange)),
+				getBitmap(r.getDrawable(R.drawable.topic_arrow_yellow)),
+				getBitmap(r.getDrawable(R.drawable.topic_arrow_green)) };
+		
+		stars = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_star_blue)),
+				getBitmap(r.getDrawable(R.drawable.topic_star_purple)),
+				getBitmap(r.getDrawable(R.drawable.topic_star_black)),
+				getBitmap(r.getDrawable(R.drawable.topic_star_red)),
+				getBitmap(r.getDrawable(R.drawable.topic_star_orange)),
+				getBitmap(r.getDrawable(R.drawable.topic_star_yellow)),
+				getBitmap(r.getDrawable(R.drawable.topic_star_green)) };
 	}
 }
