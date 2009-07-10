@@ -133,8 +133,18 @@ public class ComappingProvider extends MetaMapProvider {
 		if (metamap == null)
 			return;
 
-		if (currentLevel.getChildByIndex(index).isFolder()) {
-			currentLevel = currentLevel.getChildByIndex(index);
+		if (cachedLevel[index].isFolder) {
+			//cachedLevel[index].name;
+			Topic[] topics = currentLevel.getChildTopics();
+			for(int i = 0; i< topics.length; i++)
+			{
+				if (topics[i].getText().equals(cachedLevel[index].name))
+				{
+					currentLevel = topics[i];
+					break;
+				}
+			}
+			//currentLevel = currentLevel.getChildByIndex(index);
 		}
 		updateCache();
 	}
