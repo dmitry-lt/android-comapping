@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -52,7 +53,6 @@ public class MetaMapActivity extends Activity {
 	private static final int SYNC = R.id.synchronizeButton;
 	private static final int SWITCHER = R.id.viewSwitcher;
 	private static final int LOGOUT = R.id.logout;
-
 
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
@@ -103,6 +103,21 @@ public class MetaMapActivity extends Activity {
 		}
 
 		super.onDestroy();
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (currentProvider.canGoUp()) {
+				currentProvider.goUp();
+				updateMetaMap();
+				return true;
+			} else {
+				return false;
+			}
+
+		} else {
+			return false;
+		}
 	}
 
 	// WTF?
@@ -188,7 +203,7 @@ public class MetaMapActivity extends Activity {
 			enableButton(SYNC);
 		else
 			disableButton(SYNC);
-		
+
 		if (currentProvider == comappingProvider) {
 			((ImageButton) findViewById(R.id.viewSwitcher))
 					.setImageResource(R.drawable.metamap_sdcard);
@@ -438,9 +453,9 @@ public class MetaMapActivity extends Activity {
 
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.metamap, menu);
-		
+
 		menu.getItem(1).setEnabled(currentProvider.canLogout());
-		
+
 		return true;
 	}
 
