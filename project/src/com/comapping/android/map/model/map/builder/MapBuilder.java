@@ -1,5 +1,6 @@
 package com.comapping.android.map.model.map.builder;
 
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -74,6 +75,7 @@ abstract public class MapBuilder {
 	 * @throws MapParsingException
 	 *             when given XML document has wrong format
 	 */
+	abstract public Map buildMap(InputStream xmlDocument) throws StringToXMLConvertionException, MapParsingException;
 	abstract public Map buildMap(String xmlDocument) throws StringToXMLConvertionException, MapParsingException;
 	
 }
