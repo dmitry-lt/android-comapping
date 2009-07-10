@@ -3,6 +3,7 @@ package com.comapping.android.map.model.map.builder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,18 +22,15 @@ public class SaxMapBuilder extends MapBuilder {
 
 	SaxHandler handler;
 
-	
-	public Map buildMap(String xmlDocument) throws StringToXMLConvertionException, MapParsingException {
+	public Map buildMap(InputStream xmlDocument) throws StringToXMLConvertionException, MapParsingException
+	{
 		try {
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser parser = saxParserFactory.newSAXParser();
 
-			InputStream stream = new ByteArrayInputStream(xmlDocument.getBytes("UTF-8"));
 			handler = new SaxHandler();
-
-			Log.d(Log.MODEL_TAG, "parsing xml document: \n" + xmlDocument);
 			
-			parser.parse(stream, handler);			
+			parser.parse(xmlDocument, handler);			
 		} catch (FactoryConfigurationError e) {
 			Log.e("SAX Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
@@ -51,5 +49,17 @@ public class SaxMapBuilder extends MapBuilder {
 		}
 
 		return handler.getMap();
+
+	}
+	
+	public Map buildMap(String xmlDocument) throws StringToXMLConvertionException, MapParsingException {
+		InputStream stream;
+		try {
+			stream = new ByteArrayInputStream(xmlDocument.getBytes("UTF-8"));
+			return buildMap(stream);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new StringToXMLConvertionException();
+		}
 	}
 }
