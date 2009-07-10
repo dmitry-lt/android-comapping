@@ -453,13 +453,13 @@ public class MetaMapActivity extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.metamap, menu);
 
-		MenuItem logoutItem = menu.getItem(1);
+		MenuItem logoutItem = menu.findItem(R.id.logout);
 		logoutItem.setEnabled(currentProvider.canLogout());
 
 		if (currentProvider.canLogout()) {
 			logoutItem.setIcon(R.drawable.metamap_logout);
 		} else {
-			logoutItem.setIcon(R.drawable.metamap_logout_grey); 
+			logoutItem.setIcon(R.drawable.metamap_logout_grey);
 		}
 
 		return true;
