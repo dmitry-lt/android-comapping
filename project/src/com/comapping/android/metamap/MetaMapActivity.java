@@ -106,17 +106,12 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (currentProvider.canGoUp()) {
-				currentProvider.goUp();
-				updateMetaMap();
-				return true;
-			} else {
-				return false;
-			}
-
+		if ((keyCode == KeyEvent.KEYCODE_BACK) & (currentProvider.canGoUp())) {
+			currentProvider.goUp();
+			updateMetaMap();
+			return true;
 		} else {
-			return false;
+			return super.onKeyDown(keyCode, event);
 		}
 	}
 
