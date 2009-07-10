@@ -24,7 +24,6 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -54,7 +53,6 @@ public class MetaMapActivity extends Activity {
 	private static final int HOME = R.id.homeButton;
 	private static final int SYNC = R.id.synchronizeButton;
 	private static final int SWITCHER = R.id.viewSwitcher;
-	private static final int LOGOUT = R.id.logout;
 
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";

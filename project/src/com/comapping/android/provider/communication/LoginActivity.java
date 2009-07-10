@@ -10,7 +10,6 @@ package com.comapping.android.provider.communication;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -22,9 +21,6 @@ import android.widget.TextView;
 
 import com.comapping.android.Log;
 import com.comapping.android.controller.R;
-import com.comapping.android.controller.R.drawable;
-import com.comapping.android.controller.R.id;
-import com.comapping.android.controller.R.layout;
 import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;

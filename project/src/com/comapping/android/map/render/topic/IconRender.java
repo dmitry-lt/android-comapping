@@ -5,7 +5,6 @@ import com.comapping.android.controller.R;
 import com.comapping.android.map.model.map.Icon;
 import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.render.Render;
-import com.comapping.android.metamap.MetaMapActivity;
 
 import android.content.Context;
 import android.content.res.Resources;

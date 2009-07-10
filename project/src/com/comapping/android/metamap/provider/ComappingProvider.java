@@ -20,7 +20,6 @@ import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.model.map.builder.MapBuilder;
 import com.comapping.android.map.model.map.builder.SaxMapBuilder;
 import com.comapping.android.metamap.MetaMapItem;
-import com.comapping.android.storage.SqliteMapCache;
 
 public class ComappingProvider extends MetaMapProvider {
 

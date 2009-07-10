@@ -9,7 +9,6 @@
 package com.comapping.android.preferences;
 
 import com.comapping.android.Log;
-import com.comapping.android.metamap.*;
 
 import android.content.Context;
 import android.content.SharedPreferences;
