@@ -14,6 +14,8 @@ import com.comapping.android.map.model.map.Map;
 import com.comapping.android.map.model.map.Smiley;
 import com.comapping.android.map.model.map.TaskCompletion;
 import com.comapping.android.map.model.map.Topic;
+import com.comapping.android.map.model.map.builder.MapBuilder;
+import com.comapping.android.map.model.map.builder.SaxMapBuilder;
 
 import android.test.AndroidTestCase;
 
