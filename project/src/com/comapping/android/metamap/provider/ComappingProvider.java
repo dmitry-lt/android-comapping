@@ -30,6 +30,9 @@ public class ComappingProvider extends MetaMapProvider {
 
 	private static final String MAP_DESCRIPTION = "Map";
 	private static final String FOLDER_DESCRIPTION = "Folder";
+	
+	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
+	private static final String NEED_RESYNC_MESSAGE = "Please, click resync button for downloading map list";
 
 	Map metamap;
 	Topic currentLevel;
@@ -283,5 +286,14 @@ public class ComappingProvider extends MetaMapProvider {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String getEmptyListText() {
+		CachingClient client = Client.getClient(activity);
+		if (!client.isLoggedIn())
+			return NEED_RESYNC_MESSAGE;
+		else
+			return EMPTY_FOLDER_MESSAGE;
 	}
 }

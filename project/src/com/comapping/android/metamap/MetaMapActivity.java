@@ -24,7 +24,9 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -390,6 +392,9 @@ public class MetaMapActivity extends Activity {
 				}
 			}
 		});
+		
+		
+		listView.setEmptyView(findViewById(R.id.textViewMessage));
 	}
 
 	// ====================================================

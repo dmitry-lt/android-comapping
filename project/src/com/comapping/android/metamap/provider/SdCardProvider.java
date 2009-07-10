@@ -10,6 +10,7 @@ public class SdCardProvider extends MetaMapProvider {
 
 	private static final String FOLDER_DESCR = "Folder";
 	private static final String MAP_DESCR = "Map";
+	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
 	final static private FilenameFilter filter = new FilenameFilter() {
 		public boolean accept(File dir, String filename) {
@@ -106,5 +107,10 @@ public class SdCardProvider extends MetaMapProvider {
 
 	@Override
 	public void logout() {
+	}
+
+	@Override
+	public String getEmptyListText() {
+		return EMPTY_FOLDER_MESSAGE;
 	}
 }
