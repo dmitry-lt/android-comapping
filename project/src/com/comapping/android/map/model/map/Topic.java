@@ -2,7 +2,6 @@ package com.comapping.android.map.model.map;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import android.graphics.Color;
@@ -27,6 +26,8 @@ public class Topic implements Serializable {
 	private Flag flag;
 	private int priority;
 	private Smiley smiley;
+	private Arrow arrow;
+	private Star star;
 	private TaskCompletion taskCompletion;
 
 	private String text;
@@ -137,6 +138,26 @@ public class Topic implements Serializable {
 		this.smiley = smiley;
 
 		Log.d(Log.MODEL_TAG, "set smiley=\"" + smiley + "\" in " + this);
+	}
+	
+	public Arrow getArrow() {
+		return arrow;
+	}
+
+	public void setArrow(Arrow arrow) {
+		this.arrow = arrow;
+
+		Log.d(Log.MODEL_TAG, "set arrow=\"" + arrow + "\" in " + this);
+	}
+	
+	public Star getStar() {
+		return star;
+	}
+
+	public void setStar(Star star) {
+		this.star = star;
+
+		Log.d(Log.MODEL_TAG, "set star=\"" + star + "\" in " + this);
 	}
 
 	public TaskCompletion getTaskCompletion() {

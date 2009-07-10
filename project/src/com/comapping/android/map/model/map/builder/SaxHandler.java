@@ -19,6 +19,8 @@ import com.comapping.android.map.model.map.Flag;
 import com.comapping.android.map.model.map.Icon;
 import com.comapping.android.map.model.map.Map;
 import com.comapping.android.map.model.map.Smiley;
+import com.comapping.android.map.model.map.Arrow;
+import com.comapping.android.map.model.map.Star;
 import com.comapping.android.map.model.map.Task;
 import com.comapping.android.map.model.map.TaskCompletion;
 import com.comapping.android.map.model.map.Topic;
@@ -32,6 +34,8 @@ class SaxHandler extends DefaultHandler {
 	private static int TOPIC_FLAG_TAG_HASHCODE = mod(MapBuilder.TOPIC_FLAG_ATTR.hashCode());
 	private static int TOPIC_PRIORITY_TAG_HASHCODE = mod(MapBuilder.TOPIC_PRIORITY_ATTR.hashCode());
 	private static int TOPIC_SMILEY_TAG_HASHCODE = mod(MapBuilder.TOPIC_SMILEY_ATTR.hashCode());
+	private static int TOPIC_ARROW_TAG_HASHCODE = mod(MapBuilder.TOPIC_ARROW_ATTR.hashCode());
+	private static int TOPIC_STAR_TAG_HASHCODE = mod(MapBuilder.TOPIC_STAR_ATTR.hashCode());
 	private static int TOPIC_TASK_COMPLETION_TAG_HASHCODE = mod(MapBuilder.TOPIC_TASK_COMPLETION_ATTR.hashCode());
 	private static int TOPIC_MAP_REF_TAG_HASHCODE = mod(MapBuilder.TOPIC_MAP_REF_TAG.hashCode());
 
@@ -186,6 +190,16 @@ class SaxHandler extends DefaultHandler {
 			if (attributesMap[TOPIC_SMILEY_TAG_HASHCODE] != null) {
 				currentTopic.setSmiley(Smiley.parse(attributesMap[TOPIC_SMILEY_TAG_HASHCODE]));
 				attributesMap[TOPIC_SMILEY_TAG_HASHCODE] = null;
+			}
+			
+			if (attributesMap[TOPIC_ARROW_TAG_HASHCODE] != null) {
+				currentTopic.setArrow(Arrow.parse(attributesMap[TOPIC_ARROW_TAG_HASHCODE]));
+				attributesMap[TOPIC_ARROW_TAG_HASHCODE] = null;
+			}
+			
+			if (attributesMap[TOPIC_STAR_TAG_HASHCODE] != null) {
+				currentTopic.setStar(Star.parse(attributesMap[TOPIC_STAR_TAG_HASHCODE]));
+				attributesMap[TOPIC_STAR_TAG_HASHCODE] = null;
 			}
 
 			if (attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE] != null) {

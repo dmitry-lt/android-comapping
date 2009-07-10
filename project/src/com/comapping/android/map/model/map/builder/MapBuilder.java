@@ -9,6 +9,7 @@ import com.comapping.android.map.model.exceptions.MapParsingException;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.map.model.map.Map;
 
+
 abstract public class MapBuilder {
 	static final String METADATA_TAG = "metadata";
 	static final String MAP_ID_TAG = "id";
@@ -24,6 +25,8 @@ abstract public class MapBuilder {
 	static final String TOPIC_FLAG_ATTR = "flag";
 	static final String TOPIC_PRIORITY_ATTR = "priority";
 	static final String TOPIC_SMILEY_ATTR = "smiley";
+	static final String TOPIC_STAR_ATTR = "star";
+	static final String TOPIC_ARROW_ATTR = "arrow";
 	static final String TOPIC_TASK_COMPLETION_ATTR = "taskCompletion";
 	static final String TOPIC_MAP_REF_TAG = "map_ref";
 	static final String TOPIC_TEXT_TAG = "text";
