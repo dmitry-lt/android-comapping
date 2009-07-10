@@ -27,6 +27,9 @@ import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.controller.R;
+import com.comapping.android.map.render.MapRender;
+import com.comapping.android.map.render.comapping.ComappingRender;
+import com.comapping.android.map.render.explorer.ExplorerRender;
 import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.model.exceptions.MapParsingException;
 import com.comapping.android.model.exceptions.StringToXMLConvertionException;
@@ -35,9 +38,6 @@ import com.comapping.android.model.map.Topic;
 import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
 import com.comapping.android.provider.contentprovider.MapContentProvider;
 import com.comapping.android.storage.MemoryCache;
-import com.comapping.android.view.comapping.ComappingRender;
-import com.comapping.android.view.explorer.ExplorerRender;
-import com.comapping.android.view.MapRender;
 
 public class MapActivity extends Activity {
 	

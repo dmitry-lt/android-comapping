@@ -1,11 +1,11 @@
-package com.comapping.android.view.topic;
+package com.comapping.android.map.render.topic;
 
 import com.comapping.android.Log;
+import com.comapping.android.map.render.Render;
 import com.comapping.android.model.text.FormattedText;
 import com.comapping.android.model.text.TextBlock;
 import com.comapping.android.model.text.TextFormat;
 import com.comapping.android.model.text.TextParagraph;
-import com.comapping.android.view.Render;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
-import static com.comapping.android.view.topic.RenderHelper.pointLiesOnRect;
+import static com.comapping.android.map.render.topic.RenderHelper.pointLiesOnRect;
 
 public class TextRender extends Render {
 	public static final int DEFAULT_BORDER = 4;

@@ -31,14 +31,14 @@
  * Render zone width is TopicView.getRenderZoneWidth(), but must be changed
  * Render zone height is TopicView.getRenderZoneHeight()
  */
-package com.comapping.android.view.comapping;
+package com.comapping.android.map.render.comapping;
 
 import java.util.ArrayList;
 
+import com.comapping.android.map.ScrollController;
+import com.comapping.android.map.render.MapRender;
 import com.comapping.android.model.map.Map;
 import com.comapping.android.model.map.Topic;
-import com.comapping.android.view.MapRender;
-import com.comapping.android.view.ScrollController;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 import com.comapping.android.Options;
 import com.comapping.android.controller.R;
+import com.comapping.android.map.render.MapRender;
 import com.comapping.android.model.map.Topic;
-import com.comapping.android.view.MapRender;
-import com.comapping.android.view.ScrollController;
 
 import android.content.Context;
 import android.graphics.Canvas;

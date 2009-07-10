@@ -1,4 +1,4 @@
-package com.comapping.android.view.explorer;
+package com.comapping.android.map.render.explorer;
 
 public class Expander implements Comparable<Expander> {
 	public int x, y;

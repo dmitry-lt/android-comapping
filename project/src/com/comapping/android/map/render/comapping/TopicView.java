@@ -1,4 +1,4 @@
-package com.comapping.android.view.comapping;
+package com.comapping.android.map.render.comapping;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,9 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.comapping.android.map.render.PlusMinusRender;
+import com.comapping.android.map.render.topic.TopicRender;
 import com.comapping.android.model.map.Topic;
-import com.comapping.android.view.PlusMinusRender;
-import com.comapping.android.view.topic.TopicRender;
 
 /**
  * Container for Topic's whith some helpful functions for drawing, calculating

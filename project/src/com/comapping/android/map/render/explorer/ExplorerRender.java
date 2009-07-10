@@ -1,14 +1,14 @@
-package com.comapping.android.view.explorer;
+package com.comapping.android.map.render.explorer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.comapping.android.map.ScrollController;
+import com.comapping.android.map.render.MapRender;
+import com.comapping.android.map.render.PlusMinusRender;
+import com.comapping.android.map.render.topic.TopicRender;
 import com.comapping.android.model.map.Map;
 import com.comapping.android.model.map.Topic;
-import com.comapping.android.view.MapRender;
-import com.comapping.android.view.PlusMinusRender;
-import com.comapping.android.view.ScrollController;
-import com.comapping.android.view.topic.TopicRender;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -1,12 +1,12 @@
-package com.comapping.android.view.explorer;
+package com.comapping.android.map.render.explorer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
 
+import com.comapping.android.map.render.topic.CachedTopicRender;
 import com.comapping.android.model.map.Topic;
-import com.comapping.android.view.topic.CachedTopicRender;
 
 public class TopicView implements Comparable<TopicView> {
 	public boolean isOpen;

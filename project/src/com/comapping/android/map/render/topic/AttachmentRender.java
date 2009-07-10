@@ -1,4 +1,4 @@
-package com.comapping.android.view.topic;
+package com.comapping.android.map.render.topic;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -17,9 +17,9 @@ import com.comapping.android.Options;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.R;
+import com.comapping.android.map.render.Render;
 import com.comapping.android.model.map.Attachment;
 import com.comapping.android.storage.PreferencesStorage;
-import com.comapping.android.view.Render;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -30,7 +30,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import static com.comapping.android.view.topic.RenderHelper.getBitmap;
+import static com.comapping.android.map.render.topic.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {
 

@@ -1,8 +1,8 @@
-package com.comapping.android.view.topic;
+package com.comapping.android.map.render.topic;
 
 import com.comapping.android.Log;
+import com.comapping.android.map.render.Render;
 import com.comapping.android.model.map.Topic;
-import com.comapping.android.view.Render;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,7 +13,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
 
-import static com.comapping.android.view.topic.RenderHelper.pointLiesOnRect;
+import static com.comapping.android.map.render.topic.RenderHelper.pointLiesOnRect;
 
 public class TopicRender extends Render {
 

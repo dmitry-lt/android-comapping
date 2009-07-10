@@ -1,4 +1,4 @@
-package com.comapping.android.view;
+package com.comapping.android.map.render;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

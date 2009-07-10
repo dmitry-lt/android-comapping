@@ -1,4 +1,4 @@
-package com.comapping.android.view.topic;
+package com.comapping.android.map.render.topic;
 
 import android.content.Context;
 
