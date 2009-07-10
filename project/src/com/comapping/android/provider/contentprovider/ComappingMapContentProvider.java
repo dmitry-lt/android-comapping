@@ -26,7 +26,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(PROVIDER_NAME, "maps/#####", MAP);
+		uriMatcher.addURI(PROVIDER_NAME, "maps/*", MAP);
 		uriMatcher.addURI(PROVIDER_NAME, "*/", META_MAP);
 	}
 
@@ -65,17 +65,19 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {						
-		 // parse uri
-		 switch (uriMatcher.match(uri)) {
-		 	case META_MAP:
-		 		
-		 	case MAP:
-		 		return new ComappingMapCursor(uri.getLastPathSegment(), client, context);
-		 	default:
-		 		throw new IllegalArgumentException("Unsupported URI: " + uri);
-		 }
-				
+			String[] selectionArgs, String sortOrder) {
+		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uri.toString());
+
+		// parse uri
+		switch (uriMatcher.match(uri)) {
+		case META_MAP:
+		case MAP:
+			return new ComappingMapCursor(uri.getLastPathSegment(), client,
+					context);
+		default:
+			throw new IllegalArgumentException("Unsupported URI: " + uri);
+		}
+
 	}
 
 	@Override
@@ -86,9 +88,9 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	}
 
 	private class ComappingMetamapCursor extends MetamapCursor {
-		
+
 	}
-	
+
 	private class ComappingMapCursor extends MapCursor {
 		public ComappingMapCursor(String mapId, CachingClient client,
 				Context context) {
@@ -96,7 +98,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 			try {
 				this.text = client.getComap(mapId, context, ignoreCache, false);
-				Log.d("InternetMapContentProvider", "text received: " + text);
+//				Log.d(Log.PROVIDER_COMAPPING_TAG, "text received: " + text);
 			} catch (ConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
