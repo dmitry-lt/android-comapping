@@ -214,7 +214,7 @@ public class ComappingProvider extends MetaMapProvider {
 		String error = null;
 
 		try {
-			result = client.getComap("meta", activity, ignoreCache,
+			result = client.getComap("meta", ignoreCache,
 					!ignoreCache);
 		} catch (ConnectionException e) {
 			error = PROBLEMS_WHILE_RETRIEVING_MESSAGE; // TODO:
@@ -277,7 +277,7 @@ public class ComappingProvider extends MetaMapProvider {
 	public void logout() {
 		CachingClient client = Client.getClient(activity);
 		try {
-			client.logout(activity);
+			client.logout();
 		} catch (ConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

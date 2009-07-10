@@ -20,14 +20,16 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 	public static boolean ignoreCache = true;
 
-	private static final int MAP = 1;
-	private static final int META_MAP = 2;
-
+	private enum QueryType {
+		MAP, META_MAP, LOGOUT, SYNC
+	}
+	
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(PROVIDER_NAME, "maps/*", MAP);
-		uriMatcher.addURI(PROVIDER_NAME, "*/", META_MAP);
+		uriMatcher.addURI(PROVIDER_NAME, "logout", QueryType.LOGOUT.ordinal());
+		uriMatcher.addURI(PROVIDER_NAME, "maps/*", QueryType.MAP.ordinal());
+		uriMatcher.addURI(PROVIDER_NAME, "*/", QueryType.META_MAP.ordinal());
 	}
 
 	private CachingClient client;
@@ -69,11 +71,20 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uri.toString());
 
 		// parse uri
-		switch (uriMatcher.match(uri)) {
+		switch (QueryType.values()[uriMatcher.match(uri)]) {
 		case META_MAP:
 		case MAP:
-			return new ComappingMapCursor(uri.getLastPathSegment(), client,
-					context);
+			return new ComappingMapCursor(uri.getLastPathSegment(), client);
+		case LOGOUT:
+			try {
+				client.logout();
+			} catch (ConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		case SYNC:
+			return null;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -92,12 +103,11 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	}
 
 	private class ComappingMapCursor extends MapCursor {
-		public ComappingMapCursor(String mapId, CachingClient client,
-				Context context) {
+		public ComappingMapCursor(String mapId, CachingClient client) {
 			this.id = mapId;
 
 			try {
-				this.text = client.getComap(mapId, context, ignoreCache, false);
+				this.text = client.getComap(mapId, ignoreCache, false);
 //				Log.d(Log.PROVIDER_COMAPPING_TAG, "text received: " + text);
 			} catch (ConnectionException e) {
 				// TODO Auto-generated catch block

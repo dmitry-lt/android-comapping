@@ -12,8 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 
-import android.app.Activity;
-import android.content.Context;
 import com.comapping.android.Log;
 
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
@@ -54,14 +52,14 @@ public class CachingClient {
 		return client.isLoggedIn();
 	}
 
-	public void logout(Activity context) throws ConnectionException {
+	public void logout() throws ConnectionException {
 		cache.clear();
 		MemoryCache.clear();
 
-		client.logout(context, true);
+		client.logout(true);
 	}
 
-	public void applicationClose(Activity context) throws ConnectionException {
+	public void applicationClose() throws ConnectionException {
 		MemoryCache.clear();
 
 		if (!remember) {
@@ -69,13 +67,13 @@ public class CachingClient {
 		}
 	}
 
-	public String getComap(String mapId, Context context)
+	public String getComap(String mapId)
 			throws ConnectionException, LoginInterruptedException,
 			InvalidCredentialsException {
-		return getComap(mapId, context, false, false);
+		return getComap(mapId, false, false);
 	}
 
-	public String getComap(String mapId, Context context, boolean ignoreCache,
+	public String getComap(String mapId, boolean ignoreCache,
 			boolean ignoreInternet) throws ConnectionException,
 			LoginInterruptedException, InvalidCredentialsException {
 		String result = null;
@@ -86,7 +84,7 @@ public class CachingClient {
 
 		if ((result == null) && (!ignoreInternet)) {
 			try {
-				result = client.getComap(mapId, context);
+				result = client.getComap(mapId);
 			} catch (Exception e) {
 				Log.e(Log.CONNECTION_TAG, e.toString());
 				result = cache.get(mapId); // if map not retrieved return cached

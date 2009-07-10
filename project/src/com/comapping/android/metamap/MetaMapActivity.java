@@ -95,7 +95,7 @@ public class MetaMapActivity extends Activity {
 
 		try {
 			CachingClient client = Client.getClient(this);
-			client.applicationClose(this);
+			client.applicationClose();
 		} catch (ConnectionException e) {
 			Log
 					.e(Log.META_MAP_CONTROLLER_TAG,
@@ -145,7 +145,7 @@ public class MetaMapActivity extends Activity {
 
 		try {
 			CachingClient client = Client.getClient(this);
-			client.logout(this);
+			client.logout();
 		} catch (ConnectionException e) {
 			Log
 					.e(Log.META_MAP_CONTROLLER_TAG,

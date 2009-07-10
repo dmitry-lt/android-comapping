@@ -40,7 +40,7 @@ public class PreferencesStorage {
 //		return instance;
 //	}
 	public static void set(String key, String value, Context context) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 
 		Editor edit = preferences.edit();
 
@@ -51,7 +51,7 @@ public class PreferencesStorage {
 	}
 
 	public static String get(String key, String defaultValue, Context context) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 
 		String value = preferences.getString(key, defaultValue);
 
@@ -62,7 +62,7 @@ public class PreferencesStorage {
 	
 	public static boolean getBoolean(String key, boolean defaultValue, Context context) {
 		// false if not created
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 
 		return preferences.getBoolean(key, defaultValue);
 	}

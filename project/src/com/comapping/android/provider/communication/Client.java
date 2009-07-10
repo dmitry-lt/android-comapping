@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.apache.http.message.BasicNameValuePair;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -192,7 +191,7 @@ public class Client {
 	 * 
 	 * @throws ConnectionException
 	 */
-	public void logout(Activity context, boolean isToEmptyAutologin)
+	public void logout(boolean isToEmptyAutologin)
 			throws ConnectionException {
 		if (!isLoggedIn()) {
 			Log.i(Log.CONNECTION_TAG, "logout without login");
@@ -224,12 +223,12 @@ public class Client {
 	 * @throws LoginInterruptedException
 	 * @throws InvalidCredentialsException
 	 */
-	public String getComap(String mapId, Context context)
+	public String getComap(String mapId)
 			throws ConnectionException, LoginInterruptedException,
 			InvalidCredentialsException {
 		Log.d(Log.CONNECTION_TAG, "getting " + mapId + " comap");
 
-		loginRequired(context);
+		loginRequired();
 
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
@@ -389,7 +388,7 @@ public class Client {
 		}
 	}
 
-	private void loginRequired(Context context)
+	private void loginRequired()
 			throws LoginInterruptedException {
 		Log.d(Log.CONNECTION_TAG, "login required action with login status: "
 				+ isLoggedIn());
