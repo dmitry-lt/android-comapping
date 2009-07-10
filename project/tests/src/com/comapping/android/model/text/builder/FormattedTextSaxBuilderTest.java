@@ -2,11 +2,11 @@ package com.comapping.android.model.text.builder;
 
 import java.util.List;
 
-import com.comapping.android.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 
-import com.comapping.android.model.text.TextParagraph;
-import com.comapping.android.model.text.FormattedText;
-import com.comapping.android.model.text.TextFormat;
+import com.comapping.android.map.model.text.TextParagraph;
+import com.comapping.android.map.model.text.FormattedText;
+import com.comapping.android.map.model.text.TextFormat;
 
 
 import android.graphics.Color;

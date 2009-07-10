@@ -25,10 +25,10 @@ import com.comapping.android.controller.R;
 import com.comapping.android.controller.R.drawable;
 import com.comapping.android.controller.R.id;
 import com.comapping.android.controller.R.layout;
+import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
-import com.comapping.android.storage.PreferencesStorage;
 
 public class LoginActivity extends Activity {
 	private static final int RESULT_LOGIN_SUCCESSFUL = 200;

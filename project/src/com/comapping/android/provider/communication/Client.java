@@ -27,10 +27,10 @@ import android.content.Intent;
 
 import com.comapping.android.Log;
 import com.comapping.android.Options;
+import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
-import com.comapping.android.storage.PreferencesStorage;
 import com.comapping.android.storage.SqliteMapCache;
 
 public class Client {

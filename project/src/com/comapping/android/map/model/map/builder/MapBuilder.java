@@ -1,13 +1,13 @@
-package com.comapping.android.model.map.builder;
+package com.comapping.android.map.model.map.builder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.comapping.android.model.exceptions.DateParsingException;
-import com.comapping.android.model.exceptions.MapParsingException;
-import com.comapping.android.model.exceptions.StringToXMLConvertionException;
-import com.comapping.android.model.map.Map;
+import com.comapping.android.map.model.exceptions.DateParsingException;
+import com.comapping.android.map.model.exceptions.MapParsingException;
+import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.map.model.map.Map;
 
 abstract public class MapBuilder {
 	static final String METADATA_TAG = "metadata";

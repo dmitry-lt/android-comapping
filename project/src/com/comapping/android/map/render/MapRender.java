@@ -1,7 +1,7 @@
 package com.comapping.android.map.render;
 
 import com.comapping.android.map.ScrollController;
-import com.comapping.android.model.map.Topic;
+import com.comapping.android.map.model.map.Topic;
 
 public abstract class MapRender extends Render {
 	public abstract void setScrollController(ScrollController scroll);

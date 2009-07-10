@@ -13,13 +13,13 @@ import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.map.model.exceptions.MapParsingException;
+import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.map.model.map.Map;
+import com.comapping.android.map.model.map.Topic;
+import com.comapping.android.map.model.map.builder.MapBuilder;
+import com.comapping.android.map.model.map.builder.SaxMapBuilder;
 import com.comapping.android.metamap.MetaMapItem;
-import com.comapping.android.model.exceptions.MapParsingException;
-import com.comapping.android.model.exceptions.StringToXMLConvertionException;
-import com.comapping.android.model.map.Map;
-import com.comapping.android.model.map.Topic;
-import com.comapping.android.model.map.builder.MapBuilder;
-import com.comapping.android.model.map.builder.SaxMapBuilder;
 import com.comapping.android.storage.SqliteMapCache;
 
 public class ComappingProvider extends MetaMapProvider {

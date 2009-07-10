@@ -2,7 +2,7 @@ package com.comapping.android.map.render.topic;
 
 import android.content.Context;
 
-import com.comapping.android.model.map.Topic;
+import com.comapping.android.map.model.map.Topic;
 
 public class CachedTopicRender {
 	private static final int CACHE_SIZE = 2;

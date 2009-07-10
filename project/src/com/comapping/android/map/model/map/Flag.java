@@ -1,6 +1,6 @@
-package com.comapping.android.model.map;
+package com.comapping.android.map.model.map;
 
-import com.comapping.android.model.exceptions.EnumParsingException;
+import com.comapping.android.map.model.exceptions.EnumParsingException;
 
 public enum Flag {
 	GO, FOR_DISCUSSION, POSSIBILITY, RISK, PROGRESS, CAREFULL, CAUTION;

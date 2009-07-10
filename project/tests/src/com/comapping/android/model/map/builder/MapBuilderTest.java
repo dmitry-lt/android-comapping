@@ -6,14 +6,14 @@ import java.io.IOException;
 
 import static com.comapping.android.provider.communication.ClientHelper.getTextFromInputStream;
 import static com.comapping.android.TestHelper.mapSimpleEquals;
-import com.comapping.android.model.exceptions.MapParsingException;
-import com.comapping.android.model.exceptions.StringToXMLConvertionException;
-import com.comapping.android.model.map.Flag;
-import com.comapping.android.model.map.Icon;
-import com.comapping.android.model.map.Map;
-import com.comapping.android.model.map.Smiley;
-import com.comapping.android.model.map.TaskCompletion;
-import com.comapping.android.model.map.Topic;
+import com.comapping.android.map.model.exceptions.MapParsingException;
+import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.map.model.map.Flag;
+import com.comapping.android.map.model.map.Icon;
+import com.comapping.android.map.model.map.Map;
+import com.comapping.android.map.model.map.Smiley;
+import com.comapping.android.map.model.map.TaskCompletion;
+import com.comapping.android.map.model.map.Topic;
 
 import android.test.AndroidTestCase;
 

@@ -3,7 +3,7 @@
  * @author Dmitry Manayev
  * 
  */
-package com.comapping.android.model.map.builder;
+package com.comapping.android.map.model.map.builder;
 
 import java.util.Date;
 
@@ -12,17 +12,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.comapping.android.Log;
-import com.comapping.android.model.exceptions.EnumParsingException;
-import com.comapping.android.model.exceptions.StringToXMLConvertionException;
-import com.comapping.android.model.map.Attachment;
-import com.comapping.android.model.map.Flag;
-import com.comapping.android.model.map.Icon;
-import com.comapping.android.model.map.Map;
-import com.comapping.android.model.map.Smiley;
-import com.comapping.android.model.map.Task;
-import com.comapping.android.model.map.TaskCompletion;
-import com.comapping.android.model.map.Topic;
-import com.comapping.android.model.map.User;
+import com.comapping.android.map.model.exceptions.EnumParsingException;
+import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.map.model.map.Attachment;
+import com.comapping.android.map.model.map.Flag;
+import com.comapping.android.map.model.map.Icon;
+import com.comapping.android.map.model.map.Map;
+import com.comapping.android.map.model.map.Smiley;
+import com.comapping.android.map.model.map.Task;
+import com.comapping.android.map.model.map.TaskCompletion;
+import com.comapping.android.map.model.map.Topic;
+import com.comapping.android.map.model.map.User;
 
 class SaxHandler extends DefaultHandler {
 	private static int base = 1000;

@@ -2,10 +2,10 @@ package com.comapping.android.map.render.topic;
 
 import com.comapping.android.Log;
 import com.comapping.android.controller.R;
+import com.comapping.android.map.model.map.Icon;
+import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.render.Render;
 import com.comapping.android.metamap.MetaMapActivity;
-import com.comapping.android.model.map.Icon;
-import com.comapping.android.model.map.Topic;
 
 import android.content.Context;
 import android.content.res.Resources;

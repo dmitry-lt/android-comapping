@@ -5,8 +5,8 @@ import java.util.HashMap;
 
 import android.content.Context;
 
+import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.render.topic.CachedTopicRender;
-import com.comapping.android.model.map.Topic;
 
 public class TopicView implements Comparable<TopicView> {
 	public boolean isOpen;

@@ -1,4 +1,4 @@
-package com.comapping.android.model.map;
+package com.comapping.android.map.model.map;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,10 +8,10 @@ import java.util.List;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
-import com.comapping.android.model.exceptions.StringToXMLConvertionException;
-import com.comapping.android.model.text.FormattedText;
-import com.comapping.android.model.text.TextFormat;
-import com.comapping.android.model.text.builder.FormattedTextSaxBuilder;
+import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.map.model.text.FormattedText;
+import com.comapping.android.map.model.text.TextFormat;
+import com.comapping.android.map.model.text.builder.FormattedTextSaxBuilder;
 
 /**
  * @author Passichenko Victor and Yuri Zemlyanskiy

@@ -1,4 +1,4 @@
-package com.comapping.android.model.map.builder;
+package com.comapping.android.map.model.map.builder;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,10 +12,10 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import com.comapping.android.Log;
-import com.comapping.android.model.exceptions.DocumentBuilderCreatingError;
-import com.comapping.android.model.exceptions.MapParsingException;
-import com.comapping.android.model.exceptions.StringToXMLConvertionException;
-import com.comapping.android.model.map.Map;
+import com.comapping.android.map.model.exceptions.DocumentBuilderCreatingError;
+import com.comapping.android.map.model.exceptions.MapParsingException;
+import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
+import com.comapping.android.map.model.map.Map;
 
 public class SaxMapBuilder extends MapBuilder {
 

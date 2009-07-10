@@ -31,17 +31,17 @@ import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.preferences.PreferencesActivity;
+import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.R;
 import com.comapping.android.map.MapActivity;
+import com.comapping.android.map.model.map.builder.MapBuilder;
+import com.comapping.android.map.model.map.builder.SaxMapBuilder;
 import com.comapping.android.metamap.provider.ComappingProvider;
 import com.comapping.android.metamap.provider.MetaMapProvider;
 import com.comapping.android.metamap.provider.SdCardProvider;
-import com.comapping.android.model.map.builder.MapBuilder;
-import com.comapping.android.model.map.builder.SaxMapBuilder;
-import com.comapping.android.storage.PreferencesStorage;
 
 public class MetaMapActivity extends Activity {
 

@@ -6,7 +6,7 @@
  * Class implements Storage for save options
  */
 
-package com.comapping.android.storage;
+package com.comapping.android.preferences;
 
 import com.comapping.android.Log;
 import com.comapping.android.metamap.*;

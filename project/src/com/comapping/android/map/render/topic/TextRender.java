@@ -1,11 +1,11 @@
 package com.comapping.android.map.render.topic;
 
 import com.comapping.android.Log;
+import com.comapping.android.map.model.text.FormattedText;
+import com.comapping.android.map.model.text.TextBlock;
+import com.comapping.android.map.model.text.TextFormat;
+import com.comapping.android.map.model.text.TextParagraph;
 import com.comapping.android.map.render.Render;
-import com.comapping.android.model.text.FormattedText;
-import com.comapping.android.model.text.TextBlock;
-import com.comapping.android.model.text.TextFormat;
-import com.comapping.android.model.text.TextParagraph;
 
 import android.content.Context;
 import android.content.Intent;

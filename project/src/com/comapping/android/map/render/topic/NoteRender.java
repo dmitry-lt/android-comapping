@@ -6,9 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 import com.comapping.android.Log;
+import com.comapping.android.map.model.text.FormattedText;
+import com.comapping.android.map.model.text.TextFormat;
 import com.comapping.android.map.render.Render;
-import com.comapping.android.model.text.FormattedText;
-import com.comapping.android.model.text.TextFormat;
 
 public class NoteRender extends Render {
 	private static final TextFormat FORMAT = new TextFormat(10, Color.GRAY, "", false);

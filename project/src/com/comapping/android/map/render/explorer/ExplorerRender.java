@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.comapping.android.map.ScrollController;
+import com.comapping.android.map.model.map.Map;
+import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.render.MapRender;
 import com.comapping.android.map.render.PlusMinusRender;
 import com.comapping.android.map.render.topic.TopicRender;
-import com.comapping.android.model.map.Map;
-import com.comapping.android.model.map.Topic;
 
 import android.content.Context;
 import android.graphics.Canvas;

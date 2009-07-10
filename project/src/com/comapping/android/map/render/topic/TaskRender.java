@@ -1,10 +1,10 @@
 package com.comapping.android.map.render.topic;
 
 import com.comapping.android.Log;
+import com.comapping.android.map.model.map.Task;
+import com.comapping.android.map.model.text.FormattedText;
+import com.comapping.android.map.model.text.TextFormat;
 import com.comapping.android.map.render.Render;
-import com.comapping.android.model.map.Task;
-import com.comapping.android.model.text.FormattedText;
-import com.comapping.android.model.text.TextFormat;
 
 import android.app.AlertDialog;
 import android.content.Context;

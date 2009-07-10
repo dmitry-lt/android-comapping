@@ -1,4 +1,4 @@
-package com.comapping.android.model.map;
+package com.comapping.android.map.model.map;
 
 import java.io.Serializable;
 import java.util.ArrayList;
