@@ -44,13 +44,10 @@ public class ComappingProvider extends MetaMapProvider {
 		metamap = null;
 
 		update(false);
-
-		if (metamap == null)
-			return;
-		
-		currentLevel = metamap.getRoot();
-		
 		updateCache();
+
+		if (metamap != null)
+			currentLevel = metamap.getRoot();
 	}
 
 	void updateCache() {
