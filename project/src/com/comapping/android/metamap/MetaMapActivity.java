@@ -211,6 +211,8 @@ public class MetaMapActivity extends Activity {
 					.setImageResource(R.drawable.metamap_internet);
 		}
 
+		TextView emptyListText = (TextView) findViewById(R.id.emptyListText);
+		emptyListText.setText(currentProvider.getEmptyListText());
 	}
 
 	public void switchProvider() {
@@ -392,9 +394,8 @@ public class MetaMapActivity extends Activity {
 				}
 			}
 		});
-		
-		
-		listView.setEmptyView(findViewById(R.id.textViewMessage));
+
+		listView.setEmptyView(findViewById(R.id.emptyListText));
 	}
 
 	// ====================================================
@@ -454,7 +455,14 @@ public class MetaMapActivity extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.metamap, menu);
 
-		menu.getItem(1).setEnabled(currentProvider.canLogout());
+		MenuItem logoutItem = menu.getItem(1);
+		logoutItem.setEnabled(currentProvider.canLogout());
+
+		if (currentProvider.canLogout()) {
+			logoutItem.setIcon(R.drawable.metamap_logout);
+		} else {
+			logoutItem.setIcon(R.drawable.metamap_logout_grey);
+		}
 
 		return true;
 	}

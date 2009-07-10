@@ -54,6 +54,6 @@
 					android:layout_width="wrap_content"
 					android:layout_gravity="center"
 					android:text="Try to syncronize or open SD-card or other folder"
-					android:id="@+id/textViewMessage">
+					android:id="@+id/emptyListText">
 				</TextView>
 </LinearLayout>
