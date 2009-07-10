@@ -1,11 +1,13 @@
 package com.comapping.android.model.map.builder;
 
+import static com.comapping.android.TestHelper.mapSimpleEquals;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static com.comapping.android.provider.communication.ClientHelper.getTextFromInputStream;
-import static com.comapping.android.TestHelper.mapSimpleEquals;
+import android.test.AndroidTestCase;
+
 import com.comapping.android.map.model.exceptions.MapParsingException;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.map.model.map.Flag;
@@ -17,27 +19,24 @@ import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.model.map.builder.MapBuilder;
 import com.comapping.android.map.model.map.builder.SaxMapBuilder;
 
-import android.test.AndroidTestCase;
+public class MapBuilderTest2 extends AndroidTestCase {
 
-public class MapBuilderTest extends AndroidTestCase {
-
-	private Map testgetMapFromSD(String path) throws FileNotFoundException,
+	private Map getMapFromSD2(String path) throws FileNotFoundException,
 			StringToXMLConvertionException, MapParsingException, IOException {
 		MapBuilder mapBuilder = new SaxMapBuilder();
-		return mapBuilder.buildMap(getTextFromInputStream(new FileInputStream(
-				path)));
+		return mapBuilder.buildMap(new FileInputStream(path));
 	}
 
 	public void testMap() throws FileNotFoundException,
 			StringToXMLConvertionException, MapParsingException, IOException {
-		testgetMapFromSD("sdcard\\2Mb.comap");
+		getMapFromSD2("sdcard\\2Mb.comap");
 	}
 
 	public void test0() throws StringToXMLConvertionException,
 			MapParsingException, IOException {
 		Map map;
 		try {
-			map = testgetMapFromSD("sdcard\\test0.comap");
+			map = getMapFromSD2("sdcard\\test0.comap");
 		} catch (FileNotFoundException e) {
 			return;
 		}
@@ -52,7 +51,7 @@ public class MapBuilderTest extends AndroidTestCase {
 			MapParsingException, IOException {
 		Map map;
 		try {
-			map = testgetMapFromSD("sdcard\\test1.comap");
+			map = getMapFromSD2("sdcard\\test1.comap");
 		} catch (FileNotFoundException e) {
 			return;
 		}
@@ -71,7 +70,7 @@ public class MapBuilderTest extends AndroidTestCase {
 			MapParsingException, IOException {
 		Map map;
 		try {
-			map = testgetMapFromSD("sdcard\\test2.comap");
+			map = getMapFromSD2("sdcard\\test2.comap");
 		} catch (FileNotFoundException e) {
 			return;
 		}
@@ -101,7 +100,7 @@ public class MapBuilderTest extends AndroidTestCase {
 			MapParsingException, IOException {
 		Map map;
 		try {
-			map = testgetMapFromSD("sdcard\\test3.comap");
+			map = getMapFromSD2("sdcard\\test3.comap");
 		} catch (FileNotFoundException e) {
 			return;
 		}
@@ -124,7 +123,7 @@ public class MapBuilderTest extends AndroidTestCase {
 			MapParsingException, IOException {
 		Map map;
 		try {
-			map = testgetMapFromSD("sdcard\\test4.comap");
+			map = getMapFromSD2("sdcard\\test4.comap");
 		} catch (FileNotFoundException e) {
 			return;
 		}
@@ -142,11 +141,10 @@ public class MapBuilderTest extends AndroidTestCase {
 	public void testAllFiles() throws StringToXMLConvertionException,
 			MapParsingException, IOException {
 		Map map;
-		map = testgetMapFromSD("sdcard\\test0.comap");
-		map = testgetMapFromSD("sdcard\\test1.comap");
-		map = testgetMapFromSD("sdcard\\test2.comap");
-		map = testgetMapFromSD("sdcard\\test3.comap");
-		map = testgetMapFromSD("sdcard\\test4.comap");
+		map = getMapFromSD2("sdcard\\test0.comap");
+		map = getMapFromSD2("sdcard\\test1.comap");
+		map = getMapFromSD2("sdcard\\test2.comap");
+		map = getMapFromSD2("sdcard\\test3.comap");
+		map = getMapFromSD2("sdcard\\test4.comap");
 	}
-
 }
