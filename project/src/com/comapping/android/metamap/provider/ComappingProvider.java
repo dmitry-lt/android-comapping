@@ -287,8 +287,7 @@ public class ComappingProvider extends MetaMapProvider {
 
 	@Override
 	public String getEmptyListText() {
-		CachingClient client = Client.getClient(activity);
-		if (!client.isLoggedIn())
+		if (metamap == null)
 			return NEED_RESYNC_MESSAGE;
 		else
 			return EMPTY_FOLDER_MESSAGE;
