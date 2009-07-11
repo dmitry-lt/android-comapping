@@ -41,7 +41,7 @@ import com.comapping.android.provider.contentprovider.MapContentProvider;
 import com.comapping.android.storage.MemoryCache;
 
 public class MapActivity extends Activity {
-	
+
 	// ===========================================================
 	// Current MapActivity
 	// ===========================================================
@@ -55,13 +55,13 @@ public class MapActivity extends Activity {
 	// ===========================================================
 	// Opening map by starting new MapActivity
 	// ===========================================================
-	
-	public static void openMap(final String mapId, final String viewType,
-			boolean ignoreCache, Activity parent, String dataSource) {
+
+	public static void openMap(final String mapId, final String viewType, boolean ignoreCache, Activity parent,
+			String dataSource) {
 		Intent intent = new Intent(Constants.MAP_ACTIVITY_INTENT);
 
 		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
-		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType.toString());
+		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType);
 		intent.putExtra(MapActivity.EXT_IS_IGNORE_CACHE, ignoreCache);
 		intent.putExtra(MapActivity.EXT_DATA_SOURCE, dataSource);
 
@@ -71,7 +71,7 @@ public class MapActivity extends Activity {
 	// ===========================================================
 	// Intent parameters
 	// ===========================================================
-	
+
 	public static final String EXT_VIEW_TYPE = "viewType";
 	public static final String EXT_MAP_ID = "mapId";
 	public static final String EXT_IS_IGNORE_CACHE = "ignoreCache";
@@ -82,12 +82,12 @@ public class MapActivity extends Activity {
 	// ===========================================================
 	// Saved parameters for view
 	// ===========================================================
-	
+
 	static private String viewType;
 	static private String mapId;
 	static private boolean ignoreCache;
 	static private String dataSource;
-	
+
 	// ===========================================================
 	// Map variables
 	// ===========================================================
@@ -98,12 +98,12 @@ public class MapActivity extends Activity {
 	// ===========================================================
 	// Misc
 	// ===========================================================
-	
+
 	private ProgressDialog splash = null;
 	private Thread mapProcessingThread;
 
 	private boolean canDraw = true;
-	
+
 	// ===========================================================
 	// Zoom controls variables
 	// ===========================================================
@@ -138,8 +138,7 @@ public class MapActivity extends Activity {
 
 						public void onCancel(DialogInterface dialog) {
 							mapProcessingThread.interrupt();
-							mapProcessingThread
-									.setPriority(Thread.MIN_PRIORITY);
+							mapProcessingThread.setPriority(Thread.MIN_PRIORITY);
 							finish();
 						}
 					});
@@ -167,12 +166,10 @@ public class MapActivity extends Activity {
 
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				Dialog dialog = (new AlertDialog.Builder(activity).setTitle(
-						"Error").setMessage(message).setNeutralButton("Ok",
-						new DialogInterface.OnClickListener() {
+				Dialog dialog = (new AlertDialog.Builder(activity).setTitle("Error").setMessage(message)
+						.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
 
-							public void onClick(DialogInterface dialog,
-									int which) {
+							public void onClick(DialogInterface dialog, int which) {
 								activity.finish();
 							}
 						})).create();
@@ -227,8 +224,12 @@ public class MapActivity extends Activity {
 		if (!MemoryCache.has(mapId) || (ignoreCache)) {
 			splashActivate("Downloading map", false);
 			String result = "";
-			result = FileMapContentProvider.getComap(mapId,
-					FileMapContentProvider.CONTENT_URI, this);
+
+			if (dataSource.equals(Constants.DATA_SOURCE_COMAPPING)) {
+				result = ComappingMapContentProvider.getComap(mapId, ComappingMapContentProvider.CONTENT_URI, this);
+			} else if (dataSource.equals(Constants.DATA_SOURCE_SD)) {
+				result = FileMapContentProvider.getComap(mapId, FileMapContentProvider.CONTENT_URI, this);
+			}
 
 			if (result == null) {
 				result = "";
@@ -248,9 +249,8 @@ public class MapActivity extends Activity {
 	// ===========================================================
 	// Init
 	// ===========================================================
-	
-	void initLayout()
-	{
+
+	void initLayout() {
 		runOnUiThread(new Runnable() {
 
 			public void run() {
@@ -311,7 +311,7 @@ public class MapActivity extends Activity {
 			ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
 			dataSource = extras.getString(EXT_DATA_SOURCE);
 		} catch (Exception e) {
-
+			// TODO Empty catch
 		}
 	}
 
@@ -323,7 +323,7 @@ public class MapActivity extends Activity {
 		else
 			return null;
 	}
-	
+
 	// ===========================================================
 	// Live cycle
 	// ===========================================================
@@ -348,7 +348,7 @@ public class MapActivity extends Activity {
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		new Thread() {
@@ -397,7 +397,7 @@ public class MapActivity extends Activity {
 					splashActivate("Loading map", true);
 
 					mapRender = initMapRender(map, viewType);
-					
+
 					initLayout();
 
 					// Canceled
@@ -438,7 +438,7 @@ public class MapActivity extends Activity {
 		splashDeactivate();
 		super.onDestroy();
 	}
-	
+
 	// ===========================================================
 	// Search
 	// ===========================================================
@@ -465,7 +465,7 @@ public class MapActivity extends Activity {
 			search(query, i, resultList);
 		}
 	}
-	
+
 	// ===========================================================
 	// Options Menu
 	// ===========================================================
@@ -478,16 +478,16 @@ public class MapActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.zoom:
-			showZoom();
-			return true;
-		case R.id.find:
-			onSearchRequested();
-			return true;
-		case R.id.mapSynchronizeButton:
-			finish();
-			openMap(mapId, viewType, true, this, dataSource);
-			return true;
+			case R.id.zoom:
+				showZoom();
+				return true;
+			case R.id.find:
+				onSearchRequested();
+				return true;
+			case R.id.mapSynchronizeButton:
+				finish();
+				openMap(mapId, viewType, true, this, dataSource);
+				return true;
 		}
 		return false;
 	}
