@@ -29,10 +29,11 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(INFO.authorities, INFO.relLogout, QueryType.LOGOUT.ordinal());
-		uriMatcher.addURI(INFO.authorities, INFO.relSync, QueryType.SYNC.ordinal());
-		uriMatcher.addURI(INFO.authorities, INFO.relRoot + INFO.separator + "#####", QueryType.MAP.ordinal());
-		uriMatcher.addURI(INFO.authorities, INFO.relRoot + INFO.separator + "*" + INFO.separator, QueryType.META_MAP
+		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relLogout, QueryType.LOGOUT.ordinal());
+		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relSync, QueryType.SYNC.ordinal());
+		uriMatcher.addURI("comapping.com", "maps/*", QueryType.MAP.ordinal());
+//		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relRoot + INFO.separator + "#####", QueryType.MAP.ordinal());
+		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relRoot + INFO.separator + "*" + INFO.separator, QueryType.META_MAP
 				.ordinal());
 	}
 
@@ -56,7 +57,6 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uri.toString());
-		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uri.getPath());
 
 		// parse uri
 		switch (QueryType.values()[uriMatcher.match(uri)]) {
