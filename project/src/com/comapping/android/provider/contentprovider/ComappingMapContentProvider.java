@@ -19,7 +19,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 public class ComappingMapContentProvider extends MapContentProvider {
-	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("comapping.com", "maps", true, true);
+	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true, true);
 	public static final Uri CONTENT_URI = Uri.parse("content://" + INFO.root);
 
 	private enum QueryType {
