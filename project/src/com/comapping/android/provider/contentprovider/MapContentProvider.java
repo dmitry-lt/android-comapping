@@ -1,6 +1,7 @@
 package com.comapping.android.provider.contentprovider;
 
 import android.content.ContentProvider;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.AbstractCursor;
 import android.database.Cursor;
@@ -19,12 +20,44 @@ public abstract class MapContentProvider extends ContentProvider {
 		return cursor.getString(cursor.getColumnIndex(TEXT));
 	}
 
-	class MetamapCursor extends AbstractCursor {
+	public static class MapContentProviderInfo {
+		public final String authorities;
+		public final String separator;
+		public final String root;
+		public final String relRoot;
+		public final String logout;
+		public final String relLogout;
+		public final String sync;
+		public final String relSync;
+		public final boolean canLogout;
+		public final boolean canSync;
+
+		public MapContentProviderInfo(String authorities, String relRoot, boolean canLogout, boolean canSync) {
+			this(authorities, "/", relRoot, "logout", "sync", canLogout, canSync);
+		}
+
+		public MapContentProviderInfo(String authorities, String separator, String relRoot, String relLogout,
+				String relSync, boolean canLogout, boolean canSync) {
+			this.authorities = authorities;
+			this.separator = separator;
+			this.root = authorities + separator + relRoot + separator;
+			this.relRoot = relRoot;
+			this.logout = authorities + separator + relLogout;
+			this.relLogout = relLogout;
+			this.sync = authorities + separator + relSync;
+			this.relSync = relSync;
+			this.canLogout = canLogout;
+			this.canSync = canSync;
+		}
+	}
+
+	abstract class MetamapCursor extends AbstractCursor {
 		protected MetaMapItem[] currentLevel;
 
 		@Override
 		public String[] getColumnNames() {
-			return new String[] { "NAME", "DESCRIPTION", "IS_FOLDER", "REFERENCE" };
+			return new String[] { MetaMapItem.COLUMN_NAME, MetaMapItem.COLUMN_DESCRIPTION,
+					MetaMapItem.COLUMN_IS_FOLDER, MetaMapItem.COLUMN_REFERENCE };
 		}
 
 		@Override
@@ -148,5 +181,29 @@ public abstract class MapContentProvider extends ContentProvider {
 			return false;
 		}
 
+	}
+
+	@Override
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getType(Uri uri) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
