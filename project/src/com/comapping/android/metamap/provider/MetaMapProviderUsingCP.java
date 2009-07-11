@@ -1,10 +1,13 @@
 package com.comapping.android.metamap.provider;
 
+import java.util.Arrays;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
 import com.comapping.android.metamap.MetaMapItem;
+import com.comapping.android.Log;
 
 public class MetaMapProviderUsingCP extends MetaMapProvider {
 	private static final String SEPARATOR = "/";
@@ -12,8 +15,8 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	private final boolean canLogout;
 	private final boolean canSync;
 	private final String root;
-	private final String logout;
-	private final String sync;
+	private final String logoutUri;
+	private final String syncUri;
 	private String currentPath;
 	private String emptyListText;
 		
@@ -21,15 +24,17 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	
 	private MetaMapItem[] currentLevel;
 	
-	public MetaMapProviderUsingCP(String authorities, String root, boolean canLogout, boolean canSync, String emptyListText, Context context) {
-		this.root = authorities + SEPARATOR + root + SEPARATOR;
-		this.logout = authorities + SEPARATOR + "logout";
-		this.sync = authorities + SEPARATOR + "sync";
+	public MetaMapProviderUsingCP(String authorities, String relativeRoot, boolean canLogout, boolean canSync, String emptyListText, Context context) {
+		this.root = authorities + SEPARATOR + relativeRoot + SEPARATOR;
+		this.logoutUri = authorities + SEPARATOR + "logout";
+		this.syncUri = authorities + SEPARATOR + "sync";
 		this.canLogout = canLogout;
 		this.canSync = canSync;
 		this.emptyListText = emptyListText;
 		
 		this.context = context;
+		
+		this.currentPath = root;
 	}
 	
 	private boolean isInRoot() {
@@ -42,7 +47,26 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	}
 	
 	private void updateCurrentLevel() {
+		Cursor cursor = query(currentPath);
 		
+		currentLevel = new MetaMapItem[cursor.getCount()];
+		
+		boolean isCurrentPresented = cursor.moveToFirst();
+		for (MetaMapItem item : currentLevel) {
+			item = new MetaMapItem();
+			if (!isCurrentPresented) {
+				Log.w(Log.META_MAP_CONTROLLER_TAG, "MetaMapProviderUsingCP.updateCurrentLevel(): cursor's element not found");				
+			} else {
+				item.name = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_NAME));
+				item.description = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_DESCRIPTION));
+				item.isFolder = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_IS_FOLDER)));
+				item.reference = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_REFERENCE));
+			}
+			
+			isCurrentPresented = cursor.moveToNext();
+		}
+		
+		Arrays.sort(currentLevel, new MetaMapProvider.MetaMapItemComparator());
 	}
 
 	@Override
@@ -97,12 +121,12 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 
 	@Override
 	public void logout() {		
-		query(logout);
+		query(logoutUri);
 	}
 
 	@Override
 	public boolean sync() {
-		query(sync);
+		query(syncUri);
 		return false;
 	}
 	
