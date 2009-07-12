@@ -200,12 +200,12 @@ public class MetaMapActivity extends Activity {
 			disableButton(SYNC);
 
 		if (currentProvider == comappingProvider) {
-			((ImageButton) findViewById(R.id.viewSwitcher))
+			((ImageButton) findViewById(SWITCHER))
 					.setImageResource(R.drawable.metamap_sdcard);
-			if (!hasSDCard())
+			if (!isSdPresent())
 				disableButton(SWITCHER);
 		} else {
-			((ImageButton) findViewById(R.id.viewSwitcher))
+			((ImageButton) findViewById(SWITCHER))
 					.setImageResource(R.drawable.metamap_internet);
 		}
 
@@ -215,20 +215,16 @@ public class MetaMapActivity extends Activity {
 
 	public void switchProvider() {
 		if (currentProvider != sdCardProvider) {
-			if (hasSDCard())
+			if (isSdPresent())
 				enableProvider(sdCardProvider);
 		} else {
 			enableProvider(comappingProvider);
 		}
 	}
 
-	private boolean hasSDCard() {
-		final String sdCardPath = "/sdcard";
-		File directory = new File(sdCardPath);
-		if (directory.exists())
-			return true;
-		return false;
-	}
+	private static boolean isSdPresent() {
+		return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+		}
 
 	// ====================================================
 	// View Controls Manipulation
@@ -305,7 +301,7 @@ public class MetaMapActivity extends Activity {
 
 		// Switch view
 
-		ImageButton switchButton = (ImageButton) findViewById(R.id.viewSwitcher);
+		ImageButton switchButton = (ImageButton) findViewById(SWITCHER);
 
 		switchButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
