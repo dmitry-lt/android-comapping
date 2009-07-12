@@ -31,7 +31,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relLogout, QueryType.LOGOUT.ordinal());
 		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relSync, QueryType.SYNC.ordinal());
-		uriMatcher.addURI("comapping.com", "maps/*", QueryType.MAP.ordinal());
+		uriMatcher.addURI(INFO.authorities, INFO.relRoot + INFO.separator + "*", QueryType.MAP.ordinal());
 //		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relRoot + INFO.separator + "#####", QueryType.MAP.ordinal());
 		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relRoot + INFO.separator + "*" + INFO.separator, QueryType.META_MAP
 				.ordinal());

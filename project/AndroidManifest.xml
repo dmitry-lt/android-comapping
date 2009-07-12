@@ -37,7 +37,7 @@
 				android:resource="@xml/searchable" />
 		</activity>
 
-		<provider android:name="com.comapping.android.provider.contentprovider.ComappingMapContentProvider" android:authorities="comapping.com"/> 
+		<provider android:name="com.comapping.android.provider.contentprovider.ComappingMapContentProvider" android:authorities="www.comapping.com"/> 
   		<provider android:name="com.comapping.android.provider.contentprovider.FileMapContentProvider" android:authorities="sdcard"/> 
 
 	</application>
