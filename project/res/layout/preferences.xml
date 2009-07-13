@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="View">
-		<ListPreference 
-			android:key="@string/view_type_preference_key"
-			android:title="@string/view_type_preference_title" 
-			android:entries="@array/view_types"
-			android:entryValues="@array/view_types" 
-			android:defaultValue="@string/comapping_view_value" />
+		<ListPreference android:key="@string/view_type_preference_key"
+			android:title="@string/view_type_preference_title" android:entries="@array/view_types"
+			android:entryValues="@array/view_types" android:defaultValue="@string/comapping_view_value" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="Proxy settings">
-		<CheckBoxPreference 
-			android:key="@string/use_proxy_preference_key"
-			android:title="@string/use_proxy_preference_title" />
-		<EditTextPreference 
-			android:key="@string/proxy_host_preference_key"
-			android:title="@string/proxy_host_preference_title"
-			android:dependency = "@string/use_proxy_preference_key" />
-		<EditTextPreference 
-			android:key="@string/proxy_port_preference_key"
-			android:title="@string/proxy_port_preference_title" 
-			android:dependency = "@string/use_proxy_preference_key" />		
-		<CheckBoxPreference 
-			android:key="@string/use_proxy_auth_preference_key"
-			android:title="@string/use_proxy_auth_preference_title"
-			android:dependency="@string/use_proxy_preference_key"  />
-		<EditTextPreference 
-			android:key="@string/proxy_name_preference_key"
-			android:title="@string/proxy_name_preference_title"
-			android:dependency = "@string/use_proxy_auth_preference_key" />
-		<EditTextPreference 
-			android:key="@string/proxy_password_preference_key"
-			android:title="@string/proxy_password_preference_title" 
-			android:dependency = "@string/use_proxy_auth_preference_key" />
+		<PreferenceScreen android:title="Proxy settings"
+			android:summary="Manage proxy,set proxy auth.">
+			<PreferenceCategory android:title="Enable proxy">
+				<CheckBoxPreference android:key="@string/use_proxy_preference_key"
+					android:title="@string/use_proxy_preference_title" />
+				<EditTextPreference android:key="@string/proxy_host_preference_key"
+					android:title="@string/proxy_host_preference_title"
+					android:dependency="@string/use_proxy_preference_key" />
+				<EditTextPreference android:key="@string/proxy_port_preference_key"
+					android:title="@string/proxy_port_preference_title"
+					android:dependency="@string/use_proxy_preference_key" />
+			</PreferenceCategory>
+			<PreferenceCategory android:title="Proxy Auth">
+				<CheckBoxPreference android:key="@string/use_proxy_auth_preference_key"
+					android:title="@string/use_proxy_auth_preference_title"
+					android:dependency="@string/use_proxy_preference_key" />
+				<EditTextPreference android:key="@string/proxy_name_preference_key"
+					android:title="@string/proxy_name_preference_title"
+					android:dependency="@string/use_proxy_auth_preference_key" />
+				<EditTextPreference android:key="@string/proxy_password_preference_key"
+					android:title="@string/proxy_password_preference_title"
+					android:dependency="@string/use_proxy_auth_preference_key" />
+			</PreferenceCategory>
+		</PreferenceScreen>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="Attachment">
-		<EditTextPreference 
-			android:key="@string/download_folder_preference_key"
+		<EditTextPreference android:key="@string/download_folder_preference_key"
 			android:title="@string/download_folder_preference_title"
 			android:dialogTitle="@string/download_folder_preference_dialogTitle" />
 	</PreferenceCategory>
