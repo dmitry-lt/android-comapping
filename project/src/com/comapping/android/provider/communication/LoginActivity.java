@@ -10,9 +10,13 @@ package com.comapping.android.provider.communication;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,6 +25,7 @@ import android.widget.TextView;
 
 import com.comapping.android.Log;
 import com.comapping.android.controller.R;
+import com.comapping.android.preferences.PreferencesActivity;
 import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
@@ -38,26 +43,26 @@ public class LoginActivity extends Activity {
 	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "E-mail or password is incorrect";
 	private static final String UNKNOWN_RESULT_MESSAGE = "Unknown result";
 
-	//private LoginView loginView;
-	private ProgressDialog splash = null;	
+	// private LoginView loginView;
+	private ProgressDialog splash = null;
 
 	private static boolean isWorking = false;
 	private static Thread workThread = null;
 	private static String stateMsg = "";
-	
+
 	private void finishLoginAttempt(final String errorMsg) {
-		
+
 		final Activity context = this;
 		runOnUiThread(new Runnable() {
-			
-			public void run() {	
+
+			public void run() {
 				CachingClient client = Client.getClient(context);
 				if (client.isLoggedIn()) {
 					setResult(RESULT_LOGIN_SUCCESSFUL);
 					finish();
 				} else {
-					((TextView)findViewById(R.id.error)).setText(errorMsg);
-					((TextView)findViewById(R.id.password)).setText("");
+					((TextView) findViewById(R.id.error)).setText(errorMsg);
+					((TextView) findViewById(R.id.password)).setText("");
 				}
 			}
 		});
@@ -65,12 +70,11 @@ public class LoginActivity extends Activity {
 
 	void startWork(final String email, final String password,
 			final boolean remember) {
-		if (isWorking)
-		{
+		if (isWorking) {
 			splashDeactivate();
 			workThread.stop();
 		}
-		
+
 		final Activity context = this;
 
 		workThread = new Thread() {
@@ -103,21 +107,20 @@ public class LoginActivity extends Activity {
 	}
 
 	void startAutologin() {
-		if (isWorking)
-		{
+		if (isWorking) {
 			splashDeactivate();
 			workThread.stop();
 		}
-		
+
 		final Activity context = this;
 		workThread = new Thread() {
 			public void run() {
 				isWorking = true;
 				stateMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
 				CachingClient client = Client.getClient(context);
-				
+
 				try {
-					
+
 					client.autologin();
 				} catch (ConnectionException e) {
 					Log.e(Log.LOGIN_TAG, "connection exception");
@@ -142,13 +145,16 @@ public class LoginActivity extends Activity {
 	}
 
 	public void loginClick() {
-		
+
 		Log.d("Logic Activity", "splash activate start");
 		splashActivate(LOGIN_ATTEMPT_MESSAGE);
 		Log.d("Logic Activity", "splash activate end");
-		final String email = ((TextView) findViewById(R.id.eMail)).getText().toString();
-		final String password = ((TextView) findViewById(R.id.password)).getText().toString();
-		final Boolean remember = ((CheckBox) findViewById(R.id.rememberUserCheckBox)).isChecked();
+		final String email = ((TextView) findViewById(R.id.eMail)).getText()
+				.toString();
+		final String password = ((TextView) findViewById(R.id.password))
+				.getText().toString();
+		final Boolean remember = ((CheckBox) findViewById(R.id.rememberUserCheckBox))
+				.isChecked();
 
 		startWork(email, password, remember);
 	}
@@ -162,41 +168,44 @@ public class LoginActivity extends Activity {
 			finish();
 			return;
 		}
-		
+
 		// set login Layout
 		setContentView(R.layout.login);
 
 		// bind login button
-		//loginView = new LoginView(this);
-		
-		((Button)findViewById(R.id.login)).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				loginClick();
-			}
-		});
-		
+		// loginView = new LoginView(this);
+
+		((Button) findViewById(R.id.login))
+				.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						loginClick();
+					}
+				});
+
 		// set auto login
-		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, null, this);
+		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY,
+				null, this);
 		if (email != null) {
-			((TextView)findViewById(R.id.eMail)).setText(email);
-			((TextView)findViewById(R.id.password)).requestFocus();
-		} 		
-		
+			((TextView) findViewById(R.id.eMail)).setText(email);
+			((TextView) findViewById(R.id.password)).requestFocus();
+		}
+
 		// set background
-		BitmapDrawable background =(BitmapDrawable)getResources().getDrawable(R.drawable.login_background);
+		BitmapDrawable background = (BitmapDrawable) getResources()
+				.getDrawable(R.drawable.login_background);
 		background.setTileModeX(TileMode.REPEAT);
 		background.setTileModeY(TileMode.REPEAT);
-		findViewById(R.id.loginLayout).setBackgroundDrawable(background);		
-		
+		findViewById(R.id.loginLayout).setBackgroundDrawable(background);
+
 		if (isWorking) {
-			Log.d("Logic Activity", "splash activate start");			
+			Log.d("Logic Activity", "splash activate start");
 			splashActivate(LOGIN_ATTEMPT_MESSAGE);
 			Log.d("Logic Activity", "splash activate end");
 		} else {
-			((TextView)findViewById(R.id.error)).setText(stateMsg);
+			((TextView) findViewById(R.id.error)).setText(stateMsg);
 			if (client.isAutologinPossible()) {
 				// autologin attempt
-				((TextView)findViewById(R.id.password)).setText("******");
+				((TextView) findViewById(R.id.password)).setText("******");
 				Log.d("Logic Activity", "splash activate start");
 				splashActivate(LOGIN_ATTEMPT_MESSAGE);
 				Log.d("Logic Activity", "splash activate end");
@@ -207,33 +216,33 @@ public class LoginActivity extends Activity {
 			}
 		}
 	}
-	
+
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 		splashDeactivate();
-		
+
 		CachingClient client = Client.getClient(this);
-		
-		if (!client.isLoggedIn())
-		{
+
+		if (!client.isLoggedIn()) {
 			client.interruptLogin();
 		}
 	}
-	
+
 	private void splashActivate(final String message) {
 		final LoginActivity thisActivity = this;
 		runOnUiThread(new Runnable() {
 			public void run() {
 				if (splash == null) {
-					splash = ProgressDialog.show(thisActivity, "Comapping", message);
+					splash = ProgressDialog.show(thisActivity, "Comapping",
+							message);
 				} else {
 					splash.setMessage(message);
 				}
 			}
 		});
 	}
-	
+
 	private void splashDeactivate() {
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -243,5 +252,29 @@ public class LoginActivity extends Activity {
 				}
 			}
 		});
+	}
+
+	// ===========================================================
+	// Options Menu
+	// ===========================================================
+
+	public void preferences() {
+		startActivity(new Intent(
+				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.login, menu);
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.preferences:
+			preferences();
+			return true;
+		}
+		return false;
 	}
 }
