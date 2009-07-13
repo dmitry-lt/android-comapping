@@ -78,7 +78,7 @@ public class Topic implements Serializable {
 		setFormattedText(FormattedTextSaxBuilder.buildFormattedText(htmlText));
 		String unescText = getFormattedText().getSimpleText();
 
-		Log.d(Log.MODEL_TAG, "set text=\"" + unescText + "\" in " + this);
+		//Log.d(Log.MODEL_TAG, "set text=\"" + unescText + "\" in " + this);
 
 		this.text = unescText;
 	}
@@ -107,7 +107,7 @@ public class Topic implements Serializable {
 	public void setBgColor(int bgColor) {
 		this.bgColor = bgColor;
 
-		Log.d(Log.MODEL_TAG, "set bgColor=\"" + bgColor + "\" in " + this);
+		//Log.d(Log.MODEL_TAG, "set bgColor=\"" + bgColor + "\" in " + this);
 	}
 
 	public Flag getFlag() {
@@ -117,7 +117,7 @@ public class Topic implements Serializable {
 	public void setFlag(Flag flag) {
 		this.flag = flag;
 
-		Log.d(Log.MODEL_TAG, "set flag=\"" + flag + "\" in " + this);
+		//Log.d(Log.MODEL_TAG, "set flag=\"" + flag + "\" in " + this);
 	}
 
 	public int getPriority() {
@@ -127,7 +127,7 @@ public class Topic implements Serializable {
 	public void setPriority(int priority) {
 		this.priority = priority;
 
-		Log.d(Log.MODEL_TAG, "set priority=\"" + priority + "\" in " + this);
+		//Log.d(Log.MODEL_TAG, "set priority=\"" + priority + "\" in " + this);
 	}
 
 	public Smiley getSmiley() {
@@ -137,7 +137,7 @@ public class Topic implements Serializable {
 	public void setSmiley(Smiley smiley) {
 		this.smiley = smiley;
 
-		Log.d(Log.MODEL_TAG, "set smiley=\"" + smiley + "\" in " + this);
+		//Log.d(Log.MODEL_TAG, "set smiley=\"" + smiley + "\" in " + this);
 	}
 	
 	public Arrow getArrow() {
@@ -147,7 +147,7 @@ public class Topic implements Serializable {
 	public void setArrow(Arrow arrow) {
 		this.arrow = arrow;
 
-		Log.d(Log.MODEL_TAG, "set arrow=\"" + arrow + "\" in " + this);
+		//.d(Log.MODEL_TAG, "set arrow=\"" + arrow + "\" in " + this);
 	}
 	
 	public Star getStar() {
@@ -157,7 +157,7 @@ public class Topic implements Serializable {
 	public void setStar(Star star) {
 		this.star = star;
 
-		Log.d(Log.MODEL_TAG, "set star=\"" + star + "\" in " + this);
+		//Log.d(Log.MODEL_TAG, "set star=\"" + star + "\" in " + this);
 	}
 
 	public TaskCompletion getTaskCompletion() {
@@ -174,13 +174,13 @@ public class Topic implements Serializable {
 	public void addIcon(Icon icon) {
 		icons.addIcon(icon);
 
-		Log.d(Log.MODEL_TAG, "add icon " + icon + " in " + this);
+		//Log.d(Log.MODEL_TAG, "add icon " + icon + " in " + this);
 	}
 
 	public void removeIcon(Icon icon) {
 		icons.removeIcon(icon);
 
-		Log.d(Log.MODEL_TAG, "remove icon " + icon + " from " + this);
+		//Log.d(Log.MODEL_TAG, "remove icon " + icon + " from " + this);
 	}
 
 	public boolean hasIcon(Icon icon) {
@@ -202,7 +202,7 @@ public class Topic implements Serializable {
 	public void setNote(String note) {
 		this.note = note;
 
-		Log.d(Log.MODEL_TAG, "set note=\"" + note + "\" in " + this);
+		//Log.d(Log.MODEL_TAG, "set note=\"" + note + "\" in " + this);
 	}
 
 	public Task getTask() {
@@ -212,13 +212,13 @@ public class Topic implements Serializable {
 	public void setTask(Task task) {
 		this.task = task;
 
-		Log.d(Log.MODEL_TAG, "set task=\"" + task + "\" in " + this);
+		//Log.d(Log.MODEL_TAG, "set task=\"" + task + "\" in " + this);
 	}
 
 	public void setAttachment(Attachment attachment) {
 		this.attachment = attachment;
 
-		Log.d(Log.MODEL_TAG, "set attachment=" + attachment + " in " + this);
+		//Log.d(Log.MODEL_TAG, "set attachment=" + attachment + " in " + this);
 	}
 
 	public Attachment getAttachment() {
@@ -242,12 +242,12 @@ public class Topic implements Serializable {
 	public void addChild(Topic child) {
 		children.add(child);
 
-		Log.d(Log.MODEL_TAG, "add " + child + " in " + this);
+		//Log.d(Log.MODEL_TAG, "add " + child + " in " + this);
 	}
 
 	public void removeChildByIndex(int index) throws IndexOutOfBoundsException {
-		Log.d(Log.MODEL_TAG, "remove " + getChildByIndex(index) + " from "
-				+ this);
+		//Log.d(Log.MODEL_TAG, "remove " + getChildByIndex(index) + " from "
+		//		+ this);
 
 		children.remove(index);
 	}

@@ -40,6 +40,8 @@ public class FormattedTextSaxBuilder {
 		try {
 			if (parser == null)
 				parser = saxParserFactory.newSAXParser();
+			else
+				parser.reset();
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,6 +57,7 @@ public class FormattedTextSaxBuilder {
 		return new TextFormat();
 	}
 
+	@SuppressWarnings("deprecation")
 	public static FormattedText buildFormattedText(String xmlString)
 			throws StringToXMLConvertionException {
 
@@ -71,8 +74,8 @@ public class FormattedTextSaxBuilder {
 		FormattedText resultText;
 		init();
 		try {
-			InputStream stream = new ByteArrayInputStream(xmlString
-					.getBytes("UTF-8"));
+
+			InputStream stream = new java.io.StringBufferInputStream(xmlString);
 
 			Log.d(Log.MODEL_TAG, "Text SAX parsing: " + xmlString);
 
