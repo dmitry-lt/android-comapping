@@ -15,24 +15,38 @@ public class Log {
 	public static final String PROVIDER_COMAPPING_TAG = "ComappingMapContentProvider";
 
 	public static void v(String module, String msg) {
+		if (!Options.USE_LOG)
+			return;
 		android.util.Log.v(APPLICATION_TAG, combine(module, msg));
 	}
 
 	public static void d(String module, String msg) {
+		if (!Options.USE_LOG)
+			return;
+		
 		if (Options.DEBUG_LOG) {
 			android.util.Log.d(APPLICATION_TAG, combine(module, msg));
 		}
 	}
 
 	public static void i(String module, String msg) {
+		if (!Options.USE_LOG)
+			return;
+		
 		android.util.Log.i(APPLICATION_TAG, combine(module, msg));
 	}
 
 	public static void w(String module, String msg) {
+		if (!Options.USE_LOG)
+			return;
+		
 		android.util.Log.w(APPLICATION_TAG, combine(module, msg));
 	}
 
 	public static void e(String module, String msg) {
+		if (!Options.USE_LOG)
+			return;
+		
 		android.util.Log.e(APPLICATION_TAG, combine(module, msg));
 	}
 	
