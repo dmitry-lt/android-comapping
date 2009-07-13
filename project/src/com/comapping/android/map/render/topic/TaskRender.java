@@ -182,9 +182,7 @@ public class TaskRender extends Render {
 			deadlineCoords = new Point(0, responsibleRender.getHeight() + startRender.getHeight());
 			break;
 		}
-		if (!estimateRender.isEmpty()) {
-			estimateCoords = new Point(0, height);
-			height += estimateRender.getHeight();
-		}
+		estimateCoords = new Point(0, height);
+		height += estimateRender.getHeight();
 	}
 }
