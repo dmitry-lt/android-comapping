@@ -25,10 +25,12 @@ public class TaskRender extends Render {
 	private TextRender responsibleRender;
 	private TextRender startRender;
 	private TextRender deadlineRender;
+	private TextRender estimateRender;
 
 	private Point responsibleCoords;
 	private Point startCoords;
 	private Point deadlineCoords;
+	private Point estimateCoords;
 
 	private int height, width;
 	private int merging = MIN_MERGING;
@@ -53,6 +55,10 @@ public class TaskRender extends Render {
 			FormattedText deadline = !task.getDeadline().equals("") ? new FormattedText("Deadline: "
 					+ task.getDeadline(), FORMAT) : null;
 			deadlineRender = new TextRender(deadline, context);
+			
+			FormattedText estimate = !task.getEstimate().equals("") ? new FormattedText("Estimate: "
+					+ task.getEstimate(), FORMAT) : null;
+			estimateRender = new TextRender(estimate, context);
 
 			recalcDrawingData();
 		} else {
@@ -70,6 +76,7 @@ public class TaskRender extends Render {
 			responsibleRender.setMaxWidthAndLinesCount(width, 1);
 			startRender.setMaxWidthAndLinesCount(width, 1);
 			deadlineRender.setMaxWidthAndLinesCount(width, 1);
+			estimateRender.setMaxWidthAndLinesCount(width, 1);
 
 			int sumWidth = responsibleRender.getWidth() + startRender.getWidth() + deadlineRender.getWidth();
 			if (!responsibleRender.isEmpty() && sumWidth + MIN_MERGING * 2 <= width) {
@@ -93,6 +100,7 @@ public class TaskRender extends Render {
 			responsibleRender.draw(x + responsibleCoords.x, y + responsibleCoords.y, 0, 0, c);
 			startRender.draw(x + startCoords.x, y + startCoords.y, 0, 0, c);
 			deadlineRender.draw(x + deadlineCoords.x, y + deadlineCoords.y, 0, 0, c);
+			estimateRender.draw(x + estimateCoords.x, y + estimateCoords.y, 0, 0, c);
 		} else {
 			// nothing to draw
 		}
@@ -173,6 +181,10 @@ public class TaskRender extends Render {
 			startCoords = new Point(0, responsibleRender.getHeight());
 			deadlineCoords = new Point(0, responsibleRender.getHeight() + startRender.getHeight());
 			break;
+		}
+		if (!estimateRender.isEmpty()) {
+			estimateCoords = new Point(0, height);
+			height += estimateRender.getHeight();
 		}
 	}
 }

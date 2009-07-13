@@ -39,6 +39,7 @@ abstract public class MapBuilder {
 	static final String TASK_START_ATTR = "start";
 	static final String TASK_DEADLINE_ATTR = "deadline";
 	static final String TASK_RESPONSIBLE_ATTR = "responsible";
+	static final String TASK_ESTIMATE_ATTR = "estimate";
 	static final String TOPIC_ATTACHMENT_TAG = "attachment";
 	static final String ATTACHMENT_DATE_ATTR = "date";
 	static final String ATTACHMENT_FILENAME_ATTR = "filename";

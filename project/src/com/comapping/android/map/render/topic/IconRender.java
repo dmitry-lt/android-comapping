@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 public class IconRender extends Render {
 
 	private static final int ICON_SIZE = 30;
-	private static final int HORISONTAL_MERGING = 0;
+	private static final int HORISONTAL_MERGING = 5;
 	private static final int VERTICAL_MERGING = 5;
 
 	private static boolean iconsLoaded = false;
@@ -27,8 +27,8 @@ public class IconRender extends Render {
 	private static Bitmap[] taskCompletionIcons;
 	private static Bitmap[] flagIcons;
 	private static Bitmap[] icons;
-	private static Bitmap[] arrows;
-	private static Bitmap[] stars;
+	private static Bitmap[] arrowIcons;
+	private static Bitmap[] starIcons;
 
 	private Context context;
 	
@@ -131,7 +131,7 @@ public class IconRender extends Render {
 			}
 			
 			if (topic.getStar() != null) {
-				c.drawBitmap(stars[topic.getStar().ordinal()], curX, curY, null);
+				c.drawBitmap(starIcons[topic.getStar().ordinal()], curX, curY, null);
 				curX += ICON_SIZE + HORISONTAL_MERGING;
 			}
 			
@@ -141,7 +141,7 @@ public class IconRender extends Render {
 			}
 			
 			if (topic.getArrow() != null) {
-				c.drawBitmap(arrows[topic.getArrow().ordinal()], curX, curY, null);
+				c.drawBitmap(arrowIcons[topic.getArrow().ordinal()], curX, curY, null);
 				curX += ICON_SIZE + HORISONTAL_MERGING;
 			}
 
@@ -250,7 +250,7 @@ public class IconRender extends Render {
 				getBitmap(r.getDrawable(R.drawable.topic_icon_homework)),
 				getBitmap(r.getDrawable(R.drawable.topic_icon_needs_feedback)) };
 
-		arrows = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_arrow_blue)),
+		arrowIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_arrow_blue)),
 				getBitmap(r.getDrawable(R.drawable.topic_arrow_purple)),
 				getBitmap(r.getDrawable(R.drawable.topic_arrow_black)),
 				getBitmap(r.getDrawable(R.drawable.topic_arrow_red)),
@@ -258,7 +258,7 @@ public class IconRender extends Render {
 				getBitmap(r.getDrawable(R.drawable.topic_arrow_yellow)),
 				getBitmap(r.getDrawable(R.drawable.topic_arrow_green)) };
 		
-		stars = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_star_blue)),
+		starIcons = new Bitmap[] { getBitmap(r.getDrawable(R.drawable.topic_star_blue)),
 				getBitmap(r.getDrawable(R.drawable.topic_star_purple)),
 				getBitmap(r.getDrawable(R.drawable.topic_star_black)),
 				getBitmap(r.getDrawable(R.drawable.topic_star_red)),
