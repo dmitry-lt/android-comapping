@@ -3,7 +3,6 @@ package com.comapping.android;
 import java.util.List;
 
 import com.comapping.android.map.model.map.Icon;
-import com.comapping.android.map.model.map.Icons;
 import com.comapping.android.map.model.map.Map;
 import com.comapping.android.map.model.map.Topic;
 
