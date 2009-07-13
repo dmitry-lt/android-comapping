@@ -183,6 +183,8 @@ public class TaskRender extends Render {
 			break;
 		}
 		estimateCoords = new Point(0, height);
-		height += estimateRender.getHeight();
+		if (!estimateRender.isEmpty()) {
+			height += estimateRender.getHeight();
+		}
 	}
 }
