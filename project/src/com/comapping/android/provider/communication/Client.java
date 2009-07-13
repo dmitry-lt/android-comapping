@@ -54,6 +54,7 @@ public class Client {
 
 	final static String MetaMapId = "meta";
 	// constants
+
 	final static private String SIMPLE_LOGIN_METHOD = "simple";
 	final static private String COOKIE_LOGIN_METHOD = "flashCookie";
 	final static private String WITH_SALT_LOGIN_METHOD = "withSalt";
@@ -182,7 +183,8 @@ public class Client {
 		clientId = null;
 
 		if (isToEmptyAutologin) {
-			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, "", context);
+			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, "",
+					context);
 		}
 	}
 
@@ -191,8 +193,7 @@ public class Client {
 	 * 
 	 * @throws ConnectionException
 	 */
-	public void logout(boolean isToEmptyAutologin)
-			throws ConnectionException {
+	public void logout(boolean isToEmptyAutologin) throws ConnectionException {
 		if (!isLoggedIn()) {
 			Log.i(Log.CONNECTION_TAG, "logout without login");
 			clientSideLogout(isToEmptyAutologin);
@@ -223,9 +224,8 @@ public class Client {
 	 * @throws LoginInterruptedException
 	 * @throws InvalidCredentialsException
 	 */
-	public String getComap(String mapId)
-			throws ConnectionException, LoginInterruptedException,
-			InvalidCredentialsException {
+	public String getComap(String mapId) throws ConnectionException,
+			LoginInterruptedException, InvalidCredentialsException {
 		Log.d(Log.CONNECTION_TAG, "getting " + mapId + " comap");
 
 		loginRequired();
@@ -245,15 +245,16 @@ public class Client {
 
 	public HttpURLConnection getHttpURLConnection(URL url)
 			throws ConnectionException, IOException {
-		if (PreferencesStorage.getBoolean(PreferencesStorage.USE_PROXY,
-				Options.DEFAULT_USE_PROXY, context)) {
+		if (PreferencesStorage.getBoolean(
+				PreferencesStorage.USE_PROXY_AUTH_KEY,
+				PreferencesStorage.USE_PROXY_DEFAULT_VALUE, context)) {
 			String proxyHost = PreferencesStorage.get(
-					PreferencesStorage.PROXY_HOST, "", context);
+					PreferencesStorage.PROXY_HOST_KEY, "", context);
 			int proxyPort = 0;
 
 			try {
 				proxyPort = Integer.parseInt(PreferencesStorage.get(
-						PreferencesStorage.PROXY_PORT, "", context));
+						PreferencesStorage.PROXY_PORT_KEY, "", context));
 			} catch (Exception e) {
 				throw new ConnectionException();
 			}
@@ -266,12 +267,12 @@ public class Client {
 			// TODO: wrong work after login with wrong proxy name and password
 			// :-(
 			if (PreferencesStorage.getBoolean(
-					PreferencesStorage.USE_PROXY_AUTH,
-					Options.DEFAULT_USE_PROXY_AUTH, context)) {
+					PreferencesStorage.USE_PROXY_AUTH_KEY,
+					PreferencesStorage.USE_PROXY_AUTH_DEFAULT_VALUE, context)) {
 				String proxyUser = PreferencesStorage.get(
-						PreferencesStorage.PROXY_NAME, "", context);
+						PreferencesStorage.PROXY_NAME_KEY, "", context);
 				String proxyPassword = PreferencesStorage.get(
-						PreferencesStorage.PROXY_PASSWORD, "", context);
+						PreferencesStorage.PROXY_PASSWORD_KEY, "", context);
 				;
 				StringBuilder encodedInfo = new StringBuilder();
 				for (byte b : Base64Encoder
@@ -388,8 +389,7 @@ public class Client {
 		}
 	}
 
-	private void loginRequired()
-			throws LoginInterruptedException {
+	private void loginRequired() throws LoginInterruptedException {
 		Log.d(Log.CONNECTION_TAG, "login required action with login status: "
 				+ isLoggedIn());
 

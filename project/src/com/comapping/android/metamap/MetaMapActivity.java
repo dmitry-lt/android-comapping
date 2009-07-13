@@ -8,8 +8,6 @@
 
 package com.comapping.android.metamap;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +29,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.comapping.android.Constants;
 import com.comapping.android.Log;
-import com.comapping.android.Options;
 import com.comapping.android.preferences.PreferencesActivity;
 import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.CachingClient;
@@ -202,7 +199,7 @@ public class MetaMapActivity extends Activity {
 		if (currentProvider != sdCardProvider) {
 			((ImageButton) findViewById(SWITCHER))
 					.setImageResource(R.drawable.metamap_sdcard);
-			if(!isSdPresent())
+			if (!isSdPresent())
 				disableButton(SWITCHER);
 		} else {
 			((ImageButton) findViewById(SWITCHER))
@@ -223,8 +220,9 @@ public class MetaMapActivity extends Activity {
 	}
 
 	private boolean isSdPresent() {
-		return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
-		}
+		return android.os.Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+	}
 
 	// ====================================================
 	// View Controls Manipulation
@@ -378,9 +376,10 @@ public class MetaMapActivity extends Activity {
 					updateMetaMap();
 				} else {
 
-					String viewType = PreferencesStorage.get(
-							PreferencesStorage.VIEW_TYPE_KEY,
-							Options.DEFAULT_VIEW_TYPE, context);
+					String viewType = PreferencesStorage
+							.get(PreferencesStorage.VIEW_TYPE_KEY,
+									PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE,
+									context);
 
 					openMap(
 							currentProvider.getCurrentLevel()[position].reference,

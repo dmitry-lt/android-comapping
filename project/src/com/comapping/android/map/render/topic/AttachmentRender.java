@@ -33,7 +33,6 @@ import android.graphics.Canvas;
 import static com.comapping.android.map.render.topic.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {
-
 	private static final int ICON_SIZE = 30;
 
 	private static Bitmap attachmentIcon;
@@ -54,7 +53,7 @@ public class AttachmentRender extends Render {
 		if (!isEmpty) {
 			this.context = context;
 			this.attachment = attachment;
-			
+
 			if (attachmentIcon == null) {
 				loadIcon();
 			}
@@ -67,7 +66,6 @@ public class AttachmentRender extends Render {
 		}
 	}
 
-	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			c.drawBitmap(attachmentIcon, x, y, null);
@@ -76,82 +74,97 @@ public class AttachmentRender extends Render {
 		}
 	}
 
-	
 	public String toString() {
 		if (!isEmpty) {
-			return "[AttachmentRender: width=" + getWidth() + " height=" + getHeight() + "]";
+			return "[AttachmentRender: width=" + getWidth() + " height="
+					+ getHeight() + "]";
 		} else {
 			return "[AttachmentRender: EMPTY]";
 		}
 	}
 
-	
 	public int getHeight() {
 		return height;
 	}
 
-	
 	public int getWidth() {
 		return width;
 	}
 
-	
 	public void onTouch(int x, int y) {
 		if (dialog == null) {
-			downloadFolder = PreferencesStorage.get(PreferencesStorage.DOWNLOAD_FOLDER_KEY, Options.DEFAULT_DOWNLOAD_FOLDER, context);
-			
+			downloadFolder = PreferencesStorage.get(
+					PreferencesStorage.DOWNLOAD_FOLDER_KEY,
+					PreferencesStorage.DOWNLOAD_FOLDER_DEFAULT_VALUE, context);
+
 			dialog = (new AlertDialog.Builder(context).setTitle("Attachment")
 					.setMessage(
-							"File: " + attachment.getFilename() + "\n" + "Upload date: "
-									+ formatDate(attachment.getDate()) + "\n" + "Size: "
-									+ formatFileSize(attachment.getSize()) + "\n\n"
-									+ "Save in " + downloadFolder + " ?").setNegativeButton("No",
+							"File: " + attachment.getFilename() + "\n"
+									+ "Upload date: "
+									+ formatDate(attachment.getDate()) + "\n"
+									+ "Size: "
+									+ formatFileSize(attachment.getSize())
+									+ "\n\n" + "Save in " + downloadFolder
+									+ " ?").setNegativeButton("No",
 							new DialogInterface.OnClickListener() {
-								
-								public void onClick(DialogInterface dialog, int which) {
+
+								public void onClick(DialogInterface dialog,
+										int which) {
 
 								}
-							}).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				
-				public void onClick(DialogInterface dialog, int which) {
-					downloadProgressDialog = new ProgressDialog(context);
-					downloadProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-					downloadProgressDialog.setOnDismissListener(new OnDismissListener() {
-						
-						public void onDismiss(DialogInterface dialog) {
-							if (!downloadedSuccessfully) {
-								(new AlertDialog.Builder(context).setMessage("Error while downloading and saving file")
-										.setNeutralButton("Ok", null).create()).show();
-							}
-						}
-					});
-					downloadProgressDialog.show();
-					downloadProgressDialog.setProgress(0);
+							}).setPositiveButton("Yes",
+					new DialogInterface.OnClickListener() {
 
-					final Thread downloadAndSaveThread = new Thread(new Runnable() {
-						
-						public void run() {
-							try {
-								downloadAndSaveAttachment();
-								downloadedSuccessfully = true;
-							} catch (ConnectionException e) {
-								downloadedSuccessfully = false;
-								e.printStackTrace();
-							}
-							downloadProgressDialog.dismiss();
-						}
-					});
-					downloadAndSaveThread.start();
+						public void onClick(DialogInterface dialog, int which) {
+							downloadProgressDialog = new ProgressDialog(context);
+							downloadProgressDialog
+									.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+							downloadProgressDialog
+									.setOnDismissListener(new OnDismissListener() {
 
-					downloadProgressDialog.setOnCancelListener(new OnCancelListener() {
-						
-						public void onCancel(DialogInterface dialog) {
-							downloadAndSaveThread.interrupt();
+										public void onDismiss(
+												DialogInterface dialog) {
+											if (!downloadedSuccessfully) {
+												(new AlertDialog.Builder(
+														context)
+														.setMessage(
+																"Error while downloading and saving file")
+														.setNeutralButton("Ok",
+																null).create())
+														.show();
+											}
+										}
+									});
+							downloadProgressDialog.show();
+							downloadProgressDialog.setProgress(0);
+
+							final Thread downloadAndSaveThread = new Thread(
+									new Runnable() {
+
+										public void run() {
+											try {
+												downloadAndSaveAttachment();
+												downloadedSuccessfully = true;
+											} catch (ConnectionException e) {
+												downloadedSuccessfully = false;
+												e.printStackTrace();
+											}
+											downloadProgressDialog.dismiss();
+										}
+									});
+							downloadAndSaveThread.start();
+
+							downloadProgressDialog
+									.setOnCancelListener(new OnCancelListener() {
+
+										public void onCancel(
+												DialogInterface dialog) {
+											downloadAndSaveThread.interrupt();
+										}
+									});
+							downloadProgressDialog.setCancelable(true);
 						}
-					});
-					downloadProgressDialog.setCancelable(true);
-				}
-			})).create();
+					})).create();
 		}
 
 		dialog.show();
@@ -159,7 +172,8 @@ public class AttachmentRender extends Render {
 
 	private void loadIcon() {
 		Resources r = context.getResources();
-		attachmentIcon = getBitmap(r.getDrawable(R.drawable.topic_attachment), ICON_SIZE);
+		attachmentIcon = getBitmap(r.getDrawable(R.drawable.topic_attachment),
+				ICON_SIZE);
 	}
 
 	private String formatFileSize(int size) {
@@ -198,7 +212,7 @@ public class AttachmentRender extends Render {
 		HttpURLConnection connection = null;
 		try {
 			connection = Client.getClient(context).getHttpURLConnection(url);
-			
+
 			connection.setDoOutput(true);
 
 			code = connection.getResponseCode();
@@ -209,7 +223,8 @@ public class AttachmentRender extends Render {
 			throw new ConnectionException();
 		}
 
-		Log.d(Log.TOPIC_RENDER_TAG, "contentLength=" + contentLength + " code=" + code);
+		Log.d(Log.TOPIC_RENDER_TAG, "contentLength=" + contentLength + " code="
+				+ code);
 
 		downloadProgressDialog.setMax(contentLength);
 
@@ -217,7 +232,7 @@ public class AttachmentRender extends Render {
 			String path = downloadFolder + "\\" + attachment.getFilename();
 			String name;
 			String ext;
-			int dotIndex = path.lastIndexOf('.');			
+			int dotIndex = path.lastIndexOf('.');
 			if (dotIndex != -1) {
 				name = path.substring(0, dotIndex);
 				ext = path.substring(dotIndex + 1, path.length());
@@ -225,10 +240,10 @@ public class AttachmentRender extends Render {
 				name = path;
 				ext = "";
 			}
-			
+
 			File file = new File(downloadFolder);
 			file.mkdirs();
-			
+
 			file = new File(path);
 			int counter = 1;
 			while (file.exists()) {
@@ -236,9 +251,10 @@ public class AttachmentRender extends Render {
 				counter++;
 			}
 			file.createNewFile();
-			
+
 			FileOutputStream output = new FileOutputStream(file);
-			BufferedInputStream bufferedInput = new BufferedInputStream(input, 8 * 1024);
+			BufferedInputStream bufferedInput = new BufferedInputStream(input,
+					8 * 1024);
 
 			int sum = 0;
 			int readsCount = 0;
@@ -261,7 +277,8 @@ public class AttachmentRender extends Render {
 			bufferedInput.close();
 			output.close();
 
-			Log.d(Log.TOPIC_RENDER_TAG, "sum bytes=" + sum + " readsCount=" + readsCount);
+			Log.d(Log.TOPIC_RENDER_TAG, "sum bytes=" + sum + " readsCount="
+					+ readsCount);
 		} catch (IOException e) {
 			throw new ConnectionException();
 		}
