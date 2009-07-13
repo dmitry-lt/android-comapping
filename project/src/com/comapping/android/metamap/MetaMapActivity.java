@@ -199,10 +199,10 @@ public class MetaMapActivity extends Activity {
 		else
 			disableButton(SYNC);
 
-		if (currentProvider == comappingProvider) {
+		if (currentProvider != sdCardProvider) {
 			((ImageButton) findViewById(SWITCHER))
 					.setImageResource(R.drawable.metamap_sdcard);
-			if (!isSdPresent())
+			if(!isSdPresent())
 				disableButton(SWITCHER);
 		} else {
 			((ImageButton) findViewById(SWITCHER))
@@ -222,7 +222,7 @@ public class MetaMapActivity extends Activity {
 		}
 	}
 
-	private static boolean isSdPresent() {
+	private boolean isSdPresent() {
 		return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 		}
 
@@ -244,7 +244,6 @@ public class MetaMapActivity extends Activity {
 		case SYNC:
 			resource = R.drawable.menu_reload;
 			break;
-
 		default:
 			return;
 		}
@@ -269,7 +268,9 @@ public class MetaMapActivity extends Activity {
 		case SYNC:
 			resource = R.drawable.menu_reload_grey;
 			break;
-
+		case SWITCHER:
+			resource = R.drawable.metamap_sdcard;
+			break;
 		default:
 			return;
 		}
