@@ -1,6 +1,5 @@
 package com.comapping.android.map.model.text.builder;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -66,8 +65,6 @@ public class FormattedTextSaxBuilder {
 			return new FormattedText(xmlString, new TextFormat());
 		}
 
-		// long startTime = System.currentTimeMillis();
-
 		if (xmlString.startsWith("<P")) {
 			xmlString = "<TEXT>" + xmlString + "</TEXT>";
 		} else if (xmlString.startsWith("<FONT")) {
@@ -94,20 +91,12 @@ public class FormattedTextSaxBuilder {
 					.e(Log.MODEL_TAG, "cannot convert string to xml:"
 							+ e.toString());
 			resultText = new FormattedText(ERROR_TEXT, getDefFormat());
-			// throw new StringToXMLConvertionException();
 		} catch (IOException e) {
 			Log
 					.e(Log.MODEL_TAG, "cannot convert string to xml:"
 							+ e.toString());
 			throw new StringToXMLConvertionException();
 		}
-
-		// long parsingTime = System.currentTimeMillis() - startTime;
-
-		// Log.d(Log.MODEL_TAG,
-		// "Formatted Text was built with SAX successfully, parsing time: " +
-		// parsingTime);
-
 		return resultText;
 	}
 }
