@@ -35,8 +35,6 @@ import com.comapping.android.map.render.MapRender;
 import com.comapping.android.map.render.comapping.ComappingRender;
 import com.comapping.android.map.render.explorer.ExplorerRender;
 import com.comapping.android.metamap.MetaMapActivity;
-import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
-import com.comapping.android.provider.contentprovider.FileMapContentProvider;
 import com.comapping.android.provider.contentprovider.MapContentProvider;
 import com.comapping.android.storage.MemoryCache;
 
@@ -56,15 +54,13 @@ public class MapActivity extends Activity {
 	// Opening map by starting new MapActivity
 	// ===========================================================
 
-	public static void openMap(final String mapId, final String viewType, boolean ignoreCache, Activity parent,
-			String dataSource) {
+	public static void openMap(final String mapRef, final String viewType, boolean ignoreCache, Activity parent) {
 		Intent intent = new Intent(Constants.MAP_ACTIVITY_INTENT);
 
-		intent.putExtra(MapActivity.EXT_MAP_ID, mapId);
+		intent.putExtra(MapActivity.EXT_MAP_REF, mapRef);
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType);
 		intent.putExtra(MapActivity.EXT_IS_IGNORE_CACHE, ignoreCache);
-		intent.putExtra(MapActivity.EXT_DATA_SOURCE, dataSource);
-
+		
 		parent.startActivityForResult(intent, Constants.ACTION_MAP_REQUEST);
 	}
 
@@ -73,9 +69,8 @@ public class MapActivity extends Activity {
 	// ===========================================================
 
 	public static final String EXT_VIEW_TYPE = "viewType";
-	public static final String EXT_MAP_ID = "mapId";
+	public static final String EXT_MAP_REF = "mapRef";
 	public static final String EXT_IS_IGNORE_CACHE = "ignoreCache";
-	public static final String EXT_DATA_SOURCE = "dataSource";
 
 	private static final long ZOOM_CONTROLS_TIME_TO_HIDE = 2000;
 
@@ -84,9 +79,8 @@ public class MapActivity extends Activity {
 	// ===========================================================
 
 	static private String viewType;
-	static private String mapId;
+	static private String mapRef;
 	static private boolean ignoreCache;
-	static private String dataSource;
 
 	// ===========================================================
 	// Map variables
@@ -221,16 +215,12 @@ public class MapActivity extends Activity {
 
 	Map loadMap() throws StringToXMLConvertionException, MapParsingException {
 		final Map map;
-		if (!MemoryCache.has(mapId) || (ignoreCache)) {
+		if (!MemoryCache.has(mapRef) || (ignoreCache)) {
 			splashActivate("Downloading map", false);
 			String result = "";
 
-			if (dataSource.equals(Constants.DATA_SOURCE_COMAPPING)) {
-				result = ComappingMapContentProvider.getComap(mapId, ComappingMapContentProvider.CONTENT_URI, this);
-			} else if (dataSource.equals(Constants.DATA_SOURCE_SD)) {
-				result = FileMapContentProvider.getComap(mapId, FileMapContentProvider.CONTENT_URI, this);
-			}
-
+			result = MapContentProvider.getComap(mapRef, this);
+			
 			if (result == null) {
 				result = "";
 			}
@@ -239,9 +229,9 @@ public class MapActivity extends Activity {
 			map = MetaMapActivity.mapBuilder.buildMap(result);
 
 			// add to cache
-			MemoryCache.set(mapId, map);
+			MemoryCache.set(mapRef, map);
 		} else {
-			map = (Map) MemoryCache.get(mapId);
+			map = (Map) MemoryCache.get(mapRef);
 		}
 		return map;
 	}
@@ -307,9 +297,8 @@ public class MapActivity extends Activity {
 
 		try {
 			viewType = extras.getString(EXT_VIEW_TYPE);
-			mapId = extras.getString(EXT_MAP_ID);
+			mapRef = extras.getString(EXT_MAP_REF);
 			ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
-			dataSource = extras.getString(EXT_DATA_SOURCE);
 		} catch (Exception e) {
 			// TODO Empty catch
 		}
@@ -486,7 +475,7 @@ public class MapActivity extends Activity {
 				return true;
 			case R.id.mapSynchronizeButton:
 				finish();
-				openMap(mapId, viewType, true, this, dataSource);
+				openMap(mapRef, viewType, true, this);
 				return true;
 		}
 		return false;

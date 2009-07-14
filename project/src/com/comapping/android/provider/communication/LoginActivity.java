@@ -160,6 +160,7 @@ public class LoginActivity extends Activity {
 	}
 
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(Log.LOGIN_TAG, "LoginActivity.onCreate()");
 		super.onCreate(savedInstanceState);
 
 		CachingClient client = Client.getClient(this);

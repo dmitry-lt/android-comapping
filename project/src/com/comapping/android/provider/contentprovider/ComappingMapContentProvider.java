@@ -3,6 +3,7 @@ package com.comapping.android.provider.contentprovider;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.comapping.android.Log;
 import com.comapping.android.map.model.map.Map;
@@ -17,6 +18,7 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.PatternMatcher;
 
 public class ComappingMapContentProvider extends MapContentProvider {
 	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true, true);
@@ -26,17 +28,20 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		MAP, META_MAP, LOGOUT, SYNC
 	}
 
+	
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relLogout, QueryType.LOGOUT.ordinal());
-		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relSync, QueryType.SYNC.ordinal());
+		uriMatcher.addURI(INFO.authorities, INFO.relLogout, QueryType.LOGOUT.ordinal());
+		uriMatcher.addURI(INFO.authorities, INFO.relSync, QueryType.SYNC.ordinal());
+		uriMatcher.addURI(INFO.authorities, "*" + INFO.separator, QueryType.META_MAP
+				.ordinal());
+//		uriMatcher.addURI("www.comapping.com", "maps/", QueryType.META_MAP.ordinal());
 		uriMatcher.addURI(INFO.authorities, INFO.relRoot + INFO.separator + "*", QueryType.MAP.ordinal());
 //		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relRoot + INFO.separator + "#####", QueryType.MAP.ordinal());
-		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relRoot + INFO.separator + "*" + INFO.separator, QueryType.META_MAP
-				.ordinal());
+		
 	}
-
+	
 	private CachingClient client;
 	private Map metamap;
 	private MapBuilder mapBuilder = new SaxMapBuilder();
@@ -53,17 +58,40 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 		return true;
 	}
+	
+	private QueryType detectQueryTypeWithUriMatcher(Uri uri) {
+		if (uriMatcher.match(uri) == -1) {
+			throw new IllegalArgumentException("Unsupported URI: " + uri);
+		}
+		
+		return QueryType.values()[uriMatcher.match(uri)];
+	}
+	
+	private QueryType detectQueryType(Uri uri) {
+		String uriString = uri.toString();
+		if (Pattern.matches("content://" + INFO.logout, uriString)) {
+			return QueryType.LOGOUT;
+		} else if (Pattern.matches("content://" + INFO.sync, uriString)) {
+			return QueryType.SYNC;
+		} else if (Pattern.matches("content://" + INFO.root + "\\d\\d\\d\\d\\d", uriString)) {
+			return QueryType.MAP;		
+		} else { 
+			return QueryType.META_MAP;
+		}		
+	}
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uri.toString());
-
+		
 		// parse uri
-		switch (QueryType.values()[uriMatcher.match(uri)]) {
+		QueryType queryType = detectQueryType(uri);
+		Log.d(Log.PROVIDER_COMAPPING_TAG, "QueryType is " + queryType.toString());
+		switch (queryType) {
 			case META_MAP:
 				List<String> pathSegments = uri.getPathSegments();
 				if (!INFO.relRoot.equals("")) {
-					pathSegments.remove(0);
+					pathSegments = pathSegments.subList(1, pathSegments.size());
 				}
 				return new ComappingMetamapCursor(getTopic(pathSegments));
 			case MAP:
@@ -111,13 +139,13 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 	private void updateMetamap() {
 		try {
-			metamap = mapBuilder.buildMap(getComap("meta", true));
+			metamap = mapBuilder.buildMap(getComap("meta", false));
 		} catch (Exception e) {
 			Log.w(Log.PROVIDER_COMAPPING_TAG, "Error while synchronizing: cannot parse metamap");
 		}
 	}
 
-	private String getComap(String mapId, boolean ignoreCache) {
+	private String getComap(String mapId, boolean ignoreCache) {		
 		try {
 			return client.getComap(mapId, ignoreCache, false);
 		} catch (Exception e) {
@@ -153,7 +181,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 					res[i].description = getMapDescription(topics[i]);
 				}
 
-				res[i].reference = "content://" + INFO.root + INFO.separator + topics[i].getMapRef();
+				res[i].reference = "content://" + INFO.root + topics[i].getMapRef();
 			}
 
 			return res;

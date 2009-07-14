@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 public class FileMapContentProvider extends MapContentProvider {
+	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("sdcard", "", false, false);
 	public static final String PROVIDER_NAME = "sdcard";
 	public static final Uri CONTENT_URI = Uri
 			.parse("content://" + PROVIDER_NAME);

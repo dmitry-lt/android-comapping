@@ -33,13 +33,17 @@ import com.comapping.android.preferences.PreferencesActivity;
 import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
+import com.comapping.android.provider.communication.LoginActivity;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
+import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
+import com.comapping.android.provider.contentprovider.FileMapContentProvider;
 import com.comapping.android.controller.R;
 import com.comapping.android.map.MapActivity;
 import com.comapping.android.map.model.map.builder.MapBuilder;
 import com.comapping.android.map.model.map.builder.SaxMapBuilder;
 import com.comapping.android.metamap.provider.ComappingProvider;
 import com.comapping.android.metamap.provider.MetaMapProvider;
+import com.comapping.android.metamap.provider.MetaMapProviderUsingCP;
 import com.comapping.android.metamap.provider.SdCardProvider;
 
 public class MetaMapActivity extends Activity {
@@ -54,11 +58,14 @@ public class MetaMapActivity extends Activity {
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
 
+	private static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open sdcard view";
+	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
+
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
 
-	private static SdCardProvider sdCardProvider = null;
-	private static ComappingProvider comappingProvider = null;
+	private static MetaMapProviderUsingCP sdCardProvider = null;
+	private static MetaMapProviderUsingCP comappingProvider = null;
 	private static MetaMapProvider currentProvider = null;
 
 	// ====================================================
@@ -74,11 +81,17 @@ public class MetaMapActivity extends Activity {
 
 		// Init providers
 
-		if (comappingProvider == null)
-			comappingProvider = new ComappingProvider(this);
+		if (comappingProvider == null) {
+			comappingProvider = new MetaMapProviderUsingCP(
+					ComappingMapContentProvider.INFO,
+					PLEASE_SYNCHRONIZE_MESSAGE, this);
+		}
 
-		if (sdCardProvider == null)
-			sdCardProvider = new SdCardProvider();
+		if (sdCardProvider == null) {
+			sdCardProvider = new MetaMapProviderUsingCP(
+					ComappingMapContentProvider.INFO, EMPTY_FOLDER_MESSAGE,
+					this);
+		}
 
 		// set provider
 
@@ -130,11 +143,8 @@ public class MetaMapActivity extends Activity {
 				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 
-	void openMap(final String mapId, final String viewType, boolean ignoreCache) {
-		String dataSource = (currentProvider == comappingProvider) ? Constants.DATA_SOURCE_COMAPPING
-				: Constants.DATA_SOURCE_SD;
-
-		MapActivity.openMap(mapId, viewType, ignoreCache, this, dataSource);
+	void openMap(final String mapRef, final String viewType, boolean ignoreCache) {
+		MapActivity.openMap(mapRef, viewType, ignoreCache, this);
 	}
 
 	public void logout() {

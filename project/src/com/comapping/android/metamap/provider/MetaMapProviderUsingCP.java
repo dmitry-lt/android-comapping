@@ -48,6 +48,9 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 
 	@Override
 	public MetaMapItem[] getCurrentLevel() {
+		if (currentLevel == null) {
+			updateCurrentLevel();
+		}
 		return currentLevel;
 	}
 
@@ -64,7 +67,8 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 
 	@Override
 	public void goUp() {
-		currentPath = currentPath.substring(0, currentPath.lastIndexOf(info.separator));
+		// TODO write it more accurate
+		currentPath = currentPath.substring(0, currentPath.substring(0, currentPath.length() - 1).lastIndexOf(info.separator));
 		updateCurrentLevel();
 	}
 
@@ -102,8 +106,10 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 		currentLevel = new MetaMapItem[cursor.getCount()];
 
 		boolean isCurrentPresented = cursor.moveToFirst();
-		for (MetaMapItem item : currentLevel) {
-			item = new MetaMapItem();
+		for (int i = 0; i < currentLevel.length; i++) {
+			currentLevel[i] = new MetaMapItem();
+			MetaMapItem item = currentLevel[i];
+			
 			if (!isCurrentPresented) {
 				Log.w(Log.META_MAP_CONTROLLER_TAG,
 						"MetaMapProviderUsingCP.updateCurrentLevel(): cursor's element not found");

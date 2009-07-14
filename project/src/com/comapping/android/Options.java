@@ -11,6 +11,6 @@ public class Options {
 	public static final boolean DEBUG_RENDERING = false;
 	public static final boolean DEBUG_LOG = true;
 
-	public static final boolean USE_LOG = false;
+	public static final boolean USE_LOG = true;
 
 }

@@ -13,11 +13,11 @@ public abstract class MapContentProvider extends ContentProvider {
 	public static final String ID = "id";
 	public static final String TEXT = "content";
 
-	public static String getComap(String mapId, Uri providerUri, Context context) {
-		Uri fullUri = Uri.withAppendedPath(providerUri, mapId);
+	public static String getComap(String mapRef, Context context) {
+		Uri fullUri = Uri.parse(mapRef);
 		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);
 
-		return cursor.getString(cursor.getColumnIndex(TEXT));
+		return cursor.getString(1);
 	}
 
 	public static class MapContentProviderInfo {
@@ -53,6 +53,7 @@ public abstract class MapContentProvider extends ContentProvider {
 
 	abstract class MetamapCursor extends AbstractCursor {
 		protected MetaMapItem[] currentLevel;
+		private MetaMapItem currentItem;
 
 		@Override
 		public String[] getColumnNames() {
@@ -99,15 +100,25 @@ public abstract class MapContentProvider extends ContentProvider {
 		public String getString(int column) {
 			switch (column) {
 				case 0:
-					return currentLevel[column].name;
+					return currentItem.name;
 				case 1:
-					return currentLevel[column].description;
+					return currentItem.description;
 				case 2:
-					return String.valueOf(currentLevel[column].isFolder);
+					return String.valueOf(currentItem.isFolder);
 				case 3:
-					return currentLevel[column].reference;
+					return currentItem.reference;
 				default:
 					throw new IllegalArgumentException("No such column " + column);
+			}
+		}
+		
+		@Override
+		public boolean onMove(int oldPosition, int newPosition) {
+			if (newPosition >= 0 && newPosition < currentLevel.length) {
+				currentItem = currentLevel[newPosition];
+				return true;
+			} else {
+				return false;
 			}
 		}
 
@@ -179,8 +190,7 @@ public abstract class MapContentProvider extends ContentProvider {
 		public boolean isNull(int column) {
 			// TODO Auto-generated method stub
 			return false;
-		}
-
+		}		
 	}
 
 	@Override
