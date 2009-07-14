@@ -66,7 +66,6 @@ public class MapView extends View {
 
 	ScrollController scrollController = new ScrollController() {
 
-		
 		public void intermediateScroll(int destX, int destY) {
 
 			int vx = mScroller.getCurrX() - destX;
@@ -77,7 +76,6 @@ public class MapView extends View {
 			mScroller.computeScrollOffset();
 		}
 
-		
 		public void smoothScroll(int destX, int destY) {
 			int vx = mScroller.getCurrX() - destX;
 			int vy = mScroller.getCurrY() - destY;
@@ -106,7 +104,8 @@ public class MapView extends View {
 		initScrolling(context);
 		setFocusable(true);
 
-		background = context.getResources().getDrawable(R.drawable.map_background);
+		background = context.getResources().getDrawable(
+				R.drawable.map_background);
 		background.setBounds(0, 0, background.getIntrinsicWidth(), background
 				.getIntrinsicHeight());
 		background.setAlpha(127);
@@ -147,14 +146,14 @@ public class MapView extends View {
 		this.findLayout = findLayout;
 
 		this.cancel.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
 				hideSearchUI();
 			}
 		});
 
 		this.next.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
 				selectedSearchResult = (selectedSearchResult + 1)
 						% findTopics.size();
@@ -167,7 +166,7 @@ public class MapView extends View {
 		});
 
 		this.prev.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
 				selectedSearchResult = (selectedSearchResult
 						+ findTopics.size() - 1)
@@ -252,10 +251,9 @@ public class MapView extends View {
 
 	private boolean isFinished = true;
 
-	
 	protected void onDraw(Canvas canvas) {
 		new Thread() {
-			
+
 			public void run() {
 				isFinished = false;
 				while (!activity.canDraw()) {
@@ -276,7 +274,7 @@ public class MapView extends View {
 
 		final View mainMapView = this;
 		new Thread(new Runnable() {
-			
+
 			public void run() {
 				if (!canDraw) {
 					mRender.onRotate();
@@ -291,25 +289,26 @@ public class MapView extends View {
 		if (!canDraw) {
 			return;
 		}
+		
+		//fixScrolCoordinates();
 
 		// Save matrix
 		canvas.save();
 
-
 		// Clear screen
-		
-		//canvas.drawARGB(255, 213, 255, 251);
+
+		// canvas.drawARGB(255, 213, 255, 251);
 		canvas.drawARGB(255, 255, 255, 255);
 
 		// Draw logo
-		Rect size = background.getBounds();
-		canvas.translate(this.getWidth() - size.right, this.getHeight() - size.bottom);
-		background.draw(canvas);
-		
+		// Rect size = background.getBounds();
+		// canvas.translate(this.getWidth() - size.right, this.getHeight() -
+		// size.bottom);
+		// background.draw(canvas);
+
 		// Scaling
 		canvas.restore();
 		canvas.scale(scale, scale);
-
 
 		// Draw map
 		mRender.draw(mScroller.getCurrX(), mScroller.getCurrY(),
@@ -394,7 +393,6 @@ public class MapView extends View {
 
 	}
 
-	
 	public boolean onTouchEvent(MotionEvent ev) {
 
 		switch (ev.getAction()) {
@@ -482,7 +480,6 @@ public class MapView extends View {
 		return true;
 	}
 
-	
 	public boolean onKeyDown(int keyCode, KeyEvent msg) {
 
 		// Back button fix
@@ -510,6 +507,29 @@ public class MapView extends View {
 	private final int getScreenForRenderHeight() {
 		return (int) (this.getHeight() / scale) - SCROLLBAR_WIDTH;
 	}
+	
+	void fixScrolCoordinates() {
+		int deltaX = 0, deltaY = 0;
+		if (mScroller.getCurrX() + deltaX > getScrollWidth())
+			deltaX = getScrollWidth() - mScroller.getCurrX();
+		if (mScroller.getCurrY() + deltaY > getScrollHeight())
+			deltaY = getScrollHeight() - mScroller.getCurrY();
+
+		if (mScroller.getCurrX() + deltaX < 0)
+			deltaX = -mScroller.getCurrX();
+		if (mScroller.getCurrY() + deltaY < 0)
+			deltaY = -mScroller.getCurrY();
+
+		mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
+				deltaX, deltaY, 0);
+	}
+	
+	protected void onLayout (boolean changed, int left, int top, int right, int bottom)
+	{
+		super.onLayout(changed, left, top, right, bottom);
+		fixScrolCoordinates();
+	}
+	
 
 	public void onRotate() {
 		canDraw = false;
