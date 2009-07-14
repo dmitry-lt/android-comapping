@@ -18,6 +18,7 @@ public class LoginActivityTest extends
 	private EditText password;
 	private CheckBox check;
 	private TextView passwordView;
+
 	/**
 	 * The first constructor parameter must refer to the package identifier of
 	 * the package hosting the activity to be launched, which is specified in
@@ -32,7 +33,7 @@ public class LoginActivityTest extends
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-	    final LoginActivity a = getActivity();
+		final LoginActivity a = getActivity();
 		login = (Button) a.findViewById(R.id.login);
 		eMail = (EditText) a.findViewById(R.id.eMail);
 		password = (EditText) a.findViewById(R.id.password);
@@ -65,32 +66,60 @@ public class LoginActivityTest extends
 	}
 
 	@MediumTest
+	public void testCheckBox() {
+		// Give login button focus by having it
+		// request focus. We post it
+		// to the UI thread because we are not running on the same thread, and
+		// any direct api calls that change state must be made from the UI
+		// thread.
+		// This is in contrast to instrumentation calls that send events that
+		// are
+		// processed through the framework and eventually find their way to
+		// affecting the ui thread.
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				login.requestFocus();
+			}
+		});
+		// wait for the request to go through
+		getInstrumentation().waitForIdleSync();
+
+		assertTrue(login.isFocused());
+
+		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		assertTrue("checkbox should be focused", check.isFocused());
+		sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+		assertTrue("checkbox is chosen", check.isChecked());
+	}
+
+	@MediumTest
 	public void testLogin() {
-		
+
 		// Email field
-		//input "android"
+		// input "android"
 		sendKeys(KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_N, KeyEvent.KEYCODE_D,
 				KeyEvent.KEYCODE_R, KeyEvent.KEYCODE_O, KeyEvent.KEYCODE_I,
 				KeyEvent.KEYCODE_D);
-		//input "@"
+		// input "@"
 		sendKeys(KeyEvent.KEYCODE_AT);
-		//input "comapping"
+		// input "comapping"
 		sendKeys(KeyEvent.KEYCODE_C, KeyEvent.KEYCODE_O, KeyEvent.KEYCODE_M,
 				KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_P, KeyEvent.KEYCODE_P,
 				KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_N, KeyEvent.KEYCODE_G);
-		//input "."
+		// input "."
 		sendKeys(KeyEvent.KEYCODE_PERIOD);
-		//input "com"
+		// input "com"
 		sendKeys(KeyEvent.KEYCODE_C, KeyEvent.KEYCODE_O, KeyEvent.KEYCODE_M);
-		//go down
+		// go down
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
 		// password field
 		sendKeys(KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_3);
-		//go down
+		// go down
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		assertEquals(eMail.getText().toString(),"android@comapping.com");
-		assertEquals(password.getText().toString(),"123");
+		assertEquals(eMail.getText().toString(), "android@comapping.com");
+		assertEquals(password.getText().toString(), "123");
 		assertTrue("login button should be focused", login.isFocused());
+		sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 	}
 }
