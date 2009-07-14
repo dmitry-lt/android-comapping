@@ -89,8 +89,8 @@ public class LoginActivityTest extends
 		//go down
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		assertEquals(eMail.getText(),"android@comapping.com");
-		assertEquals(password.getText(),"129");
+		assertEquals(eMail.getText().toString(),"android@comapping.com");
+		assertEquals(password.getText().toString(),"123");
 		assertTrue("login button should be focused", login.isFocused());
 	}
 }
