@@ -61,7 +61,7 @@ public class FormattedTextSaxBuilder {
 	public static FormattedText buildFormattedText(String xmlString)
 			throws StringToXMLConvertionException {
 		
-		if (!xmlString.startsWith("<"))
+		if (!xmlString.contains("<"))
 		{
 			return new FormattedText(xmlString, new TextFormat());
 		}
