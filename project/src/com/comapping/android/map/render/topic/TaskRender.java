@@ -1,6 +1,5 @@
 package com.comapping.android.map.render.topic;
 
-import com.comapping.android.Log;
 import com.comapping.android.map.model.map.Task;
 import com.comapping.android.map.model.text.FormattedText;
 import com.comapping.android.map.model.text.TextFormat;
@@ -69,7 +68,7 @@ public class TaskRender extends Render {
 
 	public void setWidth(int width) {
 		if (!isEmpty) {
-			Log.d(Log.TOPIC_RENDER_TAG, "setting width=" + width + " in " + this);
+			//Log.d(Log.TOPIC_RENDER_TAG, "setting width=" + width + " in " + this);
 
 			width = Math.max(width, MIN_MAX_WIDTH);
 

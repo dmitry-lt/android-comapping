@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import com.comapping.android.Log;
 import com.comapping.android.map.model.text.FormattedText;
 import com.comapping.android.map.model.text.TextFormat;
 import com.comapping.android.map.render.Render;
@@ -76,7 +75,7 @@ public class NoteRender extends Render {
 
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty) {
-			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
+			//Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
 			textRender.setMaxWidthAndLinesCount(Math.max(maxWidth, MIN_MAX_WIDTH), MAX_LINES_COUNT);
 			recalcDrawingData();
 		}

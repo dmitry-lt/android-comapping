@@ -1,6 +1,5 @@
 package com.comapping.android.map.render.topic;
 
-import com.comapping.android.Log;
 import com.comapping.android.map.model.text.FormattedText;
 import com.comapping.android.map.model.text.TextBlock;
 import com.comapping.android.map.model.text.TextFormat;
@@ -81,7 +80,7 @@ public class TextRender extends Render {
 
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty) {
-			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
+			//Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
 
 			setMaxWidthAndLinesCount(maxWidth, Integer.MAX_VALUE);
 		}
@@ -145,7 +144,7 @@ public class TextRender extends Render {
 
 	public void setMaxWidthAndLinesCount(int maxWidth, int linesCount) {
 		if (!isEmpty && linesCount > 0) {
-			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " linesCount=" + linesCount + " in " + this);
+			//Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " linesCount=" + linesCount + " in " + this);
 
 			maxWidth -= leftBorder + rightBorder;
 
@@ -228,8 +227,8 @@ public class TextRender extends Render {
 	private void addThreeDots(FormattedText formattedText, int lastLineWidth, int maxLineWidth) {
 		// checking data validness
 		if (formattedText == null || lastLineWidth > maxLineWidth || maxLineWidth < MIN_MAX_WIDTH) {
-			Log.d(Log.TOPIC_RENDER_TAG, "Cannot add three dots, invalide args:\n" + formattedText + "\nlastLineWidth="
-					+ lastLineWidth + " maxLineWidth=" + maxLineWidth);
+			//Log.d(Log.TOPIC_RENDER_TAG, "Cannot add three dots, invalide args:\n" + formattedText + "\nlastLineWidth="
+			//		+ lastLineWidth + " maxLineWidth=" + maxLineWidth);
 			return;
 		}
 
@@ -330,13 +329,13 @@ public class TextRender extends Render {
 		if (!isEmpty) {
 			Point touchPoint = new Point(x, y);
 
-			Log.d(Log.TOPIC_RENDER_TAG, "Touch " + touchPoint + " on " + this);
+			//Log.d(Log.TOPIC_RENDER_TAG, "Touch " + touchPoint + " on " + this);
 
 			for (int i = 0; i < textToDraw.getTextParagraphs().size(); i++) {
 				TextParagraph paragraph = textToDraw.getTextParagraphs().get(i);
 				for (int j = 0; j < paragraph.getTextBlocks().size(); j++) {
 					if (pointLiesOnRect(touchPoint, blocksRect[i][j])) {
-						Log.d(Log.TOPIC_RENDER_TAG, "Touch on " + paragraph.getTextBlocks().get(j));
+						//Log.d(Log.TOPIC_RENDER_TAG, "Touch on " + paragraph.getTextBlocks().get(j));
 
 						String url = paragraph.getTextBlocks().get(j).getFormat().getHRef();
 						if (!url.equals("")) {

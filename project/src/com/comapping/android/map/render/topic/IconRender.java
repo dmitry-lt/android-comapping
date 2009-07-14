@@ -1,6 +1,5 @@
 package com.comapping.android.map.render.topic;
 
-import com.comapping.android.Log;
 import com.comapping.android.controller.R;
 import com.comapping.android.map.model.map.Icon;
 import com.comapping.android.map.model.map.Topic;
@@ -184,7 +183,7 @@ public class IconRender extends Render {
 
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty && maxWidth >= ICON_SIZE) {
-			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
+			//Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
 
 			int iconsInLineCount = (maxWidth + HORISONTAL_MERGING) / (ICON_SIZE + HORISONTAL_MERGING);
 
