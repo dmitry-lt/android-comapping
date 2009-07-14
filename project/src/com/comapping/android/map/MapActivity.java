@@ -356,7 +356,7 @@ public class MapActivity extends Activity {
 			public void run() {
 				splashActivate("Loading map", false);
 				canDraw = false;
-				Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
+//				Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
 				while (!mapRender.canRotate()) {
 					try {
 						sleep(100);
@@ -365,7 +365,7 @@ public class MapActivity extends Activity {
 					}
 				}
 				splashDeactivate();
-				Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged finish");
+//				Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged finish");
 				view.onRotate();
 				canDraw = true;
 			}

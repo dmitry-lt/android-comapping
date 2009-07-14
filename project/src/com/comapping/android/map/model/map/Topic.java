@@ -167,8 +167,8 @@ public class Topic implements Serializable {
 	public void setTaskCompletion(TaskCompletion taskCompletion) {
 		this.taskCompletion = taskCompletion;
 
-		Log.d(Log.MODEL_TAG, "set taskCompletion=\"" + taskCompletion
-				+ "\" in " + this);
+//		Log.d(Log.MODEL_TAG, "set taskCompletion=\"" + taskCompletion
+//				+ "\" in " + this);
 	}
 
 	public void addIcon(Icon icon) {

@@ -20,7 +20,7 @@ public class Map implements Serializable {
 	public Map(int id) {
 		this.id = id;
 
-		Log.d(Log.MODEL_TAG, "create " + this);
+//		Log.d(Log.MODEL_TAG, "create " + this);
 	}
 
 	public int getId() {
@@ -32,7 +32,7 @@ public class Map implements Serializable {
 	}
 
 	public void setName(String name) {
-		Log.d(Log.MODEL_TAG, "set name=\"" + name + "\" in " + this);
+//		Log.d(Log.MODEL_TAG, "set name=\"" + name + "\" in " + this);
 
 		this.name = name;
 	}
@@ -44,7 +44,7 @@ public class Map implements Serializable {
 	public void setOwner(User owner) {
 		this.owner = owner;
 
-		Log.d(Log.MODEL_TAG, "set owner=" + owner + " in " + this);
+//		Log.d(Log.MODEL_TAG, "set owner=" + owner + " in " + this);
 	}
 
 	public Topic getRoot() {
@@ -52,7 +52,7 @@ public class Map implements Serializable {
 	}
 
 	public void setRoot(Topic root) {
-		Log.d(Log.MODEL_TAG, "set root=" + root + " in " + this);
+//		Log.d(Log.MODEL_TAG, "set root=" + root + " in " + this);
 
 		this.root = root;
 	}

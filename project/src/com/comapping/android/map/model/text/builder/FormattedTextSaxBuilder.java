@@ -79,7 +79,7 @@ public class FormattedTextSaxBuilder {
 
 			InputStream stream = new java.io.StringBufferInputStream(xmlString);
 
-			Log.d(Log.MODEL_TAG, "Text SAX parsing: " + xmlString);
+//			Log.d(Log.MODEL_TAG, "Text SAX parsing: " + xmlString);
 
 			parser.parse(stream, handler);
 			resultText = handler.getFormattedText();
