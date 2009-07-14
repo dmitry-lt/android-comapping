@@ -66,7 +66,7 @@ public class LoginActivityTest extends
 	}
 
 	@MediumTest
-	public void testCheckBox() {
+	public void testRememberBox() {
 		// Give login button focus by having it
 		// request focus. We post it
 		// to the UI thread because we are not running on the same thread, and
@@ -86,7 +86,7 @@ public class LoginActivityTest extends
 
 		assertTrue(login.isFocused());
 
-		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		sendKeys(KeyEvent.KEYCODE_DPAD_UP);
 		assertTrue("checkbox should be focused", check.isFocused());
 		sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 		assertTrue("checkbox is chosen", check.isChecked());
