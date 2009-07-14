@@ -1,7 +1,6 @@
 package com.comapping.android.metamap.provider;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import android.app.Activity;
@@ -24,8 +23,6 @@ import com.comapping.android.metamap.MetaMapItem;
 public class ComappingProvider extends MetaMapProvider {
 
 	private static final String LAST_SYNCHRONIZATION = "Last synchronization";
-
-	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	private static final String MAP_DESCRIPTION = "Map";
 	private static final String FOLDER_DESCRIPTION = "Folder";
@@ -82,6 +79,32 @@ public class ComappingProvider extends MetaMapProvider {
 		return res;
 	}
 
+	private String getLastSynchronization(Timestamp date) {
+		long time = (System.currentTimeMillis() - date.getTime()) / 1000;
+		if (time < 5 * 60) {
+			return "just now";
+		}
+		time /= 60;
+		if (time < 60) {
+			return time + " minutes ago";
+		}
+		time /= 60;
+		if (time < 24) {
+			return time + " hours ago";
+		}
+		time /= 24;
+		return time + " days ago";
+	}
+	
+	private String getSize(int size) {
+		if (size < 1024) {
+			return size + " bytes";
+		}
+		size /= 1024;
+		return size + " Kbytes";
+
+	}
+	
 	public String getMapDescription(Topic topic) {
 		CachingClient client = Client.getClient(activity);
 		Timestamp lastSynchronizationDate = client
@@ -90,10 +113,15 @@ public class ComappingProvider extends MetaMapProvider {
 		if (lastSynchronizationDate == null) {
 			return MAP_DESCRIPTION;
 		} else {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-
-			return LAST_SYNCHRONIZATION + ": "
-					+ dateFormat.format(lastSynchronizationDate);
+			String result = LAST_SYNCHRONIZATION + ": "
+			+ getLastSynchronization(lastSynchronizationDate) + "\nSize: ";
+			try {
+				result = result 
+						+ getSize(client.getComap(topic.getMapRef()).length());
+			} catch (Exception e) {
+				
+			}
+			return result;
 		}
 	}
 
