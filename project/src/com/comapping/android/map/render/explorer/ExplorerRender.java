@@ -276,6 +276,7 @@ public class ExplorerRender extends MapRender {
 		Log.d(Log.EXPLORER_RENDER_TAG,"Size" + width + " " + height);
 		if (setBoundsNeeded) {
 			update();
+			selectTopic(selectedTopic);
 			if (cachingNeeded) {
 				new Thread(new Runnable() {
 					public void run() {
