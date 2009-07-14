@@ -62,7 +62,7 @@ public class FormattedTextSaxBuilder {
 		
 		if (!xmlString.contains("<"))
 		{
-			return new FormattedText(xmlString, new TextFormat());
+			return new FormattedText(xmlString, getDefFormat());
 		}
 
 		if (xmlString.startsWith("<P")) {
