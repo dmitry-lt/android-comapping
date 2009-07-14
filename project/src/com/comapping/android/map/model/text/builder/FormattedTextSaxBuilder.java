@@ -60,6 +60,11 @@ public class FormattedTextSaxBuilder {
 	@SuppressWarnings("deprecation")
 	public static FormattedText buildFormattedText(String xmlString)
 			throws StringToXMLConvertionException {
+		
+		if (!xmlString.startsWith("<"))
+		{
+			return new FormattedText(xmlString, new TextFormat());
+		}
 
 		// long startTime = System.currentTimeMillis();
 

@@ -283,7 +283,12 @@ class SaxHandler extends DefaultHandler {
 			throws SAXException {
 		// try {
 		if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
-			// currentTopic.setHtmlText(topicText);
+			try {
+				currentTopic.setHtmlText(topicText);
+			} catch (StringToXMLConvertionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (localName.equals(MapBuilder.TOPIC_TAG)) {
 			if (currentTopic.getParent() != null) {
 				currentTopic = currentTopic.getParent();
