@@ -491,11 +491,17 @@ public class MapView extends View {
 	}
 
 	private final int getScrollWidth() {
+		if (mRender == null)
+			return 0;
+		
 		return mRender.getWidth() - (int) (this.getWidth() / scale)
 				+ SCROLLBAR_WIDTH;
 	}
 
 	private final int getScrollHeight() {
+		if (mRender == null)
+			return 0;
+		
 		return mRender.getHeight() - (int) (this.getHeight() / scale)
 				+ SCROLLBAR_WIDTH;
 	}
