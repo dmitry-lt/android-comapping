@@ -30,7 +30,7 @@ public class MapBuilderTest extends AndroidTestCase {
 
 	public void testMap() throws FileNotFoundException,
 			StringToXMLConvertionException, MapParsingException, IOException {
-		testgetMapFromSD("sdcard\\2Mb.comap");
+		testgetMapFromSD("sdcard\\100kb.comap");
 	}
 
 	public void test0() throws StringToXMLConvertionException,
