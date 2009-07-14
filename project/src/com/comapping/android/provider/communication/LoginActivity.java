@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+
 import com.comapping.android.Log;
 import com.comapping.android.controller.R;
 import com.comapping.android.preferences.PreferencesActivity;
@@ -184,11 +185,13 @@ public class LoginActivity extends Activity {
 				});
 
 		// set auto login
-		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY,
-				null, this);
-		if (email != null) {
-			((TextView) findViewById(R.id.eMail)).setText(email);
-			((TextView) findViewById(R.id.password)).requestFocus();
+		if (client.isAutologinPossible()) {
+			String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY,
+					null, this);
+			if (email != null) {
+				((TextView) findViewById(R.id.eMail)).setText(email);
+				((TextView) findViewById(R.id.password)).requestFocus();
+			}
 		}
 
 		// set background
