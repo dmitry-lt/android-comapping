@@ -37,7 +37,7 @@ public class SqliteMapCache {
 	}
 
 	public void set(String mapId, String data) {
-		Log.d(Log.SQLITE_CACHE_TAG, "set ["+mapId+"] = "+data);
+//		Log.d(Log.SQLITE_CACHE_TAG, "set ["+mapId+"] = "+data);
 		
 		if (data == null) {
 			return;
@@ -53,7 +53,7 @@ public class SqliteMapCache {
 		values.put(DATA_ATTR_NAME, data);
 		values.put(LAST_UPDATE_ATTR_NAME, new Timestamp(Calendar.getInstance().getTimeInMillis()).toString());
 
-		Log.d(Log.SQLITE_CACHE_TAG, "set attributes "+values);
+//		Log.d(Log.SQLITE_CACHE_TAG, "set attributes "+values);
 		
 		database.delete(TABLE_NAME, "mapId=?", new String[]{ mapId });
 		
@@ -65,7 +65,7 @@ public class SqliteMapCache {
 	}
 
 	private Cursor getMapCursor(String mapId) {
-		Log.d(Log.SQLITE_CACHE_TAG, "get ["+mapId+"]");
+//		Log.d(Log.SQLITE_CACHE_TAG, "get ["+mapId+"]");
 		
 		if (database == null) {
 			return null;
@@ -88,7 +88,7 @@ public class SqliteMapCache {
         if (result != null) {
         	if (result.moveToFirst()) {
         		String res = result.getString(result.getColumnIndex(DATA_ATTR_NAME));
-        		Log.d(Log.SQLITE_CACHE_TAG, "getting result "+res);
+//        		Log.d(Log.SQLITE_CACHE_TAG, "getting result "+res);
         		result.close();
         		return res;
         	}
@@ -104,7 +104,7 @@ public class SqliteMapCache {
         if (result != null) {
         	if (result.moveToFirst()) {
         		String res = result.getString(result.getColumnIndex(LAST_UPDATE_ATTR_NAME));
-        		Log.d(Log.SQLITE_CACHE_TAG, "getting result "+res);
+//        		Log.d(Log.SQLITE_CACHE_TAG, "getting result "+res);
         		
         		result.close();
         		return Timestamp.valueOf(res);
@@ -121,7 +121,7 @@ public class SqliteMapCache {
 	}
 
 	public void clear() {
-		Log.d(Log.SQLITE_CACHE_TAG, "clear database");
+//		Log.d(Log.SQLITE_CACHE_TAG, "clear database");
 		if (database != null) {
 			database.execSQL(DELETE_TABLE_QUERY);
 			initDatabase();

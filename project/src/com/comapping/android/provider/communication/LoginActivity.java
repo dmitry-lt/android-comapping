@@ -146,9 +146,9 @@ public class LoginActivity extends Activity {
 
 	public void loginClick() {
 
-		Log.d("Logic Activity", "splash activate start");
+//		Log.d("Logic Activity", "splash activate start");
 		splashActivate(LOGIN_ATTEMPT_MESSAGE);
-		Log.d("Logic Activity", "splash activate end");
+//		Log.d("Logic Activity", "splash activate end");
 		final String email = ((TextView) findViewById(R.id.eMail)).getText()
 				.toString();
 		final String password = ((TextView) findViewById(R.id.password))
@@ -198,17 +198,17 @@ public class LoginActivity extends Activity {
 		findViewById(R.id.loginLayout).setBackgroundDrawable(background);
 
 		if (isWorking) {
-			Log.d("Logic Activity", "splash activate start");
+//			Log.d("Logic Activity", "splash activate start");
 			splashActivate(LOGIN_ATTEMPT_MESSAGE);
-			Log.d("Logic Activity", "splash activate end");
+//			Log.d("Logic Activity", "splash activate end");
 		} else {
 			((TextView) findViewById(R.id.error)).setText(stateMsg);
 			if (client.isAutologinPossible()) {
 				// autologin attempt
 				((TextView) findViewById(R.id.password)).setText("******");
-				Log.d("Logic Activity", "splash activate start");
+//				Log.d("Logic Activity", "splash activate start");
 				splashActivate(LOGIN_ATTEMPT_MESSAGE);
-				Log.d("Logic Activity", "splash activate end");
+//				Log.d("Logic Activity", "splash activate end");
 
 				startAutologin();
 			} else {
