@@ -1,6 +1,5 @@
 package com.comapping.android.map.render.topic;
 
-import com.comapping.android.Log;
 import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.render.Render;
 
@@ -22,7 +21,7 @@ public class TopicRender extends Render {
 	private static final int SELECTION_WIDTH = 3;
 	private static final int SELECTION_EDGES_RADIUS = 4;
 	private Topic topic;
-	
+
 	private boolean isEmpty;
 
 	private IconRender iconRender;
@@ -48,13 +47,15 @@ public class TopicRender extends Render {
 	public TopicRender(Topic topic, Context context) {
 		this.topic = topic;
 		isEmpty = (topic == null);
-		
+
 		if (!isEmpty) {
-			textRender = new TextRender(topic.getFormattedText(), topic.getBgColor(), context);
+			textRender = new TextRender(topic.getFormattedText(), topic
+					.getBgColor(), context);
 			iconRender = new IconRender(topic, context);
 			taskRender = new TaskRender(topic.getTask(), context);
 			noteRender = new NoteRender(topic.getNote(), context);
-			attachmentRender = new AttachmentRender(topic.getAttachment(), context);
+			attachmentRender = new AttachmentRender(topic.getAttachment(),
+					context);
 
 			// calc approximately icon and text parts to recal width
 			float iconSquare = iconRender.getWidth() * iconRender.getHeight();
@@ -68,15 +69,15 @@ public class TopicRender extends Render {
 			width = 0;
 		}
 
-		Log.d(Log.TOPIC_RENDER_TAG, "created " + this);
+		//Log.d(Log.TOPIC_RENDER_TAG, "created " + this);
 	}
 
-	
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			iconRender.draw(x + iconRect.left, y + iconRect.top, 0, 0, c);
 			textRender.draw(x + textRect.left, y + textRect.top, 0, 0, c);
-			attachmentRender.draw(x + attachmentRect.left, y + attachmentRect.top, 0, 0, c);
+			attachmentRender.draw(x + attachmentRect.left, y
+					+ attachmentRect.top, 0, 0, c);
 			taskRender.draw(x + taskRect.left, y + taskRect.top, 0, 0, c);
 			noteRender.draw(x + noteRect.left, y + noteRect.top, 0, 0, c);
 
@@ -89,7 +90,8 @@ public class TopicRender extends Render {
 				p.setStyle(Style.STROKE);
 				p.setStrokeWidth(SELECTION_WIDTH);
 				RectF rect = new RectF(x, y, x + getWidth(), y + getHeight());
-				c.drawRoundRect(rect, SELECTION_EDGES_RADIUS, SELECTION_EDGES_RADIUS, p);
+				c.drawRoundRect(rect, SELECTION_EDGES_RADIUS,
+						SELECTION_EDGES_RADIUS, p);
 			}
 		} else {
 			// nothing to draw
@@ -109,34 +111,31 @@ public class TopicRender extends Render {
 		return lineOffset;
 	}
 
-	public Topic getTopic()
-	{
+	public Topic getTopic() {
 		return topic;
 	}
-	
-	
+
 	public int getWidth() {
 		return width;
 	}
 
-	
 	public int getHeight() {
 		return height;
 	}
 
-	
 	public String toString() {
 		if (!isEmpty) {
-			return "[TopicRender: width=" + getWidth() + " height=" + getHeight() + "\n\t" + iconRender + "\n\t"
-					+ textRender + "\n\t" + attachmentRender + "\n\t" + taskRender + "\n\t" + noteRender + "]\n";
+			return "[TopicRender: width=" + getWidth() + " height="
+					+ getHeight() + "\n\t" + iconRender + "\n\t" + textRender
+					+ "\n\t" + attachmentRender + "\n\t" + taskRender + "\n\t"
+					+ noteRender + "]\n";
 		} else {
 			return "[TopicRender: EMPTY]";
 		}
 	}
 
-	
 	public void onTouch(int x, int y) {
-		Log.d(Log.TOPIC_RENDER_TAG, "Touch on " + this);
+		//Log.d(Log.TOPIC_RENDER_TAG, "Touch on " + this);
 
 		if (!isEmpty && selected) {
 			Point touchPoint = new Point(x, y);
@@ -163,10 +162,11 @@ public class TopicRender extends Render {
 			}
 		}
 	}
-	
+
 	public void setMaxWidth(int maxWidth) {
 		if (!isEmpty && maxWidth != lastMaxWidth) {
-			Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth + " in " + this);
+			// Log.d(Log.TOPIC_RENDER_TAG, "setting maxWidth=" + maxWidth +
+			// " in " + this);
 
 			lastMaxWidth = maxWidth;
 			maxWidth -= attachmentRender.getWidth();
@@ -187,8 +187,10 @@ public class TopicRender extends Render {
 		lineOffset = Math.max(iconRender.getHeight(), textRender.getHeight());
 		lineOffset = Math.max(lineOffset, attachmentRender.getHeight());
 
-		int widthWithoutAttach = Math.max(iconRender.getWidth() + textRender.getWidth(), taskRender.getWidth());
-		widthWithoutAttach = Math.max(widthWithoutAttach, noteRender.getWidth());
+		int widthWithoutAttach = Math.max(iconRender.getWidth()
+				+ textRender.getWidth(), taskRender.getWidth());
+		widthWithoutAttach = Math
+				.max(widthWithoutAttach, noteRender.getWidth());
 		width = widthWithoutAttach + attachmentRender.getWidth();
 		height = lineOffset + taskRender.getHeight() + noteRender.getHeight();
 
@@ -205,8 +207,10 @@ public class TopicRender extends Render {
 
 		attachmentRect.left = widthWithoutAttach;
 		attachmentRect.top = (getLineOffset() - attachmentRender.getHeight()) / 2;
-		attachmentRect.right = attachmentRect.left + attachmentRender.getWidth();
-		attachmentRect.bottom = attachmentRect.top + attachmentRender.getHeight();
+		attachmentRect.right = attachmentRect.left
+				+ attachmentRender.getWidth();
+		attachmentRect.bottom = attachmentRect.top
+				+ attachmentRender.getHeight();
 
 		taskRect.left = 0;
 		taskRect.top = getLineOffset();
