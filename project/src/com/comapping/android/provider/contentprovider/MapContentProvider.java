@@ -40,7 +40,13 @@ public abstract class MapContentProvider extends ContentProvider {
 				String relSync, boolean canLogout, boolean canSync) {
 			this.authorities = authorities;
 			this.separator = separator;
-			this.root = authorities + separator + relRoot + separator;
+			
+			if (relRoot.equals("")) {
+				this.root = authorities + separator;
+			} else {
+				this.root = authorities + separator + relRoot + separator;
+			}
+			
 			this.relRoot = relRoot;
 			this.logout = authorities + separator + relLogout;
 			this.relLogout = relLogout;
