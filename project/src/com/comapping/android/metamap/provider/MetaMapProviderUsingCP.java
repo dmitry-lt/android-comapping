@@ -68,7 +68,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	@Override
 	public void goUp() {
 		// TODO write it more accurate
-		currentPath = currentPath.substring(0, currentPath.substring(0, currentPath.length() - 1).lastIndexOf(info.separator));
+		currentPath = currentPath.substring(0, currentPath.substring(0, currentPath.length() - 1).lastIndexOf(info.separator) + 1);
 		updateCurrentLevel();
 	}
 
