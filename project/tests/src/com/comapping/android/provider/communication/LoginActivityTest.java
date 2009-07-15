@@ -1,13 +1,20 @@
 package com.comapping.android.provider.communication;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.comapping.android.Log;
 import com.comapping.android.controller.R;
+import com.comapping.android.provider.communication.exceptions.ConnectionException;
+import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
 
 public class LoginActivityTest extends
 		ActivityInstrumentationTestCase2<LoginActivity> {
@@ -66,7 +73,7 @@ public class LoginActivityTest extends
 	}
 
 	@MediumTest
-	public void testRememberBox() {
+	public void testCheckBox() {
 		// Give login button focus by having it
 		// request focus. We post it
 		// to the UI thread because we are not running on the same thread, and
@@ -92,7 +99,7 @@ public class LoginActivityTest extends
 		assertTrue("remeberbox is chosen", check.isChecked());
 	}
 
-	@MediumTest
+	@LargeTest
 	public void testLogin() {
 
 		// Email field
@@ -131,8 +138,22 @@ public class LoginActivityTest extends
 		assertEquals(eMail.getText().toString(), "android@comapping.com");
 		assertEquals(password.getText().toString(), "123");
 		assertTrue("login button should be focused", login.isFocused());
+		
 		sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 
+		CachingClient client = Client.getClient(getActivity());
+		try {
+			client.login(eMail.getText().toString(), password.getText().toString(),check.isChecked());
+		} catch (ConnectionException e) {
+			Log.e(Log.LOGIN_TAG, "connection exception");
+		} catch (LoginInterruptedException e) {
+			Log.e(Log.LOGIN_TAG, "login interrupted");
+		} catch (InvalidCredentialsException e) {
+			Log.e(Log.LOGIN_TAG, "invalid credentails");
+		}
+		
+		assertFalse(client.isLoggedIn());
+		
 	}
 
 }
