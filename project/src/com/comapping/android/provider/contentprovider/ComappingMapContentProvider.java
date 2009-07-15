@@ -1,7 +1,6 @@
 package com.comapping.android.provider.contentprovider;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -157,9 +156,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	private class ComappingMetamapCursor extends MetamapCursor {
 		private static final String LAST_SYNCHRONIZATION = "Last synchronization";
 
-		private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-		private static final String MAP_DESCRIPTION = "Map";
+		private static final String MAP_DESCRIPTION = "Not syncronized yet";
 		private static final String FOLDER_DESCRIPTION = "Folder";
 
 		public ComappingMetamapCursor(Topic topic) {
@@ -191,15 +188,46 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			return res;
 		}
 
+		private String getLastSynchronization(Timestamp date) {
+			long time = (System.currentTimeMillis() - date.getTime()) / 1000;
+			if (time < 5 * 60) {
+				return "just now";
+			}
+			time /= 60;
+			if (time < 60) {
+				return time + " minutes ago";
+			}
+			time /= 60;
+			if (time < 24) {
+				return time + " hours ago";
+			}
+			time /= 24;
+			return time + " days ago";
+		}
+		
+		private String getSize(int size) {
+			if (size < 1024) {
+				return size + " bytes";
+			}
+			size /= 1024;
+			return size + " Kbytes";
+		}
+		
 		private String getMapDescription(Topic topic) {
 			Timestamp lastSynchronizationDate = client.getLastSynchronizationDate(topic.getMapRef());
 
 			if (lastSynchronizationDate == null) {
 				return MAP_DESCRIPTION;
 			} else {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-
-				return LAST_SYNCHRONIZATION + ": " + dateFormat.format(lastSynchronizationDate);
+				String result = LAST_SYNCHRONIZATION + ": "
+				+ getLastSynchronization(lastSynchronizationDate) + "\nSize: ";
+				try {
+					result = result 
+							+ getSize(client.getComap(topic.getMapRef()).length());
+				} catch (Exception e) {
+					
+				}
+				return result;
 			}
 		}
 
