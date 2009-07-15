@@ -402,7 +402,7 @@ public class Client {
 			while (!isLoggedIn() && (!loginInterrupted)) {
 				try {
 					Thread.sleep(SLEEP_TIME);
-					Log.d(Log.CONNECTION_TAG, "waiting login...");
+//					Log.d(Log.CONNECTION_TAG, "waiting login...");
 				} catch (InterruptedException e) {
 					Log.i(Log.CONNECTION_TAG,
 							"login required interrupted exception");
