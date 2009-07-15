@@ -2,7 +2,6 @@ package com.comapping.android.provider.communication;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.test.suitebuilder.annotation.SmallTest;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -39,6 +38,7 @@ public class LoginActivityTest extends
 		password = (EditText) a.findViewById(R.id.password);
 		passwordView = (TextView) a.findViewById(R.id.passwordTextView);
 		check = (CheckBox) a.findViewById(R.id.rememberUserCheckBox);
+
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class LoginActivityTest extends
 	 * any and all failures in other tests. This is not guaranteed to run before
 	 * other tests, as junit uses reflection to find the tests.
 	 */
-	@SmallTest
+	@MediumTest
 	public void testPreconditions() {
 		assertNotNull(login);
 		assertTrue("checkbox should be top of login button",
@@ -57,8 +57,8 @@ public class LoginActivityTest extends
 		assertTrue("eMail should be focused", eMail.isFocused());
 	}
 
-	@SmallTest
-	public void testGoingRightFromTopEditTextToLoginButton() {
+	@MediumTest
+	public void testGoingDownFromTopEditTextToLoginButton() {
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
@@ -89,7 +89,7 @@ public class LoginActivityTest extends
 		sendKeys(KeyEvent.KEYCODE_DPAD_UP);
 		assertTrue("checkbox should be focused", check.isFocused());
 		sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
-		assertTrue("checkbox is chosen", check.isChecked());
+		assertTrue("remeberbox is chosen", check.isChecked());
 	}
 
 	@MediumTest
@@ -100,26 +100,39 @@ public class LoginActivityTest extends
 		sendKeys(KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_N, KeyEvent.KEYCODE_D,
 				KeyEvent.KEYCODE_R, KeyEvent.KEYCODE_O, KeyEvent.KEYCODE_I,
 				KeyEvent.KEYCODE_D);
+
 		// input "@"
 		sendKeys(KeyEvent.KEYCODE_AT);
+
 		// input "comapping"
 		sendKeys(KeyEvent.KEYCODE_C, KeyEvent.KEYCODE_O, KeyEvent.KEYCODE_M,
 				KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_P, KeyEvent.KEYCODE_P,
 				KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_N, KeyEvent.KEYCODE_G);
+
 		// input "."
 		sendKeys(KeyEvent.KEYCODE_PERIOD);
+
 		// input "com"
 		sendKeys(KeyEvent.KEYCODE_C, KeyEvent.KEYCODE_O, KeyEvent.KEYCODE_M);
+
 		// go down
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+
 		// password field
 		sendKeys(KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_3);
+
 		// go down
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+
+		// rememberbox
+		sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 		sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+
 		assertEquals(eMail.getText().toString(), "android@comapping.com");
 		assertEquals(password.getText().toString(), "123");
 		assertTrue("login button should be focused", login.isFocused());
 		sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+
 	}
+
 }
