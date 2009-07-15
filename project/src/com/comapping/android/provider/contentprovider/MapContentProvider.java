@@ -10,6 +10,8 @@ import android.net.Uri;
 import com.comapping.android.metamap.MetaMapItem;
 
 public abstract class MapContentProvider extends ContentProvider {
+	public static final String CONTENT_PREFIX = "content://";
+	
 	public static final String ID = "id";
 	public static final String TEXT = "content";
 

@@ -19,7 +19,7 @@ import android.net.Uri;
 
 public class ComappingMapContentProvider extends MapContentProvider {
 	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true, true);
-	public static final Uri CONTENT_URI = Uri.parse("content://" + INFO.root);
+	public static final Uri CONTENT_URI = Uri.parse(CONTENT_PREFIX + INFO.root);
 	
 	private enum QueryType {
 		MAP, META_MAP, LOGOUT, SYNC
@@ -44,11 +44,11 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		
 	private QueryType detectQueryType(Uri uri) {
 		String uriString = uri.toString();
-		if (Pattern.matches("content://" + INFO.logout, uriString)) {
+		if (Pattern.matches(CONTENT_PREFIX + INFO.logout, uriString)) {
 			return QueryType.LOGOUT;
-		} else if (Pattern.matches("content://" + INFO.sync, uriString)) {
+		} else if (Pattern.matches(CONTENT_PREFIX + INFO.sync, uriString)) {
 			return QueryType.SYNC;
-		} else if (Pattern.matches("content://" + INFO.root + "\\d\\d\\d\\d\\d", uriString)) {
+		} else if (Pattern.matches(CONTENT_PREFIX + INFO.root + "\\d\\d\\d\\d\\d", uriString)) {
 			return QueryType.MAP;		
 		} else { 
 			return QueryType.META_MAP;
@@ -182,7 +182,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 					res[i].description = getMapDescription(topics[i]);
 				}
 
-				res[i].reference = "content://" + INFO.root + topics[i].getMapRef();
+				res[i].reference = CONTENT_PREFIX + INFO.root + topics[i].getMapRef();
 			}
 
 			return res;
