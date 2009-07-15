@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.AbstractCursor;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.comapping.android.metamap.MetaMapItem;
 
@@ -17,8 +18,10 @@ public abstract class MapContentProvider extends ContentProvider {
 
 	public static String getComap(String mapRef, Context context) {
 		Uri fullUri = Uri.parse(mapRef);
+		Log.e("MCP", "uri:" +  fullUri);
 		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);
-
+		
+	
 		return cursor.getString(1);
 	}
 

@@ -89,7 +89,7 @@ public class MetaMapActivity extends Activity {
 
 		if (sdCardProvider == null) {
 			sdCardProvider = new MetaMapProviderUsingCP(
-					ComappingMapContentProvider.INFO, EMPTY_FOLDER_MESSAGE,
+					FileMapContentProvider.INFO, EMPTY_FOLDER_MESSAGE,
 					EMPTY_FOLDER_MESSAGE, this);
 		}
 
