@@ -13,6 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.comapping.android.Log;
 import com.comapping.android.map.model.exceptions.EnumParsingException;
+import com.comapping.android.map.model.exceptions.MapParsingException;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.map.model.map.Attachment;
 import com.comapping.android.map.model.map.Flag;
@@ -134,7 +135,8 @@ class SaxHandler extends DefaultHandler {
 						.getValue(MapBuilder.TASK_DEADLINE_ATTR);
 				String responsible = attributes
 						.getValue(MapBuilder.TASK_RESPONSIBLE_ATTR);
-				String estimate = attributes.getValue(MapBuilder.TASK_ESTIMATE_ATTR);
+				String estimate = attributes
+						.getValue(MapBuilder.TASK_ESTIMATE_ATTR);
 				Task task = new Task(start, deadline, responsible, estimate);
 				currentTopic.setTask(task);
 			} else if (localName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
@@ -317,8 +319,10 @@ class SaxHandler extends DefaultHandler {
 		// }
 	}
 
-	public Map getMap() {
-		return map;
+	public Map getMap() throws MapParsingException{
+		if(map.getRoot()== null)
+			throw new MapParsingException();
+		return map;	
 	}
 
 	public void endDocument() {
