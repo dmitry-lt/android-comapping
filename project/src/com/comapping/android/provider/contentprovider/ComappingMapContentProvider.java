@@ -15,10 +15,8 @@ import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import android.content.Context;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.PatternMatcher;
 
 public class ComappingMapContentProvider extends MapContentProvider {
 	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true, true);
@@ -26,19 +24,6 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	
 	private enum QueryType {
 		MAP, META_MAP, LOGOUT, SYNC
-	}
-	
-	private static final UriMatcher uriMatcher;
-	static {
-		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(INFO.authorities, INFO.relLogout, QueryType.LOGOUT.ordinal());
-		uriMatcher.addURI(INFO.authorities, INFO.relSync, QueryType.SYNC.ordinal());
-		uriMatcher.addURI(INFO.authorities, "*" + INFO.separator, QueryType.META_MAP
-				.ordinal());
-//		uriMatcher.addURI("www.comapping.com", "maps/", QueryType.META_MAP.ordinal());
-		uriMatcher.addURI(INFO.authorities, INFO.relRoot + INFO.separator + "*", QueryType.MAP.ordinal());
-//		uriMatcher.addURI(INFO.authorities, INFO.separator + INFO.relRoot + INFO.separator + "#####", QueryType.MAP.ordinal());
-		
 	}
 	
 	private CachingClient client;
@@ -57,15 +42,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 		return true;
 	}
-	
-	private QueryType detectQueryTypeWithUriMatcher(Uri uri) {
-		if (uriMatcher.match(uri) == -1) {
-			throw new IllegalArgumentException("Unsupported URI: " + uri);
-		}
 		
-		return QueryType.values()[uriMatcher.match(uri)];
-	}
-	
 	private QueryType detectQueryType(Uri uri) {
 		String uriString = uri.toString();
 		if (Pattern.matches("content://" + INFO.logout, uriString)) {
@@ -105,9 +82,17 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				if (!INFO.relRoot.equals("")) {
 					pathSegments = pathSegments.subList(1, pathSegments.size());
 				}
-				return new ComappingMetamapCursor(getTopic(pathSegments, getMetamap(ignoreCache, ignoreInternet)));
+				
+				Map metamap = getMetamap(ignoreCache, ignoreInternet);
+				if (metamap == null) {
+					return null;
+				} else {
+					return new ComappingMetamapCursor(getTopic(pathSegments, metamap));
+				}
+				
 			case MAP:
 				return new ComappingMapCursor(getComap(uri.getLastPathSegment(), ignoreCache, ignoreInternet));
+				
 			case LOGOUT:
 				try {
 					client.logout();
@@ -115,9 +100,11 @@ public class ComappingMapContentProvider extends MapContentProvider {
 					Log.w(Log.PROVIDER_COMAPPING_TAG, "ConnectionException while logout");
 				}
 				return null;
+				
 			case SYNC:
 				getMetamap(true, false);
 				return null;
+				
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -176,7 +163,11 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		private static final String FOLDER_DESCRIPTION = "Folder";
 
 		public ComappingMetamapCursor(Topic topic) {
-			currentLevel = getItems(topic.getChildTopics());
+			if (topic == null) {
+				currentLevel = null;
+			} else {
+				currentLevel = getItems(topic.getChildTopics());
+			}
 		}
 
 		private MetaMapItem[] getItems(Topic[] topics) {

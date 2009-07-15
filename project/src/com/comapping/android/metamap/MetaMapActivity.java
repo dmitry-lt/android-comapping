@@ -84,13 +84,13 @@ public class MetaMapActivity extends Activity {
 		if (comappingProvider == null) {
 			comappingProvider = new MetaMapProviderUsingCP(
 					ComappingMapContentProvider.INFO,
-					PLEASE_SYNCHRONIZE_MESSAGE, this);
+					PLEASE_SYNCHRONIZE_MESSAGE, EMPTY_FOLDER_MESSAGE, this);
 		}
 
 		if (sdCardProvider == null) {
 			sdCardProvider = new MetaMapProviderUsingCP(
 					ComappingMapContentProvider.INFO, EMPTY_FOLDER_MESSAGE,
-					this);
+					EMPTY_FOLDER_MESSAGE, this);
 		}
 
 		// set provider
@@ -148,16 +148,19 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public void logout() {
-		PreferencesStorage.set("key", "", this);
-
-		try {
-			CachingClient client = Client.getClient(this);
-			client.logout();
-		} catch (ConnectionException e) {
-			Log
-					.e(Log.META_MAP_CONTROLLER_TAG,
-							"connection exception in logout");
-		}
+		currentProvider.logout();
+		updateMetaMap();
+		
+//		PreferencesStorage.set("key", "", this);
+//
+//		try {
+//			CachingClient client = Client.getClient(this);
+//			client.logout();
+//		} catch (ConnectionException e) {
+//			Log
+//					.e(Log.META_MAP_CONTROLLER_TAG,
+//							"connection exception in logout");
+//		}
 	}
 
 	public void sync() {

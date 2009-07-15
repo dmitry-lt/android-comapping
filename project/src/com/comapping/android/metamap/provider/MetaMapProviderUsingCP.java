@@ -12,15 +12,18 @@ import com.comapping.android.Log;
 
 public class MetaMapProviderUsingCP extends MetaMapProvider {
 	private MapContentProviderInfo info;
-	private String emptyListText;
+	private String nullListMessage;
+	private String emptyListMessage;
 	private Context context;
 
+	private String emptyListCurrentMessage;
 	private String currentPath;
 	private MetaMapItem[] currentLevel;
 
-	public MetaMapProviderUsingCP(MapContentProviderInfo info, String emptyListText, Context context) {
+	public MetaMapProviderUsingCP(MapContentProviderInfo info, String nullListMessage, String emptyListMessage, Context context) {
 		this.info = info;
-		this.emptyListText = emptyListText;
+		this.nullListMessage = nullListMessage;
+		this.emptyListMessage = emptyListMessage;
 		this.context = context;
 
 		this.currentPath = info.root;
@@ -56,7 +59,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 
 	@Override
 	public String getEmptyListText() {
-		return emptyListText;
+		return emptyListCurrentMessage;
 	}
 
 	@Override
@@ -88,6 +91,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	@Override
 	public boolean sync() {
 		query(info.sync);
+		updateCurrentLevel();
 		return false;
 	}
 
@@ -102,6 +106,14 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 
 	private void updateCurrentLevel() {
 		Cursor cursor = query(currentPath + info.ignoreInternetSuffix);
+		
+		if (cursor == null) {
+			emptyListCurrentMessage = nullListMessage;
+			currentLevel = new MetaMapItem[0];
+			return;
+		} else {
+			emptyListCurrentMessage = emptyListMessage;
+		}
 
 		currentLevel = new MetaMapItem[cursor.getCount()];
 
