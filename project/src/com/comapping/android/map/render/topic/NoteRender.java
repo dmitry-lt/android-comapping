@@ -1,8 +1,6 @@
 package com.comapping.android.map.render.topic;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
@@ -10,9 +8,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.comapping.android.Log;
 import com.comapping.android.controller.R;
 import com.comapping.android.map.model.text.FormattedText;
 import com.comapping.android.map.model.text.TextFormat;
@@ -35,18 +31,11 @@ public class NoteRender extends Render {
 	private AlertDialog dialog;
 
 	public NoteRender(String note, Context context) {
-		isEmpty = (note == null || note.equals(""));
 
-		if (!isEmpty) {
-			this.note = note;
-			this.context = context;
+		this.context = context;
 
-			FormattedText text = new FormattedText(note, FORMAT);
-			textRender = new TextRender(text, context);
-			recalcDrawingData();
-		} else {
+		setText(note);
 
-		}
 	}
 
 	public void draw(int x, int y, int width, int height, Canvas c) {
@@ -67,37 +56,29 @@ public class NoteRender extends Render {
 
 	public void onTouch(int x, int y) {
 		if (!isEmpty) {
-			
-			if (dialog == null)
-			{
-				LayoutInflater factory = LayoutInflater.from(context);
-				final View textEntryView = factory.inflate(com.comapping.android.controller.R.layout.topic_edit, null);
-				Log.d("NOTE REANDER !!!!!", "try to init dialobg view");
-            	((EditText)textEntryView.findViewById(R.id.topic_text_edit)).setText(note);
-            	dialog =  new AlertDialog.Builder(context)
-                .setIcon(R.drawable.metamap_map)
-                //.setTitle(R.string.alert_dialog_text_entry)
-                .setView(textEntryView)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    	//Log.d("NOTE REANDER !!!!!", "Press save");
-                    	note = ((EditText)textEntryView.findViewById(R.id.topic_text_edit)).getText().toString();
-                    	
-            			FormattedText text = new FormattedText(note, FORMAT);
-            			textRender = new TextRender(text, context);
-            			recalcDrawingData();                    	
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
 
-                    	//Log.d("NOTE REANDER !!!!!", "press cancel");
-                        /* User clicked cancel so do some stuff */
-                    }
-                })    
-                .create();
-            	
-            	//Log.d("NOTE REANDER !!!!!", "was created...");
+			if (dialog == null) {
+				LayoutInflater factory = LayoutInflater.from(context);
+				final View textEntryView = factory.inflate(R.layout.topic_edit,	null);
+				
+				((EditText) textEntryView.findViewById(R.id.topic_text_edit)).setText(note);
+				dialog = new AlertDialog.Builder(context)
+						.setView(textEntryView).setPositiveButton("Save",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,	int whichButton) {
+										String note = ((EditText) textEntryView
+												.findViewById(R.id.topic_text_edit))
+												.getText().toString();
+
+										setText(note);
+									}
+								})
+						.setNegativeButton("Cancel",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,	int whichButton) {
+										// nothing to do
+									}
+								}).create();
 			}
 			dialog.show();
 		}
@@ -125,5 +106,20 @@ public class NoteRender extends Render {
 	private void recalcDrawingData() {
 		width = textRender.getWidth();
 		height = textRender.getHeight();
+	}
+
+	private void setText(String note) {
+
+		isEmpty = (note == null || note.equals(""));
+
+		if (!isEmpty) {
+			this.note = note;
+
+			FormattedText text = new FormattedText(note, FORMAT);
+			textRender = new TextRender(text, context);
+			recalcDrawingData();
+		} else {
+
+		}
 	}
 }
