@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="View">
 		<ListPreference android:key="@string/view_type_preference_key"
@@ -16,7 +16,10 @@
 					android:dependency="@string/use_proxy_preference_key" />
 				<EditTextPreference android:key="@string/proxy_port_preference_key"
 					android:title="@string/proxy_port_preference_title"
-					android:dependency="@string/use_proxy_preference_key" />
+					android:dependency="@string/use_proxy_preference_key"
+					android:numeric="integer"
+                    android:maxLength="4"
+                    android:hint="Enter distance (max 9999)"/>
 			</PreferenceCategory>
 			<PreferenceCategory android:title="Proxy Auth">
 				<CheckBoxPreference android:key="@string/use_proxy_auth_preference_key"
