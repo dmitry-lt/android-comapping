@@ -31,6 +31,8 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final String relSync;
 		public final boolean canLogout;
 		public final boolean canSync;
+		public final String ignoreCacheSuffix = "-ic";
+		public final String ignoreInternetSuffix = "-ii";
 
 		public MapContentProviderInfo(String authorities, String relRoot, boolean canLogout, boolean canSync) {
 			this(authorities, "/", relRoot, "logout", "sync", canLogout, canSync);

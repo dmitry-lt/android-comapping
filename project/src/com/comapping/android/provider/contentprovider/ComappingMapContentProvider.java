@@ -23,11 +23,10 @@ import android.os.PatternMatcher;
 public class ComappingMapContentProvider extends MapContentProvider {
 	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true, true);
 	public static final Uri CONTENT_URI = Uri.parse("content://" + INFO.root);
-
+	
 	private enum QueryType {
 		MAP, META_MAP, LOGOUT, SYNC
 	}
-
 	
 	private static final UriMatcher uriMatcher;
 	static {
@@ -82,7 +81,20 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uri.toString());
+		String uriString = uri.toString();
+		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uriString);
+		
+		boolean ignoreCache = false;		
+		if (uriString.endsWith(INFO.ignoreCacheSuffix)) {
+			ignoreCache = true;
+			uri = Uri.parse(uriString.substring(0, uriString.length() - INFO.ignoreCacheSuffix.length()));
+		}
+		
+		boolean ignoreInternet = false;		
+		if (uriString.endsWith(INFO.ignoreInternetSuffix)) {
+			ignoreInternet = true;
+			uri = Uri.parse(uriString.substring(0, uriString.length() - INFO.ignoreInternetSuffix.length()));
+		}		
 		
 		// parse uri
 		QueryType queryType = detectQueryType(uri);
@@ -93,9 +105,9 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				if (!INFO.relRoot.equals("")) {
 					pathSegments = pathSegments.subList(1, pathSegments.size());
 				}
-				return new ComappingMetamapCursor(getTopic(pathSegments));
+				return new ComappingMetamapCursor(getTopic(pathSegments, getMetamap(ignoreCache, ignoreInternet)));
 			case MAP:
-				return new ComappingMapCursor(getComap(uri.getLastPathSegment(), true));
+				return new ComappingMapCursor(getComap(uri.getLastPathSegment(), ignoreCache, ignoreInternet));
 			case LOGOUT:
 				try {
 					client.logout();
@@ -104,7 +116,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				}
 				return null;
 			case SYNC:
-				updateMetamap();
+				getMetamap(true, false);
 				return null;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -112,11 +124,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 	}
 
-	private Topic getTopic(List<String> pathSegments) {
-		if (metamap == null) {
-			updateMetamap();
-		}
-
+	private Topic getTopic(List<String> pathSegments, Map metamap) {
 		Topic curTopic = metamap.getRoot();
 		for (String segment : pathSegments) {
 			boolean folderFound = false;
@@ -137,17 +145,22 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		return curTopic;
 	}
 
-	private void updateMetamap() {
+	private Map getMetamap(boolean ignoreCache, boolean ignoreInternet) {
+		if (metamap != null && !ignoreCache) {
+			return metamap;
+		}		
+		
 		try {
-			metamap = mapBuilder.buildMap(getComap("meta", false));
+			return mapBuilder.buildMap(getComap("meta", ignoreCache, ignoreInternet));
 		} catch (Exception e) {
 			Log.w(Log.PROVIDER_COMAPPING_TAG, "Error while synchronizing: cannot parse metamap");
+			return null;
 		}
 	}
 
-	private String getComap(String mapId, boolean ignoreCache) {		
+	private String getComap(String mapId, boolean ignoreCache, boolean ignoreInternet) {		
 		try {
-			return client.getComap(mapId, ignoreCache, false);
+			return client.getComap(mapId, ignoreCache, ignoreInternet);
 		} catch (Exception e) {
 			Log.w(Log.PROVIDER_COMAPPING_TAG, "error while receiving map: " + mapId);
 			return "";

@@ -101,7 +101,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	}
 
 	private void updateCurrentLevel() {
-		Cursor cursor = query(currentPath);
+		Cursor cursor = query(currentPath + info.ignoreInternetSuffix);
 
 		currentLevel = new MetaMapItem[cursor.getCount()];
 
