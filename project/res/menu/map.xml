@@ -15,4 +15,8 @@
 		android:title="Synchronize"
 		android:id="@+id/mapSynchronizeButton"
 	/>
+	<item
+		android:title="Save"
+		android:id="@+id/saveButton"
+	/>
 </menu> 

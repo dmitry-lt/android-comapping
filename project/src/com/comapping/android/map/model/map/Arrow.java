@@ -1,11 +1,9 @@
 package com.comapping.android.map.model.map;
 
-import com.comapping.android.map.model.exceptions.EnumParsingException;
-
 public enum Arrow {
 	BLUE, PURPLE, BLACK, RED, ORANGE, YELLOW, GREEN;
 
-	public static Arrow parse(String s) throws EnumParsingException {
+	public static Arrow parse(String s) {
 		if (s.equals("blue")) {
 			return Arrow.BLUE;
 		} else if (s.equals("purple")) {
@@ -21,8 +19,25 @@ public enum Arrow {
 		} else if (s.equals("green")) {
 			return Arrow.GREEN;
 		} else {
-			throw new EnumParsingException();
+			return null;
 		}
-
+	}
+	
+	public static String serialize(Arrow a) {
+		if (a.equals(BLUE)) {
+			return "blue";
+		} else if (a.equals(PURPLE)) {
+			return "purple";
+		} else if (a.equals(BLACK)) {
+			return "black";
+		} else if (a.equals(RED)) {
+			return "red";
+		} else if (a.equals(ORANGE)) {
+			return "orange";
+		} else if (a.equals(YELLOW)) {
+			return "yellow";
+		} else {
+			return "green";
+		}
 	}
 }

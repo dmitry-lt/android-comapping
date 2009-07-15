@@ -1,5 +1,10 @@
 package com.comapping.android.map;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -31,6 +36,7 @@ import com.comapping.android.map.model.exceptions.MapParsingException;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.map.model.map.Map;
 import com.comapping.android.map.model.map.Topic;
+import com.comapping.android.map.model.map.builder.XmlBuilder;
 import com.comapping.android.map.render.MapRender;
 import com.comapping.android.map.render.comapping.ComappingRender;
 import com.comapping.android.map.render.explorer.ExplorerRender;
@@ -423,6 +429,25 @@ public class MapActivity extends Activity {
 		mapProcessingThread.start();
 	}
 
+	private void saveMap() {
+		String path = "sdcard\\ttt.comap";
+
+		File file = new File("sdcard");
+		file.mkdirs();
+
+		file = new File(path);
+		try {
+			file.createNewFile();
+			FileOutputStream output = new FileOutputStream(file);
+			XmlBuilder xmlBuilder = new XmlBuilder();
+			String result = xmlBuilder.buildXml(map);
+			output.write(result.getBytes());
+			output.close();
+		} catch (IOException e) {
+
+		}
+	}
+	
 	protected void onDestroy() {
 		splashDeactivate();
 		super.onDestroy();
@@ -476,6 +501,9 @@ public class MapActivity extends Activity {
 			case R.id.mapSynchronizeButton:
 				finish();
 				openMap(mapRef, viewType, true, this);
+				return true;
+			case R.id.saveButton:
+				saveMap();
 				return true;
 		}
 		return false;
