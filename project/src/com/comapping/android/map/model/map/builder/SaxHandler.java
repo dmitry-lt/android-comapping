@@ -185,71 +185,63 @@ class SaxHandler extends DefaultHandler {
 	}
 
 	private void getTopicAttributes(Attributes attributes) throws SAXException {
-		try {
-			int length = attributes.getLength();
-			for (int i = 0; i < length; i++) {
-				attributesMap[mod(attributes.getLocalName(i).hashCode())] = attributes
-						.getValue(i);
-			}
+		int length = attributes.getLength();
+		for (int i = 0; i < length; i++) {
+			attributesMap[mod(attributes.getLocalName(i).hashCode())] = attributes
+					.getValue(i);
+		}
 
-			if (attributesMap[TOPIC_ID_TAG_HASHCODE] != null) {
-				currentTopic.setId(Integer
-						.parseInt(attributesMap[TOPIC_ID_TAG_HASHCODE]));
-				attributesMap[TOPIC_ID_TAG_HASHCODE] = null;
-			}
+		if (attributesMap[TOPIC_ID_TAG_HASHCODE] != null) {
+			currentTopic.setId(Integer
+					.parseInt(attributesMap[TOPIC_ID_TAG_HASHCODE]));
+			attributesMap[TOPIC_ID_TAG_HASHCODE] = null;
+		}
 
-			if (attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE] != null) {
-				currentTopic.setBgColor(Integer
-						.parseInt(attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE]));
-				attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE] = null;
-			}
+		if (attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE] != null) {
+			currentTopic.setBgColor(Integer
+					.parseInt(attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE]));
+			attributesMap[TOPIC_BGCOLOR_TAG_HASHCODE] = null;
+		}
 
-			if (attributesMap[TOPIC_FLAG_TAG_HASHCODE] != null) {
-				currentTopic.setFlag(Flag
-						.parse(attributesMap[TOPIC_FLAG_TAG_HASHCODE]));
-				attributesMap[TOPIC_FLAG_TAG_HASHCODE] = null;
-			}
+		if (attributesMap[TOPIC_FLAG_TAG_HASHCODE] != null) {
+			currentTopic.setFlag(Flag
+					.parse(attributesMap[TOPIC_FLAG_TAG_HASHCODE]));
+			attributesMap[TOPIC_FLAG_TAG_HASHCODE] = null;
+		}
 
-			if (attributesMap[TOPIC_PRIORITY_TAG_HASHCODE] != null) {
-				currentTopic.setPriority(Integer
-						.parseInt(attributesMap[TOPIC_PRIORITY_TAG_HASHCODE]));
-				attributesMap[TOPIC_PRIORITY_TAG_HASHCODE] = null;
-			}
+		if (attributesMap[TOPIC_PRIORITY_TAG_HASHCODE] != null) {
+			currentTopic.setPriority(Integer
+					.parseInt(attributesMap[TOPIC_PRIORITY_TAG_HASHCODE]));
+			attributesMap[TOPIC_PRIORITY_TAG_HASHCODE] = null;
+		}
 
-			if (attributesMap[TOPIC_SMILEY_TAG_HASHCODE] != null) {
-				currentTopic.setSmiley(Smiley
-						.parse(attributesMap[TOPIC_SMILEY_TAG_HASHCODE]));
-				attributesMap[TOPIC_SMILEY_TAG_HASHCODE] = null;
-			}
+		if (attributesMap[TOPIC_SMILEY_TAG_HASHCODE] != null) {
+			currentTopic.setSmiley(Smiley
+					.parse(attributesMap[TOPIC_SMILEY_TAG_HASHCODE]));
+			attributesMap[TOPIC_SMILEY_TAG_HASHCODE] = null;
+		}
 
-			if (attributesMap[TOPIC_ARROW_TAG_HASHCODE] != null) {
-				currentTopic.setArrow(Arrow
-						.parse(attributesMap[TOPIC_ARROW_TAG_HASHCODE]));
-				attributesMap[TOPIC_ARROW_TAG_HASHCODE] = null;
-			}
+		if (attributesMap[TOPIC_ARROW_TAG_HASHCODE] != null) {
+			currentTopic.setArrow(Arrow
+					.parse(attributesMap[TOPIC_ARROW_TAG_HASHCODE]));
+			attributesMap[TOPIC_ARROW_TAG_HASHCODE] = null;
+		}
 
-			if (attributesMap[TOPIC_STAR_TAG_HASHCODE] != null) {
-				currentTopic.setStar(Star
-						.parse(attributesMap[TOPIC_STAR_TAG_HASHCODE]));
-				attributesMap[TOPIC_STAR_TAG_HASHCODE] = null;
-			}
+		if (attributesMap[TOPIC_STAR_TAG_HASHCODE] != null) {
+			currentTopic.setStar(Star
+					.parse(attributesMap[TOPIC_STAR_TAG_HASHCODE]));
+			attributesMap[TOPIC_STAR_TAG_HASHCODE] = null;
+		}
 
-			if (attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE] != null) {
-				currentTopic
-						.setTaskCompletion(TaskCompletion
-								.parse(attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE]));
-				attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE] = null;
-			}
+		if (attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE] != null) {
+			currentTopic.setTaskCompletion(TaskCompletion
+					.parse(attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE]));
+			attributesMap[TOPIC_TASK_COMPLETION_TAG_HASHCODE] = null;
+		}
 
-			if (attributesMap[TOPIC_MAP_REF_TAG_HASHCODE] != null) {
-				currentTopic
-						.setMapRef(attributesMap[TOPIC_MAP_REF_TAG_HASHCODE]);
-				attributesMap[TOPIC_MAP_REF_TAG_HASHCODE] = null;
-			}
-		} catch (EnumParsingException e) {
-			e.printStackTrace();
-			Log.e(Log.MODEL_TAG, e.toString());
-			throw new SAXException();
+		if (attributesMap[TOPIC_MAP_REF_TAG_HASHCODE] != null) {
+			currentTopic.setMapRef(attributesMap[TOPIC_MAP_REF_TAG_HASHCODE]);
+			attributesMap[TOPIC_MAP_REF_TAG_HASHCODE] = null;
 		}
 
 	}

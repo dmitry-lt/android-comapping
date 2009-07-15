@@ -1,11 +1,9 @@
 package com.comapping.android.map.model.map;
 
-import com.comapping.android.map.model.exceptions.EnumParsingException;
-
 public enum Smiley {
 	HAPPY, NEUTRAL, SAD, FURIOUS;
 
-	public static Smiley parse(String s) throws EnumParsingException {
+	public static Smiley parse(String s) {
 		if (s.equals("happy")) {
 			return Smiley.HAPPY;
 		} else if (s.equals("neutral")) {
@@ -15,8 +13,22 @@ public enum Smiley {
 		} else if (s.equals("furious")) {
 			return Smiley.FURIOUS;
 		} else {
-			throw new EnumParsingException();
+			return null;
 		}
-
 	}
+	
+	public static String write(Smiley s) {
+		if (s == null) {
+			return null;
+		}
+		if (s.equals(HAPPY)) {
+			return "happy";
+		} else if (s.equals(NEUTRAL)) {
+			return "neutral";
+		} else if (s.equals(SAD)) {
+			return "sad";
+		} else {
+			return "furious";
+		}
+	}	
 }

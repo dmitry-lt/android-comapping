@@ -1,11 +1,9 @@
 package com.comapping.android.map.model.map;
 
-import com.comapping.android.map.model.exceptions.EnumParsingException;
-
 public enum Star {
 	BLUE, PURPLE, BLACK, RED, ORANGE, YELLOW, GREEN;
 
-	public static Star parse(String s) throws EnumParsingException {
+	public static Star parse(String s) {
 		if (s.equals("blue")) {
 			return Star.BLUE;
 		} else if (s.equals("purple")) {
@@ -21,8 +19,28 @@ public enum Star {
 		} else if (s.equals("green")) {
 			return Star.GREEN;
 		} else {
-			throw new EnumParsingException();
+			return null;
 		}
-
 	}
+	
+	public static String write(Star a) {
+		if (a == null) {
+			return null;
+		}
+		if (a.equals(BLUE)) {
+			return "blue";
+		} else if (a.equals(PURPLE)) {
+			return "purple";
+		} else if (a.equals(BLACK)) {
+			return "black";
+		} else if (a.equals(RED)) {
+			return "red";
+		} else if (a.equals(ORANGE)) {
+			return "orange";
+		} else if (a.equals(YELLOW)) {
+			return "yellow";
+		} else {
+			return "green";
+		}
+	}	
 }

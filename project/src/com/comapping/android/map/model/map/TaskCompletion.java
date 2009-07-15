@@ -1,11 +1,9 @@
 package com.comapping.android.map.model.map;
 
-import com.comapping.android.map.model.exceptions.EnumParsingException;
-
 public enum TaskCompletion {
 	TO_DO, TWENTY_FIVE, FIFTY, SEVENTY_FIVE, COMPLETE, CANCELLED;
 
-	public static TaskCompletion parse(String s) throws EnumParsingException {
+	public static TaskCompletion parse(String s) {
 		if (s.equals("0")) {
 			return TaskCompletion.TO_DO;
 		} else if (s.equals("25")) {
@@ -19,7 +17,26 @@ public enum TaskCompletion {
 		} else if (s.equals("-1")) {
 			return TaskCompletion.CANCELLED;
 		} else {
-			throw new EnumParsingException();
+			return null;
 		}
 	}
+	
+	public static String write(TaskCompletion s) {
+		if (s == null) {
+			return null;
+		}
+		if (s.equals(TO_DO)) {
+			return "0";
+		} else if (s.equals(TWENTY_FIVE)) {
+			return "25";
+		} else if (s.equals(FIFTY)) {
+			return "50";
+		} else if (s.equals(SEVENTY_FIVE)) {
+			return "75";
+		} else if (s.equals(COMPLETE)) {
+			return "100";
+		} else {
+			return "-1";
+		}
+	}	
 }

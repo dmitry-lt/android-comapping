@@ -23,7 +23,10 @@ public enum Arrow {
 		}
 	}
 	
-	public static String serialize(Arrow a) {
+	public static String write(Arrow a) {
+		if (a == null) {
+			return null;
+		}
 		if (a.equals(BLUE)) {
 			return "blue";
 		} else if (a.equals(PURPLE)) {

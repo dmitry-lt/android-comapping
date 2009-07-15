@@ -428,7 +428,7 @@ public class MapActivity extends Activity {
 	}
 
 	private void saveMap() {
-		String path = "sdcard\\ttt.comap";
+		String path = "sdcard\\" + map.getName() + ".comap";
 
 		File file = new File("sdcard");
 		file.mkdirs();
@@ -437,9 +437,7 @@ public class MapActivity extends Activity {
 		try {
 			file.createNewFile();
 			FileOutputStream output = new FileOutputStream(file);
-			XmlBuilder xmlBuilder = new XmlBuilder();
-			String result = xmlBuilder.buildXml(map);
-			output.write(result.getBytes());
+			output.write(new XmlBuilder().buildXml(map).getBytes());
 			output.close();
 		} catch (IOException e) {
 
