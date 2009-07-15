@@ -22,7 +22,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	public static final Uri CONTENT_URI = Uri.parse(CONTENT_PREFIX + INFO.root);
 	
 	private enum QueryType {
-		MAP, META_MAP, LOGOUT, SYNC
+		MAP, META_MAP, LOGOUT, SYNC, FINISH_WORK
 	}
 	
 	private CachingClient client;
@@ -48,6 +48,8 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			return QueryType.LOGOUT;
 		} else if (Pattern.matches(CONTENT_PREFIX + INFO.sync, uriString)) {
 			return QueryType.SYNC;
+		} else if (Pattern.matches(CONTENT_PREFIX + INFO.finishWork, uriString)) {
+			return QueryType.FINISH_WORK;			
 		} else if (Pattern.matches(CONTENT_PREFIX + INFO.root + "\\d\\d\\d\\d\\d", uriString)) {
 			return QueryType.MAP;		
 		} else { 
@@ -103,6 +105,14 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			case SYNC:
 				getMetamap(true, false);
 				return null;
+			
+			case FINISH_WORK:
+				try {
+					client.applicationClose();
+				} catch (ConnectionException e) {
+					Log.w(Log.PROVIDER_COMAPPING_TAG, "ConnectionException in client.applicationClose()");
+				}
+				return null;			
 				
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);

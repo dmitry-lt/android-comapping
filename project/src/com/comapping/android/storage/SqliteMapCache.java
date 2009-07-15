@@ -121,7 +121,7 @@ public class SqliteMapCache {
 	}
 
 	public void clear() {
-//		Log.d(Log.SQLITE_CACHE_TAG, "clear database");
+		Log.d(Log.SQLITE_CACHE_TAG, "clear database");
 		if (database != null) {
 			database.execSQL(DELETE_TABLE_QUERY);
 			initDatabase();

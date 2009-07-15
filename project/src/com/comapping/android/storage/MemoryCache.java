@@ -2,6 +2,8 @@ package com.comapping.android.storage;
 
 import java.util.HashMap;
 
+import com.comapping.android.Log;
+
 public class MemoryCache {
 	// max objects in cache
 	final private static int maxObjectsCount = 3;
@@ -35,6 +37,8 @@ public class MemoryCache {
 	}
 
 	synchronized public static void clear() {
+		Log.d(Log.MEMORY_CACHE_TAG, "Clearing");
+		
 		cache = new HashMap<String, Object>();
 		queue = new String[maxObjectsCount];
 		currentPosition = 0;

@@ -113,4 +113,10 @@ public class SdCardProvider extends MetaMapProvider {
 	public String getEmptyListText() {
 		return EMPTY_FOLDER_MESSAGE;
 	}
+
+	@Override
+	public void finishWork() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -38,6 +38,8 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final boolean canSync;
 		public final String ignoreCacheSuffix = "-ic";
 		public final String ignoreInternetSuffix = "-ii";
+		public final String relFinishWork = "finish_work";
+		public final String finishWork;
 
 		public MapContentProviderInfo(String authorities, String relRoot, boolean canLogout, boolean canSync) {
 			this(authorities, "/", relRoot, "logout", "sync", canLogout, canSync);
@@ -61,6 +63,8 @@ public abstract class MapContentProvider extends ContentProvider {
 			this.relSync = relSync;
 			this.canLogout = canLogout;
 			this.canSync = canSync;
+			
+			this.finishWork = authorities + separator + relFinishWork;
 		}
 	}
 

@@ -50,8 +50,6 @@ public class PreferencesStorage {
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(context.getApplicationContext());
 
-		boolean contains = preferences.contains(key);
-
 		String value = preferences.getString(key, defaultValue);
 
 		Log.i(Log.STORAGE_TAG, "get [" + key + "] = " + value);

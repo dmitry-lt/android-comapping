@@ -319,4 +319,10 @@ public class ComappingProvider extends MetaMapProvider {
 		else
 			return EMPTY_FOLDER_MESSAGE;
 	}
+
+	@Override
+	public void finishWork() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -38,5 +38,7 @@ public abstract class MetaMapProvider {
 	public abstract boolean canLogout();
 	public abstract void logout();
 	
+	public abstract void finishWork();
+	
 	public abstract String getEmptyListText();
 }

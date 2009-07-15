@@ -12,6 +12,7 @@ public class Log {
 	public static final String LOGIN_TAG = "Login";
 	public static final String STORAGE_TAG = "Storage";
 	public static final String SQLITE_CACHE_TAG = "SQLite";
+	public static final String MEMORY_CACHE_TAG = "MemoryCache";
 	public static final String PROVIDER_COMAPPING_TAG = "ComappingMapContentProvider";
 
 	public static void v(String module, String msg) {

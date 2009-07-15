@@ -86,6 +86,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	@Override
 	public void logout() {
 		query(info.logout);
+		updateCurrentLevel();
 	}
 
 	@Override
@@ -137,5 +138,10 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 		}
 
 		Arrays.sort(currentLevel, new MetaMapProvider.MetaMapItemComparator());
+	}
+
+	@Override
+	public void finishWork() {
+		query(info.finishWork);		
 	}
 }

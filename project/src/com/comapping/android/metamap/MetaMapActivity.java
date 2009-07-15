@@ -28,23 +28,16 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.comapping.android.Constants;
-import com.comapping.android.Log;
 import com.comapping.android.preferences.PreferencesActivity;
 import com.comapping.android.preferences.PreferencesStorage;
-import com.comapping.android.provider.communication.CachingClient;
-import com.comapping.android.provider.communication.Client;
-import com.comapping.android.provider.communication.LoginActivity;
-import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
 import com.comapping.android.provider.contentprovider.FileMapContentProvider;
 import com.comapping.android.controller.R;
 import com.comapping.android.map.MapActivity;
 import com.comapping.android.map.model.map.builder.MapBuilder;
 import com.comapping.android.map.model.map.builder.SaxMapBuilder;
-import com.comapping.android.metamap.provider.ComappingProvider;
 import com.comapping.android.metamap.provider.MetaMapProvider;
 import com.comapping.android.metamap.provider.MetaMapProviderUsingCP;
-import com.comapping.android.metamap.provider.SdCardProvider;
 
 public class MetaMapActivity extends Activity {
 
@@ -102,16 +95,8 @@ public class MetaMapActivity extends Activity {
 	}
 
 	protected void onDestroy() {
-
-		try {
-			CachingClient client = Client.getClient(this);
-			client.applicationClose();
-		} catch (ConnectionException e) {
-			Log
-					.e(Log.META_MAP_CONTROLLER_TAG,
-							"Connection exception in logout");
-		}
-
+		currentProvider.finishWork();
+		
 		super.onDestroy();
 	}
 
@@ -150,17 +135,6 @@ public class MetaMapActivity extends Activity {
 	public void logout() {
 		currentProvider.logout();
 		updateMetaMap();
-		
-//		PreferencesStorage.set("key", "", this);
-//
-//		try {
-//			CachingClient client = Client.getClient(this);
-//			client.logout();
-//		} catch (ConnectionException e) {
-//			Log
-//					.e(Log.META_MAP_CONTROLLER_TAG,
-//							"connection exception in logout");
-//		}
 	}
 
 	public void sync() {
