@@ -62,17 +62,9 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		String uriString = uri.toString();
 		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uriString);
 		
-		boolean ignoreCache = false;		
-		if (uriString.endsWith(INFO.ignoreCacheSuffix)) {
-			ignoreCache = true;
-			uri = Uri.parse(uriString.substring(0, uriString.length() - INFO.ignoreCacheSuffix.length()));
-		}
-		
-		boolean ignoreInternet = false;		
-		if (uriString.endsWith(INFO.ignoreInternetSuffix)) {
-			ignoreInternet = true;
-			uri = Uri.parse(uriString.substring(0, uriString.length() - INFO.ignoreInternetSuffix.length()));
-		}		
+		boolean ignoreCache = INFO.isIgnoreCache(uriString);		
+		boolean ignoreInternet = INFO.isIgnoreInternet(uriString);
+		uri = Uri.parse(INFO.removeParameters(uriString));
 		
 		// parse uri
 		QueryType queryType = detectQueryType(uri);

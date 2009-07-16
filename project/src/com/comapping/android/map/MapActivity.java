@@ -197,7 +197,7 @@ public class MapActivity extends Activity {
 			splashActivate("Downloading map", false);
 			String result = "";
 
-			result = MapContentProvider.getComap(mapRef, this);
+			result = MapContentProvider.getComap(mapRef, ignoreCache, false, this);
 
 			if (result == null) {
 				result = "";

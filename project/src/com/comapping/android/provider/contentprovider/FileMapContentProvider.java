@@ -131,6 +131,7 @@ public class FileMapContentProvider extends MapContentProvider {
 
 	private QueryType detectQueryType(Uri uri) {
 		String uriString = uri.toString();
+		Log.d(Log.PROVIDER_FILE_TAG, "Query: uri=" + uriString);
 		if (uriString.endsWith(".comap")) {
 			return QueryType.MAP;
 		} else {
@@ -142,8 +143,11 @@ public class FileMapContentProvider extends MapContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
+		String uriString = uri.toString();
+		uri = Uri.parse(INFO.removeParameters(uriString));
+		
 		QueryType queryType = detectQueryType(uri);
-
+				
 		switch (queryType) {
 		case META_MAP:
 			List<String> pathSegments = uri.getPathSegments();

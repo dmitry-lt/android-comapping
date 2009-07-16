@@ -6,8 +6,8 @@ import android.content.Context;
 import android.database.AbstractCursor;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
+import com.comapping.android.Log;
 import com.comapping.android.metamap.MetaMapItem;
 
 public abstract class MapContentProvider extends ContentProvider {
@@ -15,14 +15,22 @@ public abstract class MapContentProvider extends ContentProvider {
 	
 	public static final String ID = "id";
 	public static final String TEXT = "content";
+	
+	private static MapContentProviderInfo infoForParameters = new MapContentProviderInfo();
 
 	public static String getComap(String mapRef, Context context) {
 		Uri fullUri = Uri.parse(mapRef);
-		Log.e("MCP", "uri:" +  fullUri);
-		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);
-		
+		Log.d(Log.PROVIDER_TAG, "getComap: uri=" +  fullUri);
+		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);		
 	
 		return cursor.getString(1);
+	}
+	
+	public static String getComap(String mapRef, boolean ignoreCache, boolean ignoreInternet, Context context) {
+		mapRef = infoForParameters.removeParameters(mapRef);
+		mapRef = infoForParameters.setIgnoreCache(mapRef, ignoreCache);
+		mapRef = infoForParameters.setIgnoreInternet(mapRef, ignoreInternet);
+		return getComap(mapRef, context);		
 	}
 
 	public static class MapContentProviderInfo {
@@ -41,6 +49,10 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final String relFinishWork = "finish_work";
 		public final String finishWork;
 
+		private MapContentProviderInfo() {
+			this("", "", true, true);
+		}
+		
 		public MapContentProviderInfo(String authorities, String relRoot, boolean canLogout, boolean canSync) {
 			this(authorities, "/", relRoot, "logout", "sync", canLogout, canSync);
 		}
@@ -65,6 +77,38 @@ public abstract class MapContentProvider extends ContentProvider {
 			this.canSync = canSync;
 			
 			this.finishWork = authorities + separator + relFinishWork;
+		}
+		
+		public String setIgnoreCache(String uri, boolean ignoreCache) {
+			if (ignoreCache) {
+				return uri + "-ic";
+			} else {
+				return uri;
+			}
+		}
+		
+		public String setIgnoreInternet(String uri, boolean ignoreInternet) {
+			if (ignoreInternet) {
+				return uri + "-ii";
+			} else {
+				return uri;
+			}
+		}
+		
+		public boolean isIgnoreCache(String uri) {
+			return (uri.endsWith(ignoreCacheSuffix));
+		}
+		
+		public boolean isIgnoreInternet(String uri) {
+			return (uri.endsWith(ignoreInternetSuffix));
+		}
+		
+		public String removeParameters(String uri) {
+			if (isIgnoreCache(uri) || isIgnoreInternet(uri)) {
+				return uri.substring(0, uri.length() - 3);
+			} else {
+				return uri;
+			}
 		}
 	}
 

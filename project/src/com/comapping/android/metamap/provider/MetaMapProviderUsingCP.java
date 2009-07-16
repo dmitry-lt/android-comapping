@@ -99,7 +99,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	}
 
 	private void updateCurrentLevelFromCache() {
-		Cursor cursor = query(currentPath + info.ignoreInternetSuffix);
+		Cursor cursor = query(info.setIgnoreInternet(currentPath, true));
 		
 		if (cursor == null) {
 			emptyListCurrentMessage = nullListMessage;
