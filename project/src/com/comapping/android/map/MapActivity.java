@@ -228,7 +228,9 @@ public class MapActivity extends Activity {
 			if (result == null) {
 				result = "";
 			}
-			Log.e(Log.CONNECTION_TAG, result);
+			
+			//Log.e(Log.CONNECTION_TAG, result);
+			
 			splashActivate("Parsing map", true);
 			map = MetaMapActivity.mapBuilder.buildMap(result);
 

@@ -1,5 +1,6 @@
 package com.comapping.android.map.model.text.builder;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -60,10 +61,10 @@ public class FormattedTextSaxBuilder {
 	public static FormattedText buildFormattedText(String xmlString)
 			throws StringToXMLConvertionException {
 		
-		if (!xmlString.contains("<"))
-		{
-			return new FormattedText(xmlString, getDefFormat());
-		}
+//		if (!xmlString.contains("<"))
+//		{
+//			return new FormattedText(xmlString, getDefFormat());
+//		}
 
 		if (xmlString.startsWith("<P")) {
 			xmlString = "<TEXT>" + xmlString + "</TEXT>";
@@ -77,7 +78,7 @@ public class FormattedTextSaxBuilder {
 		init();
 		try {
 
-			InputStream stream = new java.io.StringBufferInputStream(xmlString);
+			InputStream stream = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
 
 //			Log.d(Log.MODEL_TAG, "Text SAX parsing: " + xmlString);
 
