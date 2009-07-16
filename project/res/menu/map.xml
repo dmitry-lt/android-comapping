@@ -29,10 +29,4 @@
 		android:id="@+id/save"
 		android:icon="@drawable/menu_save"
 	/>
-	
-	<item
-		android:icon="@drawable/menu_sync"
-		android:title="Back to Map List"
-		android:id="@+id/metamap"
-	/>
 </menu> 
