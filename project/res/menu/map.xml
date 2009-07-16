@@ -1,14 +1,14 @@
 <menu
 	xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:icon="@drawable/menu_search"
+		android:title="Search"
+		android:id="@+id/search"
+	/>
 	<item 
 		android:icon="@drawable/menu_zoom"
 		android:title="Zoom"
 		android:id="@+id/zoom"
-	/>
-	<item
-		android:icon="@drawable/menu_find"
-		android:title="Find"
-		android:id="@+id/find"
 	/>
 	<item
 		android:icon="@drawable/menu_reload"
@@ -18,5 +18,6 @@
 	<item
 		android:title="Save"
 		android:id="@+id/saveButton"
+		android:icon="@drawable/menu_save"
 	/>
 </menu> 

@@ -491,7 +491,7 @@ public class MapActivity extends Activity {
 			case R.id.zoom:
 				showZoom();
 				return true;
-			case R.id.find:
+			case R.id.search:
 				onSearchRequested();
 				return true;
 			case R.id.mapSynchronizeButton:
