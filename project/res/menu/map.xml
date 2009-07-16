@@ -11,7 +11,7 @@
 		android:id="@+id/zoom"
 	/>
 	<item
-		android:icon="@drawable/menu_reload"
+		android:icon="@drawable/menu_sync"
 		android:title="Synchronize"
 		android:id="@+id/mapSynchronizeButton"
 	/>
