@@ -38,6 +38,8 @@ public class MapView extends View {
 	// Scrollbar constants
 	private static final int SCROLLBAR_WIDTH = 4;
 	private static final int SCROLLBAR_LINE_LEN = 15;
+	
+	private static final int SCROLL_BOTTOM_OFFSET = 100;
 
 	// Drawing variables
 	public MapRender mRender;
@@ -573,7 +575,7 @@ public class MapView extends View {
 			return 0;
 
 		return mRender.getHeight() - (int) (this.getHeight() / scale)
-				+ SCROLLBAR_WIDTH;
+				+ SCROLLBAR_WIDTH + SCROLL_BOTTOM_OFFSET;
 	}
 
 	private final int getScreenForRenderWidth() {
