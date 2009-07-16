@@ -496,11 +496,11 @@ public class MapActivity extends Activity {
 			case R.id.search:
 				onSearchRequested();
 				return true;
-			case R.id.mapSynchronizeButton:
+			case R.id.sync:
 				finish();
 				openMap(mapRef, viewType, true, this);
 				return true;
-			case R.id.saveButton:
+			case R.id.save:
 				saveMap();
 				return true;
 		}

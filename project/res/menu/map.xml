@@ -10,14 +10,33 @@
 		android:title="Zoom"
 		android:id="@+id/zoom"
 	/>
+	
+	<item
+		android:icon="@drawable/menu_reload"
+		android:title="Switch view"
+		android:id="@+id/switchView"
+	/>
+	
 	<item
 		android:icon="@drawable/menu_sync"
 		android:title="Synchronize"
-		android:id="@+id/mapSynchronizeButton"
+		android:id="@+id/sync"
 	/>
 	<item
 		android:title="Save"
-		android:id="@+id/saveButton"
+		android:id="@+id/save"
 		android:icon="@drawable/menu_save"
+	/>
+	
+	<item
+		android:title="Edit"
+		android:id="@+id/edit"
+		android:icon="@drawable/menu_save"
+	/>
+	
+	<item
+		android:icon="@drawable/menu_sync"
+		android:title="Back to Map List"
+		android:id="@+id/metamap"
 	/>
 </menu> 
