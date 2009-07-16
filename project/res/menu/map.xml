@@ -17,15 +17,16 @@
 		android:title="Synchronize"
 		android:id="@+id/sync"
 	/>
-	<item
-		android:title="Save"
-		android:id="@+id/save"
-		android:icon="@drawable/menu_save"
-	/>
-	
+
 	<item
 		android:title="Edit"
 		android:id="@+id/edit"
+		android:icon="@drawable/menu_edit"
+	/>
+	
+	<item
+		android:title="Save"
+		android:id="@+id/save"
 		android:icon="@drawable/menu_save"
 	/>
 	
