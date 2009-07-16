@@ -5,11 +5,6 @@
 		android:title="Search"
 		android:id="@+id/search"
 	/>
-	<item 
-		android:icon="@drawable/menu_zoom"
-		android:title="Zoom"
-		android:id="@+id/zoom"
-	/>
 	
 	<item
 		android:icon="@drawable/menu_reload"

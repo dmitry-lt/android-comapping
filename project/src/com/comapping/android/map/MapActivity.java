@@ -58,13 +58,14 @@ public class MapActivity extends Activity {
 	// Opening map by starting new MapActivity
 	// ===========================================================
 
-	public static void openMap(final String mapRef, final String viewType, boolean ignoreCache, Activity parent) {
+	public static void openMap(final String mapRef, final String viewType,
+			boolean ignoreCache, Activity parent) {
 		Intent intent = new Intent(Constants.MAP_ACTIVITY_INTENT);
 
 		intent.putExtra(MapActivity.EXT_MAP_REF, mapRef);
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType);
 		intent.putExtra(MapActivity.EXT_IS_IGNORE_CACHE, ignoreCache);
-		
+
 		parent.startActivityForResult(intent, Constants.ACTION_MAP_REQUEST);
 	}
 
@@ -107,7 +108,6 @@ public class MapActivity extends Activity {
 	// ===========================================================
 
 	private long lastZoomPress = -100000;
-	private boolean zoomVisible = true;
 
 	// ===========================================================
 	// Controls of view
@@ -136,7 +136,8 @@ public class MapActivity extends Activity {
 
 						public void onCancel(DialogInterface dialog) {
 							mapProcessingThread.interrupt();
-							mapProcessingThread.setPriority(Thread.MIN_PRIORITY);
+							mapProcessingThread
+									.setPriority(Thread.MIN_PRIORITY);
 							finish();
 						}
 					});
@@ -164,45 +165,18 @@ public class MapActivity extends Activity {
 
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				Dialog dialog = (new AlertDialog.Builder(activity).setTitle("Error").setMessage(message)
-						.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+				Dialog dialog = (new AlertDialog.Builder(activity).setTitle(
+						"Error").setMessage(message).setNeutralButton("Ok",
+						new DialogInterface.OnClickListener() {
 
-							public void onClick(DialogInterface dialog, int which) {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								activity.finish();
 							}
 						})).create();
 				dialog.show();
 			}
 		});
-	}
-
-	// ===========================================================
-	// Zoom control
-	// ===========================================================
-
-	public void showZoom() {
-		lastZoomPress = System.currentTimeMillis();
-		if (!zoomVisible) {
-			zoomVisible = true;
-			runOnUiThread(new Runnable() {
-
-				public void run() {
-					zoom.show();
-				}
-			});
-		}
-	}
-
-	public void hideZoom() {
-		if (zoomVisible) {
-			zoomVisible = false;
-			runOnUiThread(new Runnable() {
-
-				public void run() {
-					zoom.hide();
-				}
-			});
-		}
 	}
 
 	// ===========================================================
@@ -224,13 +198,13 @@ public class MapActivity extends Activity {
 			String result = "";
 
 			result = MapContentProvider.getComap(mapRef, this);
-			
+
 			if (result == null) {
 				result = "";
 			}
-			
-			//Log.e(Log.CONNECTION_TAG, result);
-			
+
+			// Log.e(Log.CONNECTION_TAG, result);
+
 			splashActivate("Parsing map", true);
 			map = MetaMapActivity.mapBuilder.buildMap(result);
 
@@ -278,7 +252,7 @@ public class MapActivity extends Activity {
 
 		// Zoom
 
-		hideZoom();
+		view.hideZoom();
 		zoom.setIsZoomInEnabled(false);
 		zoom.setOnZoomInClickListener(new OnClickListener() {
 
@@ -351,7 +325,7 @@ public class MapActivity extends Activity {
 			public void run() {
 				splashActivate("Loading map", false);
 				canDraw = false;
-//				Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
+				// Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
 				while (!mapRender.canRotate()) {
 					try {
 						sleep(100);
@@ -360,7 +334,8 @@ public class MapActivity extends Activity {
 					}
 				}
 				splashDeactivate();
-//				Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged finish");
+				// Log.d(Log.MAP_CONTROLLER_TAG,
+				// "onConfigurationChanged finish");
 				view.onRotate();
 				canDraw = true;
 			}
@@ -406,14 +381,6 @@ public class MapActivity extends Activity {
 
 					splashDeactivate();
 
-					// Zoom code
-					while (true) {
-						if (System.currentTimeMillis() - lastZoomPress > ZOOM_CONTROLS_TIME_TO_HIDE) {
-							hideZoom();
-						}
-						sleep(100);
-					}
-
 				} catch (StringToXMLConvertionException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
 					showError("Wrong file format");
@@ -445,7 +412,7 @@ public class MapActivity extends Activity {
 
 		}
 	}
-	
+
 	protected void onDestroy() {
 		splashDeactivate();
 		super.onDestroy();
@@ -490,19 +457,16 @@ public class MapActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.zoom:
-				showZoom();
-				return true;
-			case R.id.search:
-				onSearchRequested();
-				return true;
-			case R.id.sync:
-				finish();
-				openMap(mapRef, viewType, true, this);
-				return true;
-			case R.id.save:
-				saveMap();
-				return true;
+		case R.id.search:
+			onSearchRequested();
+			return true;
+		case R.id.sync:
+			finish();
+			openMap(mapRef, viewType, true, this);
+			return true;
+		case R.id.save:
+			saveMap();
+			return true;
 		}
 		return false;
 	}

@@ -7,6 +7,7 @@ import com.comapping.android.controller.R;
 import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.render.MapRender;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -98,6 +99,85 @@ public class MapView extends View {
 	String query;
 	LinearLayout findLayout;
 
+	// ===============================================
+	// Zoom
+	// ===============================================
+
+	private static final long ZOOM_CONTROLS_TIME_TO_HIDE = 2000;
+
+	private long lastZoomPress = 0;
+
+	private Thread zoomUpdateThread = new Thread() {
+		public void run() {
+			// Zoom code
+			while (true) {
+				if (System.currentTimeMillis() - lastZoomPress > ZOOM_CONTROLS_TIME_TO_HIDE) {
+					hideZoom();
+				}
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+	};
+
+	private static final float eps = 1e-6f;
+
+	public void setScale(float scale) {
+		if (scale > MAX_SCALE) {
+			scale = MAX_SCALE;
+		}
+		if (scale < MIN_SCALE) {
+			scale = MIN_SCALE;
+		}
+		zoom.setIsZoomInEnabled(Math.abs(scale - MAX_SCALE) > eps);
+		zoom.setIsZoomOutEnabled(Math.abs(scale - MIN_SCALE) > eps);
+		this.scale = scale;
+
+		showZoom();
+	}
+
+	public void setZoom(ZoomControls zoom) {
+		this.zoom = zoom;
+	}
+
+	public void showZoom() {
+	
+		lastZoomPress = System.currentTimeMillis();
+
+		if (zoom == null)
+			return;
+
+
+		if (zoom.getVisibility() != View.VISIBLE) {
+			((Activity) getContext()).runOnUiThread(new Runnable() {
+
+				public void run() {
+
+					zoom.show();
+				}
+			});
+		}
+	}
+
+	public void hideZoom() {
+		if (zoom == null)
+			return;
+		
+		if (zoom.getVisibility() == View.VISIBLE) {
+			((Activity) getContext()).runOnUiThread(new Runnable() {
+
+				public void run() {
+					zoom.hide();
+				}
+			});
+		}
+	}
+
 	public MapView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
@@ -109,6 +189,8 @@ public class MapView extends View {
 		background.setBounds(0, 0, background.getIntrinsicWidth(), background
 				.getIntrinsicHeight());
 		background.setAlpha(127);
+		
+		zoomUpdateThread.start();
 	}
 
 	void initScrolling(Context context) {
@@ -213,26 +295,8 @@ public class MapView extends View {
 		return isInitialized;
 	}
 
-	public void setZoom(ZoomControls zoom) {
-		this.zoom = zoom;
-	}
-
 	public float getScale() {
 		return scale;
-	}
-
-	private static final float eps = 1e-6f;
-
-	public void setScale(float scale) {
-		if (scale > MAX_SCALE) {
-			scale = MAX_SCALE;
-		}
-		if (scale < MIN_SCALE) {
-			scale = MIN_SCALE;
-		}
-		zoom.setIsZoomInEnabled(Math.abs(scale - MAX_SCALE) > eps);
-		zoom.setIsZoomOutEnabled(Math.abs(scale - MIN_SCALE) > eps);
-		this.scale = scale;
 	}
 
 	public void refresh() {
@@ -289,8 +353,8 @@ public class MapView extends View {
 		if (!canDraw) {
 			return;
 		}
-		
-		//fixScrolCoordinates();
+
+		// fixScrolCoordinates();
 
 		// Save matrix
 		canvas.save();
@@ -397,6 +461,9 @@ public class MapView extends View {
 
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN: {
+
+			showZoom();
+
 			mVelocityTracker = VelocityTracker.obtain();
 			oldX = (int) ev.getX();
 			oldY = (int) ev.getY();
@@ -408,6 +475,9 @@ public class MapView extends View {
 			return true;
 		}
 		case MotionEvent.ACTION_MOVE: {
+
+			showZoom();
+
 			int pathLen = (startX - (int) ev.getX())
 					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
 					* (startY - (int) ev.getY());
@@ -493,7 +563,7 @@ public class MapView extends View {
 	private final int getScrollWidth() {
 		if (mRender == null)
 			return 0;
-		
+
 		return mRender.getWidth() - (int) (this.getWidth() / scale)
 				+ SCROLLBAR_WIDTH;
 	}
@@ -501,7 +571,7 @@ public class MapView extends View {
 	private final int getScrollHeight() {
 		if (mRender == null)
 			return 0;
-		
+
 		return mRender.getHeight() - (int) (this.getHeight() / scale)
 				+ SCROLLBAR_WIDTH;
 	}
@@ -513,7 +583,7 @@ public class MapView extends View {
 	private final int getScreenForRenderHeight() {
 		return (int) (this.getHeight() / scale) - SCROLLBAR_WIDTH;
 	}
-	
+
 	void fixScrolCoordinates() {
 		int deltaX = 0, deltaY = 0;
 		if (mScroller.getCurrX() + deltaX > getScrollWidth())
@@ -529,13 +599,12 @@ public class MapView extends View {
 		mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
 				deltaX, deltaY, 0);
 	}
-	
-	protected void onLayout (boolean changed, int left, int top, int right, int bottom)
-	{
+
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		fixScrolCoordinates();
 	}
-	
 
 	public void onRotate() {
 		canDraw = false;
