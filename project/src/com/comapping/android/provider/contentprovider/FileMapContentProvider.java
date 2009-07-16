@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.comapping.android.Log;
-import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.metamap.MetaMapItem;
 
 public class FileMapContentProvider extends MapContentProvider {
@@ -132,16 +131,6 @@ public class FileMapContentProvider extends MapContentProvider {
 
 	private QueryType detectQueryType(Uri uri) {
 		String uriString = uri.toString();
-		Log.e("detectQueryType", "" + uri);
-		// TODO realize and implement detecting using patterns
-		/*
-		 * if (Pattern.matches("content://" + INFO.logout, uriString)) { return
-		 * QueryType.LOGOUT; } else if (Pattern.matches("content://" +
-		 * INFO.sync, uriString)) { return QueryType.SYNC; } else if
-		 * (Pattern.matches( "content://" + INFO.root + "werrt.comap",
-		 * uriString)) { return QueryType.MAP; } else { return
-		 * QueryType.META_MAP; }
-		 */
 		if (uriString.endsWith(".comap")) {
 			return QueryType.MAP;
 		} else {
@@ -157,8 +146,6 @@ public class FileMapContentProvider extends MapContentProvider {
 
 		switch (queryType) {
 		case META_MAP:
-			Log.e("******", "metamap");
-
 			List<String> pathSegments = uri.getPathSegments();
 
 			if (!INFO.relRoot.equals("")) {
@@ -170,26 +157,21 @@ public class FileMapContentProvider extends MapContentProvider {
 			return mmc;
 
 		case MAP:
-			Log.e("******", "!!!MAP!!!");
 			return new FileMapCursor(URiToId(uri));
 		case LOGOUT:
-			Log.e("******", "LOGOUT");
-
 			return null;
 		case SYNC:
-			Log.e("******", "SYNC");
-
 			return null;
 		default:
-			Log.e("******", "ERROR while parsing URI");
+			Log.e(Log.PROVIDER_FILE_TAG, "ERROR while parsing URI");
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
 
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////
-	// _____________________________CURSORS________________________________________//
-	// //////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+	//_____________________________CURSORS________________________________________//
+	////////////////////////////////////////////////////////////////////////////////
 
 	private class FileMapCursor extends MapCursor {
 
@@ -224,69 +206,25 @@ public class FileMapContentProvider extends MapContentProvider {
 			String response = null;
 
 			try {
-				Log.e(Log.CONNECTION_TAG, mapId);
+				Log.e(Log.PROVIDER_FILE_TAG, mapId);
 				response = getTextFromInputStream(new FileInputStream(mapId));
 			} catch (FileNotFoundException e) {
-				Log.e(Log.CONNECTION_TAG, "map file not found");
+				Log.e(Log.PROVIDER_FILE_TAG, "map file not found");
 			} catch (IOException e) {
-				Log.e(Log.CONNECTION_TAG, "map file IO exception");
+				Log.e(Log.PROVIDER_FILE_TAG, "map file IO exception");
 			}
-
-			Log.d(Log.CONNECTION_TAG, "file comap provider response: "
-					+ response);
 
 			this.text = response;
 
 		}
 	}
 
-	@SuppressWarnings("unused")
+	
 	private class FileMetamapCursor extends MetamapCursor {
-		private static final String LAST_SYNCHRONIZATION = "Last synchronization";
-
-		private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-		private static final String MAP_DESCRIPTION = "Map";
-		private static final String FOLDER_DESCRIPTION = "Folder";
-
-		public FileMetamapCursor(Topic topic) {
-			currentLevel = getItems(topic.getChildTopics());
-		}
-
 		public FileMetamapCursor(MetaMapItem[] mmi) {
 			currentLevel = mmi;
 		}
 
-		private MetaMapItem[] getItems(Topic[] topics) {
-			MetaMapItem[] res = new MetaMapItem[topics.length];
-
-			for (int i = 0; i < topics.length; i++) {
-				res[i] = new MetaMapItem();
-				res[i].name = topics[i].getText();
-
-				res[i].isFolder = topics[i].isFolder();
-
-				if (res[i].isFolder) {
-					res[i].description = getFolderDescription(topics[i]);
-				} else {
-					res[i].description = getMapDescription(topics[i]);
-				}
-
-				res[i].reference = "content://" + INFO.root + INFO.separator
-						+ topics[i].getMapRef();
-			}
-
-			return res;
-		}
-
-		private String getMapDescription(Topic topic) {
-			return MAP_DESCRIPTION;
-
-		}
-
-		private String getFolderDescription(Topic topic) {
-			return FOLDER_DESCRIPTION;
-		}
 	}
 
 }

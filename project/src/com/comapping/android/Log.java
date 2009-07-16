@@ -14,6 +14,7 @@ public class Log {
 	public static final String SQLITE_CACHE_TAG = "SQLite";
 	public static final String MEMORY_CACHE_TAG = "MemoryCache";
 	public static final String PROVIDER_COMAPPING_TAG = "ComappingMapContentProvider";
+	public static final String PROVIDER_FILE_TAG = "FileMapContentProvider";
 
 	public static void v(String module, String msg) {
 		if (!Options.USE_LOG)
