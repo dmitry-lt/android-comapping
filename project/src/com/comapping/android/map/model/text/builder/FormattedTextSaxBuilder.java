@@ -57,14 +57,19 @@ public class FormattedTextSaxBuilder {
 		return new TextFormat();
 	}
 
-	@SuppressWarnings("deprecation")
+	//@SuppressWarnings("deprecation")
 	public static FormattedText buildFormattedText(String xmlString)
 			throws StringToXMLConvertionException {
 		
-//		if (!xmlString.contains("<"))
-//		{
-//			return new FormattedText(xmlString, getDefFormat());
-//		}
+		if (!xmlString.contains("<"))
+		{
+			xmlString = xmlString.replace("&gt;", ">");
+			xmlString = xmlString.replace("&lt;", "<");
+			xmlString = xmlString.replace("&apos;", "\"");
+			xmlString = xmlString.replace("&quot;", "'");
+			xmlString = xmlString.replace("&amp;", "&");
+			return new FormattedText(xmlString, getDefFormat());
+		}
 
 		if (xmlString.startsWith("<P")) {
 			xmlString = "<TEXT>" + xmlString + "</TEXT>";
@@ -80,22 +85,17 @@ public class FormattedTextSaxBuilder {
 
 			InputStream stream = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
 
-//			Log.d(Log.MODEL_TAG, "Text SAX parsing: " + xmlString);
-
 			parser.parse(stream, handler);
 			resultText = handler.getFormattedText();
 		} catch (FactoryConfigurationError e) {
 			Log.e("SAX Text Parser", e.toString());
 			throw new DocumentBuilderCreatingError();
 		} catch (SAXException e) {
-			Log
-					.e(Log.MODEL_TAG, "cannot convert string to xml:"
-							+ e.toString());
+			Log.e(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
+			Log.e(Log.MODEL_TAG, "error while parsing text: " + xmlString);
 			resultText = new FormattedText(ERROR_TEXT, getDefFormat());
 		} catch (IOException e) {
-			Log
-					.e(Log.MODEL_TAG, "cannot convert string to xml:"
-							+ e.toString());
+			Log.e(Log.MODEL_TAG, "cannot convert string to xml:" + e.toString());
 			throw new StringToXMLConvertionException();
 		}
 		return resultText;
