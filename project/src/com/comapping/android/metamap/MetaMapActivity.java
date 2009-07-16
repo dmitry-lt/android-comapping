@@ -96,7 +96,7 @@ public class MetaMapActivity extends Activity {
 
 	protected void onDestroy() {
 		currentProvider.finishWork();
-		
+
 		super.onDestroy();
 	}
 
@@ -109,7 +109,7 @@ public class MetaMapActivity extends Activity {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-	
+
 	// Refresh list after map opening
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == Constants.ACTION_MAP_REQUEST) {
@@ -411,10 +411,18 @@ public class MetaMapActivity extends Activity {
 		if (!itm.isFolder) {
 
 			switch (item.getItemId()) {
-			case R.id.openWithComappingView:
+			case R.id.open:
+				String viewType = PreferencesStorage.get(
+						PreferencesStorage.VIEW_TYPE_KEY,
+						PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, this);
+
+				openMap(itm.reference, viewType, false);
+
+				break;
+			case R.id.openComapping:
 				openMap(itm.reference, Constants.VIEW_TYPE_COMAPPING, false);
 				break;
-			case R.id.openWithExplorerView:
+			case R.id.openExplorer:
 				openMap(itm.reference, Constants.VIEW_TYPE_EXPLORER, false);
 				break;
 			}
