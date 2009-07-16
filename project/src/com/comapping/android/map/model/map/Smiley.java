@@ -20,8 +20,7 @@ public enum Smiley {
 	public static String write(Smiley s) {
 		if (s == null) {
 			return null;
-		}
-		if (s.equals(HAPPY)) {
+		} else if (s.equals(HAPPY)) {
 			return "happy";
 		} else if (s.equals(NEUTRAL)) {
 			return "neutral";

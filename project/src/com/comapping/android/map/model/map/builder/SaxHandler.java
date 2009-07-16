@@ -112,11 +112,9 @@ class SaxHandler extends DefaultHandler {
 
 				String iconName = attributes
 						.getValue(MapBuilder.ICON_NAME_ATTR);
-				try {
+				Icon icon = Icon.parse(iconName);
+				if (icon != null) {
 					currentTopic.addIcon(Icon.parse(iconName));
-				} catch (EnumParsingException e) {
-					e.printStackTrace();
-					Log.e(Log.MODEL_TAG, e.toString());
 				}
 
 			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {

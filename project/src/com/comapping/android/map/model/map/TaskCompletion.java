@@ -24,8 +24,7 @@ public enum TaskCompletion {
 	public static String write(TaskCompletion s) {
 		if (s == null) {
 			return null;
-		}
-		if (s.equals(TO_DO)) {
+		} else if (s.equals(TO_DO)) {
 			return "0";
 		} else if (s.equals(TWENTY_FIVE)) {
 			return "25";

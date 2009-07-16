@@ -26,8 +26,7 @@ public enum Flag {
 	public static String write(Flag f) {
 		if (f == null) {
 			return null;
-		}
-		if (f.equals(GO)) {
+		} else if (f.equals(GO)) {
 			return "go";
 		} else if (f.equals(FOR_DISCUSSION)) {
 			return "for_discussion";

@@ -26,8 +26,7 @@ public enum Arrow {
 	public static String write(Arrow a) {
 		if (a == null) {
 			return null;
-		}
-		if (a.equals(BLUE)) {
+		} else if (a.equals(BLUE)) {
 			return "blue";
 		} else if (a.equals(PURPLE)) {
 			return "purple";

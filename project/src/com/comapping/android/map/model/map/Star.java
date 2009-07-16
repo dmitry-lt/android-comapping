@@ -26,8 +26,7 @@ public enum Star {
 	public static String write(Star a) {
 		if (a == null) {
 			return null;
-		}
-		if (a.equals(BLUE)) {
+		} else if (a.equals(BLUE)) {
 			return "blue";
 		} else if (a.equals(PURPLE)) {
 			return "purple";
