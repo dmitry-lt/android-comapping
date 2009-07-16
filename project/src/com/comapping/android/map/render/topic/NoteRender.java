@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.comapping.android.controller.R;
 import com.comapping.android.map.model.text.FormattedText;
@@ -15,8 +16,7 @@ import com.comapping.android.map.model.text.TextFormat;
 import com.comapping.android.map.render.Render;
 
 public class NoteRender extends Render {
-	private static final TextFormat FORMAT = new TextFormat(10, Color.GRAY, "",
-			false);
+	private static final TextFormat FORMAT = new TextFormat(10, Color.GRAY, "",	false);
 	private static final int MIN_MAX_WIDTH = 100;
 	private static final int MAX_LINES_COUNT = 2;
 
@@ -56,12 +56,13 @@ public class NoteRender extends Render {
 
 	public void onTouch(int x, int y) {
 		if (!isEmpty) {
-
 			if (dialog == null) {
 				LayoutInflater factory = LayoutInflater.from(context);
 				final View textEntryView = factory.inflate(R.layout.topic_edit,	null);
 				
 				((EditText) textEntryView.findViewById(R.id.topic_text_edit)).setText(note);
+				((TextView)textEntryView.findViewById(R.id.topic_text_hint)).setText("Notes");
+				
 				dialog = new AlertDialog.Builder(context)
 						.setView(textEntryView).setPositiveButton("Save",
 								new DialogInterface.OnClickListener() {
