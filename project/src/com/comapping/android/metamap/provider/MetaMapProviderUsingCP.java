@@ -51,9 +51,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 
 	@Override
 	public MetaMapItem[] getCurrentLevel() {
-		if (currentLevel == null) {
-			updateCurrentLevel();
-		}
+		updateCurrentLevelFromCache();
 		return currentLevel;
 	}
 
@@ -65,34 +63,29 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	@Override
 	public void goHome() {
 		currentPath = info.root;
-		updateCurrentLevel();
 	}
 
 	@Override
 	public void goUp() {
 		// TODO write it more accurate
 		currentPath = currentPath.substring(0, currentPath.substring(0, currentPath.length() - 1).lastIndexOf(info.separator) + 1);
-		updateCurrentLevel();
 	}
 
 	@Override
 	public void gotoFolder(int index) {
 		if (currentLevel[index].isFolder) {
 			currentPath += currentLevel[index].name + info.separator;
-			updateCurrentLevel();
 		}
 	}
 
 	@Override
 	public void logout() {
 		query(info.logout);
-		updateCurrentLevel();
 	}
 
 	@Override
 	public boolean sync() {
 		query(info.sync);
-		updateCurrentLevel();
 		return false;
 	}
 
@@ -105,7 +98,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 		return context.getContentResolver().query(uri, null, null, null, null);
 	}
 
-	private void updateCurrentLevel() {
+	private void updateCurrentLevelFromCache() {
 		Cursor cursor = query(currentPath + info.ignoreInternetSuffix);
 		
 		if (cursor == null) {

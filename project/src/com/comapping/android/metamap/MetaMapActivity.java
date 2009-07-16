@@ -109,8 +109,8 @@ public class MetaMapActivity extends Activity {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-
-	// WTF?
+	
+	// Refresh list after map opening
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == Constants.ACTION_MAP_REQUEST) {
 			initControls();
