@@ -155,7 +155,8 @@ public class FileMapContentProvider extends MapContentProvider {
 			if (!INFO.relRoot.equals("")) {
 				pathSegments.remove(0);
 			}
-
+			currentPath = uri.toString().substring(10, uri.toString().lastIndexOf("/") );
+			Log.e(Log.PROVIDER_FILE_TAG,"cur path is"+ currentPath );
 			updateCurrentLevel();
 			FileMetamapCursor mmc = new FileMetamapCursor(currentLevel);
 			return mmc;
