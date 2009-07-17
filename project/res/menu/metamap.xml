@@ -14,7 +14,7 @@
     <item
     	android:title="Switch source"
     	android:icon="@drawable/metamap_sdcard"
-    	android:id="@+id/syncAll"
+    	android:id="@+id/switchSource"
     />
     
     <item
