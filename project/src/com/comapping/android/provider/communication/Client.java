@@ -246,7 +246,7 @@ public class Client {
 	public HttpURLConnection getHttpURLConnection(URL url)
 			throws ConnectionException, IOException {
 		if (PreferencesStorage.getBoolean(
-				PreferencesStorage.USE_PROXY_AUTH_KEY,
+				PreferencesStorage.USE_PROXY_KEY,
 				PreferencesStorage.USE_PROXY_DEFAULT_VALUE, context)) {
 			String proxyHost = PreferencesStorage.get(
 					PreferencesStorage.PROXY_HOST_KEY, "", context);
