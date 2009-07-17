@@ -31,6 +31,7 @@ public class FileMapContentProvider extends MapContentProvider {
 	}
 
 	public static final int PREFIX_LENGTH = 1;
+	public static final int PATH_PREFIX_LENGTH = 10;
 
 	String currentPath = "/sdcard";
 	MetaMapItem[] currentLevel;
@@ -42,8 +43,6 @@ public class FileMapContentProvider extends MapContentProvider {
 	}
 
 	private String URiToId(Uri uri) {
-		Log.e("******UriToId-input", uri.toString());
-		Log.e("******UriToId-output", uri.getPath().substring(PREFIX_LENGTH));
 		return "sdcard/" + uri.getPath().substring(PREFIX_LENGTH);
 
 	}
@@ -145,9 +144,9 @@ public class FileMapContentProvider extends MapContentProvider {
 			String[] selectionArgs, String sortOrder) {
 		String uriString = uri.toString();
 		uri = Uri.parse(INFO.removeParameters(uriString));
-		
+
 		QueryType queryType = detectQueryType(uri);
-				
+
 		switch (queryType) {
 		case META_MAP:
 			List<String> pathSegments = uri.getPathSegments();
@@ -155,8 +154,8 @@ public class FileMapContentProvider extends MapContentProvider {
 			if (!INFO.relRoot.equals("")) {
 				pathSegments.remove(0);
 			}
-			currentPath = uri.toString().substring(10, uri.toString().lastIndexOf("/") );
-			Log.e(Log.PROVIDER_FILE_TAG,"cur path is"+ currentPath );
+			currentPath = uri.toString().substring(PATH_PREFIX_LENGTH,
+					uri.toString().lastIndexOf("/"));
 			updateCurrentLevel();
 			FileMetamapCursor mmc = new FileMetamapCursor(currentLevel);
 			return mmc;
@@ -224,7 +223,6 @@ public class FileMapContentProvider extends MapContentProvider {
 		}
 	}
 
-	
 	private class FileMetamapCursor extends MetamapCursor {
 		public FileMetamapCursor(MetaMapItem[] mmi) {
 			currentLevel = mmi;
