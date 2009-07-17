@@ -9,6 +9,7 @@ import android.net.Uri;
 
 import com.comapping.android.Log;
 import com.comapping.android.metamap.MetaMapItem;
+import com.comapping.android.provider.contentprovider.exceptions.*;
 
 public abstract class MapContentProvider extends ContentProvider {
 	public static final String CONTENT_PREFIX = "content://";
@@ -20,10 +21,10 @@ public abstract class MapContentProvider extends ContentProvider {
 
 	public static String getComap(String mapRef, Context context) {
 		Uri fullUri = Uri.parse(mapRef);
-		Log.d(Log.PROVIDER_TAG, "getComap: uri=" +  fullUri);
+		Log.d(Log.PROVIDER_TAG, "getComap: uri=" +  fullUri);		
 		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);		
 	
-		return cursor.getString(1);
+		return cursor.getString(cursor.getColumnIndex(TEXT));
 	}
 	
 	public static String getComap(String mapRef, boolean ignoreCache, boolean ignoreInternet, Context context) {
@@ -112,7 +113,7 @@ public abstract class MapContentProvider extends ContentProvider {
 		}
 	}
 
-	abstract class MetamapCursor extends AbstractCursor {
+	abstract class MetamapCursor extends AbstractCursor {		
 		protected MetaMapItem[] currentLevel;
 		private MetaMapItem currentItem;
 
@@ -129,32 +130,27 @@ public abstract class MapContentProvider extends ContentProvider {
 
 		@Override
 		public double getDouble(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public float getFloat(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public int getInt(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public long getLong(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public short getShort(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
@@ -185,13 +181,13 @@ public abstract class MapContentProvider extends ContentProvider {
 
 		@Override
 		public boolean isNull(int column) {
-			// TODO Auto-generated method stub
-			return false;
+			throw new NotImplementedException();
 		}
 
 	}
 
 	abstract class MapCursor extends AbstractCursor {
+		protected boolean mapNotFound;
 		protected String id;
 		protected String text;
 
@@ -207,36 +203,33 @@ public abstract class MapContentProvider extends ContentProvider {
 
 		@Override
 		public double getDouble(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public float getFloat(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public int getInt(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public long getLong(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public short getShort(int column) {
-			// TODO Auto-generated method stub
-			return 0;
+			throw new NotImplementedException();
 		}
 
 		@Override
 		public String getString(int column) {
+			if (mapNotFound) throw new MapNotFoundException();
+			
 			switch (column) {
 				case 0:
 					return id;
@@ -249,32 +242,27 @@ public abstract class MapContentProvider extends ContentProvider {
 
 		@Override
 		public boolean isNull(int column) {
-			// TODO Auto-generated method stub
-			return false;
+			throw new NotImplementedException();
 		}		
 	}
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public String getType(Uri uri) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 	
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new NotImplementedException();
 	}
 }

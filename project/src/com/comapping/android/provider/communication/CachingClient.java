@@ -12,8 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 
-import com.comapping.android.Log;
-
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
@@ -83,13 +81,8 @@ public class CachingClient {
 		}
 
 		if ((result == null) && (!ignoreInternet)) {
-			try {
-				result = client.getComap(mapId);
-			} catch (Exception e) {
-				Log.e(Log.CONNECTION_TAG, e.toString());
-				result = cache.get(mapId); // if map not retrieved return cached
-											// map
-			}
+			result = client.getComap(mapId);
+			
 			// save result to cache
 			cache.set(mapId, result);
 		}

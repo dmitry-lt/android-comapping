@@ -40,6 +40,7 @@ import com.comapping.android.map.render.comapping.ComappingRender;
 import com.comapping.android.map.render.explorer.ExplorerRender;
 import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.provider.contentprovider.MapContentProvider;
+import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 import com.comapping.android.storage.MemoryCache;
 
 public class MapActivity extends Activity {
@@ -160,7 +161,7 @@ public class MapActivity extends Activity {
 		});
 	}
 
-	private void showError(final String message) {
+	private void showError(final String message, final boolean finish) {
 		final Activity activity = this;
 
 		activity.runOnUiThread(new Runnable() {
@@ -171,7 +172,9 @@ public class MapActivity extends Activity {
 
 							public void onClick(DialogInterface dialog,
 									int which) {
-								activity.finish();
+								if (finish) {
+									activity.finish();
+								}
 							}
 						})).create();
 				dialog.show();
@@ -197,7 +200,13 @@ public class MapActivity extends Activity {
 			splashActivate("Downloading map", false);
 			String result = "";
 
-			result = MapContentProvider.getComap(mapRef, ignoreCache, false, this);
+			try {
+				result = MapContentProvider.getComap(mapRef, ignoreCache, false, this);
+			} catch (MapNotFoundException e) {
+				Log.w(Log.MAP_CONTROLLER_TAG, e.toString());
+				showError("This map wasn't found on server!", false);
+				result = MapContentProvider.getComap(mapRef, false, true, this);
+			}
 
 			if (result == null) {
 				result = "";
@@ -383,10 +392,10 @@ public class MapActivity extends Activity {
 
 				} catch (StringToXMLConvertionException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Wrong file format");
+					showError("Wrong file format", true);
 				} catch (MapParsingException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Wrong file format");
+					showError("Wrong file format", true);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

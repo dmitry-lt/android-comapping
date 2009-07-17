@@ -13,6 +13,9 @@ import com.comapping.android.metamap.MetaMapItem;
 import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
+import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -149,8 +152,10 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	private String getComap(String mapId, boolean ignoreCache, boolean ignoreInternet) {		
 		try {
 			return client.getComap(mapId, ignoreCache, ignoreInternet);
+		} catch (InvalidCredentialsException e) {
+			throw new MapNotFoundException();
 		} catch (Exception e) {
-			Log.w(Log.PROVIDER_COMAPPING_TAG, "error while receiving map: " + mapId);
+			Log.w(Log.PROVIDER_COMAPPING_TAG, "error " + e.toString() + " while receiving map: " + mapId);
 			return "";
 		}
 	}
