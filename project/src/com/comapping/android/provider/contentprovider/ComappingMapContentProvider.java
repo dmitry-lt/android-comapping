@@ -50,14 +50,22 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		String uriString = uri.toString();
 		if (Pattern.matches(CONTENT_PREFIX + INFO.logout, uriString)) {
 			return QueryType.LOGOUT;
-		} else if (Pattern.matches(CONTENT_PREFIX + INFO.sync, uriString)) {
+			
+		} else if (uriString.matches(CONTENT_PREFIX + INFO.sync)) {
 			return QueryType.SYNC;
-		} else if (Pattern.matches(CONTENT_PREFIX + INFO.finishWork, uriString)) {
+			
+		} else if (uriString.matches(CONTENT_PREFIX + INFO.finishWork)) {
 			return QueryType.FINISH_WORK;
-		} else if (Pattern.matches(CONTENT_PREFIX + INFO.root + "\\d\\d\\d\\d\\d", uriString)) {
+			
+		} else if (uriString.matches(CONTENT_PREFIX + INFO.root + "\\d+")) {
 			return QueryType.MAP;
-		} else {
+			
+		} else if (uriString.equals(CONTENT_PREFIX + INFO.root)
+				|| uriString.matches(CONTENT_PREFIX + INFO.root + ".*" + INFO.separator)) {
 			return QueryType.META_MAP;
+			
+		} else {
+			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
 	}
 
