@@ -154,7 +154,13 @@ public abstract class MapContentProvider extends ContentProvider {
 		}
 
 		public String removeParameters(String uriString) {
-			return uriString.substring(0, uriString.lastIndexOf('?'));
+			int queryStart = uriString.lastIndexOf('?');
+			if (queryStart > -1) {
+				return uriString.substring(0, queryStart);
+			} else {
+				return uriString;
+			}
+				
 		}
 	}
 
