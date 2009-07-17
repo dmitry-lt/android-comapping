@@ -19,13 +19,13 @@ import com.comapping.android.map.model.text.TextFormat;
 
 public class FormattedTextSaxBuilder {
 
-	static final String PARAGRAPH_TAG = "P";
-	static final String FONT_TAG = "FONT";
-	static final String FONT_ATTR_SIZE_TAG = "SIZE";
-	static final String FONT_ATTR_COLOR_TAG = "COLOR";
-	static final String HYPER_REF_TAG = "A";
-	static final String HYPER_REF_ATTR_HREF_TAG = "HREF";
-	static final String UNDERLINED_TAG = "U";
+	public static final String PARAGRAPH_TAG = "P";
+	public static final String FONT_TAG = "FONT";
+	public static final String FONT_ATTR_SIZE_TAG = "SIZE";
+	public static final String FONT_ATTR_COLOR_TAG = "COLOR";
+	public static final String HYPER_REF_TAG = "A";
+	public static final String HYPER_REF_ATTR_HREF_TAG = "HREF";
+	public static final String UNDERLINED_TAG = "U";
 
 	private static final String ERROR_TEXT = "#ERROR#";
 
