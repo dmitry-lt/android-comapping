@@ -146,16 +146,15 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	}
 
 	private Map getMetamap(boolean ignoreCache, boolean ignoreInternet) {
-		if (metamap != null && !ignoreCache) {
-			return metamap;
-		}
-
+		if (!ignoreInternet && (ignoreCache || metamap == null))
 		try {
-			return mapBuilder.buildMap(getComap("meta", ignoreCache, ignoreInternet));
+			metamap = mapBuilder.buildMap(getComap("meta", ignoreCache, ignoreInternet));
 		} catch (Exception e) {
 			Log.w(Log.PROVIDER_COMAPPING_TAG, "Error while synchronizing: cannot parse metamap");
-			return null;
+			metamap = null;
 		}
+		
+		return metamap;
 	}
 
 	private String getComap(String mapId, boolean ignoreCache, boolean ignoreInternet) {
