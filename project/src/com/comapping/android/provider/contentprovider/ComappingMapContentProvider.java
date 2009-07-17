@@ -14,7 +14,6 @@ import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
-import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 
 import android.content.Context;
@@ -223,8 +222,9 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		}
 
 		private String getSize(int size) {
-			if (size == -1) return "-";
-			
+			if (size == -1)
+				return "-";
+
 			if (size < 1024) {
 				return size + " bytes";
 			}

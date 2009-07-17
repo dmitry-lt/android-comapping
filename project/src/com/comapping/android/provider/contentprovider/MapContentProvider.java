@@ -1,7 +1,5 @@
 package com.comapping.android.provider.contentprovider;
 
-import java.sql.Timestamp;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,7 +7,6 @@ import android.database.AbstractCursor;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.comapping.android.Log;
 import com.comapping.android.metamap.MetaMapItem;
 import com.comapping.android.provider.contentprovider.exceptions.*;
 
@@ -23,14 +20,13 @@ public abstract class MapContentProvider extends ContentProvider {
 
 	public static String getComap(String mapRef, Context context) {
 		Uri fullUri = Uri.parse(mapRef);
-		Log.d(Log.PROVIDER_TAG, "getComap: uri=" + fullUri);
+		// Log.d(Log.PROVIDER_TAG, "getComap: uri=" + fullUri);
 		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);
 
 		return cursor.getString(cursor.getColumnIndex(CONTENT));
 	}
 
 	public static String getComap(String mapRef, boolean ignoreCache, boolean ignoreInternet, Context context) {
-		mapRef = infoForParameters.removeParameters(mapRef);
 		mapRef = infoForParameters.setIgnoreCache(mapRef, ignoreCache);
 		mapRef = infoForParameters.setIgnoreInternet(mapRef, ignoreInternet);
 		return getComap(mapRef, context);
@@ -47,10 +43,13 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final String relSync;
 		public final boolean canLogout;
 		public final boolean canSync;
-		public final String ignoreCacheSuffix = "-ic";
-		public final String ignoreInternetSuffix = "-ii";
 		public final String relFinishWork = "finish_work";
 		public final String finishWork;
+
+		public final String ignoreCacheParameter = "ignoreCache";
+		public final String ignoreInternetParameter = "ignoreInternet";
+		public final boolean defaultIgnoreCache = false;
+		public final boolean defaultIgnoreInternet = false;
 
 		private MapContentProviderInfo() {
 			this("", "", true, true);
@@ -82,36 +81,80 @@ public abstract class MapContentProvider extends ContentProvider {
 			this.finishWork = authorities + separator + relFinishWork;
 		}
 
-		public String setIgnoreCache(String uri, boolean ignoreCache) {
-			if (ignoreCache) {
-				return uri + "-ic";
+		private String setParameter(String uriString, String parameter, String value) {
+			int queryStart = uriString.lastIndexOf('?');
+			if (queryStart > -1) {
+				int parameterStart = uriString.indexOf(parameter, queryStart);
+				if (parameterStart > -1) {
+					String before = uriString.substring(0, parameterStart + parameter.length() + 1);
+					String after;
+					int parameterEnd = uriString.indexOf('&', parameterStart);
+					if (parameterEnd > -1) {
+						after = uriString.substring(parameterEnd, uriString.length());
+					} else {
+						after = "";
+					}
+
+					return before + value + after;
+				} else {
+					return uriString + "&" + parameter + "=" + value;
+				}
 			} else {
-				return uri;
+				return uriString + "?" + parameter + "=" + value;
 			}
 		}
 
-		public String setIgnoreInternet(String uri, boolean ignoreInternet) {
-			if (ignoreInternet) {
-				return uri + "-ii";
+		private String getParameter(String uriString, String parameter) {
+			int queryStart = uriString.lastIndexOf('?');
+			if (queryStart > -1) {
+				int parameterStart = uriString.indexOf(parameter, queryStart);
+				if (parameterStart > -1) {
+					int valueStart = parameterStart + parameter.length() + 1;
+					int valueEnd;
+					int parameterEnd = uriString.indexOf('&', parameterStart);
+					if (parameterEnd > -1) {
+						valueEnd = parameterEnd;
+					} else {
+						valueEnd = uriString.length();
+					}
+
+					return uriString.substring(valueStart, valueEnd);
+				} else {
+					return null;
+				}
 			} else {
-				return uri;
+				return null;
 			}
 		}
 
-		public boolean isIgnoreCache(String uri) {
-			return (uri.endsWith(ignoreCacheSuffix));
+		public String setIgnoreCache(String uriString, boolean ignoreCache) {
+			return setParameter(uriString, ignoreCacheParameter, String.valueOf(ignoreCache));
 		}
 
-		public boolean isIgnoreInternet(String uri) {
-			return (uri.endsWith(ignoreInternetSuffix));
+		public String setIgnoreInternet(String uriString, boolean ignoreInternet) {
+			return setParameter(uriString, ignoreInternetParameter, String.valueOf(ignoreInternet));
 		}
 
-		public String removeParameters(String uri) {
-			if (isIgnoreCache(uri) || isIgnoreInternet(uri)) {
-				return uri.substring(0, uri.length() - 3);
+		public boolean isIgnoreCache(String uriString) {
+			String value = getParameter(uriString, ignoreCacheParameter);
+			if (value != null) {
+				return Boolean.parseBoolean(value);
 			} else {
-				return uri;
+				return defaultIgnoreCache;
 			}
+		}
+
+		public boolean isIgnoreInternet(String uriString) {
+			String value = getParameter(uriString, ignoreInternetParameter);
+			if (value != null) {
+				return Boolean.parseBoolean(value);
+			} else {
+				return defaultIgnoreInternet;
+			}
+		}
+
+		public String removeParameters(String uriString) {
+			return uriString.substring(0, uriString.lastIndexOf('?'));
 		}
 	}
 
