@@ -85,6 +85,12 @@ public class XmlBuilder {
 	private String cData(String s) {
 		return "<![CDATA[" + s + "]]>";
 	}
+
+	private String colorToString(int color) {
+		return "#" + String.format("%02x", (color >> 16) & 0xFF) +
+		String.format("%02x", (color >> 8) & 0xFF) +
+		String.format("%02x", color & 0xFF);
+	}
 	
 	private void writeAttribute(StringBuilder result, String attribute, String value) {
 		if (value == null) {
@@ -102,15 +108,29 @@ public class XmlBuilder {
 				String text = block.getText();
 				TextFormat format = block.getFormat();
 				result.append("<" + FormattedTextSaxBuilder.FONT_TAG);
-//				writeAttribute(result, FormattedTextSaxBuilder.FONT_ATTR_COLOR_TAG, format.getFontColor() + "");
+				writeAttribute(result, FormattedTextSaxBuilder.FONT_ATTR_COLOR_TAG, colorToString(format.getFontColor()));
 				writeAttribute(result, FormattedTextSaxBuilder.FONT_ATTR_SIZE_TAG, format.getFontSize() + "");
 				result.append(">");
+				if (!format.getHRef().equals("")) {
+					result.append("<" + FormattedTextSaxBuilder.HYPER_REF_TAG);
+					writeAttribute(result, FormattedTextSaxBuilder.HYPER_REF_ATTR_HREF_TAG, format.getHRef());
+					result.append(">");
+				}
 				if (format.isUnderlined()) {
 					result.append("<" + FormattedTextSaxBuilder.UNDERLINED_TAG + ">");
 				}
-				result.append(text);
+				String output = new String(text);
+				output = output.replace("&", "&amp;");
+				output = output.replace(">", "&gt;");
+				output = output.replace("<", "&lt;");
+				output = output.replace("\"", "&apos;");
+				output = output.replace("'", "&quot;");
+				result.append(output);
 				if (format.isUnderlined()) {
 					result.append("</" + FormattedTextSaxBuilder.UNDERLINED_TAG + ">");
+				}
+				if (!format.getHRef().equals("")) {
+					result.append("</" + FormattedTextSaxBuilder.HYPER_REF_TAG + ">");
 				}
 				result.append("</" + FormattedTextSaxBuilder.FONT_TAG + ">");
 			}
@@ -178,8 +198,7 @@ public class XmlBuilder {
 		
 		offset(tabs);
 		result.append("<" + MapBuilder.TOPIC_TEXT_TAG + ">");
-		//result.append(cData(writeText(topic.getFormattedText())));
-		result.append(cData(topic.getText()));
+		result.append(cData(writeText(topic.getFormattedText())));
 		result.append("</" + MapBuilder.TOPIC_TEXT_TAG + ">" + "\n");
 		
 		for (int i = 0; i < topic.getChildrenCount(); i++) {
