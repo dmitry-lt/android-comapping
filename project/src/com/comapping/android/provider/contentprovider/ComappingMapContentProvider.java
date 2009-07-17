@@ -14,6 +14,7 @@ import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 
 import android.content.Context;
@@ -21,13 +22,14 @@ import android.database.Cursor;
 import android.net.Uri;
 
 public class ComappingMapContentProvider extends MapContentProvider {
-	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true, true);
+	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true,
+			true);
 	public static final Uri CONTENT_URI = Uri.parse(CONTENT_PREFIX + INFO.root);
-	
+
 	private enum QueryType {
 		MAP, META_MAP, LOGOUT, SYNC, FINISH_WORK
 	}
-	
+
 	private CachingClient client;
 	private Map metamap;
 	private MapBuilder mapBuilder = new SaxMapBuilder();
@@ -44,7 +46,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 		return true;
 	}
-		
+
 	private QueryType detectQueryType(Uri uri) {
 		String uriString = uri.toString();
 		if (Pattern.matches(CONTENT_PREFIX + INFO.logout, uriString)) {
@@ -52,23 +54,23 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		} else if (Pattern.matches(CONTENT_PREFIX + INFO.sync, uriString)) {
 			return QueryType.SYNC;
 		} else if (Pattern.matches(CONTENT_PREFIX + INFO.finishWork, uriString)) {
-			return QueryType.FINISH_WORK;			
+			return QueryType.FINISH_WORK;
 		} else if (Pattern.matches(CONTENT_PREFIX + INFO.root + "\\d\\d\\d\\d\\d", uriString)) {
-			return QueryType.MAP;		
-		} else { 
+			return QueryType.MAP;
+		} else {
 			return QueryType.META_MAP;
-		}		
+		}
 	}
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		String uriString = uri.toString();
 		Log.i(Log.PROVIDER_COMAPPING_TAG, "received uri: " + uriString);
-		
-		boolean ignoreCache = INFO.isIgnoreCache(uriString);		
+
+		boolean ignoreCache = INFO.isIgnoreCache(uriString);
 		boolean ignoreInternet = INFO.isIgnoreInternet(uriString);
 		uri = Uri.parse(INFO.removeParameters(uriString));
-		
+
 		// parse uri
 		QueryType queryType = detectQueryType(uri);
 		Log.d(Log.PROVIDER_COMAPPING_TAG, "QueryType is " + queryType.toString());
@@ -78,17 +80,17 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				if (!INFO.relRoot.equals("")) {
 					pathSegments = pathSegments.subList(1, pathSegments.size());
 				}
-				
+
 				Map metamap = getMetamap(ignoreCache, ignoreInternet);
 				if (metamap == null) {
 					return null;
 				} else {
 					return new ComappingMetamapCursor(getTopic(pathSegments, metamap));
 				}
-				
+
 			case MAP:
 				return new ComappingMapCursor(getComap(uri.getLastPathSegment(), ignoreCache, ignoreInternet));
-				
+
 			case LOGOUT:
 				try {
 					client.logout();
@@ -96,19 +98,19 @@ public class ComappingMapContentProvider extends MapContentProvider {
 					Log.w(Log.PROVIDER_COMAPPING_TAG, "ConnectionException while logout");
 				}
 				return null;
-				
+
 			case SYNC:
 				getMetamap(true, false);
 				return null;
-			
+
 			case FINISH_WORK:
 				try {
 					client.applicationClose();
 				} catch (ConnectionException e) {
 					Log.w(Log.PROVIDER_COMAPPING_TAG, "ConnectionException in client.applicationClose()");
 				}
-				return null;			
-				
+				return null;
+
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -139,8 +141,8 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	private Map getMetamap(boolean ignoreCache, boolean ignoreInternet) {
 		if (metamap != null && !ignoreCache) {
 			return metamap;
-		}		
-		
+		}
+
 		try {
 			return mapBuilder.buildMap(getComap("meta", ignoreCache, ignoreInternet));
 		} catch (Exception e) {
@@ -149,7 +151,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		}
 	}
 
-	private String getComap(String mapId, boolean ignoreCache, boolean ignoreInternet) {		
+	private String getComap(String mapId, boolean ignoreCache, boolean ignoreInternet) {
 		try {
 			return client.getComap(mapId, ignoreCache, ignoreInternet);
 		} catch (InvalidCredentialsException e) {
@@ -186,10 +188,18 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				if (res[i].isFolder) {
 					res[i].description = getFolderDescription(topics[i]);
 				} else {
-					res[i].description = getMapDescription(topics[i]);
-				}
+					res[i].reference = CONTENT_PREFIX + INFO.root + topics[i].getMapRef();
 
-				res[i].reference = CONTENT_PREFIX + INFO.root + topics[i].getMapRef();
+					res[i].lastSynchronizationDate = client.getLastSynchronizationDate(topics[i].getMapRef());
+
+					try {
+						res[i].sizeInBytes = client.getComap(topics[i].getMapRef(), false, true).length();
+					} catch (Exception e) {
+						res[i].sizeInBytes = -1;
+					}
+
+					res[i].description = getMapDescription(res[i]);
+				}
 			}
 
 			return res;
@@ -211,29 +221,26 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			time /= 24;
 			return time + " days ago";
 		}
-		
+
 		private String getSize(int size) {
+			if (size == -1) return "-";
+			
 			if (size < 1024) {
 				return size + " bytes";
 			}
 			size /= 1024;
 			return size + " Kbytes";
 		}
-		
-		private String getMapDescription(Topic topic) {
-			Timestamp lastSynchronizationDate = client.getLastSynchronizationDate(topic.getMapRef());
+
+		private String getMapDescription(MetaMapItem item) {
+			Timestamp lastSynchronizationDate = item.lastSynchronizationDate;
 
 			if (lastSynchronizationDate == null) {
 				return MAP_DESCRIPTION;
 			} else {
-				String result = LAST_SYNCHRONIZATION + ": "
-				+ getLastSynchronization(lastSynchronizationDate) + "\nSize: ";
-				try {
-					result = result 
-							+ getSize(client.getComap(topic.getMapRef()).length());
-				} catch (Exception e) {
-					
-				}
+				String result = LAST_SYNCHRONIZATION + ": " + getLastSynchronization(lastSynchronizationDate)
+						+ "\nSize: ";
+				result = result + getSize(item.sizeInBytes);
 				return result;
 			}
 		}

@@ -1,5 +1,6 @@
 package com.comapping.android.metamap.provider;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 
 import android.content.Context;
@@ -120,11 +121,25 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 				Log.w(Log.META_MAP_CONTROLLER_TAG,
 						"MetaMapProviderUsingCP.updateCurrentLevel(): cursor's element not found");
 			} else {
-				item.name = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_NAME));
+				item.name = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_NAME));				
 				item.description = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_DESCRIPTION));
 				item.isFolder = Boolean.parseBoolean(cursor.getString(cursor
 						.getColumnIndex(MetaMapItem.COLUMN_IS_FOLDER)));
-				item.reference = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_REFERENCE));
+				
+				if (!item.isFolder) {
+					item.reference = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_REFERENCE));
+					
+					String dateString = cursor.getString(cursor.getColumnIndex(MetaMapItem.COLUMN_LAST_SYNCHRONIZATION_DATE));
+					if (dateString != null) {
+						try {
+							item.lastSynchronizationDate = Timestamp.valueOf(dateString);
+						} catch(Exception e) {
+							Log.w(Log.META_MAP_CONTROLLER_TAG, "Cannot parse date in MetaMapItem, name=" + item.name);
+						}
+					}
+					
+					item.sizeInBytes = cursor.getInt(cursor.getColumnIndex(MetaMapItem.COLUMN_SIZE_IN_BYTES));
+				}
 			}
 
 			isCurrentPresented = cursor.moveToNext();

@@ -1,5 +1,7 @@
 package com.comapping.android.provider.contentprovider;
 
+import java.sql.Timestamp;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,25 +15,25 @@ import com.comapping.android.provider.contentprovider.exceptions.*;
 
 public abstract class MapContentProvider extends ContentProvider {
 	public static final String CONTENT_PREFIX = "content://";
-	
+
 	public static final String ID = "id";
-	public static final String TEXT = "content";
-	
+	public static final String CONTENT = "content";
+
 	private static MapContentProviderInfo infoForParameters = new MapContentProviderInfo();
 
 	public static String getComap(String mapRef, Context context) {
 		Uri fullUri = Uri.parse(mapRef);
-		Log.d(Log.PROVIDER_TAG, "getComap: uri=" +  fullUri);		
-		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);		
-	
-		return cursor.getString(cursor.getColumnIndex(TEXT));
+		Log.d(Log.PROVIDER_TAG, "getComap: uri=" + fullUri);
+		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);
+
+		return cursor.getString(cursor.getColumnIndex(CONTENT));
 	}
-	
+
 	public static String getComap(String mapRef, boolean ignoreCache, boolean ignoreInternet, Context context) {
 		mapRef = infoForParameters.removeParameters(mapRef);
 		mapRef = infoForParameters.setIgnoreCache(mapRef, ignoreCache);
 		mapRef = infoForParameters.setIgnoreInternet(mapRef, ignoreInternet);
-		return getComap(mapRef, context);		
+		return getComap(mapRef, context);
 	}
 
 	public static class MapContentProviderInfo {
@@ -53,7 +55,7 @@ public abstract class MapContentProvider extends ContentProvider {
 		private MapContentProviderInfo() {
 			this("", "", true, true);
 		}
-		
+
 		public MapContentProviderInfo(String authorities, String relRoot, boolean canLogout, boolean canSync) {
 			this(authorities, "/", relRoot, "logout", "sync", canLogout, canSync);
 		}
@@ -62,13 +64,13 @@ public abstract class MapContentProvider extends ContentProvider {
 				String relSync, boolean canLogout, boolean canSync) {
 			this.authorities = authorities;
 			this.separator = separator;
-			
+
 			if (relRoot.equals("")) {
 				this.root = authorities + separator;
 			} else {
 				this.root = authorities + separator + relRoot + separator;
 			}
-			
+
 			this.relRoot = relRoot;
 			this.logout = authorities + separator + relLogout;
 			this.relLogout = relLogout;
@@ -76,10 +78,10 @@ public abstract class MapContentProvider extends ContentProvider {
 			this.relSync = relSync;
 			this.canLogout = canLogout;
 			this.canSync = canSync;
-			
+
 			this.finishWork = authorities + separator + relFinishWork;
 		}
-		
+
 		public String setIgnoreCache(String uri, boolean ignoreCache) {
 			if (ignoreCache) {
 				return uri + "-ic";
@@ -87,7 +89,7 @@ public abstract class MapContentProvider extends ContentProvider {
 				return uri;
 			}
 		}
-		
+
 		public String setIgnoreInternet(String uri, boolean ignoreInternet) {
 			if (ignoreInternet) {
 				return uri + "-ii";
@@ -95,15 +97,15 @@ public abstract class MapContentProvider extends ContentProvider {
 				return uri;
 			}
 		}
-		
+
 		public boolean isIgnoreCache(String uri) {
 			return (uri.endsWith(ignoreCacheSuffix));
 		}
-		
+
 		public boolean isIgnoreInternet(String uri) {
 			return (uri.endsWith(ignoreInternetSuffix));
 		}
-		
+
 		public String removeParameters(String uri) {
 			if (isIgnoreCache(uri) || isIgnoreInternet(uri)) {
 				return uri.substring(0, uri.length() - 3);
@@ -113,14 +115,15 @@ public abstract class MapContentProvider extends ContentProvider {
 		}
 	}
 
-	abstract class MetamapCursor extends AbstractCursor {		
+	abstract class MetamapCursor extends AbstractCursor {
 		protected MetaMapItem[] currentLevel;
 		private MetaMapItem currentItem;
 
 		@Override
 		public String[] getColumnNames() {
 			return new String[] { MetaMapItem.COLUMN_NAME, MetaMapItem.COLUMN_DESCRIPTION,
-					MetaMapItem.COLUMN_IS_FOLDER, MetaMapItem.COLUMN_REFERENCE };
+					MetaMapItem.COLUMN_IS_FOLDER, MetaMapItem.COLUMN_REFERENCE,
+					MetaMapItem.COLUMN_LAST_SYNCHRONIZATION_DATE, MetaMapItem.COLUMN_SIZE_IN_BYTES };
 		}
 
 		@Override
@@ -140,7 +143,12 @@ public abstract class MapContentProvider extends ContentProvider {
 
 		@Override
 		public int getInt(int column) {
-			throw new NotImplementedException();
+			switch (column) {
+				case 5:
+					return currentItem.sizeInBytes;
+				default:
+					throw new IllegalArgumentException("No such column or illegal column type, column: " + column);
+			}
 		}
 
 		@Override
@@ -164,11 +172,19 @@ public abstract class MapContentProvider extends ContentProvider {
 					return String.valueOf(currentItem.isFolder);
 				case 3:
 					return currentItem.reference;
+				case 4:
+					if (currentItem.lastSynchronizationDate != null) {
+						return currentItem.lastSynchronizationDate.toString();
+					} else {
+						return null;
+					}
+				case 5:
+					return currentItem.sizeInBytes + "";
 				default:
-					throw new IllegalArgumentException("No such column " + column);
+					throw new IllegalArgumentException("No such column or illegal column type, column: " + column);
 			}
 		}
-		
+
 		@Override
 		public boolean onMove(int oldPosition, int newPosition) {
 			if (newPosition >= 0 && newPosition < currentLevel.length) {
@@ -193,7 +209,7 @@ public abstract class MapContentProvider extends ContentProvider {
 
 		@Override
 		public String[] getColumnNames() {
-			return new String[] { ID, TEXT };
+			return new String[] { ID, CONTENT };
 		}
 
 		@Override
@@ -228,8 +244,9 @@ public abstract class MapContentProvider extends ContentProvider {
 
 		@Override
 		public String getString(int column) {
-			if (mapNotFound) throw new MapNotFoundException();
-			
+			if (mapNotFound)
+				throw new MapNotFoundException();
+
 			switch (column) {
 				case 0:
 					return id;
@@ -243,7 +260,7 @@ public abstract class MapContentProvider extends ContentProvider {
 		@Override
 		public boolean isNull(int column) {
 			throw new NotImplementedException();
-		}		
+		}
 	}
 
 	@Override
@@ -260,7 +277,7 @@ public abstract class MapContentProvider extends ContentProvider {
 	public Uri insert(Uri uri, ContentValues values) {
 		throw new NotImplementedException();
 	}
-	
+
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		throw new NotImplementedException();
