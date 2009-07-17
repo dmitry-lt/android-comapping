@@ -116,57 +116,69 @@ public class AttachmentRender extends Render {
 					new DialogInterface.OnClickListener() {
 
 						public void onClick(DialogInterface dialog, int which) {
-							downloadProgressDialog = new ProgressDialog(context);
-							downloadProgressDialog
-									.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-							downloadProgressDialog
-									.setOnDismissListener(new OnDismissListener() {
+							if (android.os.Environment
+									.getExternalStorageState()
+									.equals(
+											android.os.Environment.MEDIA_MOUNTED)) {
+								downloadProgressDialog = new ProgressDialog(
+										context);
+								downloadProgressDialog
+										.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+								downloadProgressDialog
+										.setOnDismissListener(new OnDismissListener() {
 
-										public void onDismiss(
-												DialogInterface dialog) {
-											if (!downloadedSuccessfully) {
-												(new AlertDialog.Builder(
-														context)
-														.setMessage(
-																"Error while downloading and saving file")
-														.setNeutralButton("Ok",
-																null).create())
-														.show();
+											public void onDismiss(
+													DialogInterface dialog) {
+												if (!downloadedSuccessfully) {
+													(new AlertDialog.Builder(
+															context)
+															.setMessage(
+																	"Error while downloading and saving file")
+															.setNeutralButton(
+																	"Ok", null)
+															.create()).show();
+												}
 											}
-										}
-									});
-							downloadProgressDialog.show();
-							downloadProgressDialog.setProgress(0);
+										});
+								downloadProgressDialog.show();
+								downloadProgressDialog.setProgress(0);
 
-							final Thread downloadAndSaveThread = new Thread(
-									new Runnable() {
+								final Thread downloadAndSaveThread = new Thread(
+										new Runnable() {
 
-										public void run() {
-											try {
-												downloadAndSaveAttachment();
-												downloadedSuccessfully = true;
-											} catch (ConnectionException e) {
-												downloadedSuccessfully = false;
-												e.printStackTrace();
+											public void run() {
+												try {
+													downloadAndSaveAttachment();
+													downloadedSuccessfully = true;
+												} catch (ConnectionException e) {
+													downloadedSuccessfully = false;
+													e.printStackTrace();
+												}
+												downloadProgressDialog
+														.dismiss();
 											}
-											downloadProgressDialog.dismiss();
-										}
-									});
-							downloadAndSaveThread.start();
+										});
+								downloadAndSaveThread.start();
 
-							downloadProgressDialog
-									.setOnCancelListener(new OnCancelListener() {
+								downloadProgressDialog
+										.setOnCancelListener(new OnCancelListener() {
 
-										public void onCancel(
-												DialogInterface dialog) {
-											downloadAndSaveThread.interrupt();
-										}
-									});
-							downloadProgressDialog.setCancelable(true);
-						}
+											public void onCancel(
+													DialogInterface dialog) {
+												downloadAndSaveThread
+														.interrupt();
+											}
+										});
+								downloadProgressDialog.setCancelable(true);
+							}
+							else
+							{
+								(new AlertDialog.Builder(context).setTitle("Alert Message")
+								.setMessage("You can't download this file because SD card is not installed.")).show();
+							}
+						}	
 					})).create();
 		}
-
 		dialog.show();
 	}
 
