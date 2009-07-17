@@ -10,9 +10,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.DownloadListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +32,7 @@ import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.provider.communication.Client;
+import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.R;
 import com.comapping.android.map.model.exceptions.MapParsingException;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
@@ -77,6 +81,7 @@ public class MapActivity extends Activity {
 	public static final String EXT_VIEW_TYPE = "viewType";
 	public static final String EXT_MAP_REF = "mapRef";
 	public static final String EXT_IS_IGNORE_CACHE = "ignoreCache";
+	public static final String SAVE_FOLDER = "sdcard\\comapping";
 
 	private static final long ZOOM_CONTROLS_TIME_TO_HIDE = 2000;
 
@@ -86,6 +91,7 @@ public class MapActivity extends Activity {
 
 	static private String viewType;
 	static private String mapRef;
+	static private String mapPath;
 	static private boolean ignoreCache;
 
 	// ===========================================================
@@ -201,7 +207,8 @@ public class MapActivity extends Activity {
 			String result = "";
 
 			try {
-				result = MapContentProvider.getComap(mapRef, ignoreCache, false, this);
+				result = MapContentProvider.getComap(mapRef, ignoreCache,
+						false, this);
 			} catch (MapNotFoundException e) {
 				Log.w(Log.MAP_CONTROLLER_TAG, e.toString());
 				showError("This map wasn't found on server!", false);
@@ -287,6 +294,10 @@ public class MapActivity extends Activity {
 		try {
 			viewType = extras.getString(EXT_VIEW_TYPE);
 			mapRef = extras.getString(EXT_MAP_REF);
+			mapPath = mapRef.substring(10);
+			if (!mapPath.startsWith("sdcard")) {
+				mapPath = "";
+			}
 			ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
 		} catch (Exception e) {
 			// TODO Empty catch
@@ -406,20 +417,44 @@ public class MapActivity extends Activity {
 	}
 
 	private void saveMap() {
-		String path = "sdcard\\" + map.getName() + ".comap";
 
-		File file = new File("sdcard");
-		file.mkdirs();
+	}
 
-		file = new File(path);
-		try {
-			file.createNewFile();
-			FileOutputStream output = new FileOutputStream(file);
-			output.write(new XmlBuilder().buildXml(map).getBytes());
-			output.close();
-		} catch (IOException e) {
+	private void saveMapAs() {
+		AlertDialog dialog = (new AlertDialog.Builder(this)
+				.setTitle("Save map").setMessage(
+						"Map: " + map.getName() + "\n" + "Save to "
+								+ SAVE_FOLDER + "?").setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
 
-		}
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								String path = SAVE_FOLDER + "\\" + map.getName() + ".comap";
+
+								File file = new File(SAVE_FOLDER);
+								file.mkdirs();
+
+								file = new File(path);
+								try {
+									file.createNewFile();
+									FileOutputStream output = new FileOutputStream(file);
+									output.write(new XmlBuilder().buildXml(map).getBytes());
+									output.close();
+								} catch (IOException e) {
+
+								}
+							}
+						}).setNegativeButton("No",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+					}
+				})).create();
+
+		dialog.show();
 	}
 
 	protected void onDestroy() {
@@ -473,8 +508,8 @@ public class MapActivity extends Activity {
 			finish();
 			openMap(mapRef, viewType, true, this);
 			return true;
-		case R.id.save:
-			saveMap();
+		case R.id.save_as:
+			saveMapAs();
 			return true;
 		}
 		return false;
