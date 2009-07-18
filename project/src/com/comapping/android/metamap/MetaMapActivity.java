@@ -162,10 +162,16 @@ public class MetaMapActivity extends Activity {
 
 		// list view
 		ListView listView = (ListView) findViewById(R.id.listView);
-
+				
+		int position = listView.getFirstVisiblePosition();
+		
 		MetaMapItem[] items = currentProvider.getCurrentLevel();
 		listView.setAdapter(new MetaMapListAdapter(this, items));
-
+		
+		position = Math.min(position, items.length - 1);
+		listView.setSelection(position);
+		
+		
 		// Buttons
 
 		if (currentProvider.canGoHome())
