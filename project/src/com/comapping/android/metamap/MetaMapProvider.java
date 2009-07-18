@@ -1,17 +1,17 @@
-package com.comapping.android.metamap.provider;
+package com.comapping.android.metamap;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Comparator;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.comapping.android.metamap.MetaMapItem;
 import com.comapping.android.provider.contentprovider.MapContentProvider.MapContentProviderInfo;
 import com.comapping.android.Log;
 
-public class MetaMapProviderUsingCP extends MetaMapProvider {
+public class MetaMapProvider {
 	private MapContentProviderInfo info;
 	private String nullListMessage;
 	private String emptyListMessage;
@@ -21,7 +21,7 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 	private String currentPath;
 	private MetaMapItem[] currentLevel;
 
-	public MetaMapProviderUsingCP(MapContentProviderInfo info, String nullListMessage, String emptyListMessage, Context context) {
+	public MetaMapProvider(MapContentProviderInfo info, String nullListMessage, String emptyListMessage, Context context) {
 		this.info = info;
 		this.nullListMessage = nullListMessage;
 		this.emptyListMessage = emptyListMessage;
@@ -30,61 +30,50 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 		this.currentPath = info.root;
 	}
 
-	@Override
 	public boolean canGoHome() {
 		return !isInRoot();
 	}
 
-	@Override
 	public boolean canGoUp() {
 		return !isInRoot();
 	}
 
-	@Override
 	public boolean canLogout() {
 		return info.canLogout;
 	}
 
-	@Override
 	public boolean canSync() {
 		return info.canSync;
 	}
 
-	@Override
 	public MetaMapItem[] getCurrentLevel() {
 		updateCurrentLevelFromCache();
 		return currentLevel;
 	}
 
-	@Override
 	public String getEmptyListText() {
 		return emptyListCurrentMessage;
 	}
 
-	@Override
 	public void goHome() {
 		currentPath = info.root;
 	}
 
-	@Override
 	public void goUp() {
 		// TODO write it more accurate
 		currentPath = currentPath.substring(0, currentPath.substring(0, currentPath.length() - 1).lastIndexOf(info.separator) + 1);
 	}
 
-	@Override
 	public void gotoFolder(int index) {
 		if (currentLevel[index].isFolder) {
 			currentPath += currentLevel[index].name + info.separator;
 		}
 	}
 
-	@Override
 	public void logout() {
 		query(info.logout);
 	}
 
-	@Override
 	public boolean sync() {
 		query(info.sync);
 		return false;
@@ -145,11 +134,28 @@ public class MetaMapProviderUsingCP extends MetaMapProvider {
 			isCurrentPresented = cursor.moveToNext();
 		}
 
-		Arrays.sort(currentLevel, new MetaMapProvider.MetaMapItemComparator());
+		Arrays.sort(currentLevel, new MetaMapItemComparator());
 	}
 
-	@Override
 	public void finishWork() {
 		query(info.finishWork);		
+	}
+	
+	protected class MetaMapItemComparator implements Comparator<MetaMapItem> {
+
+		
+		public int compare(MetaMapItem topic1, MetaMapItem topic2) {
+			if ((topic1.isFolder && topic2.isFolder) || 
+				(!topic1.isFolder && !topic2.isFolder)) {
+				// if both folder or both maps we compare texts
+				return topic1.name.compareTo(topic2.name);
+			} else {
+				if (topic1.isFolder) {
+					return -1;
+				} else {
+					return 1;
+				}
+			}
+		}
 	}
 }

@@ -36,8 +36,6 @@ import com.comapping.android.controller.R;
 import com.comapping.android.map.MapActivity;
 import com.comapping.android.map.model.map.builder.MapBuilder;
 import com.comapping.android.map.model.map.builder.SaxMapBuilder;
-import com.comapping.android.metamap.provider.MetaMapProvider;
-import com.comapping.android.metamap.provider.MetaMapProviderUsingCP;
 
 public class MetaMapActivity extends Activity {
 
@@ -57,8 +55,8 @@ public class MetaMapActivity extends Activity {
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
 
-	private static MetaMapProviderUsingCP sdCardProvider = null;
-	private static MetaMapProviderUsingCP comappingProvider = null;
+	private static MetaMapProvider sdCardProvider = null;
+	private static MetaMapProvider comappingProvider = null;
 	private static MetaMapProvider currentProvider = null;
 
 	// ====================================================
@@ -75,13 +73,13 @@ public class MetaMapActivity extends Activity {
 		// Init providers
 
 		if (comappingProvider == null) {
-			comappingProvider = new MetaMapProviderUsingCP(
+			comappingProvider = new MetaMapProvider(
 					ComappingMapContentProvider.INFO,
 					PLEASE_SYNCHRONIZE_MESSAGE, EMPTY_FOLDER_MESSAGE, this);
 		}
 
 		if (sdCardProvider == null) {
-			sdCardProvider = new MetaMapProviderUsingCP(
+			sdCardProvider = new MetaMapProvider(
 					FileMapContentProvider.INFO, EMPTY_FOLDER_MESSAGE,
 					EMPTY_FOLDER_MESSAGE, this);
 		}
