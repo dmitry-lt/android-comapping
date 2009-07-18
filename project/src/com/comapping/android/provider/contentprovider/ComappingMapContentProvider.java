@@ -146,7 +146,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	}
 
 	private Map getMetamap(boolean ignoreCache, boolean ignoreInternet) {
-		if (!ignoreInternet && (ignoreCache || metamap == null))
+		if (ignoreCache || metamap == null)
 		try {
 			metamap = mapBuilder.buildMap(getComap("meta", ignoreCache, ignoreInternet));
 		} catch (Exception e) {
