@@ -321,6 +321,13 @@ public class Client {
 			writer.flush();
 
 			code = connection.getResponseCode();
+			
+			if (code == 401) {
+				// not logged in
+				clientSideLogout(false);
+				loginRequired();
+				return requestToServer(data);				
+			}
 
 			responseText = getTextFromInputStream(connection.getInputStream());
 
@@ -334,7 +341,7 @@ public class Client {
 		}
 
 		// Log result
-		Log.i(Log.CONNECTION_TAG, "New server response = " + responseText);
+//		Log.d(Log.CONNECTION_TAG, "New server response = " + responseText);
 		if (responseText != null) {
 			Log.d(Log.CONNECTION_TAG, "New server checksum = "
 					+ getBytesSum(responseText));

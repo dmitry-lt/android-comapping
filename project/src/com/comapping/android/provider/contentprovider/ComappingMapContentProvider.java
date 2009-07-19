@@ -14,6 +14,9 @@ import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
+import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.provider.contentprovider.exceptions.ConnectionRuntimeException;
+import com.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
 import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 
 import android.content.Context;
@@ -104,6 +107,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				} catch (ConnectionException e) {
 					Log.w(Log.PROVIDER_COMAPPING_TAG, "ConnectionException while logout");
 				}
+				this.metamap = null;
 				return null;
 
 			case SYNC:
@@ -116,6 +120,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				} catch (ConnectionException e) {
 					Log.w(Log.PROVIDER_COMAPPING_TAG, "ConnectionException in client.applicationClose()");
 				}
+				this.metamap = null;
 				return null;
 
 			default:
@@ -162,9 +167,10 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			return client.getComap(mapId, ignoreCache, ignoreInternet);
 		} catch (InvalidCredentialsException e) {
 			throw new MapNotFoundException();
-		} catch (Exception e) {
-			Log.w(Log.PROVIDER_COMAPPING_TAG, "error " + e.toString() + " while receiving map: " + mapId);
-			return "";
+		} catch (LoginInterruptedException e) {
+			throw new LoginInterruptedRuntimeException();
+		} catch (ConnectionException e) {
+			throw new ConnectionRuntimeException();
 		}
 	}
 

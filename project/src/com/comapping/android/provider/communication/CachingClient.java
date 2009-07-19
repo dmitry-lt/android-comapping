@@ -58,10 +58,10 @@ public class CachingClient {
 	}
 
 	public void applicationClose() throws ConnectionException {
-		MemoryCache.clear();
-
-		if (!remember) {
-			cache.clear();
+		if (remember) {
+			MemoryCache.clear();
+		} else {
+			logout();
 		}
 	}
 

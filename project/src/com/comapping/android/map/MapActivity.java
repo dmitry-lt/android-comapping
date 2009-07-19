@@ -44,6 +44,8 @@ import com.comapping.android.map.render.comapping.ComappingRender;
 import com.comapping.android.map.render.explorer.ExplorerRender;
 import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.provider.contentprovider.MapContentProvider;
+import com.comapping.android.provider.contentprovider.exceptions.ConnectionRuntimeException;
+import com.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
 import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 import com.comapping.android.storage.MemoryCache;
 
@@ -401,12 +403,18 @@ public class MapActivity extends Activity {
 
 					splashDeactivate();
 
+				} catch (LoginInterruptedRuntimeException e) {
+					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
+					finish();
+				} catch (ConnectionRuntimeException e) {
+					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
+					showError("Connection error", true);				
 				} catch (StringToXMLConvertionException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Wrong file format", true);
+					showError("Wrong file format", true);					
 				} catch (MapParsingException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Wrong file format", true);
+					showError("Wrong file format", true);					
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
