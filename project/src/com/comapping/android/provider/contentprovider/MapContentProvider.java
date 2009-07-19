@@ -37,6 +37,8 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final String separator;
 		public final String root;
 		public final String relRoot;
+		public final String login;
+		public final String relLogin;		
 		public final String logout;
 		public final String relLogout;
 		public final String sync;
@@ -56,10 +58,10 @@ public abstract class MapContentProvider extends ContentProvider {
 		}
 
 		public MapContentProviderInfo(String authorities, String relRoot, boolean canLogout, boolean canSync) {
-			this(authorities, "/", relRoot, "logout", "sync", canLogout, canSync);
+			this(authorities, "/", relRoot, "login", "logout", "sync", canLogout, canSync);
 		}
 
-		public MapContentProviderInfo(String authorities, String separator, String relRoot, String relLogout,
+		public MapContentProviderInfo(String authorities, String separator, String relRoot, String relLogin, String relLogout,
 				String relSync, boolean canLogout, boolean canSync) {
 			this.authorities = authorities;
 			this.separator = separator;
@@ -71,6 +73,8 @@ public abstract class MapContentProvider extends ContentProvider {
 			}
 
 			this.relRoot = relRoot;
+			this.login = authorities + separator + relLogin;
+			this.relLogin = relLogin;
 			this.logout = authorities + separator + relLogout;
 			this.relLogout = relLogout;
 			this.sync = authorities + separator + relSync;

@@ -73,14 +73,12 @@ public class MetaMapActivity extends Activity {
 		// Init providers
 
 		if (comappingProvider == null) {
-			comappingProvider = new MetaMapProvider(
-					ComappingMapContentProvider.INFO,
-					PLEASE_SYNCHRONIZE_MESSAGE, EMPTY_FOLDER_MESSAGE, this);
+			comappingProvider = new MetaMapProvider(ComappingMapContentProvider.INFO, PLEASE_SYNCHRONIZE_MESSAGE,
+					EMPTY_FOLDER_MESSAGE, this);
 		}
 
 		if (sdCardProvider == null) {
-			sdCardProvider = new MetaMapProvider(
-					FileMapContentProvider.INFO, EMPTY_FOLDER_MESSAGE,
+			sdCardProvider = new MetaMapProvider(FileMapContentProvider.INFO, EMPTY_FOLDER_MESSAGE,
 					EMPTY_FOLDER_MESSAGE, this);
 		}
 
@@ -122,8 +120,7 @@ public class MetaMapActivity extends Activity {
 	// ====================================================
 
 	public void preferences() {
-		startActivity(new Intent(
-				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
+		startActivity(new Intent(PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 
 	void openMap(final String mapRef, final String viewType, boolean ignoreCache) {
@@ -160,16 +157,15 @@ public class MetaMapActivity extends Activity {
 
 		// list view
 		ListView listView = (ListView) findViewById(R.id.listView);
-				
+
 		int position = listView.getFirstVisiblePosition();
-		
+
 		MetaMapItem[] items = currentProvider.getCurrentLevel();
 		listView.setAdapter(new MetaMapListAdapter(this, items));
-		
+
 		position = Math.min(position, items.length - 1);
 		listView.setSelection(position);
-		
-		
+
 		// Buttons
 
 		if (currentProvider.canGoHome())
@@ -188,13 +184,11 @@ public class MetaMapActivity extends Activity {
 			disableButton(SYNC);
 
 		if (currentProvider != sdCardProvider) {
-			((ImageButton) findViewById(SWITCHER))
-					.setImageResource(R.drawable.metamap_sdcard);
+			((ImageButton) findViewById(SWITCHER)).setImageResource(R.drawable.metamap_sdcard);
 			if (!isSdPresent())
 				disableButton(SWITCHER);
 		} else {
-			((ImageButton) findViewById(SWITCHER))
-					.setImageResource(R.drawable.metamap_internet);
+			((ImageButton) findViewById(SWITCHER)).setImageResource(R.drawable.metamap_internet);
 		}
 
 		TextView emptyListText = (TextView) findViewById(R.id.emptyListText);
@@ -211,8 +205,7 @@ public class MetaMapActivity extends Activity {
 	}
 
 	private boolean isSdPresent() {
-		return android.os.Environment.getExternalStorageState().equals(
-				android.os.Environment.MEDIA_MOUNTED);
+		return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 	}
 
 	// ====================================================
@@ -224,17 +217,17 @@ public class MetaMapActivity extends Activity {
 		ImageButton button = (ImageButton) findViewById(id);
 
 		switch (id) {
-		case UP_LEVEL:
-			resource = R.drawable.metamap_up;
-			break;
-		case HOME:
-			resource = R.drawable.metamap_home;
-			break;
-		case SYNC:
-			resource = R.drawable.menu_reload;
-			break;
-		default:
-			return;
+			case UP_LEVEL:
+				resource = R.drawable.metamap_up;
+				break;
+			case HOME:
+				resource = R.drawable.metamap_home;
+				break;
+			case SYNC:
+				resource = R.drawable.menu_reload;
+				break;
+			default:
+				return;
 		}
 
 		button.setEnabled(true);
@@ -248,20 +241,20 @@ public class MetaMapActivity extends Activity {
 		ImageButton button = (ImageButton) findViewById(id);
 
 		switch (id) {
-		case UP_LEVEL:
-			resource = R.drawable.metamap_up_grey;
-			break;
-		case HOME:
-			resource = R.drawable.metamap_home_grey;
-			break;
-		case SYNC:
-			resource = R.drawable.menu_reload_grey;
-			break;
-		case SWITCHER:
-			resource = R.drawable.metamap_sdcard;
-			break;
-		default:
-			return;
+			case UP_LEVEL:
+				resource = R.drawable.metamap_up_grey;
+				break;
+			case HOME:
+				resource = R.drawable.metamap_home_grey;
+				break;
+			case SYNC:
+				resource = R.drawable.menu_reload_grey;
+				break;
+			case SWITCHER:
+				resource = R.drawable.metamap_sdcard;
+				break;
+			default:
+				return;
 		}
 
 		button.setEnabled(false);
@@ -355,8 +348,7 @@ public class MetaMapActivity extends Activity {
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
-			public void onItemClick(AdapterView<?> apapterView, View view,
-					int position, long arg3) {
+			public void onItemClick(AdapterView<?> apapterView, View view, int position, long arg3) {
 
 				if (currentProvider == null)
 					return;
@@ -367,14 +359,10 @@ public class MetaMapActivity extends Activity {
 					updateMetaMap();
 				} else {
 
-					String viewType = PreferencesStorage
-							.get(PreferencesStorage.VIEW_TYPE_KEY,
-									PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE,
-									context);
+					String viewType = PreferencesStorage.get(PreferencesStorage.VIEW_TYPE_KEY,
+							PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, context);
 
-					openMap(
-							currentProvider.getCurrentLevel()[position].reference,
-							viewType, false);
+					openMap(currentProvider.getCurrentLevel()[position].reference, viewType, false);
 
 				}
 			}
@@ -387,8 +375,7 @@ public class MetaMapActivity extends Activity {
 	// Context Menu
 	// ====================================================
 
-	public void onCreateContextMenu(ContextMenu menu, View view,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
@@ -406,8 +393,7 @@ public class MetaMapActivity extends Activity {
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
 		int itemPos = info.position;
 
@@ -415,20 +401,19 @@ public class MetaMapActivity extends Activity {
 		if (!itm.isFolder) {
 
 			switch (item.getItemId()) {
-			case R.id.open:
-				String viewType = PreferencesStorage.get(
-						PreferencesStorage.VIEW_TYPE_KEY,
-						PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, this);
+				case R.id.open:
+					String viewType = PreferencesStorage.get(PreferencesStorage.VIEW_TYPE_KEY,
+							PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, this);
 
-				openMap(itm.reference, viewType, false);
+					openMap(itm.reference, viewType, false);
 
-				break;
-			case R.id.openComapping:
-				openMap(itm.reference, Constants.VIEW_TYPE_COMAPPING, false);
-				break;
-			case R.id.openExplorer:
-				openMap(itm.reference, Constants.VIEW_TYPE_EXPLORER, false);
-				break;
+					break;
+				case R.id.openComapping:
+					openMap(itm.reference, Constants.VIEW_TYPE_COMAPPING, false);
+					break;
+				case R.id.openExplorer:
+					openMap(itm.reference, Constants.VIEW_TYPE_EXPLORER, false);
+					break;
 			}
 		} else {
 			currentProvider.gotoFolder(itemPos);
@@ -450,7 +435,7 @@ public class MetaMapActivity extends Activity {
 
 		MenuItem logoutItem = menu.findItem(R.id.logout);
 		logoutItem.setEnabled(currentProvider.canLogout());
-		
+
 		MenuItem switchSource = menu.findItem(R.id.switchSource);
 		switchSource.setEnabled(isSdPresent());
 
@@ -465,12 +450,12 @@ public class MetaMapActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.preferences:
-			preferences();
-			return true;
-		case R.id.logout:
-			logout();
-			return true;
+			case R.id.preferences:
+				preferences();
+				return true;
+			case R.id.logout:
+				logout();
+				return true;
 		}
 
 		return false;

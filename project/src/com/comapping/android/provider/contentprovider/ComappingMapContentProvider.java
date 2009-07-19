@@ -18,8 +18,10 @@ import com.comapping.android.provider.communication.exceptions.LoginInterruptedE
 import com.comapping.android.provider.contentprovider.exceptions.ConnectionRuntimeException;
 import com.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
 import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
+import com.comapping.android.provider.contentprovider.exceptions.NotImplementedException;
 
 import android.content.Context;
+import android.database.AbstractCursor;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -29,7 +31,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	public static final Uri CONTENT_URI = Uri.parse(CONTENT_PREFIX + INFO.root);
 
 	private enum QueryType {
-		MAP, META_MAP, LOGOUT, SYNC, FINISH_WORK
+		MAP, META_MAP, LOGIN, LOGOUT, SYNC, FINISH_WORK
 	}
 
 	private CachingClient client;
@@ -51,22 +53,25 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 	private QueryType detectQueryType(Uri uri) {
 		String uriString = uri.toString();
-		if (Pattern.matches(CONTENT_PREFIX + INFO.logout, uriString)) {
+		if (Pattern.matches(CONTENT_PREFIX + INFO.login, uriString)) {
+			return QueryType.LOGIN;
+
+		} else if (Pattern.matches(CONTENT_PREFIX + INFO.logout, uriString)) {
 			return QueryType.LOGOUT;
-			
+
 		} else if (uriString.matches(CONTENT_PREFIX + INFO.sync)) {
 			return QueryType.SYNC;
-			
+
 		} else if (uriString.matches(CONTENT_PREFIX + INFO.finishWork)) {
 			return QueryType.FINISH_WORK;
-			
+
 		} else if (uriString.matches(CONTENT_PREFIX + INFO.root + "\\d+")) {
 			return QueryType.MAP;
-			
+
 		} else if (uriString.equals(CONTENT_PREFIX + INFO.root)
 				|| uriString.matches(CONTENT_PREFIX + INFO.root + ".*" + INFO.separator)) {
 			return QueryType.META_MAP;
-			
+
 		} else {
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -100,6 +105,14 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 			case MAP:
 				return new ComappingMapCursor(getComap(uri.getLastPathSegment(), ignoreCache, ignoreInternet));
+
+			case LOGIN:
+				try {
+					client.loginRequired();
+				} catch (LoginInterruptedException e1) {
+					throw new LoginInterruptedRuntimeException();
+				}
+				return new ComappingLoginCursor(client.getClientId());
 
 			case LOGOUT:
 				try {
@@ -152,13 +165,13 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 	private Map getMetamap(boolean ignoreCache, boolean ignoreInternet) {
 		if (ignoreCache || metamap == null)
-		try {
-			metamap = mapBuilder.buildMap(getComap("meta", ignoreCache, ignoreInternet));
-		} catch (Exception e) {
-			Log.w(Log.PROVIDER_COMAPPING_TAG, "Error while synchronizing: cannot parse metamap");
-			metamap = null;
-		}
-		
+			try {
+				metamap = mapBuilder.buildMap(getComap("meta", ignoreCache, ignoreInternet));
+			} catch (Exception e) {
+				Log.w(Log.PROVIDER_COMAPPING_TAG, "Error while synchronizing: cannot parse metamap");
+				metamap = null;
+			}
+
 		return metamap;
 	}
 
@@ -172,6 +185,66 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		} catch (ConnectionException e) {
 			throw new ConnectionRuntimeException();
 		}
+	}
+
+	private class ComappingLoginCursor extends AbstractCursor {
+
+		private String cliendId;
+
+		public ComappingLoginCursor(String clientId) {
+			this.cliendId = clientId;
+		}
+
+		@Override
+		public String[] getColumnNames() {
+			return new String[] { "clientId" };
+		}
+
+		@Override
+		public int getCount() {
+			return 1;
+		}
+
+		@Override
+		public double getDouble(int column) {
+			throw new NotImplementedException();
+		}
+
+		@Override
+		public float getFloat(int column) {
+			throw new NotImplementedException();
+		}
+
+		@Override
+		public int getInt(int column) {
+			throw new NotImplementedException();
+		}
+
+		@Override
+		public long getLong(int column) {
+			throw new NotImplementedException();
+		}
+
+		@Override
+		public short getShort(int column) {
+			throw new NotImplementedException();
+		}
+
+		@Override
+		public String getString(int column) {
+			switch (column) {
+				case 0:
+					return cliendId;
+				default:
+					throw new IllegalArgumentException("No such column " + column);
+			}
+		}
+
+		@Override
+		public boolean isNull(int column) {
+			throw new NotImplementedException();
+		}
+
 	}
 
 	private class ComappingMetamapCursor extends MetamapCursor {

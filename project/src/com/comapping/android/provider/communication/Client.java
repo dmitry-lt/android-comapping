@@ -34,7 +34,7 @@ import com.comapping.android.storage.SqliteMapCache;
 
 public class Client {
 
-	private Client(Context context) {
+	protected Client(Context context) {
 		this.context = context;
 	}
 
@@ -45,8 +45,7 @@ public class Client {
 			if (context == null)
 				return null;
 
-			client = new CachingClient(new Client(context), new SqliteMapCache(
-					context));
+			client = new CachingClient(context, new SqliteMapCache(context));
 		}
 
 		return client;
@@ -87,9 +86,8 @@ public class Client {
 	 * @throws ConnectionException
 	 * @throws LoginInterruptedException
 	 */
-	public void login(String email, String password, boolean remember)
-			throws ConnectionException, LoginInterruptedException,
-			InvalidCredentialsException {
+	public void login(String email, String password, boolean remember) throws ConnectionException,
+			LoginInterruptedException, InvalidCredentialsException {
 		// if you try to log in, previous user logged out
 		clientSideLogout(true);
 
@@ -97,8 +95,7 @@ public class Client {
 		PreferencesStorage.set(PreferencesStorage.EMAIL_KEY, email, context);
 
 		String passwordHash = md5Encode(password);
-		String loginResponse = loginRequest(email, passwordHash,
-				SIMPLE_LOGIN_METHOD);
+		String loginResponse = loginRequest(email, passwordHash, SIMPLE_LOGIN_METHOD);
 
 		String autoLoginKey = null;
 
@@ -122,8 +119,7 @@ public class Client {
 
 		if (isLoggedIn() && remember) {
 			// save autologin key
-			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY,
-					autoLoginKey, context);
+			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, autoLoginKey, context);
 		}
 	}
 
@@ -133,8 +129,7 @@ public class Client {
 	 * @return autologin possibility
 	 */
 	public boolean isAutologinPossible() {
-		return !PreferencesStorage.get(PreferencesStorage.AUTOLOGIN_KEY, "",
-				context).equals("");
+		return !PreferencesStorage.get(PreferencesStorage.AUTOLOGIN_KEY, "", context).equals("");
 	}
 
 	/**
@@ -147,12 +142,9 @@ public class Client {
 	 * @throws ConnectionException
 	 * @throws LoginInterruptedException
 	 */
-	public void autologin() throws ConnectionException,
-			InvalidCredentialsException, LoginInterruptedException {
-		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, "",
-				context);
-		String autologinKey = PreferencesStorage.get(
-				PreferencesStorage.AUTOLOGIN_KEY, "", context);
+	public void autologin() throws ConnectionException, InvalidCredentialsException, LoginInterruptedException {
+		String email = PreferencesStorage.get(PreferencesStorage.EMAIL_KEY, "", context);
+		String autologinKey = PreferencesStorage.get(PreferencesStorage.AUTOLOGIN_KEY, "", context);
 
 		clientSideLogout(true);
 
@@ -162,8 +154,7 @@ public class Client {
 			throw new InvalidCredentialsException(); // TODO: ???
 		} else {
 			// reSet autologin key
-			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY,
-					autologinKey, context);
+			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, autologinKey, context);
 		}
 	}
 
@@ -183,8 +174,7 @@ public class Client {
 		clientId = null;
 
 		if (isToEmptyAutologin) {
-			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, "",
-					context);
+			PreferencesStorage.set(PreferencesStorage.AUTOLOGIN_KEY, "", context);
 		}
 	}
 
@@ -224,8 +214,8 @@ public class Client {
 	 * @throws LoginInterruptedException
 	 * @throws InvalidCredentialsException
 	 */
-	public String getComap(String mapId) throws ConnectionException,
-			LoginInterruptedException, InvalidCredentialsException {
+	public String getComap(String mapId) throws ConnectionException, LoginInterruptedException,
+			InvalidCredentialsException {
 		Log.d(Log.CONNECTION_TAG, "getting " + mapId + " comap");
 
 		loginRequired();
@@ -243,45 +233,32 @@ public class Client {
 		loginInterrupted = true;
 	}
 
-	public HttpURLConnection getHttpURLConnection(URL url)
-			throws ConnectionException, IOException {
-		if (PreferencesStorage.getBoolean(
-				PreferencesStorage.USE_PROXY_KEY,
-				PreferencesStorage.USE_PROXY_DEFAULT_VALUE, context)) {
-			String proxyHost = PreferencesStorage.get(
-					PreferencesStorage.PROXY_HOST_KEY, "", context);
+	public HttpURLConnection getHttpURLConnection(URL url) throws ConnectionException, IOException {
+		if (PreferencesStorage.getBoolean(PreferencesStorage.USE_PROXY_KEY, PreferencesStorage.USE_PROXY_DEFAULT_VALUE,
+				context)) {
+			String proxyHost = PreferencesStorage.get(PreferencesStorage.PROXY_HOST_KEY, "", context);
 			int proxyPort = 0;
 
 			try {
-				proxyPort = Integer.parseInt(PreferencesStorage.get(
-						PreferencesStorage.PROXY_PORT_KEY, "", context));
+				proxyPort = Integer.parseInt(PreferencesStorage.get(PreferencesStorage.PROXY_PORT_KEY, "", context));
 			} catch (Exception e) {
 				throw new ConnectionException();
 			}
 
-			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(
-					proxyHost, proxyPort));
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection(proxy);
+			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
 
 			// TODO: wrong work after login with wrong proxy name and password
 			// :-(
-			if (PreferencesStorage.getBoolean(
-					PreferencesStorage.USE_PROXY_AUTH_KEY,
+			if (PreferencesStorage.getBoolean(PreferencesStorage.USE_PROXY_AUTH_KEY,
 					PreferencesStorage.USE_PROXY_AUTH_DEFAULT_VALUE, context)) {
-				String proxyUser = PreferencesStorage.get(
-						PreferencesStorage.PROXY_NAME_KEY, "", context);
-				String proxyPassword = PreferencesStorage.get(
-						PreferencesStorage.PROXY_PASSWORD_KEY, "", context);
-				;
+				String proxyUser = PreferencesStorage.get(PreferencesStorage.PROXY_NAME_KEY, "", context);
+				String proxyPassword = PreferencesStorage.get(PreferencesStorage.PROXY_PASSWORD_KEY, "", context);;
 				StringBuilder encodedInfo = new StringBuilder();
-				for (byte b : Base64Encoder
-						.encodeBase64((proxyUser + ":" + proxyPassword)
-								.getBytes())) {
+				for (byte b : Base64Encoder.encodeBase64((proxyUser + ":" + proxyPassword).getBytes())) {
 					encodedInfo.append((char) b);
 				}
-				connection.setRequestProperty("Proxy-Authorization", "Basic "
-						+ encodedInfo);
+				connection.setRequestProperty("Proxy-Authorization", "Basic " + encodedInfo);
 			}
 
 			return connection;
@@ -290,11 +267,9 @@ public class Client {
 		}
 	}
 
-	private String requestToServer(List<BasicNameValuePair> data)
-			throws ConnectionException, LoginInterruptedException,
-			InvalidCredentialsException {
-		Log.d(Log.CONNECTION_TAG, "request to server "
-				+ Arrays.toString(data.toArray()));
+	private String requestToServer(List<BasicNameValuePair> data) throws ConnectionException,
+			LoginInterruptedException, InvalidCredentialsException {
+		Log.d(Log.CONNECTION_TAG, "request to server " + Arrays.toString(data.toArray()));
 
 		URL url = null;
 		String responseText = null;
@@ -315,18 +290,17 @@ public class Client {
 
 			connection.setDoOutput(true);
 
-			OutputStreamWriter writer = new OutputStreamWriter(connection
-					.getOutputStream());
+			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 			writer.write(getPostParameters(data));
 			writer.flush();
 
 			code = connection.getResponseCode();
-			
+
 			if (code == 401) {
 				// not logged in
 				clientSideLogout(false);
 				loginRequired();
-				return requestToServer(data);				
+				return requestToServer(data);
 			}
 
 			responseText = getTextFromInputStream(connection.getInputStream());
@@ -336,15 +310,16 @@ public class Client {
 			if (code == 403) {
 				throw new InvalidCredentialsException();
 			} else {
+				Log.w(Log.CONNECTION_TAG, e.toString());
+				Log.w(Log.CONNECTION_TAG, "code=" + code);
 				throw new ConnectionException();
 			}
 		}
 
 		// Log result
-//		Log.d(Log.CONNECTION_TAG, "New server response = " + responseText);
+		// Log.d(Log.CONNECTION_TAG, "New server response = " + responseText);
 		if (responseText != null) {
-			Log.d(Log.CONNECTION_TAG, "New server checksum = "
-					+ getBytesSum(responseText));
+			Log.d(Log.CONNECTION_TAG, "New server checksum = " + getBytesSum(responseText));
 		}
 		Log.d(Log.CONNECTION_TAG, "New server response code = " + code);
 
@@ -355,8 +330,7 @@ public class Client {
 		return responseText;
 	}
 
-	private String loginRequest(String email, String password,
-			String loginMethod) throws ConnectionException,
+	private String loginRequest(String email, String password, String loginMethod) throws ConnectionException,
 			LoginInterruptedException, InvalidCredentialsException {
 		this.email = email;
 
@@ -396,9 +370,12 @@ public class Client {
 		}
 	}
 
-	private void loginRequired() throws LoginInterruptedException {
-		Log.d(Log.CONNECTION_TAG, "login required action with login status: "
-				+ isLoggedIn());
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void loginRequired() throws LoginInterruptedException {
+		Log.d(Log.CONNECTION_TAG, "login required action with login status: " + isLoggedIn());
 
 		if (!isLoggedIn()) {
 			loginInterrupted = false;
@@ -409,10 +386,9 @@ public class Client {
 			while (!isLoggedIn() && (!loginInterrupted)) {
 				try {
 					Thread.sleep(SLEEP_TIME);
-//					Log.d(Log.CONNECTION_TAG, "waiting login...");
+					// Log.d(Log.CONNECTION_TAG, "waiting login...");
 				} catch (InterruptedException e) {
-					Log.i(Log.CONNECTION_TAG,
-							"login required interrupted exception");
+					Log.i(Log.CONNECTION_TAG, "login required interrupted exception");
 				}
 			}
 
