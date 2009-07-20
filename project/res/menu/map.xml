@@ -6,6 +6,12 @@
 		android:id="@+id/search"
 	/>
 	
+		<item
+		android:icon="@drawable/menu_zoom"
+		android:title="Synchronize"
+		android:id="@+id/zoom"
+	/>
+	
 	<item
 		android:icon="@drawable/menu_reload"
 		android:title="Switch view"

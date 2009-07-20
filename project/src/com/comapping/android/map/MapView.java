@@ -464,8 +464,6 @@ public class MapView extends View {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN: {
 
-			showZoom();
-
 			mVelocityTracker = VelocityTracker.obtain();
 			oldX = (int) ev.getX();
 			oldY = (int) ev.getY();
@@ -477,8 +475,6 @@ public class MapView extends View {
 			return true;
 		}
 		case MotionEvent.ACTION_MOVE: {
-
-			showZoom();
 
 			int pathLen = (startX - (int) ev.getX())
 					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())

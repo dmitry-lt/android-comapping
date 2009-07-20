@@ -512,6 +512,9 @@ public class MapActivity extends Activity {
 		case R.id.search:
 			onSearchRequested();
 			return true;
+		case R.id.zoom:
+			view.showZoom();
+			return true;
 		case R.id.sync:
 			finish();
 			openMap(mapRef, viewType, true, this);
