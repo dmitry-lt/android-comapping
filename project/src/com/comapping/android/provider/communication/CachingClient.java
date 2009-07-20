@@ -79,4 +79,21 @@ public class CachingClient extends Client {
 	public Timestamp getLastSynchronizationDate(String mapId) {
 		return cache.getLastSynchronizationDate(mapId);
 	}
+	
+	public int getMapSizeInBytes(String mapId) {
+		// TODO
+		return 0;
+	}
+	
+	public void startMapDownloading(String mapId) {
+		// TODO		
+	}
+	
+	public void setDownloadingListener(IDownloadingListener downloadingListener) {
+		// TODO
+	}
+	
+	public static interface IDownloadingListener {
+		void statusChanged(String mapId, int downloadedInBytes); 
+	}
 }
