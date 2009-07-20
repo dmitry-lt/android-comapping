@@ -756,7 +756,7 @@ public class ComappingRender extends MapRender {
 
 	
 	public void setBounds(int width, int height) {
-		focusTopic(selected);
+//		focusTopic(selected);
 	}
 
 	
