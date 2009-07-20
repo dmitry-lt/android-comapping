@@ -29,7 +29,7 @@ public abstract class Render {
 	  * @param x	absolute X-coordinate
 	  * @param y	absolute Y-coordinate
 	 */
-	public abstract void onTouch(int x, int y);
+	public abstract boolean onTouch(int x, int y);
 	
 	/**
 	  * Returns width of rendering rectangle

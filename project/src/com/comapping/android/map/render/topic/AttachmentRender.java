@@ -91,7 +91,7 @@ public class AttachmentRender extends Render {
 		return width;
 	}
 
-	public void onTouch(int x, int y) {
+	public boolean onTouch(int x, int y) {
 		if (dialog == null) {
 			downloadFolder = PreferencesStorage.get(
 					PreferencesStorage.DOWNLOAD_FOLDER_KEY,
@@ -180,6 +180,7 @@ public class AttachmentRender extends Render {
 					})).create();
 		}
 		dialog.show();
+		return false;
 	}
 
 	private void loadIcon() {

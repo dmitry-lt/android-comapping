@@ -176,9 +176,8 @@ public class IconRender extends Render {
 	}
 
 	
-	public void onTouch(int x, int y) {
-		// TODO Auto-generated method stub
-
+	public boolean onTouch(int x, int y) {
+		return false;
 	}
 
 	public void setMaxWidth(int maxWidth) {

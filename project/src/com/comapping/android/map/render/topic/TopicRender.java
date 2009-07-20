@@ -134,33 +134,47 @@ public class TopicRender extends Render {
 		}
 	}
 
-	public void onTouch(int x, int y) {
+	public boolean onTouch(int x, int y) {
 		//Log.d(Log.TOPIC_RENDER_TAG, "Touch on " + this);
-
+		boolean result = false;
 		if (!isEmpty && selected) {
 			Point touchPoint = new Point(x, y);
 
 			if (pointLiesOnRect(touchPoint, iconRect)) {
 				touchPoint.offset(-iconRect.left, -iconRect.top);
-				iconRender.onTouch(touchPoint.x, touchPoint.y);
-
+				if (iconRender.onTouch(touchPoint.x, touchPoint.y)) {
+					result = true;
+				}
 			} else if (pointLiesOnRect(touchPoint, textRect)) {
 				touchPoint.offset(-textRect.left, -textRect.top);
-				textRender.onTouch(touchPoint.x, touchPoint.y);
-
+				if (textRender.onTouch(touchPoint.x, touchPoint.y)) {
+					result = true;
+				}
 			} else if (pointLiesOnRect(touchPoint, attachmentRect)) {
 				touchPoint.offset(-attachmentRect.left, -attachmentRect.top);
-				attachmentRender.onTouch(touchPoint.x, touchPoint.y);
-
+				if (attachmentRender.onTouch(touchPoint.x, touchPoint.y)) {
+					result = true;
+				}
 			} else if (pointLiesOnRect(touchPoint, taskRect)) {
 				touchPoint.offset(-taskRect.left, -taskRect.top);
-				taskRender.onTouch(touchPoint.x, touchPoint.y);
+				if (taskRender.onTouch(touchPoint.x, touchPoint.y)) {
+					result = true;
+				}
 
 			} else if (pointLiesOnRect(touchPoint, noteRect)) {
 				touchPoint.offset(-noteRect.left, -noteRect.top);
-				noteRender.onTouch(touchPoint.x, touchPoint.y);
+				if (noteRender.onTouch(touchPoint.x, touchPoint.y)) {
+					topic.setNote(noteRender.getNote());
+					result = true;
+				}
+			}
+			if (result) {
+				int t = lastMaxWidth;
+				lastMaxWidth++;
+				setMaxWidth(t);
 			}
 		}
+		return result;
 	}
 
 	public void setMaxWidth(int maxWidth) {

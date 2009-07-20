@@ -325,7 +325,7 @@ public class TextRender extends Render {
 	}
 
 	
-	public void onTouch(int x, int y) {
+	public boolean onTouch(int x, int y) {
 		if (!isEmpty) {
 			Point touchPoint = new Point(x, y);
 
@@ -342,11 +342,12 @@ public class TextRender extends Render {
 							context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 						}
 
-						return;
+						return false;
 					}
 				}
 			}
 		}
+		return false;
 	}
 
 	private void recalcDrawingData() {

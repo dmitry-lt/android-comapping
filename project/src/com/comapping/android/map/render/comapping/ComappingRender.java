@@ -259,8 +259,9 @@ public class ComappingRender extends MapRender {
 	}
 
 	
-	public void onTouch(int x, int y) {
+	public boolean onTouch(int x, int y) {
 		onTouch(0, getVertOffset(), root, x, y);
+		return false;
 	}
 
 	/**

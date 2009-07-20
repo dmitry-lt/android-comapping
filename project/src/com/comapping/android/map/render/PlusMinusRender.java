@@ -52,7 +52,8 @@ public class PlusMinusRender  extends Render {
 	}
 
 	
-	public void onTouch(int x, int y) {
+	public boolean onTouch(int x, int y) {
+		return false;
 	}
 
 }

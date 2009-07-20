@@ -46,6 +46,10 @@ public class NoteRender extends Render {
 		}
 	}
 
+	public String getNote() {
+		return note;
+	}
+	
 	public int getHeight() {
 		return height;
 	}
@@ -54,14 +58,14 @@ public class NoteRender extends Render {
 		return width;
 	}
 
-	public void onTouch(int x, int y) {
+	public boolean onTouch(int x, int y) {
 		if (!isEmpty) {
 			if (dialog == null) {
 				LayoutInflater factory = LayoutInflater.from(context);
 				final View textEntryView = factory.inflate(R.layout.topic_edit,	null);
 				
 				((EditText) textEntryView.findViewById(R.id.topic_text_edit)).setText(note);
-				((TextView)textEntryView.findViewById(R.id.topic_text_hint)).setText("Notes");
+				((TextView) textEntryView.findViewById(R.id.topic_text_hint)).setText("Notes");
 				
 				dialog = new AlertDialog.Builder(context)
 						.setView(textEntryView).setPositiveButton("Save",
@@ -82,7 +86,9 @@ public class NoteRender extends Render {
 								}).create();
 			}
 			dialog.show();
+			return true;
 		}
+		return false;
 	}
 
 	public void setMaxWidth(int maxWidth) {

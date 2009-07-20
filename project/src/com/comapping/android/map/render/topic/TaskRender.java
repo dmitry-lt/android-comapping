@@ -135,7 +135,7 @@ public class TaskRender extends Render {
 		return width;
 	}
 
-	public void onTouch(int x, int y) {
+	public boolean onTouch(int x, int y) {
 		if (!isEmpty) {
 			if (dialog == null) {
 				dialog = (new AlertDialog.Builder(context).setTitle("Task").setMessage(
@@ -146,6 +146,7 @@ public class TaskRender extends Render {
 
 			dialog.show();
 		}
+		return false;
 	}
 
 	private void recalcDrawingData() {

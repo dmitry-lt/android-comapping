@@ -320,7 +320,7 @@ public class ExplorerRender extends MapRender {
 	}
 
 	
-	public void onTouch(int x, int y) {
+	public boolean onTouch(int x, int y) {
 		// touch circles
 		for (Expander expander : expanders) {
 			if ((expander.x - x) * (expander.x - x) + (expander.y - y) * (expander.y - y) <= radius * radius) {
@@ -338,11 +338,14 @@ public class ExplorerRender extends MapRender {
 			int x2 = x1 + topic.topicRender.getCurTopicRender().getWidth();
 			int y2 = y1 + topic.topicRender.getCurTopicRender().getHeight();
 			if (x1 <= x && x <= x2 && y1 <= y && y <= y2) {
-				topic.topicRender.getCurTopicRender().onTouch(x - x1, y - y1);
+				if (topic.topicRender.getCurTopicRender().onTouch(x - x1, y - y1)) {
+					update();
+				}
 				selectTopic(topic);
 				break;
 			}
 		}
+		return false;
 	}
 
 	
