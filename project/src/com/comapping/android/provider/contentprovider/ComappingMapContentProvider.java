@@ -1,6 +1,7 @@
 package com.comapping.android.provider.contentprovider;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -20,6 +21,8 @@ import com.comapping.android.provider.contentprovider.exceptions.LoginInterrupte
 import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 import com.comapping.android.provider.contentprovider.exceptions.NotImplementedException;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.database.AbstractCursor;
 import android.database.Cursor;
@@ -31,13 +34,20 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	public static final Uri CONTENT_URI = Uri.parse(CONTENT_PREFIX + INFO.root);
 
 	private enum QueryType {
-		MAP, META_MAP, LOGIN, LOGOUT, SYNC, FINISH_WORK
+		MAP, START_MAP_DOWNLOADING, META_MAP, LOGIN, LOGOUT, SYNC, FINISH_WORK
 	}
 
 	private CachingClient client;
 	private Map metamap;
 	private MapBuilder mapBuilder = new SaxMapBuilder();
 	private Context context;
+
+	private static class MapInfo {
+		Notification notification;
+		int sizeInBytes;
+	}
+
+	private HashMap<String, MapInfo> mapInfos = new HashMap<String, MapInfo>();
 
 	@Override
 	public boolean onCreate() {
@@ -47,6 +57,8 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		if (client == null) {
 			client = Client.getClient(context);
 		}
+
+		setDownloadListener();
 
 		return true;
 	}
@@ -84,10 +96,15 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 		boolean ignoreCache = INFO.isIgnoreCache(uriString);
 		boolean ignoreInternet = INFO.isIgnoreInternet(uriString);
+		String action = INFO.getAction(uriString);
 		uri = Uri.parse(INFO.removeParameters(uriString));
 
 		// parse uri
 		QueryType queryType = detectQueryType(uri);
+		if (action.equals(INFO.startDownloadingAction) && queryType == QueryType.MAP) {
+			queryType = QueryType.START_MAP_DOWNLOADING;
+		}
+
 		Log.d(Log.PROVIDER_COMAPPING_TAG, "QueryType is " + queryType.toString());
 		switch (queryType) {
 			case META_MAP:
@@ -105,6 +122,10 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 			case MAP:
 				return new ComappingMapCursor(getComap(uri.getLastPathSegment(), ignoreCache, ignoreInternet));
+
+			case START_MAP_DOWNLOADING:
+				startMapDownloading(uri.getLastPathSegment());
+				return null;
 
 			case LOGIN:
 				try {
@@ -140,6 +161,42 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
 
+	}
+
+	private void setDownloadListener() {
+		// TODO unused now
+		client.setDownloadingListener(new CachingClient.IDownloadingListener() {
+			@Override
+			public void statusChanged(String mapId, int downloadedInBytes) {
+				MapInfo mapInfo = mapInfos.get(mapId);
+				if (mapInfo != null) {
+					mapInfo.notification.setLatestEventInfo(context, "Downloading map, mapId" + mapId,
+							downloadedInBytes + "/" + mapInfo.sizeInBytes, null);
+				}
+			}
+		});
+	}
+
+	private void startMapDownloading(String mapId) {
+		// TODO unused now
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(ns);
+
+		long when = System.currentTimeMillis();
+		Notification notification = new Notification(0, "start downloading mapId=" + mapId, when);
+
+		MapInfo mapInfo = new MapInfo();
+		mapInfo.notification = notification;
+		mapInfo.sizeInBytes = client.getMapSizeInBytes(mapId);
+
+		// Context context = this.context.getApplicationContext();
+		CharSequence contentTitle = "Downloading map, mapId" + mapId;
+		CharSequence contentText = "0/" + mapInfo.sizeInBytes;
+
+		notification.setLatestEventInfo(context, contentTitle, contentText, null);
+		mNotificationManager.notify(1, notification);
+
+		client.startMapDownloading(mapId);
 	}
 
 	private Topic getTopic(List<String> pathSegments, Map metamap) {

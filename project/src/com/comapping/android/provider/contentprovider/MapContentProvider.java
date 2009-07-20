@@ -50,8 +50,11 @@ public abstract class MapContentProvider extends ContentProvider {
 
 		public final String ignoreCacheParameter = "ignoreCache";
 		public final String ignoreInternetParameter = "ignoreInternet";
+		public final String actionParameter = "action";
 		public final boolean defaultIgnoreCache = false;
 		public final boolean defaultIgnoreInternet = false;
+		public final String defaultAction = "download";
+		public final String startDownloadingAction = "startDownloading";
 
 		private MapContentProviderInfo() {
 			this("", "", true, true);
@@ -135,10 +138,6 @@ public abstract class MapContentProvider extends ContentProvider {
 			return setParameter(uriString, ignoreCacheParameter, String.valueOf(ignoreCache));
 		}
 
-		public String setIgnoreInternet(String uriString, boolean ignoreInternet) {
-			return setParameter(uriString, ignoreInternetParameter, String.valueOf(ignoreInternet));
-		}
-
 		public boolean isIgnoreCache(String uriString) {
 			String value = getParameter(uriString, ignoreCacheParameter);
 			if (value != null) {
@@ -147,6 +146,10 @@ public abstract class MapContentProvider extends ContentProvider {
 				return defaultIgnoreCache;
 			}
 		}
+		
+		public String setIgnoreInternet(String uriString, boolean ignoreInternet) {
+			return setParameter(uriString, ignoreInternetParameter, String.valueOf(ignoreInternet));
+		}	
 
 		public boolean isIgnoreInternet(String uriString) {
 			String value = getParameter(uriString, ignoreInternetParameter);
@@ -156,7 +159,20 @@ public abstract class MapContentProvider extends ContentProvider {
 				return defaultIgnoreInternet;
 			}
 		}
+		
+		public String setAction(String uriString, String action) {
+			return setParameter(uriString, actionParameter, action);
+		}	
 
+		public String getAction(String uriString) {
+			String value = getParameter(uriString, actionParameter);
+			if (value != null) {
+				return value;
+			} else {
+				return defaultAction;
+			}
+		}
+		
 		public String removeParameters(String uriString) {
 			int queryStart = uriString.lastIndexOf('?');
 			if (queryStart > -1) {
