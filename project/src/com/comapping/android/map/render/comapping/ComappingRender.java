@@ -368,13 +368,13 @@ public class ComappingRender extends MapRender {
 
 		if (screenPosX < 0)
 			deltaX += screenPosX;
-		else if (screenPosX + topic.getTopicWidth() > renderZoneWidth)
-			deltaX += screenPosX + topic.getTopicWidth() - renderZoneWidth;
+		else if (screenPosX + topic.getFocusWidth() > renderZoneWidth)
+			deltaX += screenPosX + topic.getFocusWidth()- renderZoneWidth;
 
 		if (screenPosY < 0)
 			deltaY += screenPosY;
-		else if (screenPosY + topic.getTopicHeight() > renderZoneHeight)
-			deltaY += screenPosY + topic.getTopicHeight() - renderZoneHeight;
+		else if (screenPosY +  topic.getFocusHeight() > renderZoneHeight)
+			deltaY += screenPosY + topic.getFocusHeight() - renderZoneHeight;
 
 		smoothScroll(deltaX, deltaY);
 
@@ -756,7 +756,7 @@ public class ComappingRender extends MapRender {
 
 	
 	public void setBounds(int width, int height) {
-
+		focusTopic(selected);
 	}
 
 	

@@ -41,8 +41,8 @@ class TopicView {
 	private boolean childrenVisible = true;
 
 	/* ------ Rendering helpers ------ */
-	private TopicRender topicRender;
-	private PlusMinusRender plusMinusRender;
+	public TopicRender topicRender;
+	public PlusMinusRender plusMinusRender;
 
 	private Paint p = new Paint();
 
@@ -425,5 +425,16 @@ class TopicView {
 				topicAbsY + topicRender.getHeight());
 
 		return res;
+	}
+	
+	
+	public int getFocusWidth()
+	{
+		return topicRender.getWidth();
+	}
+	
+	public int getFocusHeight()
+	{
+		return topicRender.getHeight();
 	}
 }
