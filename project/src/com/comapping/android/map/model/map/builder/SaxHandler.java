@@ -309,10 +309,10 @@ class SaxHandler extends DefaultHandler {
 		// }
 	}
 
-	public Map getMap() throws MapParsingException{
-		if(map.getRoot()== null)
+	public Map getMap() throws MapParsingException {
+		if (map.getRoot() == null)
 			throw new MapParsingException();
-		return map;	
+		return map;
 	}
 
 	public void endDocument() {

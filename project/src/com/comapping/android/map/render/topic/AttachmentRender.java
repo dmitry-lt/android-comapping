@@ -170,13 +170,13 @@ public class AttachmentRender extends Render {
 											}
 										});
 								downloadProgressDialog.setCancelable(true);
+							} else {
+								(new AlertDialog.Builder(context)
+										.setTitle("Alert Message")
+										.setMessage("You can't download this file because SD card is not installed."))
+										.show();
 							}
-							else
-							{
-								(new AlertDialog.Builder(context).setTitle("Alert Message")
-								.setMessage("You can't download this file because SD card is not installed.")).show();
-							}
-						}	
+						}
 					})).create();
 		}
 		dialog.show();
