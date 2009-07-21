@@ -23,7 +23,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
 import android.content.Intent;
-
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.preferences.PreferencesStorage;
@@ -33,9 +32,10 @@ import com.comapping.android.provider.communication.exceptions.LoginInterruptedE
 import com.comapping.android.storage.SqliteMapCache;
 
 public class Client {
-
+	long time;
 	protected Client(Context context) {
 		this.context = context;
+		time = System.currentTimeMillis();
 	}
 
 	private static CachingClient client;
@@ -408,14 +408,15 @@ public class Client {
 	}
 
 	public int getSize(String mapId) throws ConnectionException {
-
+		time = System.currentTimeMillis() - time;
+		
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
 		data.add(new BasicNameValuePair("format", "comap"));
 		data.add(new BasicNameValuePair("clientID", clientId));
 		data.add(new BasicNameValuePair("mapid", mapId));
 		int res = getSizeFromServer(data);
-		Log.w(Log.CONNECTION_TAG, "mapId=" + mapId + " size=" + res);
+		Log.w(Log.CONNECTION_TAG, "mapId=" + mapId + " size=" + res + " time=" +time);
 		return res;
 		
 	}
