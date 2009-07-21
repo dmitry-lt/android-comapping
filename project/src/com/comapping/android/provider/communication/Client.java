@@ -414,18 +414,20 @@ public class Client {
 		data.add(new BasicNameValuePair("format", "comap"));
 		data.add(new BasicNameValuePair("clientID", clientId));
 		data.add(new BasicNameValuePair("mapid", mapId));
-
-		return getSizeFromServer(data);
+		int res = getSizeFromServer(data);
+		Log.w(Log.CONNECTION_TAG, "mapId=" + mapId + " size=" + res);
+		return res;
+		
 	}
 
-	private int getSizeFromServer(List<BasicNameValuePair> data)  {
+	private int getSizeFromServer(List<BasicNameValuePair> data) throws ConnectionException  {
 		URL url = null;
 		int res = -1;
 		try {
 			url = new URL(Options.SERVER);
 		} catch (MalformedURLException e1) {
 			Log.e(Log.CONNECTION_TAG, "Malformed URL Exception!!!");
-			//throw new ConnectionException();
+			throw new ConnectionException();
 		}
 		try {
 			HttpURLConnection connection = getHttpURLConnection(url);
