@@ -8,9 +8,8 @@
 	
 		<item
 		android:icon="@drawable/menu_zoom"
-		android:title="Synchronize"
 		android:id="@+id/zoom"
-	/>
+	android:title="Zoom"/>
 	
 	<item
 		android:icon="@drawable/menu_reload"

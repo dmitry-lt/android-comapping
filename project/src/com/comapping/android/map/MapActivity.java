@@ -521,8 +521,18 @@ public class MapActivity extends Activity {
 			return true;
 		case R.id.save_as:
 			saveMapAs();
+			return true;		
+		case R.id.switchView:
+			finish();
+			if (viewType.equals(Constants.VIEW_TYPE_COMAPPING)) {
+				viewType = Constants.VIEW_TYPE_EXPLORER;
+			} else {
+				viewType = Constants.VIEW_TYPE_COMAPPING;
+			}
+			openMap(mapRef, viewType, false, this);
 			return true;
 		}
+		
 		return false;
 	}
 
