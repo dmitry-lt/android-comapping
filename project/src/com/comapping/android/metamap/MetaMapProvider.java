@@ -100,7 +100,11 @@ public class MetaMapProvider {
 	}
 
 	private Cursor query(String uriString) {
-		Uri uri = Uri.parse("content://" + uriString);
+		return queryWithoutPrefix("content://" + uriString);
+	}
+	
+	private Cursor queryWithoutPrefix(String uriString) {
+		Uri uri = Uri.parse(uriString);
 		return context.getContentResolver().query(uri, null, null, null, null);
 	}
 
@@ -156,6 +160,12 @@ public class MetaMapProvider {
 
 	public void finishWork() {
 		query(info.finishWork);
+	}
+	
+	public int getMapSizeInBytes(MetaMapItem item) {
+		Cursor cursor = queryWithoutPrefix(info.setAction(item.reference, info.getMapSizeInBytesAction));
+		int size = cursor.getInt(cursor.getColumnIndex(MetaMapItem.COLUMN_SIZE_IN_BYTES));
+		return size;
 	}
 
 	protected class MetaMapItemComparator implements Comparator<MetaMapItem> {

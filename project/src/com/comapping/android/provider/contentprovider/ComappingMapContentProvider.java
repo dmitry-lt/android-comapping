@@ -5,6 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.database.AbstractCursor;
+import android.database.Cursor;
+import android.net.Uri;
+
 import com.comapping.android.Log;
 import com.comapping.android.map.model.map.Map;
 import com.comapping.android.map.model.map.Topic;
@@ -21,20 +28,13 @@ import com.comapping.android.provider.contentprovider.exceptions.LoginInterrupte
 import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 import com.comapping.android.provider.contentprovider.exceptions.NotImplementedException;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.database.AbstractCursor;
-import android.database.Cursor;
-import android.net.Uri;
-
 public class ComappingMapContentProvider extends MapContentProvider {
 	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true,
 			true);
 	public static final Uri CONTENT_URI = Uri.parse(CONTENT_PREFIX + INFO.root);
 
 	private enum QueryType {
-		MAP, START_MAP_DOWNLOADING, META_MAP, LOGIN, LOGOUT, SYNC, FINISH_WORK
+		MAP, GET_MAP_SIZE, START_MAP_DOWNLOADING, META_MAP, LOGIN, LOGOUT, SYNC, FINISH_WORK
 	}
 
 	private CachingClient client;
@@ -103,6 +103,8 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		QueryType queryType = detectQueryType(uri);
 		if (action.equals(INFO.startDownloadingAction) && queryType == QueryType.MAP) {
 			queryType = QueryType.START_MAP_DOWNLOADING;
+		} else if (action.equals(INFO.getMapSizeInBytesAction) && queryType == QueryType.MAP) {
+			queryType = QueryType.GET_MAP_SIZE;
 		}
 
 		Log.d(Log.PROVIDER_COMAPPING_TAG, "QueryType is " + queryType.toString());
@@ -123,6 +125,18 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			case MAP:
 				return new ComappingMapCursor(getComap(uri.getLastPathSegment(), ignoreCache, ignoreInternet));
 
+			case GET_MAP_SIZE:
+				String mapId = uri.getLastPathSegment();				
+				MetaMapItem[] item = new MetaMapItem[1];
+				item[0] = new MetaMapItem();
+				try {
+					item[0].sizeInBytes = client.getMapSizeInBytes(mapId, false);
+				} catch (ConnectionException e2) {
+					item[0].sizeInBytes = -1;
+					e2.printStackTrace();
+				}
+				return new ComappingMetamapCursor(item);
+				
 			case START_MAP_DOWNLOADING:
 				startMapDownloading(uri.getLastPathSegment());
 				return null;
@@ -188,7 +202,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		MapInfo mapInfo = new MapInfo();
 		mapInfo.notification = notification;
 		try {
-			mapInfo.sizeInBytes = client.getMapSizeInBytes(mapId);
+			mapInfo.sizeInBytes = client.getMapSizeInBytes(mapId, false);
 		} catch (Exception e) {
 			Log.e(Log.CONNECTION_TAG,e.toString());
 			
@@ -316,11 +330,13 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		private static final String FOLDER_DESCRIPTION = "Folder";
 
 		public ComappingMetamapCursor(Topic topic) {
-			if (topic == null) {
-				currentLevel = null;
-			} else {
-				currentLevel = getItems(topic.getChildTopics());
-			}
+			currentLevel = getItems(topic.getChildTopics());
+			this.moveToFirst();
+		}
+		
+		public ComappingMetamapCursor(MetaMapItem[] items) {
+			currentLevel = items;
+			this.moveToFirst();
 		}
 
 		private MetaMapItem[] getItems(Topic[] topics) {
@@ -340,11 +356,11 @@ public class ComappingMapContentProvider extends MapContentProvider {
 					res[i].lastSynchronizationDate = client.getLastSynchronizationDate(topics[i].getMapRef());
 
 					try {
-						res[i].sizeInBytes = client.getComap(topics[i].getMapRef(), false, true).length();
-					} catch (Exception e) {
+						res[i].sizeInBytes = client.getMapSizeInBytes(topics[i].getMapRef(), true);
+					} catch (ConnectionException e) {
 						res[i].sizeInBytes = -1;
 					}
-
+					
 					res[i].description = getMapDescription(res[i]);
 				}
 			}
@@ -384,7 +400,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			Timestamp lastSynchronizationDate = item.lastSynchronizationDate;
 
 			if (lastSynchronizationDate == null) {
-				return MAP_DESCRIPTION;
+				return MAP_DESCRIPTION + "\nSize: " + getSize(item.sizeInBytes);
 			} else {
 				String result = LAST_SYNCHRONIZATION + ": " + getLastSynchronization(lastSynchronizationDate)
 						+ "\nSize: ";

@@ -81,9 +81,16 @@ public class CachingClient extends Client {
 		return cache.getLastSynchronizationDate(mapId);
 	}
 	
-	public int getMapSizeInBytes(String mapId) throws ConnectionException  {
-		
-		return super.getSize(mapId);
+	public int getMapSizeInBytes(String mapId, boolean ignoreInternet) throws ConnectionException  {
+		if (ignoreInternet) {
+			try {
+				return getComap(mapId, false, ignoreInternet).length();
+			} catch (Exception e) {
+				return -1;
+			}
+		} else {		
+			return super.getSize(mapId);
+		}
 		
 	}
 	

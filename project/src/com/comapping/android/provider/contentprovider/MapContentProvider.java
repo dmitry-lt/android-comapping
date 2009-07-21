@@ -55,6 +55,7 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final boolean defaultIgnoreInternet = false;
 		public final String defaultAction = "download";
 		public final String startDownloadingAction = "startDownloading";
+		public final String getMapSizeInBytesAction = "getMapSizeInBytes";
 
 		private MapContentProviderInfo() {
 			this("", "", true, true);

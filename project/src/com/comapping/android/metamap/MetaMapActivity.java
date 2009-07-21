@@ -9,7 +9,9 @@
 package com.comapping.android.metamap;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -52,12 +54,16 @@ public class MetaMapActivity extends Activity {
 	private static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open sdcard view";
 	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
+	private static final int MAX_MAP_SIZE_IN_BYTES = 10 * 1024; // 1MB
+
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
 
 	private static MetaMapProvider sdCardProvider = null;
 	private static MetaMapProvider comappingProvider = null;
 	private static MetaMapProvider currentProvider = null;
+	
+	private MetaMapItem[] metaMapItems;
 
 	// ====================================================
 	// Live Cycle
@@ -123,8 +129,39 @@ public class MetaMapActivity extends Activity {
 		startActivity(new Intent(PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 
-	void openMap(final String mapRef, final String viewType, boolean ignoreCache) {
-		MapActivity.openMap(mapRef, viewType, ignoreCache, this);
+	private String getSize(int size) {
+		if (size == -1)
+			return "-";
+
+		if (size < 1024) {
+			return size + " bytes";
+		}
+		size /= 1024;
+		return size + " Kbytes";
+	}
+	
+	void openMap(final MetaMapItem item, final String viewType, final boolean ignoreCache) {
+		final Activity currentActivity = this;
+		item.sizeInBytes = currentProvider.getMapSizeInBytes(item);
+		
+		if (item.sizeInBytes > MAX_MAP_SIZE_IN_BYTES) {
+			new AlertDialog.Builder(this).setMessage("This map is too large, do you realy want to open it?" +
+					"\nMap: " + item.name + "  Size: " + getSize(item.sizeInBytes))
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
+				}
+			}).setNegativeButton("No", new DialogInterface.OnClickListener() {				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// 
+					
+				}
+			}).create().show();
+		} else {
+			MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
+		}
 	}
 
 	public void logout() {
@@ -160,10 +197,10 @@ public class MetaMapActivity extends Activity {
 
 		int position = listView.getFirstVisiblePosition();
 
-		MetaMapItem[] items = currentProvider.getCurrentLevel();
-		listView.setAdapter(new MetaMapListAdapter(this, items));
+		metaMapItems = currentProvider.getCurrentLevel();
+		listView.setAdapter(new MetaMapListAdapter(this, metaMapItems));
 
-		position = Math.min(position, items.length - 1);
+		position = Math.min(position, metaMapItems.length - 1);
 		listView.setSelection(position);
 
 		// Buttons
@@ -354,7 +391,7 @@ public class MetaMapActivity extends Activity {
 					return;
 				// get viewType
 
-				if (currentProvider.getCurrentLevel()[position].isFolder) {
+				if (metaMapItems[position].isFolder) {
 					currentProvider.gotoFolder(position);
 					updateMetaMap();
 				} else {
@@ -362,7 +399,7 @@ public class MetaMapActivity extends Activity {
 					String viewType = PreferencesStorage.get(PreferencesStorage.VIEW_TYPE_KEY,
 							PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, context);
 
-					openMap(currentProvider.getCurrentLevel()[position].reference, viewType, false);
+					openMap(metaMapItems[position], viewType, false);
 
 				}
 			}
@@ -383,7 +420,7 @@ public class MetaMapActivity extends Activity {
 
 		int toInflate;
 
-		if (!currentProvider.getCurrentLevel()[info.position].isFolder) {
+		if (!metaMapItems[info.position].isFolder) {
 			toInflate = R.menu.metamap_map_context;
 		} else {
 			toInflate = R.menu.metamap_folder_context;
@@ -397,7 +434,7 @@ public class MetaMapActivity extends Activity {
 
 		int itemPos = info.position;
 
-		MetaMapItem itm = currentProvider.getCurrentLevel()[itemPos];
+		MetaMapItem itm = metaMapItems[itemPos];
 		if (!itm.isFolder) {
 
 			switch (item.getItemId()) {
@@ -405,14 +442,14 @@ public class MetaMapActivity extends Activity {
 					String viewType = PreferencesStorage.get(PreferencesStorage.VIEW_TYPE_KEY,
 							PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, this);
 
-					openMap(itm.reference, viewType, false);
+					openMap(itm, viewType, false);
 
 					break;
 				case R.id.openComapping:
-					openMap(itm.reference, Constants.VIEW_TYPE_COMAPPING, false);
+					openMap(itm, Constants.VIEW_TYPE_COMAPPING, false);
 					break;
 				case R.id.openExplorer:
-					openMap(itm.reference, Constants.VIEW_TYPE_EXPLORER, false);
+					openMap(itm, Constants.VIEW_TYPE_EXPLORER, false);
 					break;
 			}
 		} else {

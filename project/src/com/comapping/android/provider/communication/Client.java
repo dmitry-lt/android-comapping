@@ -35,7 +35,6 @@ public class Client {
 	long time;
 	protected Client(Context context) {
 		this.context = context;
-		time = System.currentTimeMillis();
 	}
 
 	private static CachingClient client;
@@ -408,7 +407,7 @@ public class Client {
 	}
 
 	public int getSize(String mapId) throws ConnectionException {
-		time = System.currentTimeMillis() - time;
+		time = System.currentTimeMillis();	
 		
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
@@ -416,7 +415,10 @@ public class Client {
 		data.add(new BasicNameValuePair("clientID", clientId));
 		data.add(new BasicNameValuePair("mapid", mapId));
 		int res = getSizeFromServer(data);
-		Log.w(Log.CONNECTION_TAG, "mapId=" + mapId + " size=" + res + " time=" +time);
+		
+		time = System.currentTimeMillis() - time;
+		Log.w(Log.CONNECTION_TAG, "mapId=" + mapId + " size=" + res + " time=" + time);
+		
 		return res;
 		
 	}
