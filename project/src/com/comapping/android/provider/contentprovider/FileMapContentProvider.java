@@ -16,6 +16,7 @@ import android.net.Uri;
 import com.comapping.android.Log;
 import com.comapping.android.metamap.MetaMapItem;
 
+
 public class FileMapContentProvider extends MapContentProvider {
 
 	public static final MapContentProviderInfo INFO = new MapContentProviderInfo(
@@ -27,7 +28,7 @@ public class FileMapContentProvider extends MapContentProvider {
 	private static final String FOLDER_DESCRIPTION = "Folder";
 
 	private enum QueryType {
-		MAP, META_MAP, LOGOUT, SYNC
+		MAP, META_MAP, LOGOUT, SYNC, GET_SIZE
 	}
 
 	public static final int PREFIX_LENGTH = 1;
@@ -55,6 +56,16 @@ public class FileMapContentProvider extends MapContentProvider {
 		}
 	};
 
+	private String getSize(int size) {
+		if (size == -1)
+			return "-";
+
+		if (size < 1024) {
+			return size + " bytes";
+		}
+		size /= 1024;
+		return size + " Kbytes";
+	}
 	void updateCurrentLevel() {
 		File directory = new File(currentPath);
 		File[] fileList = directory.listFiles(filter);
@@ -75,7 +86,8 @@ public class FileMapContentProvider extends MapContentProvider {
 			if (currentLevel[i].isFolder)
 				currentLevel[i].description = FOLDER_DESCRIPTION;
 			else
-				currentLevel[i].description = MAP_DESCRIPTION;
+				
+				currentLevel[i].description = MAP_DESCRIPTION + " Size: " + getSize(getSize(fileList[i].getAbsolutePath()));
 		}
 
 	}
@@ -139,14 +151,22 @@ public class FileMapContentProvider extends MapContentProvider {
 
 	}
 
+	private int getSize(String mapId){
+		File file = new File(mapId);
+		return (int)file.length();
+	}
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		String uriString = uri.toString();
+		String action = INFO.getAction(uriString);	
 		uri = Uri.parse(INFO.removeParameters(uriString));
+		
 
 		QueryType queryType = detectQueryType(uri);
-
+		if (action.equals(INFO.getMapSizeInBytesAction) && queryType == QueryType.MAP) {
+			queryType = QueryType.GET_SIZE;
+		}
 		switch (queryType) {
 		case META_MAP:
 			List<String> pathSegments = uri.getPathSegments();
@@ -162,6 +182,14 @@ public class FileMapContentProvider extends MapContentProvider {
 
 		case MAP:
 			return new FileMapCursor(URiToId(uri));
+		case GET_SIZE:
+			String mapId = uri.getLastPathSegment();				
+			MetaMapItem[] item = new MetaMapItem[1];
+			item[0] = new MetaMapItem();
+			
+				item[0].sizeInBytes = getSize(mapId);
+			
+			return new FileMetamapCursor(item);
 		case LOGOUT:
 			return null;
 		case SYNC:
@@ -226,6 +254,7 @@ public class FileMapContentProvider extends MapContentProvider {
 	private class FileMetamapCursor extends MetamapCursor {
 		public FileMetamapCursor(MetaMapItem[] mmi) {
 			currentLevel = mmi;
+			moveToFirst();
 		}
 
 	}
