@@ -25,12 +25,6 @@
 	/>
 
 	<item
-		android:title="Edit"
-		android:id="@+id/edit"
-		android:icon="@drawable/menu_edit"
-	/>
-	
-	<item
 		android:title="Save as"
 		android:id="@+id/save_as"
 		android:icon="@drawable/menu_save"

@@ -61,29 +61,8 @@ public class NoteRender extends Render {
 	public boolean onTouch(int x, int y) {
 		if (!isEmpty) {
 			if (dialog == null) {
-				LayoutInflater factory = LayoutInflater.from(context);
-				final View textEntryView = factory.inflate(R.layout.topic_edit,	null);
-				
-				((EditText) textEntryView.findViewById(R.id.topic_text_edit)).setText(note);
-				((TextView) textEntryView.findViewById(R.id.topic_text_hint)).setText("Notes");
-				
 				dialog = new AlertDialog.Builder(context)
-						.setView(textEntryView).setPositiveButton("Save",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,	int whichButton) {
-										String note = ((EditText) textEntryView
-												.findViewById(R.id.topic_text_edit))
-												.getText().toString();
-
-										setText(note);
-									}
-								})
-						.setNegativeButton("Cancel",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,	int whichButton) {
-										// nothing to do
-									}
-								}).create();
+						.setTitle("Task").setMessage(note).setNeutralButton("Ok", null).create();
 			}
 			dialog.show();
 			return true;
