@@ -76,6 +76,8 @@ public class Client {
 	private String email = null;
 
 	private boolean loginInterrupted = false;
+	
+	private boolean tryToLoginAgain = true;
 
 	// public methods
 	/**
@@ -295,20 +297,27 @@ public class Client {
 			writer.flush();
 
 			code = connection.getResponseCode();
-
-			if (code == 401) {
-				// not logged in
-				clientSideLogout(false);
-				loginRequired();
-				return requestToServer(data);
-			}
-
+			
 			responseText = getTextFromInputStream(connection.getInputStream());
 
 			writer.close();
 		} catch (IOException e) {
 			if (code == 403) {
 				throw new InvalidCredentialsException();
+			} else if (code == 401 || e.getMessage().equals("Received authentication challenge is null")) {
+				if (tryToLoginAgain) {
+					tryToLoginAgain = false;					
+					clientSideLogout(false);
+					loginRequired();
+					String res = requestToServer(data);
+					tryToLoginAgain = true;
+					return res;
+				}
+				
+				Log.w(Log.CONNECTION_TAG, e.toString());
+				Log.w(Log.CONNECTION_TAG, "code=" + code);
+				tryToLoginAgain = true;
+				throw new ConnectionException();
 			} else {
 				Log.w(Log.CONNECTION_TAG, e.toString());
 				Log.w(Log.CONNECTION_TAG, "code=" + code);
