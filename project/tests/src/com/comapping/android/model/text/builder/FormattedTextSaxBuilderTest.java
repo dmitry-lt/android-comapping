@@ -89,5 +89,12 @@ public class FormattedTextSaxBuilderTest extends AndroidTestCase {
 		assertEquals("Error with format - underling", false, format
 				.isUnderlined());
 	}
+	
+	@SmallTest
+	public void testTextWithLink() throws StringToXMLConvertionException
+	{
+		String xmlTestString = "Text <A HREF=\"http://www.google.ru/search?hl=ru&q=O%28n+%5E+k%29&lr=&aq=f&oq=\" TARGET=\"_blank\">endtext</A>";
+		FormattedText formattedText = FormattedTextSaxBuilder.buildFormattedText(xmlTestString);
+	}
 
 }
