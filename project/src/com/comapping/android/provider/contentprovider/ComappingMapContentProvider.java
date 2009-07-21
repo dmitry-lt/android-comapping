@@ -187,7 +187,12 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 		MapInfo mapInfo = new MapInfo();
 		mapInfo.notification = notification;
-		mapInfo.sizeInBytes = client.getMapSizeInBytes(mapId);
+		try {
+			mapInfo.sizeInBytes = client.getMapSizeInBytes(mapId);
+		} catch (Exception e) {
+			Log.e(Log.CONNECTION_TAG,e.toString());
+			
+		}
 
 		// Context context = this.context.getApplicationContext();
 		CharSequence contentTitle = "Downloading map, mapId" + mapId;

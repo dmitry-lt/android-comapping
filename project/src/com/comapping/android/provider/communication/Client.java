@@ -406,4 +406,47 @@ public class Client {
 			}
 		}
 	}
+
+	public int getSize(String mapId) throws ConnectionException {
+
+		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
+		data.add(new BasicNameValuePair("action", "download"));
+		data.add(new BasicNameValuePair("format", "comap"));
+		data.add(new BasicNameValuePair("clientID", clientId));
+		data.add(new BasicNameValuePair("mapid", mapId));
+
+		return getSizeFromServer(data);
+	}
+
+	private int getSizeFromServer(List<BasicNameValuePair> data)  {
+		URL url = null;
+		int res = -1;
+		try {
+			url = new URL(Options.SERVER);
+		} catch (MalformedURLException e1) {
+			Log.e(Log.CONNECTION_TAG, "Malformed URL Exception!!!");
+			//throw new ConnectionException();
+		}
+		try {
+			HttpURLConnection connection = getHttpURLConnection(url);
+
+			connection.setReadTimeout(MAX_READ_TIMEOUT);
+			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
+
+			connection.setDoOutput(true);
+			 
+			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+			writer.write(getPostParameters(data));
+			//writer.flush();
+			res = connection.getContentLength();
+
+		} catch (IOException e) {
+			Log.e(Log.CONNECTION_TAG, e.toString());
+		} catch (Exception e){
+			Log.e(Log.CONNECTION_TAG, e.toString());
+		}
+		
+
+		return res;
+	}
 }

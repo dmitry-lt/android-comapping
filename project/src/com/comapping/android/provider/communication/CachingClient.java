@@ -21,6 +21,7 @@ public class CachingClient extends Client {
 	private SqliteMapCache cache = null;
 
 	private boolean remember = true;
+	private IDownloadingListener downloadingListener;
 
 	public CachingClient(Context context, SqliteMapCache cache) {
 		super(context);
@@ -80,9 +81,10 @@ public class CachingClient extends Client {
 		return cache.getLastSynchronizationDate(mapId);
 	}
 	
-	public int getMapSizeInBytes(String mapId) {
-		// TODO
-		return 0;
+	public int getMapSizeInBytes(String mapId) throws ConnectionException  {
+		
+		return super.getSize(mapId);
+		
 	}
 	
 	public void startMapDownloading(String mapId) {
@@ -90,7 +92,7 @@ public class CachingClient extends Client {
 	}
 	
 	public void setDownloadingListener(IDownloadingListener downloadingListener) {
-		// TODO
+		this.downloadingListener = downloadingListener;
 	}
 	
 	public static interface IDownloadingListener {
