@@ -439,7 +439,7 @@ public class Client {
 			 
 			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 			writer.write(getPostParameters(data));
-			//writer.flush();
+			writer.flush();
 			res = connection.getContentLength();
 
 		} catch (IOException e) {
