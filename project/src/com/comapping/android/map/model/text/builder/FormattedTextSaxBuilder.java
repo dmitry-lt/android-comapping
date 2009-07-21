@@ -70,6 +70,9 @@ public class FormattedTextSaxBuilder {
 			xmlString = xmlString.replace("&amp;", "&");
 			return new FormattedText(xmlString, getDefFormat());
 		}
+		
+		// Ugly "&" Fix
+		xmlString = xmlString.replace('&', FormattedTextSaxHandler.AndReplacer);
 
 		if (xmlString.startsWith("<P")) {
 			xmlString = "<TEXT>" + xmlString + "</TEXT>";

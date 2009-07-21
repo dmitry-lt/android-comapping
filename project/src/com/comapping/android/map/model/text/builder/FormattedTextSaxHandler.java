@@ -17,6 +17,9 @@ import com.comapping.android.map.model.text.TextFormat;
 import com.comapping.android.map.model.text.TextParagraph;
 
 public class FormattedTextSaxHandler extends DefaultHandler {
+	
+	// Ugly "&" Fix
+	public static final char AndReplacer = '\u2CCB';
 
 	private Stack<TextFormat> stackTextFormat;
 	private FormattedText formattedText;
@@ -30,7 +33,7 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 				currentTextParagraph = new TextParagraph();
 			}
 			if (currentText.length() != 0) {
-				currentTextParagraph.add(new TextBlock(currentText.toString(),
+				currentTextParagraph.add(new TextBlock(currentText.toString().replace(AndReplacer, '&'),
 						currentTextFormat));
 			}
 		}
@@ -105,7 +108,7 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 			} else if (localName.equals(FormattedTextSaxBuilder.HYPER_REF_TAG)) {
 				String href = attributes
 						.getValue(FormattedTextSaxBuilder.HYPER_REF_ATTR_HREF_TAG);
-				newTextFormat.setHRef(href);
+				newTextFormat.setHRef(href.replace(AndReplacer, '&'));
 
 			} else if (localName.equals(FormattedTextSaxBuilder.UNDERLINED_TAG)) {
 				newTextFormat.setUnderlined(true);
