@@ -472,10 +472,7 @@ public class MetaMapActivity extends Activity {
 
 		MenuItem logoutItem = menu.findItem(R.id.logout);
 		logoutItem.setEnabled(currentProvider.canLogout());
-
-		MenuItem switchSource = menu.findItem(R.id.switchSource);
-		switchSource.setEnabled(isSdPresent());
-
+		
 		if (currentProvider.canLogout()) {
 			logoutItem.setIcon(R.drawable.metamap_logout);
 		} else {
