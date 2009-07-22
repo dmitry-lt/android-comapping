@@ -15,7 +15,6 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,12 +43,14 @@ public class LoginActivity extends Activity {
 	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "E-mail or password is incorrect";
 	private static final String UNKNOWN_RESULT_MESSAGE = "Unknown result";
 
+	private static final int MENU_PREFERENCES = Menu.FIRST;
 	// private LoginView loginView;
 	private ProgressDialog splash = null;
 
 	private static boolean isWorking = false;
 	private static Thread workThread = null;
 	private static String stateMsg = "";
+	
 
 	private void finishLoginAttempt(final String errorMsg) {
 
@@ -268,14 +269,17 @@ public class LoginActivity extends Activity {
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.login, menu);
+		
+		// Build the menu that are shown when login.
+		menu.add(0, MENU_PREFERENCES,0,"Preferences")
+		.setIcon(android.R.drawable.ic_menu_preferences);
+		
 		return true;
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.preferences:
+		case MENU_PREFERENCES:
 			preferences();
 			return true;
 		}
