@@ -375,14 +375,26 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			}
 			time /= 60;
 			if (time < 60) {
-				return time + " minutes ago";
+				if (time == 1) {
+					return time + " minute ago";
+				} else {
+					return time + " minutes ago";
+				}
 			}
 			time /= 60;
 			if (time < 24) {
-				return time + " hours ago";
+				if (time == 1) {
+					return time + " hour ago";
+				} else {
+					return time + " hours ago";
+				}
 			}
 			time /= 24;
-			return time + " days ago";
+			if (time == 1) {
+				return time + " day ago";
+			} else {
+				return time + " days ago";
+			}
 		}
 
 		private String getSize(int size) {
