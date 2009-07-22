@@ -415,8 +415,9 @@ public class MapActivity extends Activity {
 	}
 
 	private void saveMapAs() {
-		AlertDialog dialog = (new AlertDialog.Builder(this)
-				.setTitle("Save map").setMessage(
+		AlertDialog dialog = (new AlertDialog.Builder(this).setIcon(
+				android.R.drawable.ic_dialog_info).setTitle("Save map")
+				.setMessage(
 						"Map: " + map.getName() + "\n" + "Save to "
 								+ SAVE_FOLDER + "?").setPositiveButton("Yes",
 						new DialogInterface.OnClickListener() {
@@ -445,7 +446,9 @@ public class MapActivity extends Activity {
 
 									}
 								} else {
-									(new AlertDialog.Builder(getCurrentActivity())
+									(new AlertDialog.Builder(
+											getCurrentActivity()).setIcon(
+											android.R.drawable.ic_dialog_alert)
 											.setTitle("Alert Message")
 											.setMessage("You can't download this file, because SD card is not installed."))
 											.show();

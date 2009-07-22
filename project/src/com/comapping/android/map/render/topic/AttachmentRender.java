@@ -97,7 +97,8 @@ public class AttachmentRender extends Render {
 					PreferencesStorage.DOWNLOAD_FOLDER_KEY,
 					PreferencesStorage.DOWNLOAD_FOLDER_DEFAULT_VALUE, context);
 
-			dialog = (new AlertDialog.Builder(context).setTitle("Attachment")
+			dialog = (new AlertDialog.Builder(context).setIcon(
+					android.R.drawable.ic_dialog_info).setTitle("Attachment")
 					.setMessage(
 							"File: " + attachment.getFilename() + "\n"
 									+ "Upload date: "
@@ -171,7 +172,8 @@ public class AttachmentRender extends Render {
 										});
 								downloadProgressDialog.setCancelable(true);
 							} else {
-								(new AlertDialog.Builder(context)
+								(new AlertDialog.Builder(context).setIcon(
+										android.R.drawable.ic_dialog_alert)
 										.setTitle("Alert Message")
 										.setMessage("You can't download this file because SD card is not installed."))
 										.show();
