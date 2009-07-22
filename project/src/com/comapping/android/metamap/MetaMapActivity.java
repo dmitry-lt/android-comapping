@@ -52,6 +52,7 @@ public class MetaMapActivity extends Activity {
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
 
 	private static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open SD card view";
+	private static final String PLEASE_SYNCHRONIZE_SDMESSAGE ="Please synchronize your map list.";
 	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
 	private static final int MAX_MAP_SIZE_IN_BYTES = 100 * 1024; // 1MB
@@ -79,8 +80,12 @@ public class MetaMapActivity extends Activity {
 		// Init providers
 
 		if (comappingProvider == null) {
+			if (isSdPresent())
 			comappingProvider = new MetaMapProvider(ComappingMapContentProvider.INFO, PLEASE_SYNCHRONIZE_MESSAGE,
 					EMPTY_FOLDER_MESSAGE, this);
+			else 
+				comappingProvider = new MetaMapProvider(ComappingMapContentProvider.INFO, PLEASE_SYNCHRONIZE_SDMESSAGE,
+						EMPTY_FOLDER_MESSAGE, this);
 		}
 
 		if (sdCardProvider == null) {
