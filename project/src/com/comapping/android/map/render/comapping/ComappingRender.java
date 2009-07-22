@@ -776,7 +776,7 @@ public class ComappingRender extends MapRender {
 	}
 
 	
-	public void onRotate() {
+	public void onChangeSize() {
 
 	}
 }

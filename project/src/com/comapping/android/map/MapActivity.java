@@ -348,8 +348,8 @@ public class MapActivity extends Activity {
 				splashDeactivate();
 				// Log.d(Log.MAP_CONTROLLER_TAG,
 				// "onConfigurationChanged finish");
-				view.onRotate();
 				canDraw = true;
+				view.onRotate();
 			}
 		}.start();
 	}

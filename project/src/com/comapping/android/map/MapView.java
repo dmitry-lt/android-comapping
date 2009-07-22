@@ -51,7 +51,7 @@ public class MapView extends View {
 
 	private boolean isDrawing = false;
 	private boolean isInitialized = false;
-	private boolean canDraw = false;
+	private boolean needChangeSize = true;
 
 	private Drawable background;
 
@@ -315,44 +315,52 @@ public class MapView extends View {
 		this.activity = activity;
 	}
 
-	private boolean isFinished = true;
+	private boolean isFinished = false;
 
 	protected void onDraw(Canvas canvas) {
-		new Thread() {
-
-			public void run() {
-				isFinished = false;
-				while (!activity.canDraw()) {
-					try {
-						sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+		
+		if (!activity.canDraw()) {
+			new Thread() {
+				public void run() {
+					isFinished = false;
+					while (!activity.canDraw()) {
+						try {
+							sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
+					isFinished = true;
+					postInvalidate();
 				}
-				isFinished = true;
-				postInvalidate();
-			}
-		}.start();
+			}.start();
+		} else {
+			isFinished = true;
+		}
 		if (!isFinished) {
 			return;
 		}
+		
 		isDrawing = false;
 
-		final View mainMapView = this;
-		new Thread(new Runnable() {
-
-			public void run() {
-				if (!canDraw) {
-					mRender.onRotate();
+		if (needChangeSize) {
+			final View mainMapView = this;
+			new Thread(new Runnable() {
+	
+				public void run() {
+					mRender.onChangeSize();
+					mRender.setBounds(getScreenForRenderWidth(),
+							getScreenForRenderHeight());
+					needChangeSize = false;
+					mainMapView.postInvalidate();
 				}
-				mRender.setBounds(getScreenForRenderWidth(),
-						getScreenForRenderHeight());
-				canDraw = true;
-				mainMapView.postInvalidate();
-			}
-		}).start();
+			}).start();
+		} else {
+			mRender.setBounds(getScreenForRenderWidth(),
+					getScreenForRenderHeight());
+		}
 
-		if (!canDraw) {
+		if (needChangeSize) {
 			return;
 		}
 
@@ -606,7 +614,7 @@ public class MapView extends View {
 	}
 
 	public void onRotate() {
-		canDraw = false;
+		needChangeSize = true;
 		isInitialized = false;
 	}
 }

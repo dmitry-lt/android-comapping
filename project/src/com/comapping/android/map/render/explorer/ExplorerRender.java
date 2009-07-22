@@ -155,7 +155,7 @@ public class ExplorerRender extends MapRender {
 		if (y1 < 0) {
 			ny = topic.y1;
 		}
-		scroll.smoothScroll(nx, ny);
+		scroll.intermediateScroll(nx, ny);
 	}
 
 	// Method to calculate coordinates of topics, circles
@@ -264,7 +264,7 @@ public class ExplorerRender extends MapRender {
 	}
 
 	
-	public void onRotate() {
+	public void onChangeSize() {
 		setBoundsNeeded = true;
 	}
 
