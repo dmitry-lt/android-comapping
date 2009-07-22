@@ -54,7 +54,7 @@ public class MetaMapActivity extends Activity {
 	private static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open sdcard view";
 	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
-	private static final int MAX_MAP_SIZE_IN_BYTES = 10 * 1024; // 1MB
+	private static final int MAX_MAP_SIZE_IN_BYTES = 100 * 1024; // 1MB
 
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
