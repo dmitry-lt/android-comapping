@@ -161,10 +161,12 @@ public class LoginActivity extends Activity {
 		startWork(email, password, remember);
 	}
 
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {		
 		Log.d(Log.LOGIN_TAG, "LoginActivity.onCreate()");
 		super.onCreate(savedInstanceState);
 
+		stateMsg = "";
+		
 		CachingClient client = Client.getClient(this);
 		if (client.isLoggedIn()) {
 			setResult(RESULT_LOGIN_SUCCESSFUL);
