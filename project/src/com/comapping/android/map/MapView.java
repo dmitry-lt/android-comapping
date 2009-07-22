@@ -12,9 +12,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -377,6 +377,7 @@ public class MapView extends View {
 		canvas.scale(scale, scale);
 
 		// Draw map
+		Log.d("Map", "Draw");
 		mRender.draw(mScroller.getCurrX(), mScroller.getCurrY(),
 				getScreenForRenderWidth(), getScreenForRenderHeight(), canvas);
 

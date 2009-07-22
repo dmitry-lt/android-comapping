@@ -21,7 +21,7 @@ public class CachingClient extends Client {
 	private SqliteMapCache cache = null;
 
 	private boolean remember = true;
-	private IDownloadingListener downloadingListener;
+//	private IDownloadingListener downloadingListener;
 
 	public CachingClient(Context context, SqliteMapCache cache) {
 		super(context);
@@ -100,7 +100,7 @@ public class CachingClient extends Client {
 	}
 
 	public void setDownloadingListener(IDownloadingListener downloadingListener) {
-		this.downloadingListener = downloadingListener;
+//		this.downloadingListener = downloadingListener;
 	}
 
 	public static interface IDownloadingListener {

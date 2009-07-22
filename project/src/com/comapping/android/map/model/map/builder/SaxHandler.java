@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.comapping.android.Log;
-import com.comapping.android.map.model.exceptions.EnumParsingException;
 import com.comapping.android.map.model.exceptions.MapParsingException;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.map.model.map.Attachment;

@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.graphics.Color;
 
-import com.comapping.android.Log;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.map.model.text.FormattedText;
 import com.comapping.android.map.model.text.TextFormat;

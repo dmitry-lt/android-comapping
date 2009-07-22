@@ -10,11 +10,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.DownloadListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,7 +29,6 @@ import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.provider.communication.Client;
-import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.controller.R;
 import com.comapping.android.map.model.exceptions.MapParsingException;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
@@ -85,8 +81,6 @@ public class MapActivity extends Activity {
 	public static final String EXT_IS_IGNORE_CACHE = "ignoreCache";
 	public static final String SAVE_FOLDER = "sdcard\\comapping";
 
-	private static final long ZOOM_CONTROLS_TIME_TO_HIDE = 2000;
-
 	// ===========================================================
 	// Saved parameters for view
 	// ===========================================================
@@ -115,8 +109,6 @@ public class MapActivity extends Activity {
 	// ===========================================================
 	// Zoom controls variables
 	// ===========================================================
-
-	private long lastZoomPress = -100000;
 
 	// ===========================================================
 	// Controls of view
@@ -276,7 +268,6 @@ public class MapActivity extends Activity {
 
 			public void onClick(View v) {
 				view.setScale(view.getScale() + 0.1f);
-				lastZoomPress = System.currentTimeMillis();
 				view.refresh();
 			}
 		});
@@ -284,7 +275,6 @@ public class MapActivity extends Activity {
 
 			public void onClick(View v) {
 				view.setScale(view.getScale() - 0.1f);
-				lastZoomPress = System.currentTimeMillis();
 				view.refresh();
 			}
 		});
@@ -422,10 +412,6 @@ public class MapActivity extends Activity {
 		};
 
 		mapProcessingThread.start();
-	}
-
-	private void saveMap() {
-
 	}
 
 	private void saveMapAs() {

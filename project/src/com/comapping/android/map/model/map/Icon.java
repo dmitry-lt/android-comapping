@@ -1,7 +1,5 @@
 package com.comapping.android.map.model.map;
 
-import com.comapping.android.map.model.exceptions.EnumParsingException;
-
 public enum Icon {
 	QUESTION_MARK, EXCLAMATION_MARK, LOCK, TEA_TIME, PUZZLE, 
 	MAGNIFIER, THUMBS_UP, THUMBS_DOWN, IDEA, DOLLAR, HEART,

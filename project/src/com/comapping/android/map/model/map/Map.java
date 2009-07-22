@@ -2,8 +2,6 @@ package com.comapping.android.map.model.map;
 
 import java.io.Serializable;
 
-import com.comapping.android.Log;
-
 /**
  * @author Passichenko Victor and Yuri Zemlyanskiy
  * 

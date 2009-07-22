@@ -15,7 +15,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import com.comapping.android.Log;
 import android.view.KeyEvent;
 
 public class ExplorerRender extends MapRender {
