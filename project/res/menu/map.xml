@@ -12,10 +12,9 @@
 	android:title="Zoom"/>
 	
 	<item
-		android:icon="@drawable/menu_reload"
 		android:title="Switch view"
 		android:id="@+id/switchView"
-	/>
+	android:icon="@drawable/menu_switchview"/>
 	
 	<item
 		android:icon="@drawable/menu_sync"

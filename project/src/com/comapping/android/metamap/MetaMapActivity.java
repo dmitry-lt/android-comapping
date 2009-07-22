@@ -481,9 +481,9 @@ public class MetaMapActivity extends Activity {
 		logoutItem.setEnabled(currentProvider.canLogout());
 		
 		if (currentProvider.canLogout()) {
-			logoutItem.setIcon(R.drawable.metamap_logout);
+			logoutItem.setIcon(R.drawable.menu_logout);
 		} else {
-			logoutItem.setIcon(R.drawable.metamap_logout_grey);
+			logoutItem.setIcon(R.drawable.menu_logout);
 		}
 
 		return true;

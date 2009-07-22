@@ -10,7 +10,6 @@
     	android:id="@+id/openExplorer"
     />
     <item
-    	android:icon="@drawable/metamap_logout"
     	android:title="Open with Comapping view"
     	android:id="@+id/openComapping"
     />
