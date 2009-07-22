@@ -24,8 +24,8 @@ public class FileMapContentProvider extends MapContentProvider {
 	public static final Uri CONTENT_URI = Uri.parse("content://" + INFO.root);
 	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
-	private static final String MAP_DESCRIPTION = "Map";
-	private static final String FOLDER_DESCRIPTION = "Folder";
+	private static final String MAP_DESCRIPTION = "";
+	private static final String FOLDER_DESCRIPTION = "";
 
 	private enum QueryType {
 		MAP, META_MAP, LOGOUT, SYNC, GET_SIZE
@@ -87,7 +87,7 @@ public class FileMapContentProvider extends MapContentProvider {
 				currentLevel[i].description = FOLDER_DESCRIPTION;
 			else
 				
-				currentLevel[i].description = MAP_DESCRIPTION + " Size: " + getSize(getSize(fileList[i].getAbsolutePath()));
+				currentLevel[i].description = MAP_DESCRIPTION + "Size: " + getSize(getSize(fileList[i].getAbsolutePath()));
 		}
 
 	}
@@ -238,7 +238,7 @@ public class FileMapContentProvider extends MapContentProvider {
 			String response = null;
 
 			try {
-				Log.e(Log.PROVIDER_FILE_TAG, mapId);
+				Log.w(Log.PROVIDER_FILE_TAG, mapId);
 				response = getTextFromInputStream(new FileInputStream(mapId));
 			} catch (FileNotFoundException e) {
 				Log.e(Log.PROVIDER_FILE_TAG, "map file not found");
