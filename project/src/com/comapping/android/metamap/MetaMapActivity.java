@@ -11,7 +11,6 @@ package com.comapping.android.metamap;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -34,6 +33,7 @@ import com.comapping.android.preferences.PreferencesActivity;
 import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
 import com.comapping.android.provider.contentprovider.FileMapContentProvider;
+import com.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
 import com.comapping.android.controller.R;
 import com.comapping.android.map.MapActivity;
 import com.comapping.android.map.model.map.builder.MapBuilder;
@@ -142,26 +142,27 @@ public class MetaMapActivity extends Activity {
 	
 	void openMap(final MetaMapItem item, final String viewType, final boolean ignoreCache) {
 		final Activity currentActivity = this;
-		item.sizeInBytes = currentProvider.getMapSizeInBytes(item);
-		
-		if (item.sizeInBytes > MAX_MAP_SIZE_IN_BYTES) {
-			new AlertDialog.Builder(this).setMessage("This map is too large, do you realy want to open it?" +
-					"\nMap: " + item.name + "  Size: " + getSize(item.sizeInBytes))
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
+		new Thread() {
+			public void run() {
+				try {
+					item.sizeInBytes = currentProvider.getMapSizeInBytes(item);
+				} catch (LoginInterruptedRuntimeException e) {
+					return;
 				}
-			}).setNegativeButton("No", new DialogInterface.OnClickListener() {				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// 
-					
-				}
-			}).create().show();
-		} else {
-			MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
-		}
+				
+				runOnUiThread(new Runnable() {					
+					@Override
+					public void run() {
+						if (item.sizeInBytes > MAX_MAP_SIZE_IN_BYTES) {
+							new AlertDialog.Builder(currentActivity).setMessage("This map is too large!" +
+									"\nMap: " + item.name + "  Size: " + getSize(item.sizeInBytes)).create().show();
+						} else {
+							MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
+						}
+					}
+				});
+			}
+		}.start();		
 	}
 
 	public void logout() {

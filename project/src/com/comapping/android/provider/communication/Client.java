@@ -29,6 +29,7 @@ import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
+import com.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
 import com.comapping.android.storage.SqliteMapCache;
 
 public class Client {
@@ -408,6 +409,13 @@ public class Client {
 
 	public int getSize(String mapId) throws ConnectionException {
 		time = System.currentTimeMillis();	
+		
+		try {
+			loginRequired();
+		} catch (LoginInterruptedException e) {
+			Log.d(Log.CONNECTION_TAG, "Login interrupted");
+			throw new LoginInterruptedRuntimeException();
+		}
 		
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
