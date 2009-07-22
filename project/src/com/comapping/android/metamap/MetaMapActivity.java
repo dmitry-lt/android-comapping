@@ -55,7 +55,9 @@ public class MetaMapActivity extends Activity {
 	private static final String PLEASE_SYNCHRONIZE_NOSDMESSAGE ="Please synchronize your map list.";
 	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
-	private static final int MAX_MAP_SIZE_IN_BYTES = 100 * 1024; // 1MB
+
+	private static final int MAX_MAP_SIZE_IN_BYTES = 200 * 1024; // 1MB
+
 
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
@@ -159,8 +161,8 @@ public class MetaMapActivity extends Activity {
 					@Override
 					public void run() {
 						if (item.sizeInBytes > MAX_MAP_SIZE_IN_BYTES) {
-							new AlertDialog.Builder(currentActivity).setMessage("This map is too large!" +
-									"\nMap: " + item.name + "  Size: " + getSize(item.sizeInBytes)).create().show();
+							new AlertDialog.Builder(currentActivity).setMessage("       Map is too big. \nMax map size supported is:\n"+ getSize(MAX_MAP_SIZE_IN_BYTES) +
+									"\nCurrent map:\n" + item.name + ", " + getSize(item.sizeInBytes)).create().show();
 						} else {
 							MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
 						}
