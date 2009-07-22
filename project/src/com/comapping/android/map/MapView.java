@@ -3,7 +3,7 @@ package com.comapping.android.map;
 import java.util.ArrayList;
 
 import com.comapping.android.Options;
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.render.MapRender;
 

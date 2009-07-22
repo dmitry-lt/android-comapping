@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 
 import com.comapping.android.Log;
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 import com.comapping.android.preferences.PreferencesActivity;
 import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;

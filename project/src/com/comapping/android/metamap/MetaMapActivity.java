@@ -34,7 +34,7 @@ import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.contentprovider.ComappingMapContentProvider;
 import com.comapping.android.provider.contentprovider.FileMapContentProvider;
 import com.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 import com.comapping.android.map.MapActivity;
 import com.comapping.android.map.model.map.builder.MapBuilder;
 import com.comapping.android.map.model.map.builder.SaxMapBuilder;
@@ -158,7 +158,6 @@ public class MetaMapActivity extends Activity {
 				}
 				
 				runOnUiThread(new Runnable() {					
-					@Override
 					public void run() {
 						if (item.sizeInBytes > MAX_MAP_SIZE_IN_BYTES) {
 							new AlertDialog.Builder(currentActivity).setMessage("       Map is too big. \nMax map size supported is:\n"+ getSize(MAX_MAP_SIZE_IN_BYTES) +

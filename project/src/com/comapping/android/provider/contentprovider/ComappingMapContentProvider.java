@@ -182,7 +182,6 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	private void setDownloadListener() {
 		// TODO unused now
 		client.setDownloadingListener(new CachingClient.IDownloadingListener() {
-			@Override
 			public void statusChanged(String mapId, int downloadedInBytes) {
 				MapInfo mapInfo = mapInfos.get(mapId);
 				if (mapInfo != null) {

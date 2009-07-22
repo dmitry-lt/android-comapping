@@ -17,7 +17,7 @@ import com.comapping.android.Options;
 import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 import com.comapping.android.map.model.map.Attachment;
 import com.comapping.android.map.render.Render;
 

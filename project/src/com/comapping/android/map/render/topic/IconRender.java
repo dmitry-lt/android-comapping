@@ -1,6 +1,6 @@
 package com.comapping.android.map.render.topic;
 
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 import com.comapping.android.map.model.map.Icon;
 import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.render.Render;

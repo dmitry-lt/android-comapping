@@ -1,6 +1,6 @@
 package com.comapping.android.metamap;
 
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

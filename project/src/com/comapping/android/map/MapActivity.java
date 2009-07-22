@@ -29,7 +29,7 @@ import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.provider.communication.Client;
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 import com.comapping.android.map.model.exceptions.MapParsingException;
 import com.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 import com.comapping.android.map.model.map.Map;
@@ -421,7 +421,6 @@ public class MapActivity extends Activity {
 								+ SAVE_FOLDER + "?").setPositiveButton("Yes",
 						new DialogInterface.OnClickListener() {
 
-							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
 								if (android.os.Environment
@@ -455,7 +454,6 @@ public class MapActivity extends Activity {
 						}).setNegativeButton("No",
 				new DialogInterface.OnClickListener() {
 
-					@Override
 					public void onClick(DialogInterface dialog, int which) {
 
 					}

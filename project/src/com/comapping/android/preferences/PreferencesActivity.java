@@ -1,7 +1,7 @@
 package com.comapping.android.preferences;
 
 import com.comapping.android.Constants;
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
