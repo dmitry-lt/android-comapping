@@ -88,6 +88,7 @@ public class MetaMapProvider {
 
 	public void logout() {
 		query(info.logout);
+		info.setLogout(false);
 	}
 
 	public boolean sync() {

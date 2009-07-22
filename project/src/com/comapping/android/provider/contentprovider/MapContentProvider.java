@@ -43,7 +43,7 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final String relLogout;
 		public final String sync;
 		public final String relSync;
-		public final boolean canLogout;
+		public boolean canLogout;
 		public final boolean canSync;
 		public final String relFinishWork = "finish_work";
 		public final String finishWork;
@@ -87,6 +87,11 @@ public abstract class MapContentProvider extends ContentProvider {
 			this.canSync = canSync;
 
 			this.finishWork = authorities + separator + relFinishWork;
+		}
+
+		public void setLogout(boolean canLogout)
+		{
+			this.canLogout = canLogout;
 		}
 
 		private String setParameter(String uriString, String parameter, String value) {
