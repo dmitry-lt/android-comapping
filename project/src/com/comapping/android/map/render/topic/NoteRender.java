@@ -62,7 +62,7 @@ public class NoteRender extends Render {
 		if (!isEmpty) {
 			if (dialog == null) {
 				dialog = new AlertDialog.Builder(context)
-						.setTitle("Task").setMessage(note).setNeutralButton("Ok", null).create();
+						.setTitle("Note").setMessage(note).setNeutralButton("Ok", null).create();
 			}
 			dialog.show();
 			return true;
