@@ -48,6 +48,16 @@ import com.comapping.android.storage.MemoryCache;
 public class MapActivity extends Activity {
 
 	// ===========================================================
+	// Identifiers for our menu items.
+	// ===========================================================
+
+	private final static int MENU_ZOOM = Menu.FIRST;
+	private final static int MENU_SEARCH = Menu.FIRST + 1;
+	private final static int MENU_SWITCH_VIEW = Menu.FIRST + 2;
+	private final static int MENU_SYNCHRONIZE = Menu.FIRST + 3;
+	private final static int MENU_SAVE_AS = Menu.FIRST + 4;
+
+	// ===========================================================
 	// Current MapActivity
 	// ===========================================================
 
@@ -502,27 +512,43 @@ public class MapActivity extends Activity {
 	// ===========================================================
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.map, menu);
+		// MenuInflater inflater = getMenuInflater();
+		// inflater.inflate(R.menu.map, menu);
+
+		menu.add(0, MENU_SEARCH, 0, "Search").setIcon(
+				android.R.drawable.ic_menu_search);
+
+		menu.add(0, MENU_ZOOM, 0, "Zoom").setIcon(
+				android.R.drawable.ic_menu_zoom);
+
+		menu.add(0, MENU_SWITCH_VIEW, 0, "Switch view").setIcon(
+				android.R.drawable.ic_menu_mapmode);
+
+		menu.add(0, MENU_SYNCHRONIZE, 0, "Synchronize").setIcon(
+				R.drawable.menu_sync);
+
+		menu.add(0, MENU_SAVE_AS, 0, "Save as").setIcon(
+				android.R.drawable.ic_menu_save);
+
 		return true;
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.search:
+		case MENU_SEARCH:
 			onSearchRequested();
 			return true;
-		case R.id.zoom:
+		case MENU_ZOOM:
 			view.showZoom();
 			return true;
-		case R.id.sync:
+		case MENU_SYNCHRONIZE:
 			finish();
 			openMap(mapRef, viewType, true, this);
 			return true;
-		case R.id.save_as:
+		case MENU_SAVE_AS:
 			saveMapAs();
 			return true;
-		case R.id.switchView:
+		case MENU_SWITCH_VIEW:
 			finish();
 			if (viewType.equals(Constants.VIEW_TYPE_COMAPPING)) {
 				viewType = Constants.VIEW_TYPE_EXPLORER;
