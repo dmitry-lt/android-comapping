@@ -34,6 +34,7 @@ import com.comapping.android.storage.SqliteMapCache;
 
 public class Client {
 	long time;
+
 	protected Client(Context context) {
 		this.context = context;
 	}
@@ -76,7 +77,7 @@ public class Client {
 	private String email = null;
 
 	private boolean loginInterrupted = false;
-	
+
 	private boolean tryToLoginAgain = true;
 
 	// public methods
@@ -297,28 +298,29 @@ public class Client {
 			writer.flush();
 
 			code = connection.getResponseCode();
-			
+
 			responseText = getTextFromInputStream(connection.getInputStream());
 
 			writer.close();
 		} catch (IOException e) {
 			Log.w(Log.CONNECTION_TAG, e.toString());
 			Log.w(Log.CONNECTION_TAG, "code=" + code);
-			
+
 			if (code == 403 || (!isLoggedIn() && e.getMessage().equals("Received authentication challenge is null"))) {
 				throw new InvalidCredentialsException();
-			} else if (code == 401 || e.getMessage().equals("Received authentication challenge is null")) {
+			} else if (isLoggedIn()
+					&& (code == 401 || e.getMessage().equals("Received authentication challenge is null"))) {
 				if (tryToLoginAgain) {
-					tryToLoginAgain = false;					
+					tryToLoginAgain = false;
 					clientSideLogout(false);
 					loginRequired();
 					String res = requestToServer(data);
 					tryToLoginAgain = true;
 					return res;
+				} else {
+					tryToLoginAgain = true;
+					throw new ConnectionException();
 				}
-				
-				tryToLoginAgain = true;
-				throw new ConnectionException();
 			} else {
 				throw new ConnectionException();
 			}
@@ -406,31 +408,31 @@ public class Client {
 		}
 	}
 
-	public int getSize(String mapId) throws ConnectionException {
-		time = System.currentTimeMillis();	
-		
+	public int getSize(String mapId) throws ConnectionException, LoginInterruptedException {
+		time = System.currentTimeMillis();
+
 		try {
 			loginRequired();
 		} catch (LoginInterruptedException e) {
 			Log.d(Log.CONNECTION_TAG, "Login interrupted");
 			throw new LoginInterruptedRuntimeException();
 		}
-		
+
 		List<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
 		data.add(new BasicNameValuePair("action", "download"));
 		data.add(new BasicNameValuePair("format", "comap"));
 		data.add(new BasicNameValuePair("clientID", clientId));
 		data.add(new BasicNameValuePair("mapid", mapId));
 		int res = getSizeFromServer(data);
-		
+
 		time = System.currentTimeMillis() - time;
 		Log.w(Log.CONNECTION_TAG, "mapId=" + mapId + " size=" + res + " time=" + time);
-		
+
 		return res;
-		
+
 	}
 
-	private int getSizeFromServer(List<BasicNameValuePair> data) throws ConnectionException  {
+	private int getSizeFromServer(List<BasicNameValuePair> data) throws ConnectionException, LoginInterruptedException {
 		URL url = null;
 		int res = -1;
 		try {
@@ -446,18 +448,31 @@ public class Client {
 			connection.setConnectTimeout(MAX_CONNECT_TIMEOUT);
 
 			connection.setDoOutput(true);
-			 
+
 			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 			writer.write(getPostParameters(data));
 			writer.flush();
 			res = connection.getContentLength();
 
 		} catch (IOException e) {
-			Log.e(Log.CONNECTION_TAG, e.toString());
-		} catch (Exception e){
+			Log.w(Log.CONNECTION_TAG, e.toString());
+			if (isLoggedIn() && e.getMessage().equals("Received authentication challenge is null")) {
+				if (tryToLoginAgain) {
+					tryToLoginAgain = false;
+					clientSideLogout(false);
+					loginRequired();
+					int result = getSizeFromServer(data);
+					tryToLoginAgain = true;
+					return result;
+				} else {
+					tryToLoginAgain = true;
+					throw new ConnectionException();
+				}
+			}
+			throw new ConnectionException();
+		} catch (Exception e) {
 			Log.e(Log.CONNECTION_TAG, e.toString());
 		}
-		
 
 		return res;
 	}

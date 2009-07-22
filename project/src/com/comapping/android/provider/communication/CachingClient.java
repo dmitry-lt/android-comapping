@@ -80,29 +80,30 @@ public class CachingClient extends Client {
 	public Timestamp getLastSynchronizationDate(String mapId) {
 		return cache.getLastSynchronizationDate(mapId);
 	}
-	
-	public int getMapSizeInBytes(String mapId, boolean ignoreInternet) throws ConnectionException  {
+
+	public int getMapSizeInBytes(String mapId, boolean ignoreInternet) throws ConnectionException,
+			LoginInterruptedException {
 		if (ignoreInternet) {
 			try {
 				return getComap(mapId, false, ignoreInternet).length();
 			} catch (Exception e) {
 				return -1;
 			}
-		} else {		
+		} else {
 			return super.getSize(mapId);
 		}
-		
+
 	}
-	
+
 	public void startMapDownloading(String mapId) {
-		// TODO		
+		// TODO
 	}
-	
+
 	public void setDownloadingListener(IDownloadingListener downloadingListener) {
 		this.downloadingListener = downloadingListener;
 	}
-	
+
 	public static interface IDownloadingListener {
-		void statusChanged(String mapId, int downloadedInBytes); 
+		void statusChanged(String mapId, int downloadedInBytes);
 	}
 }

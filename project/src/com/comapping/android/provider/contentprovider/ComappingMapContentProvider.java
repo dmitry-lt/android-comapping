@@ -126,17 +126,19 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				return new ComappingMapCursor(getComap(uri.getLastPathSegment(), ignoreCache, ignoreInternet));
 
 			case GET_MAP_SIZE:
-				String mapId = uri.getLastPathSegment();				
+				String mapId = uri.getLastPathSegment();
 				MetaMapItem[] item = new MetaMapItem[1];
 				item[0] = new MetaMapItem();
 				try {
 					item[0].sizeInBytes = client.getMapSizeInBytes(mapId, false);
-				} catch (ConnectionException e2) {
+				} catch (ConnectionException e) {
 					item[0].sizeInBytes = -1;
-					e2.printStackTrace();
+					e.printStackTrace();
+				} catch (LoginInterruptedException e) {
+					throw new LoginInterruptedRuntimeException();
 				}
 				return new ComappingMetamapCursor(item);
-				
+
 			case START_MAP_DOWNLOADING:
 				startMapDownloading(uri.getLastPathSegment());
 				return null;
@@ -204,8 +206,8 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		try {
 			mapInfo.sizeInBytes = client.getMapSizeInBytes(mapId, false);
 		} catch (Exception e) {
-			Log.e(Log.CONNECTION_TAG,e.toString());
-			
+			Log.e(Log.CONNECTION_TAG, e.toString());
+
 		}
 
 		// Context context = this.context.getApplicationContext();
@@ -327,13 +329,13 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		private static final String LAST_SYNCHRONIZATION = "Last synchronization";
 
 		private static final String MAP_DESCRIPTION = "Not syncronized yet";
-		private static final String FOLDER_DESCRIPTION = "Folder";
+		private static final String FOLDER_DESCRIPTION = "";
 
 		public ComappingMetamapCursor(Topic topic) {
 			currentLevel = getItems(topic.getChildTopics());
 			this.moveToFirst();
 		}
-		
+
 		public ComappingMetamapCursor(MetaMapItem[] items) {
 			currentLevel = items;
 			this.moveToFirst();
@@ -359,8 +361,10 @@ public class ComappingMapContentProvider extends MapContentProvider {
 						res[i].sizeInBytes = client.getMapSizeInBytes(topics[i].getMapRef(), true);
 					} catch (ConnectionException e) {
 						res[i].sizeInBytes = -1;
+					} catch (LoginInterruptedException e) {
+						res[i].sizeInBytes = -1;
 					}
-					
+
 					res[i].description = getMapDescription(res[i]);
 				}
 			}
@@ -412,7 +416,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			Timestamp lastSynchronizationDate = item.lastSynchronizationDate;
 
 			if (lastSynchronizationDate == null) {
-				return MAP_DESCRIPTION + "\nSize: " + getSize(item.sizeInBytes);
+				return MAP_DESCRIPTION;
 			} else {
 				String result = LAST_SYNCHRONIZATION + ": " + getLastSynchronization(lastSynchronizationDate)
 						+ "\nSize: ";
