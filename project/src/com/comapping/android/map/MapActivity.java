@@ -511,8 +511,6 @@ public class MapActivity extends Activity {
 	// ===========================================================
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// MenuInflater inflater = getMenuInflater();
-		// inflater.inflate(R.menu.map, menu);
 
 		menu.add(0, MENU_SEARCH, 0, "Search").setIcon(
 				android.R.drawable.ic_menu_search);
