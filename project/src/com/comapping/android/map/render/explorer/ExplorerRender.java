@@ -273,7 +273,6 @@ public class ExplorerRender extends MapRender {
 	public void setBounds(int width, int height) {
 		screenWidth = width;
 		screenHeight = height;
-		Log.d(Log.EXPLORER_RENDER_TAG,"Size" + width + " " + height);
 		if (setBoundsNeeded) {
 			update();
 			selectTopic(selectedTopic);
