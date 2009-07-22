@@ -302,7 +302,10 @@ public class Client {
 
 			writer.close();
 		} catch (IOException e) {
-			if (code == 403) {
+			Log.w(Log.CONNECTION_TAG, e.toString());
+			Log.w(Log.CONNECTION_TAG, "code=" + code);
+			
+			if (code == 403 || (!isLoggedIn() && e.getMessage().equals("Received authentication challenge is null"))) {
 				throw new InvalidCredentialsException();
 			} else if (code == 401 || e.getMessage().equals("Received authentication challenge is null")) {
 				if (tryToLoginAgain) {
@@ -314,13 +317,9 @@ public class Client {
 					return res;
 				}
 				
-				Log.w(Log.CONNECTION_TAG, e.toString());
-				Log.w(Log.CONNECTION_TAG, "code=" + code);
 				tryToLoginAgain = true;
 				throw new ConnectionException();
 			} else {
-				Log.w(Log.CONNECTION_TAG, e.toString());
-				Log.w(Log.CONNECTION_TAG, "code=" + code);
 				throw new ConnectionException();
 			}
 		}
