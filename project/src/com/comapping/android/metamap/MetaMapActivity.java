@@ -51,7 +51,7 @@ public class MetaMapActivity extends Activity {
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
 
-	private static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open sdcard view";
+	private static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open SD card view";
 	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
 	private static final int MAX_MAP_SIZE_IN_BYTES = 100 * 1024; // 1MB

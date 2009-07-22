@@ -398,13 +398,13 @@ public class MapActivity extends Activity {
 					finish();
 				} catch (ConnectionRuntimeException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Connection error", true);				
+					showError("Connection error", true);
 				} catch (StringToXMLConvertionException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Wrong file format", true);					
+					showError("Wrong file format", true);
 				} catch (MapParsingException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Wrong file format", true);					
+					showError("Wrong file format", true);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -424,19 +424,32 @@ public class MapActivity extends Activity {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								String path = SAVE_FOLDER + "\\" + map.getName() + ".comap";
+								if (android.os.Environment
+										.getExternalStorageState()
+										.equals(
+												android.os.Environment.MEDIA_MOUNTED)) {
+									String path = SAVE_FOLDER + "\\"
+											+ map.getName() + ".comap";
 
-								File file = new File(SAVE_FOLDER);
-								file.mkdirs();
+									File file = new File(SAVE_FOLDER);
+									file.mkdirs();
 
-								file = new File(path);
-								try {
-									file.createNewFile();
-									FileOutputStream output = new FileOutputStream(file);
-									output.write(new XmlBuilder().buildXml(map).getBytes());
-									output.close();
-								} catch (IOException e) {
+									file = new File(path);
+									try {
+										file.createNewFile();
+										FileOutputStream output = new FileOutputStream(
+												file);
+										output.write(new XmlBuilder().buildXml(
+												map).getBytes());
+										output.close();
+									} catch (IOException e) {
 
+									}
+								} else {
+									(new AlertDialog.Builder(getCurrentActivity())
+											.setTitle("Alert Message")
+											.setMessage("You can't download this file, because SD card is not installed."))
+											.show();
 								}
 							}
 						}).setNegativeButton("No",
@@ -507,7 +520,7 @@ public class MapActivity extends Activity {
 			return true;
 		case R.id.save_as:
 			saveMapAs();
-			return true;		
+			return true;
 		case R.id.switchView:
 			finish();
 			if (viewType.equals(Constants.VIEW_TYPE_COMAPPING)) {
@@ -518,7 +531,7 @@ public class MapActivity extends Activity {
 			openMap(mapRef, viewType, false, this);
 			return true;
 		}
-		
+
 		return false;
 	}
 
