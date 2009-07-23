@@ -32,7 +32,7 @@ public class LoginActivityTest extends
 	 * at all.
 	 */
 	public LoginActivityTest() {
-		super("com.comapping.android.controller", LoginActivity.class);
+		super("com.comapping.android", LoginActivity.class);
 	}
 
 	@Override

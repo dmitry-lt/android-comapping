@@ -13,7 +13,7 @@
     "adb shell am instrument -w com.comapping.android.tests/android.test.InstrumentationTestRunner"
     -->
     <instrumentation android:name="android.test.InstrumentationTestRunner"
-                     android:targetPackage="com.comapping.android.controller"
+                     android:targetPackage="com.comapping.android"
                      android:label="Tests for Comapping."/>
 
 <uses-sdk android:minSdkVersion="3"></uses-sdk>
