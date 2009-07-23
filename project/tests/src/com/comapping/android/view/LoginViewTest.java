@@ -1,7 +1,7 @@
 package com.comapping.android.view;
 
 
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 
 import android.content.Context;
 import android.test.AndroidTestCase;
