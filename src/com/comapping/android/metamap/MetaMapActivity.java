@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -73,6 +74,7 @@ public class MetaMapActivity extends Activity {
 	private static MetaMapProvider currentProvider = null;
 
 	private MetaMapItem[] metaMapItems;
+	private AboutDialog aboutDialog;
 
 	// ====================================================
 	// Live Cycle
@@ -573,6 +575,12 @@ public class MetaMapActivity extends Activity {
 			logout();
 			return true;
 		case MENU_ABOUT:
+			Log.e("" + Log.ERROR,getBaseContext().toString());
+			if(aboutDialog==null){
+				aboutDialog = new AboutDialog(this);
+			}
+			aboutDialog.show();
+			
 			return true;
 		}
 
