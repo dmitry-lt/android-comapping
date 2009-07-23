@@ -54,6 +54,7 @@ public class MetaMapActivity extends Activity {
 	// Identifiers for our menu items.
 	private static final int MENU_LOGOUT = Menu.FIRST;
 	private static final int MENU_PREFERENCES = Menu.FIRST + 1;
+	private static final int MENU_ABOUT = Menu.FIRST + 2;
 
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
@@ -238,7 +239,7 @@ public class MetaMapActivity extends Activity {
 				});
 			}
 		};
-		
+
 		splash.setCancelable(true);
 
 		splash.setOnCancelListener(new OnCancelListener() {
@@ -246,10 +247,10 @@ public class MetaMapActivity extends Activity {
 				splash.dismiss();
 				workThread.interrupt();
 				workThread.setPriority(Thread.MIN_PRIORITY);
-				
+
 			}
 		});
-		
+
 		workThread.start();
 	}
 
@@ -557,6 +558,9 @@ public class MetaMapActivity extends Activity {
 		menu.add(0, MENU_PREFERENCES, 0, "Preferences").setIcon(
 				android.R.drawable.ic_menu_preferences);
 
+		menu.add(0, MENU_ABOUT, 0, "About").setIcon(
+				android.R.drawable.ic_menu_info_details);
+
 		return true;
 	}
 
@@ -567,6 +571,8 @@ public class MetaMapActivity extends Activity {
 			return true;
 		case MENU_LOGOUT:
 			logout();
+			return true;
+		case MENU_ABOUT:
 			return true;
 		}
 
