@@ -123,8 +123,8 @@ public class XmlBuilder {
 				output = output.replace("&", "&amp;");
 				output = output.replace(">", "&gt;");
 				output = output.replace("<", "&lt;");
-				output = output.replace("\"", "&apos;");
-				output = output.replace("'", "&quot;");
+				output = output.replace("'", "&apos;");
+				output = output.replace("`", "&quot;");
 				result.append(output);
 				if (format.isUnderlined()) {
 					result.append("</" + FormattedTextSaxBuilder.UNDERLINED_TAG + ">");

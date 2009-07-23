@@ -70,8 +70,8 @@ public class TextBlock implements Serializable {
 		String res = htmlString
 			.replace("&gt;", ">")
 			.replace("&lt;", "<")
-			.replace("&apos;", "\"")
-			.replace("&quot;", "'")
+			.replace("&apos;", "'")
+			.replace("&quot;", "`")
 			.replace("&amp;", "&");
 		
 		return res;
