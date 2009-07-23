@@ -365,9 +365,11 @@ public class MapActivity extends Activity {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		if (onSearchProcess())
 			return;
+		
+		splashActivate("Loading map", true);
 
 		parseIntentParameters();
 

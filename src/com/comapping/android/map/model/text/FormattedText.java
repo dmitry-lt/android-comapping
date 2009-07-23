@@ -42,8 +42,7 @@ public class FormattedText implements Serializable {
 
 	public FormattedText(String text, TextFormat format) {
 		this();
-		text = processHtmlString(text);
-		
+	
 		int pos = 0;
 		while (pos < text.length()) {
 			int lineEndPos = text.indexOf('\n', pos);
@@ -97,17 +96,5 @@ public class FormattedText implements Serializable {
 	
 	public String toString() {
 		return getSimpleText();
-	}
-	
-	public static String processHtmlString(String htmlString)
-	{
-		String res = htmlString
-			.replace("&gt;", ">")
-			.replace("&lt;", "<")
-			.replace("&apos;", "\"")
-			.replace("&quot;", "'")
-			.replace("&amp;", "&");
-		
-		return res;
 	}
 }
