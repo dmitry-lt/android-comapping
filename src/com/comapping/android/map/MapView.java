@@ -193,6 +193,8 @@ public class MapView extends View {
 		background.setAlpha(127);
 		
 		zoomUpdateThread.start();
+		
+		requestFocus();
 	}
 
 	void initScrolling(Context context) {
