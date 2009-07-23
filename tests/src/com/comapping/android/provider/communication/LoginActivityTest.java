@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.comapping.android.Log;
-import com.comapping.android.controller.R;
+import com.comapping.android.R;
 import com.comapping.android.provider.communication.exceptions.ConnectionException;
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
@@ -33,7 +33,7 @@ public class LoginActivityTest extends
 	 * at all.
 	 */
 	public LoginActivityTest() {
-		super("com.comapping.android.controller", LoginActivity.class);
+		super("com.comapping.android", LoginActivity.class);
 	}
 
 	@Override
