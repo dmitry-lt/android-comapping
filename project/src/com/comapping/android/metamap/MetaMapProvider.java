@@ -93,6 +93,7 @@ public class MetaMapProvider {
 
 	public boolean sync() {
 		query(info.sync);
+		info.setLogout(true);
 		return false;
 	}
 
