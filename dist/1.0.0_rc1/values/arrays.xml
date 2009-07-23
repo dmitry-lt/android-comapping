@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string-array name="view_types">
-		<item>@string/explorer_view_value</item>
-		<item>@string/comapping_view_value</item>
-	</string-array>
-</resources>
