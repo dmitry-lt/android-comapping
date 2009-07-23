@@ -17,6 +17,24 @@ import com.comapping.android.map.model.exceptions.StringToXMLConvertionException
 import com.comapping.android.map.model.text.FormattedText;
 import com.comapping.android.map.model.text.TextFormat;
 
+//======================================================
+//======================================================
+// ==================HACK WARNING! =====================
+//======================================================
+//======================================================
+// Ugly "&" Fix for URL and TURNING OFF "&apos;" and etc 
+// processing by parser!!!!!!!!
+// Processing of this is now by hand in 
+// FormattedText.processHtmlString. it AUTOMATICALY 
+// calls in FormattedText(String,String)!!
+//======================================================
+//======================================================
+//================== ORLY?! WHY?! ======================
+//======================================================
+// XML doesnt support '&' in arguments
+// but link often contains it
+//======================================================
+
 public class FormattedTextSaxBuilder {
 
 	public static final String PARAGRAPH_TAG = "P";
@@ -63,15 +81,11 @@ public class FormattedTextSaxBuilder {
 		
 		if (!xmlString.contains("<"))
 		{
-			xmlString = xmlString.replace("&gt;", ">");
-			xmlString = xmlString.replace("&lt;", "<");
-			xmlString = xmlString.replace("&apos;", "\"");
-			xmlString = xmlString.replace("&quot;", "'");
-			xmlString = xmlString.replace("&amp;", "&");
 			return new FormattedText(xmlString, getDefFormat());
 		}
 		
-		// Ugly "&" Fix
+		// Ugly "&" Fix and TURNING OFF "&apos;" and etc processing!!!!!!!!
+		// Processing of this is now in FormattedText.processHtmlString
 		xmlString = xmlString.replace('&', FormattedTextSaxHandler.AndReplacer);
 
 		if (xmlString.startsWith("<P")) {
