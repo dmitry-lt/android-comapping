@@ -18,24 +18,28 @@
 					android:title="@string/use_proxy_preference_title" />
 				<EditTextPreference android:key="@string/proxy_host_preference_key"
 					android:title="@string/proxy_host_preference_title"
-					android:dependency="@string/use_proxy_preference_key" />
+					android:dependency="@string/use_proxy_preference_key"
+					android:hint="Enter proxy host"/>
 				<EditTextPreference android:key="@string/proxy_port_preference_key"
 					android:title="@string/proxy_port_preference_title"
 					android:dependency="@string/use_proxy_preference_key"
 					android:numeric="integer"
                     android:maxLength="4"
-                    android:hint="Enter distance (max 9999)"/>
+                    android:hint="Enter port number (max 65536)"/>
 			</PreferenceCategory>
 			<PreferenceCategory android:title="Proxy Auth">
 				<CheckBoxPreference android:key="@string/use_proxy_auth_preference_key"
 					android:title="@string/use_proxy_auth_preference_title"
-					android:dependency="@string/use_proxy_preference_key" />
+					android:dependency="@string/use_proxy_preference_key" 
+					/>
 				<EditTextPreference android:key="@string/proxy_name_preference_key"
 					android:title="@string/proxy_name_preference_title"
-					android:dependency="@string/use_proxy_auth_preference_key" />
+					android:dependency="@string/use_proxy_auth_preference_key" 
+					android:hint="Enter Login for proxy"/>
 				<EditTextPreference android:key="@string/proxy_password_preference_key"
 					android:title="@string/proxy_password_preference_title"
-					android:dependency="@string/use_proxy_auth_preference_key" />
+					android:dependency="@string/use_proxy_auth_preference_key" 
+					android:hint="Enter Pass for proxy"/>
 			</PreferenceCategory>
 		</PreferenceScreen>
 	</PreferenceCategory>
