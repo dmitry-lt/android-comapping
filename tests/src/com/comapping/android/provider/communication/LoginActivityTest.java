@@ -3,7 +3,6 @@ package com.comapping.android.provider.communication;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.test.suitebuilder.annotation.SmallTest;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.CheckBox;
