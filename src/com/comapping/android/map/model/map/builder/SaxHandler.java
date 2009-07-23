@@ -99,74 +99,80 @@ class SaxHandler extends DefaultHandler {
 		try {
 			if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
 				isTextTag = true;
-			} else if (localName.equals(MapBuilder.TOPIC_TAG)) {
-				currentTopic = new Topic(currentTopic);
-				getTopicAttributes(attributes);
-				if (currentTopic.isRoot()) {
-					map.setRoot(currentTopic);
-				} else {
-					currentTopic.getParent().addChild(currentTopic);
-				}
-			} else if (localName.equals(MapBuilder.TOPIC_ICON_TAG)) {
+				topicText = "";
+			} else {
+				isTextTag = false;
+				if (localName.equals(MapBuilder.TOPIC_TAG)) {
+					currentTopic = new Topic(currentTopic);
+					getTopicAttributes(attributes);
+					if (currentTopic.isRoot()) {
+						map.setRoot(currentTopic);
+					} else {
+						currentTopic.getParent().addChild(currentTopic);
+					}
+				} else if (localName.equals(MapBuilder.TOPIC_ICON_TAG)) {
 
-				String iconName = attributes
-						.getValue(MapBuilder.ICON_NAME_ATTR);
-				Icon icon = Icon.parse(iconName);
-				if (icon != null) {
-					currentTopic.addIcon(Icon.parse(iconName));
-				}
+					String iconName = attributes
+							.getValue(MapBuilder.ICON_NAME_ATTR);
+					Icon icon = Icon.parse(iconName);
+					if (icon != null) {
+						currentTopic.addIcon(Icon.parse(iconName));
+					}
 
-			} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
-				String note = attributes.getValue(MapBuilder.NOTE_TEXT_ATTR);
-				if (note != null) {
-					currentTopic.setNote(note);
-					noteText = null;
-				} else {
-					isNoteTag = true;
-					noteText = "";
-				}
+				} else if (localName.equals(MapBuilder.TOPIC_NOTE_TAG)) {
+					String note = attributes
+							.getValue(MapBuilder.NOTE_TEXT_ATTR);
+					if (note != null) {
+						currentTopic.setNote(note);
+						noteText = null;
+					} else {
+						isNoteTag = true;
+						noteText = "";
+					}
 
-			} else if (localName.equals(MapBuilder.TOPIC_TASK_TAG)) {
-				String start = attributes.getValue(MapBuilder.TASK_START_ATTR);
-				String deadline = attributes
-						.getValue(MapBuilder.TASK_DEADLINE_ATTR);
-				String responsible = attributes
-						.getValue(MapBuilder.TASK_RESPONSIBLE_ATTR);
-				String estimate = attributes
-						.getValue(MapBuilder.TASK_ESTIMATE_ATTR);
-				Task task = new Task(start, deadline, responsible, estimate);
-				currentTopic.setTask(task);
-			} else if (localName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
-				Date date = new Date((long) Float.parseFloat(attributes
-						.getValue(MapBuilder.ATTACHMENT_DATE_ATTR)));
-				String filename = attributes
-						.getValue(MapBuilder.ATTACHMENT_FILENAME_ATTR);
-				String key = attributes
-						.getValue(MapBuilder.ATTACHMENT_KEY_ATTR);
-				int size = Integer.parseInt(attributes
-						.getValue(MapBuilder.ATTACHMENT_SIZE_ATTR));
-				Attachment attachment = new Attachment(date, filename, key,
-						size);
-				currentTopic.setAttachment(attachment);
-			} else if (!hasMeta) {
-				if (localName.equals(MapBuilder.METADATA_TAG)) {
-				} else if (localName.equals(MapBuilder.MAP_ID_TAG)
-						&& mapId == 0) {
-					isMapIDTag = true;
-				} else if (localName.equals(MapBuilder.MAP_NAME_TAG)
-						&& mapName == null) {
-					isMapNameTag = true;
-				} else if (localName.equals(MapBuilder.MAP_OWNER_TAG)) {
-					isOwnerTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_ID_TAG)
-						&& isOwnerTag) {
-					isOwnerIDTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_NAME_TAG)
-						&& isOwnerTag) {
-					isOwnerNameTag = true;
-				} else if (localName.equals(MapBuilder.OWNER_EMAIL_TAG)
-						&& isOwnerTag) {
-					isOwnerEmailTag = true;
+				} else if (localName.equals(MapBuilder.TOPIC_TASK_TAG)) {
+					String start = attributes
+							.getValue(MapBuilder.TASK_START_ATTR);
+					String deadline = attributes
+							.getValue(MapBuilder.TASK_DEADLINE_ATTR);
+					String responsible = attributes
+							.getValue(MapBuilder.TASK_RESPONSIBLE_ATTR);
+					String estimate = attributes
+							.getValue(MapBuilder.TASK_ESTIMATE_ATTR);
+					Task task = new Task(start, deadline, responsible, estimate);
+					currentTopic.setTask(task);
+				} else if (localName.equals(MapBuilder.TOPIC_ATTACHMENT_TAG)) {
+					Date date = new Date((long) Float.parseFloat(attributes
+							.getValue(MapBuilder.ATTACHMENT_DATE_ATTR)));
+					String filename = attributes
+							.getValue(MapBuilder.ATTACHMENT_FILENAME_ATTR);
+					String key = attributes
+							.getValue(MapBuilder.ATTACHMENT_KEY_ATTR);
+					int size = Integer.parseInt(attributes
+							.getValue(MapBuilder.ATTACHMENT_SIZE_ATTR));
+					Attachment attachment = new Attachment(date, filename, key,
+							size);
+					currentTopic.setAttachment(attachment);
+				} else if (!hasMeta) {
+					if (localName.equals(MapBuilder.METADATA_TAG)) {
+					} else if (localName.equals(MapBuilder.MAP_ID_TAG)
+							&& mapId == 0) {
+						isMapIDTag = true;
+					} else if (localName.equals(MapBuilder.MAP_NAME_TAG)
+							&& mapName == null) {
+						isMapNameTag = true;
+					} else if (localName.equals(MapBuilder.MAP_OWNER_TAG)) {
+						isOwnerTag = true;
+					} else if (localName.equals(MapBuilder.OWNER_ID_TAG)
+							&& isOwnerTag) {
+						isOwnerIDTag = true;
+					} else if (localName.equals(MapBuilder.OWNER_NAME_TAG)
+							&& isOwnerTag) {
+						isOwnerNameTag = true;
+					} else if (localName.equals(MapBuilder.OWNER_EMAIL_TAG)
+							&& isOwnerTag) {
+						isOwnerEmailTag = true;
+					}
 				}
 			}
 
@@ -246,8 +252,7 @@ class SaxHandler extends DefaultHandler {
 	public void characters(char[] ch, int start, int len) throws SAXException {
 		String string = new String(ch, start, len);
 		if (isTextTag) {
-			topicText = string;
-			isTextTag = false;
+			topicText += string;
 		} else if (isNoteTag) {
 			noteText += string;
 		} else if (!hasMeta) {
