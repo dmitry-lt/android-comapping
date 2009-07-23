@@ -47,10 +47,11 @@ public class MetaMapActivity extends Activity {
 	private static final int HOME = R.id.homeButton;
 	private static final int SYNC = R.id.synchronizeButton;
 	private static final int SWITCHER = R.id.viewSwitcher;
-	
-	//Identifiers for our menu items.
+
+	// Identifiers for our menu items.
 	private static final int MENU_LOGOUT = Menu.FIRST;
 	private static final int MENU_PREFERENCES = Menu.FIRST + 1;
+	private static final int MENU_ABOUT = Menu.FIRST + 2;
 
 	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
 	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
@@ -249,7 +250,7 @@ public class MetaMapActivity extends Activity {
 				disableButton(SWITCHER);
 				((ImageButton) findViewById(SWITCHER))
 						.setImageResource(R.drawable.metamap_sdcard_grey);
-				
+
 			}
 		} else {
 			((ImageButton) findViewById(SWITCHER))
@@ -502,12 +503,14 @@ public class MetaMapActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 
-		  menu.add(0,MENU_LOGOUT,0,"Logout")
-		  .setIcon(R.drawable.menu_logout)
-		  .setEnabled(currentProvider.canLogout());
-		
-		  menu.add(0,MENU_PREFERENCES,0,"Preferences")
-	      .setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(0, MENU_LOGOUT, 0, "Logout").setIcon(R.drawable.menu_logout)
+				.setEnabled(currentProvider.canLogout());
+
+		menu.add(0, MENU_PREFERENCES, 0, "Preferences").setIcon(
+				android.R.drawable.ic_menu_preferences);
+
+		menu.add(0, MENU_ABOUT, 0, "About").setIcon(
+				android.R.drawable.ic_menu_info_details);
 
 		return true;
 	}
@@ -520,8 +523,9 @@ public class MetaMapActivity extends Activity {
 		case MENU_LOGOUT:
 			logout();
 			return true;
+		case MENU_ABOUT:
+			return true;
 		}
-
 		return false;
 	}
 }
