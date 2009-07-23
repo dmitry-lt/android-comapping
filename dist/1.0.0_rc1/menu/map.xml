@@ -1,0 +1,30 @@
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:icon="@drawable/menu_search"
+		android:title="Search"
+		android:id="@+id/search"
+	/>
+	
+		<item
+		android:icon="@drawable/menu_zoom"
+		android:id="@+id/zoom"
+	android:title="Zoom"/>
+	
+	<item
+		android:title="Switch view"
+		android:id="@+id/switchView"
+	android:icon="@drawable/menu_switchview"/>
+	
+	<item
+		android:icon="@drawable/menu_sync"
+		android:title="Synchronize"
+		android:id="@+id/sync"
+	/>
+
+	<item
+		android:title="Save as"
+		android:id="@+id/save_as"
+		android:icon="@drawable/menu_save"
+	/>
+</menu> 
