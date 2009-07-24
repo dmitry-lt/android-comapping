@@ -9,8 +9,8 @@ import com.comapping.android.R;
 
 public class AboutDialog implements OnClickListener {
 
-	private static final String ABOUT_STRING = "About\nAndroid Comapping:";
-	private static final String DEVELOPERS_STRING = "Version: 1.0\nRelease date: 23.07.09\n\nDevelopers:\nTimur Abishev\nDmitriy Kozorez\nStepan Korshakov\nVladimir Kulikov\nDmitriy Manaev\nVictor Passichenko\nYuri Zemlyanskiy\n\nProject managers:\nNikolay Artamonov\nDmitriy Kichinsky\n";
+	private static final String ABOUT_STRING = "About\nAndroid Comapping";
+	private static final String DEVELOPERS_STRING = "Version: 1.0.0\nRelease date: 23.07.09\n\nDevelopers:\nTimur Abishev\nStepan Korshakov\nDmitriy Kozorez\nVladimir Kulikov\nDmitriy Manaev\nVictor Passichenko\nYuri Zemlyanskiy\n\nProject managers:\nNikolay Artamonov\nDmitriy Kichinsky\n";
 	
 	/** the dialog itself */
 	private AlertDialog dialog;
@@ -27,7 +27,7 @@ public class AboutDialog implements OnClickListener {
 
 		this.builder = new AlertDialog.Builder(context);
 		this.builder.setTitle(ABOUT_STRING);
-		this.builder.setIcon(R.drawable.matmex_small);
+		this.builder.setIcon(R.drawable.logo_small);
 		this.builder.setMessage(DEVELOPERS_STRING);
 		this.builder.setPositiveButton("Hide", this);
 	}
