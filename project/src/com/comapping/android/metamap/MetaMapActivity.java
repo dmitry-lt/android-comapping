@@ -291,7 +291,7 @@ public class MetaMapActivity extends Activity {
 			resource = R.drawable.metamap_home;
 			break;
 		case SYNC:
-			resource = R.drawable.menu_reload;
+			resource = R.drawable.metamap_sync;
 			break;
 		default:
 			return;
@@ -315,7 +315,7 @@ public class MetaMapActivity extends Activity {
 			resource = R.drawable.metamap_home_grey;
 			break;
 		case SYNC:
-			resource = R.drawable.menu_reload_grey;
+			resource = R.drawable.metamap_sync_grey;
 			break;
 		case SWITCHER:
 			resource = R.drawable.metamap_sdcard;

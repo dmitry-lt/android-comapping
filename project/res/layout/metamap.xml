@@ -28,7 +28,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/synchronizeButton"
-				android:src="@drawable/menu_sync"
+				android:src="@drawable/metamap_sync"
 				android:visibility="visible">
 			</ImageButton>
 			<ImageButton 
@@ -42,18 +42,16 @@
 			android:id="@+id/listView"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:layout_below="@+id/metaMapButtons">
-			
-		
+			android:layout_below="@+id/metaMapButtons">		
 		</ListView>
 	</RelativeLayout>
-				<TextView
-					android:gravity="center"
-					android:layout_height="fill_parent"
-					android:width="200px"
-					android:layout_width="wrap_content"
-					android:layout_gravity="center"
-					android:text="Try to syncronize or open SD-card or other folder"
-					android:id="@+id/emptyListText">
-				</TextView>
+	<TextView
+		android:gravity="center"
+		android:layout_height="fill_parent"
+		android:width="200px"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center"
+		android:text="Try to syncronize or open SD-card or other folder"
+		android:id="@+id/emptyListText">
+	</TextView>
 </LinearLayout>
