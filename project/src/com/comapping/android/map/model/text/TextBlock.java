@@ -18,7 +18,7 @@ public class TextBlock implements Serializable {
 	}
 
 	public void setText(String text) {
-		this.text = (text != null) ? text : "";
+		this.text = processHtmlString((text != null) ? text : "");
 	}
 
 	public void setFormat(TextFormat format) {
@@ -63,5 +63,17 @@ public class TextBlock implements Serializable {
 	
 	public String toString() {
 		return getText();
+	}
+	
+	public static String processHtmlString(String htmlString)
+	{
+		String res = htmlString
+			.replace("&gt;", ">")
+			.replace("&lt;", "<")
+			.replace("&apos;", "'")
+			.replace("&quot;", "`")
+			.replace("&amp;", "&");
+		
+		return res;
 	}
 }

@@ -10,9 +10,13 @@ package com.comapping.android.metamap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -70,6 +74,7 @@ public class MetaMapActivity extends Activity {
 	private static MetaMapProvider currentProvider = null;
 
 	private MetaMapItem[] metaMapItems;
+	private AboutDialog aboutDialog;
 
 	// ====================================================
 	// Live Cycle
@@ -191,18 +196,64 @@ public class MetaMapActivity extends Activity {
 		updateMetaMap();
 	}
 
+	private ProgressDialog splash = null;
+
+	// ====================================================
+	// Splash Functions
+	// ====================================================
+
+	public void splashActivate(final String message, final boolean cancelable) {
+		final Activity context = this;
+
+		runOnUiThread(new Runnable() {
+			public void run() {
+				if (splash == null) {
+					splash = ProgressDialog.show(context, "Comapping", message);
+					// splash.setOnCancelListener(new OnCancelListener() {
+					//
+					// public void onCancel(DialogInterface dialog) {
+					// mapProcessingThread.interrupt();
+					// mapProcessingThread
+					// .setPriority(Thread.MIN_PRIORITY);
+					// finish();
+					// }
+					// });
+				} else {
+					splash.setMessage(message);
+				}
+				splash.setCancelable(cancelable);
+			}
+		});
+	}
+
 	public void sync() {
-		new Thread() {
+		final ProgressDialog splash = ProgressDialog.show(this, "Comapping",
+				"Loading Map List...");
+		final Thread workThread = new Thread() {
 			public void run() {
 				currentProvider.sync();
 
 				runOnUiThread(new Runnable() {
 					public void run() {
 						updateMetaMap();
+						splash.dismiss();
 					}
 				});
 			}
-		}.start();
+		};
+
+		splash.setCancelable(true);
+
+		splash.setOnCancelListener(new OnCancelListener() {
+			public void onCancel(DialogInterface dialog) {
+				splash.dismiss();
+				workThread.interrupt();
+				workThread.setPriority(Thread.MIN_PRIORITY);
+
+			}
+		});
+
+		workThread.start();
 	}
 
 	// ====================================================
@@ -524,8 +575,15 @@ public class MetaMapActivity extends Activity {
 			logout();
 			return true;
 		case MENU_ABOUT:
+			Log.e("" + Log.ERROR,getBaseContext().toString());
+			if(aboutDialog==null){
+				aboutDialog = new AboutDialog(this);
+			}
+			aboutDialog.show();
+			
 			return true;
 		}
+
 		return false;
 	}
 }

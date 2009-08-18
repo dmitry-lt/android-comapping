@@ -78,4 +78,6 @@ public class TextParagraph implements Serializable {
 	public String toString() {
 		return getSimpleText();
 	}
+	
+	
 }

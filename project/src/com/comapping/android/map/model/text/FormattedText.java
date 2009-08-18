@@ -13,6 +13,23 @@ import java.util.List;
  * @author Yuri Zemlyanskiy
  * 
  */
+//======================================================
+//======================================================
+//==================HACK WARNING! =====================
+//======================================================
+//======================================================
+//Ugly "&" Fix for URL and TURNING OFF "&apos;" and etc 
+//processing by parser!!!!!!!!
+//Processing of this is now by hand in 
+//FormattedText.processHtmlString. it AUTOMATICALY 
+//calls in FormattedText(String,String)!!
+//======================================================
+//======================================================
+//================== ORLY?! WHY?! ======================
+//======================================================
+//XML doesnt support '&' in arguments
+//but link often contains it
+//======================================================
 public class FormattedText implements Serializable {
 	private static final long serialVersionUID = -8707558569665486055L;
 
@@ -25,6 +42,7 @@ public class FormattedText implements Serializable {
 
 	public FormattedText(String text, TextFormat format) {
 		this();
+	
 		int pos = 0;
 		while (pos < text.length()) {
 			int lineEndPos = text.indexOf('\n', pos);
