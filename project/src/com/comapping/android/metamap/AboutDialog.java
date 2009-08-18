@@ -40,7 +40,6 @@ public class AboutDialog implements OnClickListener {
 	 * @param context
 	 */
 	public AboutDialog(Context context) {
-
 		this.builder = new AlertDialog.Builder(context);
 		this.builder.setTitle(ABOUT_STRING);
 		this.builder.setIcon(R.drawable.app_icon_64);
@@ -70,7 +69,6 @@ public class AboutDialog implements OnClickListener {
 	/**
 	 * handles button clicks
 	 */
-
 	public void onClick(DialogInterface dialog, int button) {
 		if (dialog == this.dialog) {
 			if (button == DialogInterface.BUTTON_POSITIVE) {
