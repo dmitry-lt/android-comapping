@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -64,7 +65,7 @@ public class MetaMapActivity extends Activity {
 	private static final String PLEASE_SYNCHRONIZE_NOSDMESSAGE = "Please synchronize your map list.";
 	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
-	private static final int MAX_MAP_SIZE_IN_BYTES = 200 * 1024; // 1MB
+	private static final int MAX_MAP_SIZE_IN_BYTES = 200 * 1024;
 
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
@@ -456,6 +457,16 @@ public class MetaMapActivity extends Activity {
 				sync();
 			}
 		});
+		
+		// Welcome map
+
+		Button welcomeButton = (Button) findViewById(R.id.welcome);
+		final Context context = this;
+		welcomeButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				 new AlertDialog.Builder(context).setMessage("Welcome!").show();
+			}
+		});		
 	}
 
 	void initListView() {

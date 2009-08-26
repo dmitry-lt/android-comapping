@@ -11,8 +11,6 @@ package com.comapping.android.provider.communication;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Shader.TileMode;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -196,13 +194,6 @@ public class LoginActivity extends Activity {
 				((TextView) findViewById(R.id.password)).requestFocus();
 			}
 		}
-
-		// set background
-		BitmapDrawable background = (BitmapDrawable) getResources()
-				.getDrawable(R.drawable.login_background);
-		background.setTileModeX(TileMode.REPEAT);
-		background.setTileModeY(TileMode.REPEAT);
-		findViewById(R.id.loginLayout).setBackgroundDrawable(background);
 
 		if (isWorking) {
 //			Log.d("Logic Activity", "splash activate start");
