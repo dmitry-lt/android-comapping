@@ -30,6 +30,7 @@ import com.comapping.android.provider.communication.exceptions.ConnectionExcepti
 import com.comapping.android.provider.communication.exceptions.InvalidCredentialsException;
 import com.comapping.android.provider.communication.exceptions.LoginInterruptedException;
 import com.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
+import com.comapping.android.provider.ioHelper;
 import com.comapping.android.storage.SqliteMapCache;
 
 public class Client {
@@ -299,7 +300,7 @@ public class Client {
 
 			code = connection.getResponseCode();
 
-			responseText = getTextFromInputStream(connection.getInputStream());
+			responseText = ioHelper.getTextFromInputStream(connection.getInputStream());
 
 			writer.close();
 		} catch (IOException e) {

@@ -1,11 +1,6 @@
 package com.comapping.android.provider.contentprovider;
 
-import com.comapping.android.Log;
-
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -15,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.comapping.android.metamap.MetaMapItem;
+import com.comapping.android.provider.ioHelper;
 import com.comapping.android.provider.contentprovider.exceptions.*;
 
 public abstract class MapContentProvider extends ContentProvider {
@@ -37,33 +33,12 @@ public abstract class MapContentProvider extends ContentProvider {
 		if (mapRef.equals("content://resources/welcome")) {
 			// TODO: create normal Resource map provider
 			InputStream input = context.getResources().openRawResource(com.comapping.android.R.raw.welcome);
-			return getTextFromInputStream(input);
+			return ioHelper.getTextFromInputStream(input);
 		} else {
 			mapRef = infoForParameters.setIgnoreCache(mapRef, ignoreCache);
 			mapRef = infoForParameters.setIgnoreInternet(mapRef, ignoreInternet);
 			return getComap(mapRef, context);
 		}
-	}
-	
-	private static String getTextFromInputStream(InputStream input) {
-		StringBuffer content = new StringBuffer();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(input), 8 * 1024);
-		try {			
-			String line = null;
-			String separator = System.getProperty("line.separator");
-			while ((line = reader.readLine()) != null) {
-				content.append(line).append(separator);
-			}			
-		} catch (IOException e) {
-			Log.e(Log.PROVIDER_TAG, e.toString());
-		} finally {
-			try {
-				input.close();
-			} catch (IOException e) {
-				Log.e(Log.PROVIDER_TAG, e.toString());
-			}
-		}
-		return content.toString();
 	}
 	
 	public static class MapContentProviderInfo {

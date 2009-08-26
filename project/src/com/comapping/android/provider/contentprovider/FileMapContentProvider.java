@@ -1,13 +1,10 @@
 package com.comapping.android.provider.contentprovider;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.util.List;
 
 import android.database.Cursor;
@@ -15,7 +12,7 @@ import android.net.Uri;
 
 import com.comapping.android.Log;
 import com.comapping.android.metamap.MetaMapItem;
-
+import com.comapping.android.provider.ioHelper;
 
 public class FileMapContentProvider extends MapContentProvider {
 
@@ -207,31 +204,6 @@ public class FileMapContentProvider extends MapContentProvider {
 
 	private class FileMapCursor extends MapCursor {
 
-		protected String getTextFromInputStream(InputStream input)
-				throws IOException {
-			StringBuffer content = new StringBuffer();
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					input), 8 * 1024);
-
-			String line = null;
-			boolean first = true;
-
-			while ((line = reader.readLine()) != null) {
-				if (!first) {
-					content.append(System.getProperty("line.separator"));
-				} else {
-					first = false;
-				}
-
-				content.append(line);
-			}
-
-			reader.close();
-
-			return content.toString();
-		}
-
 		public FileMapCursor(String mapId) {
 			this.id = mapId;
 
@@ -239,11 +211,9 @@ public class FileMapContentProvider extends MapContentProvider {
 
 			try {
 				Log.w(Log.PROVIDER_FILE_TAG, mapId);
-				response = getTextFromInputStream(new FileInputStream(mapId));
+				response = ioHelper.getTextFromInputStream(new FileInputStream(mapId));
 			} catch (FileNotFoundException e) {
 				Log.e(Log.PROVIDER_FILE_TAG, "map file not found");
-			} catch (IOException e) {
-				Log.e(Log.PROVIDER_FILE_TAG, "map file IO exception");
 			}
 
 			this.text = response;

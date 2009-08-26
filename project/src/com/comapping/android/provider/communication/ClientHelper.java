@@ -6,10 +6,6 @@
  */
 package com.comapping.android.provider.communication;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -53,39 +49,6 @@ public class ClientHelper {
 		}
 
 		return output.toString();
-	}
-
-	/**
-	 * Method for getting text from InputStream
-	 * 
-	 * @param input
-	 *            InputStream
-	 * @return Text Text from InputStream
-	 * @throws IOException
-	 */
-	public static String getTextFromInputStream(InputStream input)
-			throws IOException {
-		StringBuffer content = new StringBuffer();
-
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(input), 8 * 1024);
-
-		String line = null;
-		boolean first = true;
-
-		while ((line = reader.readLine()) != null) {
-			if (!first) {
-				content.append(System.getProperty("line.separator"));
-			} else {
-				first = false;
-			}
-
-			content.append(line);
-		}
-
-		reader.close();
-
-		return content.toString();
 	}
 
 	/**
