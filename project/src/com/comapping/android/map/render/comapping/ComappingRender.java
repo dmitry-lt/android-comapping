@@ -290,7 +290,11 @@ public class ComappingRender extends MapRender {
 		if (itm.isOverButton(localX, localY)) {
 
 			changeChildVisibleStatus(itm);
-			focusTopic(itm);
+			if (itm.isChildrenVisible()) {
+				focusTopic(itm.children[0]);
+			} else {
+				focusTopic(itm);
+			}
 
 			return true;
 		} else if (itm.isOverTopic(localX, localY)) {
@@ -370,7 +374,7 @@ public class ComappingRender extends MapRender {
 		if (screenPosX < 0)
 			deltaX += screenPosX;
 		else if (screenPosX + topic.getFocusWidth() > renderZoneWidth)
-			deltaX += screenPosX + topic.getFocusWidth()- renderZoneWidth;
+			deltaX += screenPosX + topic.getFocusWidth() - renderZoneWidth;
 
 		if (screenPosY < 0)
 			deltaY += screenPosY;

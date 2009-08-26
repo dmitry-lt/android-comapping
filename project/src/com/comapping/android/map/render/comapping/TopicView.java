@@ -21,7 +21,7 @@ class TopicView {
 
 	private static final int HORIZONTAL_BORDER_SIZE = 10;
 	private static final int LINE_COLOR = Color.GRAY;
-	private static final int TEXT_WIDTH = 300;
+	private static final int TEXT_WIDTH = 270;
 
 	/* ------- Navigation data ------- */
 	public TopicView up = null;
@@ -428,13 +428,15 @@ class TopicView {
 	}
 	
 	
-	public int getFocusWidth()
-	{
-		return topicRender.getWidth();
+	public int getFocusWidth() {
+		int width = topicRender.getWidth();
+		if (topicData.getChildrenCount() != 0) {
+			width += plusMinusRender.getWidth();
+		}
+		return width;
 	}
 	
-	public int getFocusHeight()
-	{
+	public int getFocusHeight() {
 		return topicRender.getHeight();
 	}
 }
