@@ -107,7 +107,7 @@ public class Client {
 
 		if (loginResponse.charAt(0) == SALT_FLAG) {
 			// account with salt
-			String salt = loginResponse.substring(1);
+			String salt = loginResponse.substring(1).trim();
 
 			autoLoginKey = md5Encode(password + salt);
 
@@ -248,7 +248,9 @@ public class Client {
 			} catch (Exception e) {
 				throw new ConnectionException();
 			}
-
+			Log.d(Log.CONNECTION_TAG, "Use proxy host: " + proxyHost);
+			Log.d(Log.CONNECTION_TAG, "Use proxy port: " + proxyPort);
+			
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
 
@@ -258,6 +260,8 @@ public class Client {
 					PreferencesStorage.USE_PROXY_AUTH_DEFAULT_VALUE, context)) {
 				String proxyUser = PreferencesStorage.get(PreferencesStorage.PROXY_NAME_KEY, "", context);
 				String proxyPassword = PreferencesStorage.get(PreferencesStorage.PROXY_PASSWORD_KEY, "", context);;
+				Log.d(Log.CONNECTION_TAG, "Use proxy user: " + proxyUser);
+				Log.d(Log.CONNECTION_TAG, "Use proxy password: " + proxyPassword);
 				StringBuilder encodedInfo = new StringBuilder();
 				for (byte b : Base64Encoder.encodeBase64((proxyUser + ":" + proxyPassword).getBytes())) {
 					encodedInfo.append((char) b);
@@ -372,9 +376,12 @@ public class Client {
 
 	private void setClientId(String clientId) {
 		if (clientId != null) {
+			clientId = clientId.trim();
 			if (checkClientId(clientId)) {
 				this.clientId = clientId;
 				Log.i(Log.CONNECTION_TAG, email + " logged in!");
+			} else {
+				Log.e(Log.CONNECTION_TAG, "Invalid clientId `" + clientId + "` returned from server");
 			}
 		} else {
 			this.clientId = null;
