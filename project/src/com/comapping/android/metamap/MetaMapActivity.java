@@ -461,7 +461,6 @@ public class MetaMapActivity extends Activity {
 		// Welcome map
 
 		Button welcomeButton = (Button) findViewById(R.id.welcome);
-		final Context context = this;
 		final Activity currentActivity = this;
 		welcomeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
