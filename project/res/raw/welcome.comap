@@ -1,0 +1,151 @@
+<mindmap escape="false">
+  <metadata>
+    <id><![CDATA[63484]]></id>
+    <name><![CDATA[Andrid-Comapping-Demo]]></name>
+    <owner>
+      <id><![CDATA[491]]></id>
+      <name><![CDATA[Nickolay Artamonov]]></name>
+      <email><![CDATA[teshca@tepkom.ru]]></email>
+    </owner>
+    <access><![CDATA[Shared]]></access>
+    <source><![CDATA[Server]]></source>
+    <collaborators><![CDATA[dmitry.kichinsky@gmail.com]]></collaborators>
+    <watchers><![CDATA[]]></watchers>
+    <isTemplate><![CDATA[false]]></isTemplate>
+    <params/>
+  </metadata>
+  <presentation/>
+  <node id="10062342" locked="false">
+    <text><![CDATA[Andrid-Comapping-Demo]]></text>
+    <node id="10062343" locked="false">
+      <icon name="thumbs_up"/>
+      <text><![CDATA[<FONT SIZE="19" COLOR="#000000">Comapping</FONT>]]></text>
+      <node id="10062644" locked="false"><text><![CDATA[Comapping is the online software to manage and share information]]></text></node>
+      <node id="10062660" locked="false"><text><![CDATA[Use it to make notes, plan and organize]]></text></node>
+      <node id="10062743" locked="false"><text><![CDATA[It&apos;s a way to have one set of notes. One set of files. For everyone.]]></text></node>
+    </node>
+    <node id="10062796" locked="false">
+      <icon name="exclamation_mark"/>
+      <text><![CDATA[With this application you have access to all of your maps from your Android device]]></text>
+      <node id="10062803" locked="false">
+        <note><![CDATA[Now you have access to your maps everywhere!]]></note>
+        <text><![CDATA[You no longer need computer in order to view your maps]]></text>
+      </node>
+    </node>
+    <node id="10062795" locked="false" smiley="happy">
+      <text><![CDATA[User Guide]]></text>
+      <node flag="go" id="10062602" locked="false">
+        <text><![CDATA[<FONT FACE="myfont" SIZE="16" COLOR="#000000">How to get started?</FONT>]]></text>
+        <node id="10062895" priority="1">
+          <text><![CDATA[First you need to get map list from the server]]></text>
+          <node id="10062902" locked="false">
+            <icon name="needs_feedback"/>
+            <text><![CDATA[Use Synronize button]]></text>
+          </node>
+          <node id="10062904">
+            <text><![CDATA[Login to Comapping]]></text>
+            <node id="10062910"><text><![CDATA[If you don&apos;t have an account you can go to www.comapping.com and create one. It&apos;s free.]]></text></node>
+            <node id="10062943">
+              <text><![CDATA[If you don&apos;t want to register you can use demo account]]></text>
+              <node id="10062945" locked="false"><text><![CDATA[android-demo@comapping.com]]></text></node>
+              <node id="10062951" locked="false"><text><![CDATA[password is &apos;demo&apos;]]></text></node>
+            </node>
+          </node>
+        </node>
+        <node id="10062922" locked="false" priority="2"><text><![CDATA[Select a map you want to open]]></text></node>
+      </node>
+      <node id="10062894">
+        <text><![CDATA[Supported features]]></text>
+        <node id="10246846">
+          <text><![CDATA[Display all topic features ]]></text>
+          <node bgColor="13426162" id="10063071" locked="false"><text><![CDATA[<FONT SIZE="22" COLOR="#265999">Full<FONT SIZE="16"> support of <FONT COLOR="#6E8838">HTML <FONT SIZE="10" COLOR="#000001">formatting</FONT> feat<U>ures</U></FONT></FONT></FONT>]]></text></node>
+          <node id="10246896" locked="false">
+            <text><![CDATA[Links (url)]]></text>
+            <node id="10246897"><text><![CDATA[<FONT SIZE="16" COLOR="#0000FE"><A HREF="http://www.comapping.com" TARGET="_blank"><U>www.comapping.com</U></A></FONT>]]></text></node>
+          </node>
+          <node flag="caution" id="10246844" locked="false" priority="1" smiley="neutral" star="yellow" taskCompletion="50">
+            <icon name="exclamation_mark"/>
+            <icon name="tea_time"/>
+            <icon name="thumbs_up"/>
+            <icon name="heart"/>
+            <text><![CDATA[Icons]]></text>
+          </node>
+          <node id="10063124" locked="false">
+            <note><![CDATA[Android Comapping supports notes and tasks]]></note>
+            <text><![CDATA[Notes ]]></text>
+            <node id="10246854" locked="false"><text><![CDATA[You can tap on the note in order to see in in a popup diaog]]></text></node>
+          </node>
+          <node id="10063146">
+            <text><![CDATA[Tasks]]></text>
+            <node id="10063094" locked="false" priority="1" taskCompletion="100">
+              <task deadline="2009-08-31" estimate="1 hour" responsible="Amdroid Developers &lt;android@comapping.com&gt;" start="2009-08-04"/>
+              <text><![CDATA[Submit application to ADC 2]]></text>
+              <node id="10246856" locked="false"><text><![CDATA[You can tap on the task in order to see in in a popup diaog]]></text></node>
+            </node>
+          </node>
+          <node id="10246842" locked="false">
+            <attachment date="1.250329285e+12" filename="demo-attachment.txt" key="1250329279491" size="45"/>
+            <text><![CDATA[Attachments]]></text>
+            <node id="10246857" locked="false">
+              <note><![CDATA[You can change download folder in Preferences]]></note>
+              <text><![CDATA[You can tap on attachment icon if you want to download it]]></text>
+            </node>
+          </node>
+        </node>
+        <node id="10246847" locked="false">
+          <text><![CDATA[There are two types of map view]]></text>
+          <node id="10246848" locked="false" priority="1">
+            <note><![CDATA[Left-to right tree]]></note>
+            <text><![CDATA[Comapping style]]></text>
+            <node id="10246858"><text><![CDATA[It&apos;s better to use this view with horizontal screen orientation]]></text></node>
+          </node>
+          <node id="10246849" locked="false" priority="2">
+            <note><![CDATA[Tree view similar to Windows explorer]]></note>
+            <text><![CDATA[Outliner style]]></text>
+          </node>
+          <node id="10246853" locked="false">
+            <note><![CDATA[You can also change default view in Preferences. Or use long click over the map in the map list]]></note>
+            <text><![CDATA[You can switch the view of the map from menu]]></text>
+          </node>
+          <node id="10246861" locked="false"><text><![CDATA[Both horizontal and vertical screen orientations are supported]]></text></node>
+        </node>
+        <node id="10246865">
+          <text><![CDATA[Zoom]]></text>
+          <node id="10246878" locked="false"><text><![CDATA[You can make the map smaler  in order to see more information on the screen ]]></text></node>
+        </node>
+        <node id="10246876" locked="false">
+          <icon name="magnifier"/>
+          <note><![CDATA[You can use menu, or a special android search button]]></note>
+          <text><![CDATA[Search]]></text>
+          <node id="10246879" locked="false"><text><![CDATA[Search text inside the map]]></text></node>
+          <node id="10246881" locked="false"><text><![CDATA[Navigate throught the results]]></text></node>
+        </node>
+        <node id="10246891">
+          <text><![CDATA[Syncronization]]></text>
+          <node id="10246892" locked="false"><text><![CDATA[Once you get map from server we will cache it locally and will not retrieve it from server until you click syncronize button in menu]]></text></node>
+          <node id="10246893" locked="false"><text><![CDATA[The same is for map list. You can click refresh button in order to refresh your map list]]></text></node>
+          <node id="10246894" locked="false">
+            <icon name="idea"/>
+            <text><![CDATA[We did that in order to save your time and internet traffic]]></text>
+          </node>
+          <node id="10246895" locked="false">
+            <icon name="exclamation_mark"/>
+            <text><![CDATA[Note that we will clear this cache once you logout, unless you checked &apos;remember me&apos; when you logged in]]></text>
+          </node>
+        </node>
+        <node id="10246885">
+          <text><![CDATA[SD card support]]></text>
+          <node id="10246887">
+            <note><![CDATA[Use menu option 'Save as' for that]]></note>
+            <text><![CDATA[You can save any map to SD card]]></text>
+          </node>
+          <node id="10246889" locked="false">
+            <note><![CDATA[You can switch map list from online maps to browse your sd card]]></note>
+            <text><![CDATA[Then you are able to open your map form SD]]></text>
+          </node>
+        </node>
+      </node>
+      <node id="10246883" locked="false"><text><![CDATA[<FONT SIZE="16" COLOR="#0000FE"><A HREF="http://code.google.com/p/android-comapping/wiki/UserGguide" TARGET="_blank"><U>You can also check our online usergide</U></A></FONT>]]></text></node>
+    </node>
+  </node>
+</mindmap>

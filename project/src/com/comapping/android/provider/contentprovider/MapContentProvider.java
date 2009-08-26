@@ -1,5 +1,12 @@
 package com.comapping.android.provider.contentprovider;
 
+import com.comapping.android.Log;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,33 +19,60 @@ import com.comapping.android.provider.contentprovider.exceptions.*;
 
 public abstract class MapContentProvider extends ContentProvider {
 	public static final String CONTENT_PREFIX = "content://";
-
+	
 	public static final String ID = "id";
 	public static final String CONTENT = "content";
-
+	
 	private static MapContentProviderInfo infoForParameters = new MapContentProviderInfo();
-
+	
 	public static String getComap(String mapRef, Context context) {
 		Uri fullUri = Uri.parse(mapRef);
 		// Log.d(Log.PROVIDER_TAG, "getComap: uri=" + fullUri);
 		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);
-
+		
 		return cursor.getString(cursor.getColumnIndex(CONTENT));
 	}
-
+	
 	public static String getComap(String mapRef, boolean ignoreCache, boolean ignoreInternet, Context context) {
-		mapRef = infoForParameters.setIgnoreCache(mapRef, ignoreCache);
-		mapRef = infoForParameters.setIgnoreInternet(mapRef, ignoreInternet);
-		return getComap(mapRef, context);
+		if (mapRef.equals("content://resources/welcome")) {
+			// TODO: create normal Resource map provider
+			InputStream input = context.getResources().openRawResource(com.comapping.android.R.raw.welcome);
+			return getTextFromInputStream(input);
+		} else {
+			mapRef = infoForParameters.setIgnoreCache(mapRef, ignoreCache);
+			mapRef = infoForParameters.setIgnoreInternet(mapRef, ignoreInternet);
+			return getComap(mapRef, context);
+		}
 	}
-
+	
+	private static String getTextFromInputStream(InputStream input) {
+		StringBuffer content = new StringBuffer();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(input), 8 * 1024);
+		try {			
+			String line = null;
+			String separator = System.getProperty("line.separator");
+			while ((line = reader.readLine()) != null) {
+				content.append(line).append(separator);
+			}			
+		} catch (IOException e) {
+			Log.e(Log.PROVIDER_TAG, e.toString());
+		} finally {
+			try {
+				input.close();
+			} catch (IOException e) {
+				Log.e(Log.PROVIDER_TAG, e.toString());
+			}
+		}
+		return content.toString();
+	}
+	
 	public static class MapContentProviderInfo {
 		public final String authorities;
 		public final String separator;
 		public final String root;
 		public final String relRoot;
 		public final String login;
-		public final String relLogin;		
+		public final String relLogin;
 		public final String logout;
 		public final String relLogout;
 		public final String sync;
@@ -47,7 +81,7 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final boolean canSync;
 		public final String relFinishWork = "finish_work";
 		public final String finishWork;
-
+		
 		public final String ignoreCacheParameter = "ignoreCache";
 		public final String ignoreInternetParameter = "ignoreInternet";
 		public final String actionParameter = "action";
@@ -56,26 +90,26 @@ public abstract class MapContentProvider extends ContentProvider {
 		public final String defaultAction = "download";
 		public final String startDownloadingAction = "startDownloading";
 		public final String getMapSizeInBytesAction = "getMapSizeInBytes";
-
+		
 		private MapContentProviderInfo() {
 			this("", "", true, true);
 		}
-
+		
 		public MapContentProviderInfo(String authorities, String relRoot, boolean canLogout, boolean canSync) {
 			this(authorities, "/", relRoot, "login", "logout", "sync", canLogout, canSync);
 		}
-
-		public MapContentProviderInfo(String authorities, String separator, String relRoot, String relLogin, String relLogout,
-				String relSync, boolean canLogout, boolean canSync) {
+		
+		public MapContentProviderInfo(String authorities, String separator, String relRoot, String relLogin,
+				String relLogout, String relSync, boolean canLogout, boolean canSync) {
 			this.authorities = authorities;
 			this.separator = separator;
-
+			
 			if (relRoot.equals("")) {
 				this.root = authorities + separator;
 			} else {
 				this.root = authorities + separator + relRoot + separator;
 			}
-
+			
 			this.relRoot = relRoot;
 			this.login = authorities + separator + relLogin;
 			this.relLogin = relLogin;
@@ -85,15 +119,14 @@ public abstract class MapContentProvider extends ContentProvider {
 			this.relSync = relSync;
 			this.canLogout = canLogout;
 			this.canSync = canSync;
-
+			
 			this.finishWork = authorities + separator + relFinishWork;
 		}
-
-		public void setLogout(boolean canLogout)
-		{
+		
+		public void setLogout(boolean canLogout) {
 			this.canLogout = canLogout;
 		}
-
+		
 		private String setParameter(String uriString, String parameter, String value) {
 			int queryStart = uriString.lastIndexOf('?');
 			if (queryStart > -1) {
@@ -107,7 +140,7 @@ public abstract class MapContentProvider extends ContentProvider {
 					} else {
 						after = "";
 					}
-
+					
 					return before + value + after;
 				} else {
 					return uriString + "&" + parameter + "=" + value;
@@ -116,7 +149,7 @@ public abstract class MapContentProvider extends ContentProvider {
 				return uriString + "?" + parameter + "=" + value;
 			}
 		}
-
+		
 		private String getParameter(String uriString, String parameter) {
 			int queryStart = uriString.lastIndexOf('?');
 			if (queryStart > -1) {
@@ -130,7 +163,7 @@ public abstract class MapContentProvider extends ContentProvider {
 					} else {
 						valueEnd = uriString.length();
 					}
-
+					
 					return uriString.substring(valueStart, valueEnd);
 				} else {
 					return null;
@@ -139,11 +172,11 @@ public abstract class MapContentProvider extends ContentProvider {
 				return null;
 			}
 		}
-
+		
 		public String setIgnoreCache(String uriString, boolean ignoreCache) {
 			return setParameter(uriString, ignoreCacheParameter, String.valueOf(ignoreCache));
 		}
-
+		
 		public boolean isIgnoreCache(String uriString) {
 			String value = getParameter(uriString, ignoreCacheParameter);
 			if (value != null) {
@@ -155,8 +188,8 @@ public abstract class MapContentProvider extends ContentProvider {
 		
 		public String setIgnoreInternet(String uriString, boolean ignoreInternet) {
 			return setParameter(uriString, ignoreInternetParameter, String.valueOf(ignoreInternet));
-		}	
-
+		}
+		
 		public boolean isIgnoreInternet(String uriString) {
 			String value = getParameter(uriString, ignoreInternetParameter);
 			if (value != null) {
@@ -168,8 +201,8 @@ public abstract class MapContentProvider extends ContentProvider {
 		
 		public String setAction(String uriString, String action) {
 			return setParameter(uriString, actionParameter, action);
-		}	
-
+		}
+		
 		public String getAction(String uriString) {
 			String value = getParameter(uriString, actionParameter);
 			if (value != null) {
@@ -186,36 +219,36 @@ public abstract class MapContentProvider extends ContentProvider {
 			} else {
 				return uriString;
 			}
-				
+			
 		}
 	}
-
+	
 	abstract class MetamapCursor extends AbstractCursor {
 		protected MetaMapItem[] currentLevel;
 		private MetaMapItem currentItem;
-
+		
 		@Override
 		public String[] getColumnNames() {
 			return new String[] { MetaMapItem.COLUMN_NAME, MetaMapItem.COLUMN_DESCRIPTION,
 					MetaMapItem.COLUMN_IS_FOLDER, MetaMapItem.COLUMN_REFERENCE,
 					MetaMapItem.COLUMN_LAST_SYNCHRONIZATION_DATE, MetaMapItem.COLUMN_SIZE_IN_BYTES };
 		}
-
+		
 		@Override
 		public int getCount() {
 			return currentLevel.length;
 		}
-
+		
 		@Override
 		public double getDouble(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public float getFloat(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public int getInt(int column) {
 			switch (column) {
@@ -225,17 +258,17 @@ public abstract class MapContentProvider extends ContentProvider {
 					throw new IllegalArgumentException("No such column or illegal column type, column: " + column);
 			}
 		}
-
+		
 		@Override
 		public long getLong(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public short getShort(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public String getString(int column) {
 			switch (column) {
@@ -259,7 +292,7 @@ public abstract class MapContentProvider extends ContentProvider {
 					throw new IllegalArgumentException("No such column or illegal column type, column: " + column);
 			}
 		}
-
+		
 		@Override
 		public boolean onMove(int oldPosition, int newPosition) {
 			if (newPosition >= 0 && newPosition < currentLevel.length) {
@@ -269,59 +302,59 @@ public abstract class MapContentProvider extends ContentProvider {
 				return false;
 			}
 		}
-
+		
 		@Override
 		public boolean isNull(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 	}
-
+	
 	abstract class MapCursor extends AbstractCursor {
 		protected boolean mapNotFound;
 		protected String id;
 		protected String text;
-
+		
 		@Override
 		public String[] getColumnNames() {
 			return new String[] { ID, CONTENT };
 		}
-
+		
 		@Override
 		public int getCount() {
 			return 1;
 		}
-
+		
 		@Override
 		public double getDouble(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public float getFloat(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public int getInt(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public long getLong(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public short getShort(int column) {
 			throw new NotImplementedException();
 		}
-
+		
 		@Override
 		public String getString(int column) {
 			if (mapNotFound)
 				throw new MapNotFoundException();
-
+			
 			switch (column) {
 				case 0:
 					return id;
@@ -331,28 +364,28 @@ public abstract class MapContentProvider extends ContentProvider {
 					throw new IllegalArgumentException("No such column " + column);
 			}
 		}
-
+		
 		@Override
 		public boolean isNull(int column) {
 			throw new NotImplementedException();
 		}
 	}
-
+	
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		throw new NotImplementedException();
 	}
-
+	
 	@Override
 	public String getType(Uri uri) {
 		throw new NotImplementedException();
 	}
-
+	
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		throw new NotImplementedException();
 	}
-
+	
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		throw new NotImplementedException();

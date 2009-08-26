@@ -462,9 +462,10 @@ public class MetaMapActivity extends Activity {
 
 		Button welcomeButton = (Button) findViewById(R.id.welcome);
 		final Context context = this;
+		final Activity currentActivity = this;
 		welcomeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				 new AlertDialog.Builder(context).setMessage("Welcome!").show();
+				 MapActivity.openMap("content://resources/welcome", PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, false, currentActivity); 
 			}
 		});		
 	}
