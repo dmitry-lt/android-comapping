@@ -1,7 +1,7 @@
 <mindmap escape="false">
   <metadata>
     <id><![CDATA[63484]]></id>
-    <name><![CDATA[Andrid-Comapping-Demo]]></name>
+    <name><![CDATA[Android-Comapping-Demo]]></name>
     <owner>
       <id><![CDATA[491]]></id>
       <name><![CDATA[Nickolay Artamonov]]></name>
@@ -9,19 +9,19 @@
     </owner>
     <access><![CDATA[Shared]]></access>
     <source><![CDATA[Server]]></source>
-    <collaborators><![CDATA[dmitry.kichinsky@gmail.com]]></collaborators>
+    <collaborators><![CDATA[dmitry.kichinsky@gmail.com,pl@tercom.ru]]></collaborators>
     <watchers><![CDATA[]]></watchers>
     <isTemplate><![CDATA[false]]></isTemplate>
     <params/>
   </metadata>
   <presentation/>
   <node id="10062342" locked="false">
-    <text><![CDATA[Andrid-Comapping-Demo]]></text>
+    <text><![CDATA[Android-Comapping-Demo]]></text>
     <node id="10062343" locked="false">
       <icon name="thumbs_up"/>
       <text><![CDATA[<FONT SIZE="19" COLOR="#000000">Comapping</FONT>]]></text>
       <node id="10062644" locked="false"><text><![CDATA[Comapping is the online software to manage and share information]]></text></node>
-      <node id="10062660" locked="false"><text><![CDATA[Use it to make notes, plan and organize]]></text></node>
+      <node id="10062660" locked="false"><text><![CDATA[Use it to take notes, plan and organize]]></text></node>
       <node id="10062743" locked="false"><text><![CDATA[It&apos;s a way to have one set of notes. One set of files. For everyone.]]></text></node>
     </node>
     <node id="10062796" locked="false">
@@ -37,7 +37,7 @@
       <node flag="go" id="10062602" locked="false">
         <text><![CDATA[<FONT FACE="myfont" SIZE="16" COLOR="#000000">How to get started?</FONT>]]></text>
         <node id="10062895" priority="1">
-          <text><![CDATA[First you need to get map list from the server]]></text>
+          <text><![CDATA[First you need to get the list of your maps from the server]]></text>
           <node id="10062902" locked="false">
             <icon name="needs_feedback"/>
             <text><![CDATA[Use Synronize button]]></text>
@@ -93,7 +93,7 @@
           </node>
         </node>
         <node id="10246847" locked="false">
-          <text><![CDATA[There are two types of map view]]></text>
+          <text><![CDATA[There are two ways to look at a map]]></text>
           <node id="10246848" locked="false" priority="1">
             <note><![CDATA[Left-to right tree]]></note>
             <text><![CDATA[Comapping style]]></text>
@@ -111,7 +111,7 @@
         </node>
         <node id="10246865">
           <text><![CDATA[Zoom]]></text>
-          <node id="10246878" locked="false"><text><![CDATA[You can make the map smaler  in order to see more information on the screen ]]></text></node>
+          <node id="10246878" locked="false"><text><![CDATA[You can make the map smaler in order to see more information on the screen ]]></text></node>
         </node>
         <node id="10246876" locked="false">
           <icon name="magnifier"/>
@@ -126,7 +126,7 @@
           <node id="10246893" locked="false"><text><![CDATA[The same is for map list. You can click refresh button in order to refresh your map list]]></text></node>
           <node id="10246894" locked="false">
             <icon name="idea"/>
-            <text><![CDATA[We did that in order to save your time and internet traffic]]></text>
+            <text><![CDATA[We made it this way in order to save your time and internet traffic]]></text>
           </node>
           <node id="10246895" locked="false">
             <icon name="exclamation_mark"/>
@@ -145,7 +145,7 @@
           </node>
         </node>
       </node>
-      <node id="10246883" locked="false"><text><![CDATA[<FONT SIZE="16" COLOR="#0000FE"><A HREF="http://code.google.com/p/android-comapping/wiki/UserGguide" TARGET="_blank"><U>You can also check our online usergide</U></A></FONT>]]></text></node>
+      <node id="10246883" locked="false"><text><![CDATA[<FONT SIZE="16" COLOR="#0000FE"><A HREF="http://code.google.com/p/android-comapping/wiki/UserGguide" TARGET="_blank"><U>You can also check our online User Guide</U></A></FONT>]]></text></node>
     </node>
   </node>
 </mindmap>
