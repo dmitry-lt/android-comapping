@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:versionCode="1" android:versionName="1.0.0"
-	package="com.comapping.android">
+	android:versionCode="1" package="com.comapping.android" android:versionName="1.0.1">
 	<application android:icon="@drawable/app_icon" android:label="@string/app_name">
 		<activity android:name="com.comapping.android.metamap.MetaMapActivity" android:label="@string/app_name"  android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
@@ -9,13 +8,13 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
 		<activity android:name="com.comapping.android.provider.communication.LoginActivity"  android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
 				<action android:name="com.comapping.android.intent.LOGIN"></action>
 				<category android:name="android.intent.category.DEFAULT"></category>
 			</intent-filter>
 		</activity>
-
 
 		<activity android:name="com.comapping.android.preferences.PreferencesActivity"  android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
@@ -39,9 +38,7 @@
 
 		<provider android:name="com.comapping.android.provider.contentprovider.ComappingMapContentProvider" android:authorities="www.comapping.com"/> 
   		<provider android:name="com.comapping.android.provider.contentprovider.FileMapContentProvider" android:authorities="sdcard"/> 
-
 	</application>
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-	
+	<uses-permission android:name="android.permission.INTERNET"></uses-permission>	
 	<uses-sdk android:minSdkVersion="3" />
 </manifest> 
