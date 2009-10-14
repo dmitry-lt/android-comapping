@@ -50,6 +50,7 @@ public class Task implements Serializable {
 		this.estimate = estimate;
 	}
 	
+	@Override
 	public String toString() {
 		return "[Task: deadline=" + deadline + ", responsible=\"" + "\"]";
 	}

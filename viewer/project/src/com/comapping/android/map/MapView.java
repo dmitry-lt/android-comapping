@@ -68,22 +68,19 @@ public class MapView extends View {
 	// Scrolling variables
 
 	ScrollController scrollController = new ScrollController() {
-
+		@Override
 		public void intermediateScroll(int destX, int destY) {
-
 			int vx = mScroller.getCurrX() - destX;
 			int vy = mScroller.getCurrY() - destY;
-
-			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
-					-vx, -vy, 0);
+			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), -vx, -vy, 0);
 			mScroller.computeScrollOffset();
 		}
-
+		
+		@Override
 		public void smoothScroll(int destX, int destY) {
 			int vx = mScroller.getCurrX() - destX;
 			int vy = mScroller.getCurrY() - destY;
-			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
-					-vx, -vy);
+			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), -vx, -vy);
 		}
 
 	};
@@ -110,6 +107,7 @@ public class MapView extends View {
 	private long lastZoomPress = 0;
 
 	private Thread zoomUpdateThread = new Thread() {
+		@Override
 		public void run() {
 			// Zoom code
 			while (true) {
@@ -318,11 +316,13 @@ public class MapView extends View {
 	}
 
 	private boolean isFinished = false;
-
+	
+	@Override
 	protected void onDraw(Canvas canvas) {
 		
 		if (!activity.canDraw()) {
 			new Thread() {
+				@Override
 				public void run() {
 					isFinished = false;
 					while (!activity.canDraw()) {
@@ -469,7 +469,8 @@ public class MapView extends View {
 				getWidth(), vertLen * vertLinePos + vertBarLen, scrollBarPaint);
 
 	}
-
+	
+	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 
 		switch (ev.getAction()) {
@@ -559,6 +560,7 @@ public class MapView extends View {
 		return true;
 	}
 
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent msg) {
 
 		// Back button fix
@@ -609,8 +611,8 @@ public class MapView extends View {
 				deltaX, deltaY, 0);
 	}
 
-	protected void onLayout(boolean changed, int left, int top, int right,
-			int bottom) {
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		fixScrolCoordinates();
 	}

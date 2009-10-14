@@ -59,6 +59,7 @@ public class TextFormat implements Cloneable, Serializable {
 		this.underlined = underlined;
 	}
 
+	@Override
 	public TextFormat clone() {
 		return new TextFormat(this.fontSize, this.fontColor, this.hRef, this.underlined);
 	}

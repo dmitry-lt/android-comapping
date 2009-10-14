@@ -85,7 +85,7 @@ class TopicView {
 			return;
 
 		childrenVisible = isVisible;
-		plusMinusRender.isPlus = !childrenVisible;
+		plusMinusRender.collapsed = !childrenVisible;
 		setVisible(isVisible);
 		clearLazyBuffers();
 	}

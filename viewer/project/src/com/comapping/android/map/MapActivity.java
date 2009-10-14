@@ -328,6 +328,7 @@ public class MapActivity extends Activity {
 			return false;
 	}
 
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (((resultCode == RESULT_CANCELED) && (requestCode == Client.LOGIN_REQUEST_CODE))
 				|| (resultCode == Options.RESULT_CHAIN_CLOSE)) {
@@ -339,10 +340,11 @@ public class MapActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		new Thread() {
-
+			@Override
 			public void run() {
 				splashActivate("Loading map", false);
 				canDraw = false;
@@ -362,7 +364,8 @@ public class MapActivity extends Activity {
 			}
 		}.start();
 	}
-
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
@@ -378,6 +381,7 @@ public class MapActivity extends Activity {
 		final Activity current = this;
 
 		mapProcessingThread = new Thread() {
+			@Override			
 			public void run() {
 				try {
 					map = loadMap();
@@ -475,7 +479,8 @@ public class MapActivity extends Activity {
 
 		dialog.show();
 	}
-
+	
+	@Override
 	protected void onDestroy() {
 		splashDeactivate();
 		super.onDestroy();
@@ -511,7 +516,7 @@ public class MapActivity extends Activity {
 	// ===========================================================
 	// Options Menu
 	// ===========================================================
-
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		menu.add(0, MENU_SEARCH, 0, "Search").setIcon(
@@ -531,7 +536,8 @@ public class MapActivity extends Activity {
 
 		return true;
 	}
-
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_SEARCH:

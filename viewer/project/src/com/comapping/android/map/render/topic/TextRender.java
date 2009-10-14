@@ -19,7 +19,7 @@ import static com.comapping.android.map.render.topic.RenderHelper.pointLiesOnRec
 public class TextRender extends Render {
 	public static final int DEFAULT_BORDER = 4;
 	private static final int MIN_MAX_WIDTH = 100;
-	// private static final int MIN_MAX_WIDTH = calcWidth(new TextBlock("ù", new
+	// private static final int MIN_MAX_WIDTH = calcWidth(new TextBlock("ï¿½", new
 	// TextFormat(22, 0, "", false)));
 
 	private boolean isEmpty;
@@ -269,7 +269,7 @@ public class TextRender extends Render {
 		formattedText.update();
 	}
 
-	
+	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			if (bgColor != 0) {
@@ -304,7 +304,7 @@ public class TextRender extends Render {
 		return isEmpty;
 	}
 
-	
+	@Override	
 	public String toString() {
 		if (!isEmpty) {
 			return "[TextRender: width=" + getWidth() + " height=" + getHeight() + " text="
@@ -314,17 +314,17 @@ public class TextRender extends Render {
 		}
 	}
 
-	
+	@Override	
 	public int getHeight() {
 		return height;
 	}
 
-	
+	@Override	
 	public int getWidth() {
 		return width;
 	}
 
-	
+	@Override	
 	public boolean onTouch(int x, int y) {
 		if (!isEmpty) {
 			Point touchPoint = new Point(x, y);

@@ -54,13 +54,15 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 		formattedText = new FormattedText();
 	}
 
+	@Override
 	public void startDocument() throws SAXException {
 		stackTextFormat.push(FormattedTextSaxBuilder.getDefFormat());
 		currentTextParagraph = null;
 		currentText = new StringBuilder();
 		currentTextFormat = FormattedTextSaxBuilder.getDefFormat();
 	}
-
+	
+	@Override
 	public void endDocument() throws SAXException {
 
 		try {
@@ -75,6 +77,7 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 		}
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 
@@ -127,6 +130,7 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 		}
 	}
 
+	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		try {
@@ -137,6 +141,7 @@ public class FormattedTextSaxHandler extends DefaultHandler {
 		}
 	}
 
+	@Override
 	public void characters(char[] ch, int start, int len) throws SAXException {
 
 		// StringBuilder tempString = new StringBuilder();

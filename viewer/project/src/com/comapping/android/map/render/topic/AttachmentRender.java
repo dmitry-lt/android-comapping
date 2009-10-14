@@ -66,6 +66,7 @@ public class AttachmentRender extends Render {
 		}
 	}
 
+	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			c.drawBitmap(attachmentIcon, x, y, null);
@@ -73,7 +74,8 @@ public class AttachmentRender extends Render {
 			// nothing to draw
 		}
 	}
-
+	
+	@Override
 	public String toString() {
 		if (!isEmpty) {
 			return "[AttachmentRender: width=" + getWidth() + " height="
@@ -82,15 +84,18 @@ public class AttachmentRender extends Render {
 			return "[AttachmentRender: EMPTY]";
 		}
 	}
-
+	
+	@Override
 	public int getHeight() {
 		return height;
 	}
-
+	
+	@Override
 	public int getWidth() {
 		return width;
 	}
-
+	
+	@Override
 	public boolean onTouch(int x, int y) {
 		if (dialog == null) {
 			downloadFolder = PreferencesStorage.get(

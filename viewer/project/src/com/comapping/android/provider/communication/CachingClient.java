@@ -28,6 +28,7 @@ public class CachingClient extends Client {
 		this.cache = cache;
 	}
 
+	@Override
 	public void login(String email, String password, boolean remember) throws ConnectionException,
 			InvalidCredentialsException, LoginInterruptedException {
 		super.login(email, password, remember);
@@ -50,6 +51,7 @@ public class CachingClient extends Client {
 		}
 	}
 
+	@Override
 	public String getComap(String mapId) throws ConnectionException, LoginInterruptedException,
 			InvalidCredentialsException {
 		return getComap(mapId, false, false);

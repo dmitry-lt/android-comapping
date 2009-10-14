@@ -17,6 +17,7 @@ class MetaMapListAdapter extends ArrayAdapter<MetaMapItem> {
 		super(context, R.layout.metamap_row, topics);
 	}
 	
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		// row view

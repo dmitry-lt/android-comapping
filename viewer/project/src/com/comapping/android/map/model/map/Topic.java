@@ -255,9 +255,9 @@ public class Topic implements Serializable {
 		children = new ArrayList<Topic>();
 	}
 
+	@Override
 	public String toString() {
-		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText()
-				+ "\"]";
+		return "[Topic: id=" + this.getId() + ", text=\"" + this.getText() + "\"]";
 	}
 
 }

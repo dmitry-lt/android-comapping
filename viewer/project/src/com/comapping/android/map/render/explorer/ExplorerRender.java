@@ -107,7 +107,7 @@ public class ExplorerRender extends MapRender {
 				break;
 			}
 			if (onScreen(x - radius, y - radius, x + radius, y + radius)) {
-				plusMinusRender.isPlus = !expander.topic.isOpen;
+				plusMinusRender.collapsed = !expander.topic.isOpen;
 				plusMinusRender.draw(x - radius, y - radius, 0, 0, c);
 			}
 		}
@@ -243,55 +243,7 @@ public class ExplorerRender extends MapRender {
 		this.height = temp[1];
 	}
 
-	// Public methods
-
-	public void selectTopic(Topic topic) {
-		TopicView topicView = allTopics.get(topic);
-		while (topicView != null) {
-			topicView = topicView.parent;
-			if (topicView == null) {
-				break;
-			}
-			topicView.isOpen = true;
-		}
-		update();
-		selectTopic(allTopics.get(topic));
-	}
-
-	
-	public boolean canRotate() {
-		return canRotate;
-	}
-
-	
-	public void onChangeSize() {
-		setBoundsNeeded = true;
-	}
-
-	
-	public void setBounds(int width, int height) {
-		screenWidth = width;
-		screenHeight = height;
-		if (setBoundsNeeded) {
-			update();
-			selectTopic(selectedTopic);
-			if (cachingNeeded) {
-				new Thread(new Runnable() {
-					public void run() {
-						for (Topic topic : allTopics.keySet()) {
-							TopicView topicView = allTopics.get(topic);
-							topicView.topicRender.precalcMaxWidthSetting(screenHeight + 50 - radius - X_SHIFT - BLOCK_SHIFT);
-						}
-						canRotate = true;
-					}
-				}).start();
-				cachingNeeded = false;
-			}
-			setBoundsNeeded = false;
-		}
-	}
-
-	
+	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		xOffset = -x;
 		yOffset = -y;
@@ -307,17 +259,17 @@ public class ExplorerRender extends MapRender {
 		draw(c);
 	}
 
-	
+	@Override
 	public int getHeight() {
 		return height;
 	}
 
-	
+	@Override
 	public int getWidth() {
 		return width;
 	}
 
-	
+	@Override
 	public boolean onTouch(int x, int y) {
 		// touch circles
 		for (Expander expander : expanders) {
@@ -346,12 +298,12 @@ public class ExplorerRender extends MapRender {
 		return false;
 	}
 
-	
+	@Override
 	public void setScrollController(ScrollController scroll) {
 		this.scroll = scroll;
 	}
 
-	
+	@Override
 	public void onKeyDown(int keyCode) {
 		if (selectedTopic == null) {
 			return;
@@ -383,5 +335,51 @@ public class ExplorerRender extends MapRender {
 			break;
 		}
 	}
+	
+	@Override
+	public void setBounds(int width, int height) {
+		screenWidth = width;
+		screenHeight = height;
+		if (setBoundsNeeded) {
+			update();
+			selectTopic(selectedTopic);
+			if (cachingNeeded) {
+				new Thread(new Runnable() {
+					public void run() {
+						for (Topic topic : allTopics.keySet()) {
+							TopicView topicView = allTopics.get(topic);
+							topicView.topicRender.precalcMaxWidthSetting(screenHeight + 50 - radius - X_SHIFT - BLOCK_SHIFT);
+						}
+						canRotate = true;
+					}
+				}).start();
+				cachingNeeded = false;
+			}
+			setBoundsNeeded = false;
+		}
+	}
+	
+	@Override
+	public void selectTopic(Topic topic) {
+		TopicView topicView = allTopics.get(topic);
+		while (topicView != null) {
+			topicView = topicView.parent;
+			if (topicView == null) {
+				break;
+			}
+			topicView.isOpen = true;
+		}
+		update();
+		selectTopic(allTopics.get(topic));
+	}
+	
+	@Override
+	public boolean canRotate() {
+		return canRotate;
+	}
 
+	@Override
+	public void onChangeSize() {
+		setBoundsNeeded = true;
+	}	
 }

@@ -78,6 +78,7 @@ public class LoginActivity extends Activity {
 		final Activity context = this;
 
 		workThread = new Thread() {
+			@Override
 			public void run() {
 				isWorking = true;
 				stateMsg = UNKNOWN_RESULT_MESSAGE;
@@ -114,6 +115,7 @@ public class LoginActivity extends Activity {
 
 		final Activity context = this;
 		workThread = new Thread() {
+			@Override
 			public void run() {
 				isWorking = true;
 				stateMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
@@ -158,7 +160,8 @@ public class LoginActivity extends Activity {
 
 		startWork(email, password, remember);
 	}
-
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		Log.d(Log.LOGIN_TAG, "LoginActivity.onCreate()");
 		super.onCreate(savedInstanceState);
@@ -215,6 +218,7 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 
@@ -256,25 +260,27 @@ public class LoginActivity extends Activity {
 	// Options Menu
 	// ===========================================================
 
-	public void preferences() {
+	public void showPreferencesDialog() {
 		startActivity(new Intent(
 				PreferencesActivity.PREFERENCES_ACTIVITY_INTENT));
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
 		// Build the menu that are shown when login.
-		menu.add(0, MENU_PREFERENCES,0,"Preferences")
+		menu.add(0, MENU_PREFERENCES, 0, "Preferences")
 		.setIcon(android.R.drawable.ic_menu_preferences);
 		
 		return true;
 	}
 
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_PREFERENCES:
-			preferences();
-			return true;
+			case MENU_PREFERENCES:
+				showPreferencesDialog();
+				return true;
 		}
 		return false;
 	}

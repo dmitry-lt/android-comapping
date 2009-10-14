@@ -47,7 +47,8 @@ public class PreferencesActivity extends PreferenceActivity {
 
 		initPreference(preference, preference.getText());
 	}
-
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 

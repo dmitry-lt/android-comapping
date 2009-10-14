@@ -102,6 +102,7 @@ public class TaskRender extends Render {
 		}
 	}
 
+	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
 		if (!isEmpty) {
 			responsibleRender.draw(x + responsibleCoords.x, y
@@ -115,35 +116,41 @@ public class TaskRender extends Render {
 			// nothing to draw
 		}
 	}
-
+	
+	@Override
 	public String toString() {
 		if (!isEmpty) {
-			return "[TaskRender: width=" + getWidth() + " height="
-					+ getHeight() + " linesCount=" + linesCount
-					+ "\n\t responsible=" + responsibleRender + "\n\t start="
-					+ startRender + "\n\t deadline=" + deadlineRender + "]\n";
+			return "[TaskRender: width=" + getWidth() 
+					+ " height=" + getHeight() 
+					+ " linesCount=" + linesCount
+					+ "\n\t responsible=" + responsibleRender 
+					+ "\n\t start=" + startRender 
+					+ "\n\t deadline=" + deadlineRender + "]\n";
 		} else {
 			return "[TaskRender: EMPTY]";
 		}
 	}
-
+	
+	@Override
 	public int getHeight() {
 		return height;
 	}
-
+	
+	@Override
 	public int getWidth() {
 		return width;
 	}
-
+	
+	@Override
 	public boolean onTouch(int x, int y) {
 		if (!isEmpty) {
 			if (dialog == null) {
 				dialog = (new AlertDialog.Builder(context).setTitle("Task").setMessage(
-						"Responsible: " + task.getResponsible() + "\n" + "Start date: " + task.getStart() + "\n" + "Deadline: "
-								+ task.getDeadline() + "\n" + "Estimate: "
-								+ task.getEstimate()).setNeutralButton("Ok", null)).create();
+						"Responsible: " + task.getResponsible() + "\n" + 
+						"Start date: " + task.getStart() + "\n" + 
+						"Deadline: " + task.getDeadline() + "\n" + 
+						"Estimate: " + task.getEstimate()).setNeutralButton("Ok", null)).create();
 			}
-
 			dialog.show();
 		}
 		return false;

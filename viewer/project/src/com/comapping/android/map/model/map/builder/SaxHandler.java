@@ -88,12 +88,12 @@ class SaxHandler extends DefaultHandler {
 		return (tmp >= 0) ? tmp : tmp + base;
 	}
 
+	@Override
 	public void startDocument() {
 		startTime = System.currentTimeMillis();
-
-		// Log.i(Log.modelTag, "SAX parsing started... \n");
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 		try {
@@ -249,6 +249,7 @@ class SaxHandler extends DefaultHandler {
 
 	}
 
+	@Override
 	public void characters(char[] ch, int start, int len) throws SAXException {
 		String string = new String(ch, start, len);
 		if (isTextTag) {
@@ -275,9 +276,8 @@ class SaxHandler extends DefaultHandler {
 		}
 	}
 
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
-		// try {
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (localName.equals(MapBuilder.TOPIC_TEXT_TAG)) {
 			try {
 				currentTopic.setHtmlText(topicText);
@@ -306,11 +306,6 @@ class SaxHandler extends DefaultHandler {
 				hasMeta = true;
 			}
 		}
-		// } catch (StringToXMLConvertionException e) {
-		// e.printStackTrace();
-		// Log.e(Log.MODEL_TAG, e.toString());
-		// throw new SAXException();
-		// }
 	}
 
 	public Map getMap() throws MapParsingException {
@@ -319,6 +314,7 @@ class SaxHandler extends DefaultHandler {
 		return map;
 	}
 
+	@Override
 	public void endDocument() {
 		long parsingTime = System.currentTimeMillis() - startTime;
 		Log.i(Log.MODEL_TAG,
