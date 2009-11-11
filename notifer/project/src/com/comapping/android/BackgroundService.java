@@ -1,5 +1,9 @@
 // Written by Valery Petrov
 
+/*
+ * To-do: write to sql list of notification (while from AbstractGenerator)
+ */
+
 package com.comapping.android;
 
 import android.app.NotificationManager;

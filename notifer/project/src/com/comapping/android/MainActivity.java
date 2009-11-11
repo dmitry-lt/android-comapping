@@ -64,15 +64,17 @@ public class MainActivity  extends TabActivity implements TabHost.TabContentFact
 		// TODO Auto-generated method stub
 		ListView lv = new ListView(this);
 		
+		/*// must read from sql base List of Notifications
 		if (tag.equals("Day"))
 		lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-				new AbstractNotificationGenerator().getListNotification(5)));
+				new AbstractNotificationGenerator().getListNotification("10.10.10")));
 		else if (tag.equals("Week"))
 				lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-						new AbstractNotificationGenerator().getListNotification(10)));
+						new AbstractNotificationGenerator().getListNotification("10.10.10")));
 		else if (tag.equals("All"))
 			lv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-					new AbstractNotificationGenerator().getListNotification(20)));
+					new AbstractNotificationGenerator().getListNotification("10.10.10")));
+		*/
 
 		return lv;
 	}
