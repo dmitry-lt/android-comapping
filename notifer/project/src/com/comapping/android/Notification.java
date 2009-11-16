@@ -9,7 +9,7 @@ public class Notification {
 	public String text;
 	public String link;
 	public String user;
-	public String flag; //must be enum
+	public String flag; //must be enum OR NOT?
 	public boolean beWatched;
 	
 	Notification(String date, String text, String link, String user, String flag) {
