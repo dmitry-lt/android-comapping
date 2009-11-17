@@ -6,6 +6,9 @@
 
 package com.comapping.android;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
@@ -32,19 +35,41 @@ public class BackgroundService extends Service {
 		public void run() {
 			// do background processing here...
 			displayNotificationMessage("running... unbind me to stop!");
+			// [debug]
+			int i=0;
+			// [\debug]
 			while (true) {
+				// [debug]
+				++i;
+				if (i>10)
+					break;
+				// [\debug]
+					
 				try {
-					Thread.sleep(3000);
+					Thread.sleep(5*60*1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}				
+				
 				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
 						"/data/data/com.comapping.android/databases/notifications.db", null);
+				
 				//get last date of updatе
+				String lastDateOfUpdate = "";
+				//db.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
 				//check for new notification
+				AbstractNotificationGenerator ag = new AbstractNotificationGenerator();
+				ArrayList<com.comapping.android.Notification> listOfNotifications = 
+					ag.getListNotification(lastDateOfUpdate); 
 				//add new notification in db
+				for(com.comapping.android.Notification n : listOfNotifications) {
+					
+				}
 				//add new date of update in db
+				//lastDateOfUpdate = 
+				
+				db.close();
 			}
 		}
 	}
