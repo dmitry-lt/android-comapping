@@ -9,6 +9,7 @@ package com.comapping.android;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -31,6 +32,20 @@ public class BackgroundService extends Service {
 		public void run() {
 			// do background processing here...
 			displayNotificationMessage("running... unbind me to stop!");
+			while (true) {
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+				SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
+						"/data/data/com.comapping.android/databases/notifications.db", null);
+				//get last date of updatе
+				//check for new notification
+				//add new notification in db
+				//add new date of update in db
+			}
 		}
 	}
 

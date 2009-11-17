@@ -3,13 +3,17 @@
 
 package com.comapping.android;
 
+import java.util.Date;
+
 public class Notification {
 	//must be changed
-	public String date;
+	public String date; //must be other type
 	public String text;
 	public String link;
 	public String user;
 	public String flag; //must be enum OR NOT?
+	//public Date date;
+	
 	public boolean beWatched;
 	
 	Notification(String date, String text, String link, String user, String flag) {
