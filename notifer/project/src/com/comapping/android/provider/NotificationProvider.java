@@ -59,7 +59,11 @@ public class NotificationProvider extends ContentProvider {
     }
 
     public static Uri getNotificationsUri(Date date) {
-        return Uri.parse(CONTENT_URI + "/" + date.getTime()); // cause new Date(String) was deprecated
+        return Uri.parse(CONTENT_URI + "/" + date.getTime());
+    }
+
+    public static Uri getNotificationsUri(Date date, int id) {
+        return Uri.parse(CONTENT_URI + "/" + date.getTime() + "/" + id);
     }
 
     @Override
@@ -78,28 +82,19 @@ public class NotificationProvider extends ContentProvider {
                 notifications = getNotifications();
                 break;
             case UriID.NOTIFICATION_SET_AFTER_DATE_URI_INDICATOR:
-                notifications = getNotifications(segment.get(2));
+                notifications = getNotifications(segment.get(1));
                 break;
             case UriID.SINGLE_NOTIFICATION_URI_INDICATOR:
-                notifications = getNotification(segment.get(2), segment.get(3));
+                notifications = getNotification(segment.get(1), segment.get(2));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: <" + uri + ">");
         }
 
-                                        
         if (projection == null) {
-            projection = new String[Column.class.getFields().length];
-            for (int i = projection.length; i > 0; i--) {
-                try {
-                    Field columnName = Column.class.getFields()[i - 1];
-                    // Field.get(null) - cause all fields in Column class are "static"
-                    projection[i - 1] = (String) columnName.get(null);
-                } catch (IllegalAccessException e) {
-                    Log.d(LOG_TAG, "O_O", e);
-                }
-            }
+            projection = getDefaultProjection();
         }
+
         cursor = new MatrixCursor(projection);
 
         for (int i = 0; i < notifications.size(); i++) {
@@ -108,9 +103,11 @@ public class NotificationProvider extends ContentProvider {
 
             // fill columnValues as it described in projection:
             for (int j = 0; j < columnValues.length; j++) {
-                // cause we haven't got ID field in Notification class:
+                // TODO ID must be not zero in "single notification" query
                 if (projection[j].equals(Column._ID)) {
                     columnValues[j] = i;
+                } else if (projection[j].equals(Column.DATE)) {
+                    columnValues[j] = cur.date.getTime();
                 } else {
                     try {
                         Field column = Notification.class.getField(projection[j]);
@@ -119,31 +116,46 @@ public class NotificationProvider extends ContentProvider {
                         Log.e(LOG_TAG, "Wrong query's projection: [" + projection[j] + "]");
                         throw new IllegalArgumentException("Wrong query's projection: [" + projection[j] + "]");
                     } catch (IllegalAccessException e) {
-                        Log.e(LOG_TAG, "O_O", e);
+                        Log.e(LOG_TAG, "o_O", e);
                     }
                 }
             }
-            
+
             cursor.addRow(columnValues);
         }
 
         return cursor;
     }
 
+    private String[] getDefaultProjection() {
+        return new String[]{
+                Column._ID, Column.TITLE, Column.LINK,
+                Column.DESCRIPTION, Column.CATEGORY, Column.DATE
+        };
+    }
+
     private List<Notification> getNotification(String date, String _id) {
+        //TODO realize getting notifications list from server
+        // here some imitation of work with server now
         ArrayList<Notification> result = new ArrayList<Notification>();
         result.add(AbstractNotificationGenerator.generateNotification(new Date(Long.valueOf(date))));
         return result;
     }
 
     private List<Notification> getNotifications() {
+        //TODO realize getting notifications list from server
+        // here some imitation of work with server now
         return AbstractNotificationGenerator.generateNotificationList(new Date());
     }
 
     private List<Notification> getNotifications(String date) {
+        //TODO realize getting notifications list from server
+        // here some imitation of work with server now
         long day = 1000 * 60 * 60 * 24;
         Date from = new Date(Long.valueOf(date));
-        return AbstractNotificationGenerator.generateNotificationList(from, new Date(), day / 4, 0.5);
+        Date future = new Date();
+        future.setTime(from.getTime() + day * 3);
+        return AbstractNotificationGenerator.generateNotificationList(from, future, day / 4, 0.5);
     }
 
 
