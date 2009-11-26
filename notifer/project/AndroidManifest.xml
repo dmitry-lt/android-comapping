@@ -4,16 +4,26 @@
           android:versionCode="1"
           android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".MainActivity"
+        <activity android:name=".LocalHistoryViewer"
                   android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity"
+                  android:label="Service Starting Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service android:name="BackgroundService"></service>
+        <service android:name="BackgroundService"/>
+        <service android:name="com.comapping.android.service.NotificationsChecker"/>
+        <service android:name=".service.NotificationsChecker" android:label="NotificationCheacker"/>
         <provider android:name="com.comapping.android.provider.NotificationProvider"
                   android:authorities="com.comapping.android.provider.NotificationProvider"/>
+        <provider android:name="com.comapping.android.provider.LocalHistoryProvider"
+                  android:authorities="com.comapping.android.provider.LocalHistoryProvider"/>
     </application>
     <uses-sdk android:minSdkVersion="4"/>
 </manifest>
