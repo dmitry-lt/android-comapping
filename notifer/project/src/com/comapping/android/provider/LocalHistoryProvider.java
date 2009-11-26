@@ -25,9 +25,9 @@ public class LocalHistoryProvider extends ContentProvider {
     public static final String DATABASE_NAME = "comappingLocalHistory.db";
     public static final int DATABASE_VERSION = 1;
     public static final String TABLE_NAME = "localHistory";
-    public static final String DEFAULT_SORT_ORDER = "modified DESC";
+    public static final String DEFAULT_SORT_ORDER = "_ID DESC";
 
-    public static final String AUTHORITY = "com.comapping.android.LocalHistoryProvider";
+    public static final String AUTHORITY = "com.comapping.android.provider.LocalHistoryProvider";
     public final static Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/history");
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/notification";
     public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/notification";
@@ -38,6 +38,7 @@ public class LocalHistoryProvider extends ContentProvider {
         public static final String DESCRIPTION = "description";
         public static final String CATEGORY = "category";
         public static final String DATE = "date";
+        //TODO add column "READ"
     }
 
     public static Uri getNotificationUri(int id) {
@@ -106,6 +107,27 @@ public class LocalHistoryProvider extends ContentProvider {
             throw new IllegalArgumentException("Unknown URI <" + uri + ">");
         }
 
+        // contentValues validation:
+        String[] columns = getDefaultProjection();
+        for (int i = 1; i < columns.length; i++) {
+            if (!contentValues.containsKey(columns[i])) {
+                throw new SQLException("Failed to insert row into [" + uri
+                        + "]: haven't got value of column \"" + columns[i] + "\"");
+            }
+        }
+
+        if (!(contentValues.get(Columns.DATE) instanceof Long)) {
+            throw new SQLException("Failed to insert row into ["
+                    + uri + "]: field \"date\" must contain long value");
+        }
+
+        try {
+            Notification.Category.valueOf((String) contentValues.get(Columns.CATEGORY));
+        } catch (IllegalArgumentException e) {
+            throw new SQLException("Failed to insert row into ["
+                    + uri + "]: field \"category\" must contain valid category name");
+        }
+        /*
         if (!contentValues.containsKey(Columns.TITLE)) {
             throw new SQLException("Failed to insert row into ["
                     + uri + "] because field \"TITLE\" is needed");
@@ -138,7 +160,7 @@ public class LocalHistoryProvider extends ContentProvider {
                         + uri + "] because field \"DATE\" must contain long value");
             }
         }
-
+        */
         SQLiteDatabase db = openHelper.getReadableDatabase();
         long rowId = db.insert(TABLE_NAME, Columns.TITLE, contentValues);
         if (rowId > 0) {
@@ -152,15 +174,50 @@ public class LocalHistoryProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String s, String[] strings) {
-        //TODO implement method
-        throw new NotImplementedException();
+    public int delete(Uri uri, String where, String[] whereArgs) {
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+        int count;
+        switch (uriMatcher.match(uri)) {
+            case UriID.NOTIFICATIONS_SET_URI_INDICATOR:
+                count = db.delete(TABLE_NAME, where, whereArgs);
+                break;
+            case UriID.SINGLE_NOTIFICATION_URI_INDICATOR:
+                String rowId = uri.getPathSegments().get(1);
+                count = db.delete(TABLE_NAME
+                        , Columns._ID + "=" + rowId
+                                + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : "")
+                        , whereArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        //TODO implement method
-        throw new NotImplementedException();
+    public int update(Uri uri, ContentValues contentValues, String where,
+                      String[] whereArgs) {
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+        int count;
+        switch (uriMatcher.match(uri)) {
+            case UriID.NOTIFICATIONS_SET_URI_INDICATOR:
+                count = db.update(TABLE_NAME,
+                        contentValues, where, whereArgs);
+                break;
+            case UriID.SINGLE_NOTIFICATION_URI_INDICATOR:
+                String rowId = uri.getPathSegments().get(1);
+                count = db.update(TABLE_NAME
+                        , contentValues
+                        , Columns._ID + "=" + rowId
+                                + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : "")
+                        , whereArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 
 
@@ -184,11 +241,11 @@ public class LocalHistoryProvider extends ContentProvider {
         @Override
         public void onCreate(SQLiteDatabase database) {
             database.execSQL("CREATE TABLE " + TABLE_NAME + " ("
-                    + Columns._ID + " INTEGER PRIMARY KEY"
-                    + Columns.TITLE + " TEXT"
-                    + Columns.LINK + " TEXT"
-                    + Columns.DESCRIPTION + " TEXT"
-                    + Columns.CATEGORY + " TEXT"
+                    + Columns._ID + " INTEGER PRIMARY KEY,"
+                    + Columns.TITLE + " TEXT,"
+                    + Columns.LINK + " TEXT,"
+                    + Columns.DESCRIPTION + " TEXT,"
+                    + Columns.CATEGORY + " TEXT,"
                     + Columns.DATE + " INTEGER"
                     + ");");
         }
@@ -213,8 +270,8 @@ public class LocalHistoryProvider extends ContentProvider {
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTHORITY, "/history", UriID.NOTIFICATIONS_SET_URI_INDICATOR);
-        uriMatcher.addURI(AUTHORITY, "/history/#", UriID.SINGLE_NOTIFICATION_URI_INDICATOR);
+        uriMatcher.addURI(AUTHORITY, "history", UriID.NOTIFICATIONS_SET_URI_INDICATOR);
+        uriMatcher.addURI(AUTHORITY, "history/#", UriID.SINGLE_NOTIFICATION_URI_INDICATOR);
     }
 
 }

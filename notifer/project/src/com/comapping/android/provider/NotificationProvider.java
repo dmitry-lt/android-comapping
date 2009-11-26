@@ -141,10 +141,9 @@ public class NotificationProvider extends ContentProvider {
         //TODO realize getting notifications list from server
         // here some imitation of work with server now
         long day = 1000 * 60 * 60 * 24;
-        Date from = new Date(Long.valueOf(date));
-        Date future = new Date();
-        future.setTime(from.getTime() + day * 10);
-        return AbstractNotificationGenerator.generateNotificationList(from, future, day / 4, 0.5);
+        Date future = new Date(Long.valueOf(date));
+        Date from = new Date(future.getTime() - day / 2);
+        return AbstractNotificationGenerator.generateNotificationList(from, future, day / 8, 0.5);
     }
 
 
