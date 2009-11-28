@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
  * @author Eugene Bakisov
  */
 public class Notification {
-    public final String title;
+	public final String title;
 	public final String link;
 	public final String description;
 
@@ -43,6 +43,5 @@ public class Notification {
         }
         sb.replace(sb.length() - 2, sb.length() - 1, "]");
         return sb.toString();
-    }
-}
+    }}
 

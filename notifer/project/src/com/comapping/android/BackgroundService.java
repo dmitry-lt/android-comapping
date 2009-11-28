@@ -7,6 +7,7 @@
 package com.comapping.android;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.NotificationManager;
@@ -60,8 +61,10 @@ public class BackgroundService extends Service {
 				//db.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
 				//check for new notification
 				AbstractNotificationGenerator ag = new AbstractNotificationGenerator();
-				ArrayList<com.comapping.android.Notification> listOfNotifications = 
-					ag.getListNotification(lastDateOfUpdate); 
+//				ArrayList<com.comapping.android.Notification> listOfNotifications = 
+//					ag.getListNotification(lastDateOfUpdate); 
+				List<com.comapping.android.Notification> listOfNotifications = 
+					ag.generateNotificationList(new Date()); 
 				//add new notification in db
 				for(com.comapping.android.Notification n : listOfNotifications) {
 					

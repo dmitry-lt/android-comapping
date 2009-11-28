@@ -11,19 +11,40 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int icon=0x7f020000;
-        public static final int note=0x7f020001;
+        public static final int comapping_icon=0x7f020000;
+        public static final int comapping_logo=0x7f020001;
+        public static final int icon=0x7f020002;
+        public static final int note=0x7f020003;
+        public static final int notifications_bg=0x7f020004;
+        public static final int notifier_widget_background=0x7f020005;
+        public static final int widget_bg_normal=0x7f020006;
+        public static final int widget_bg_pressed=0x7f020007;
+        public static final int widget_bg_selected=0x7f020008;
     }
     public static final class id {
-        public static final int bindBtn=0x7f050000;
-        public static final int unbindBtn=0x7f050001;
+        public static final int accept_message_button=0x7f070005;
+        public static final int bindBtn=0x7f070000;
+        public static final int icon=0x7f070003;
+        public static final int single_message_layout=0x7f070004;
+        public static final int unbindBtn=0x7f070001;
+        public static final int widget=0x7f070002;
     }
     public static final class layout {
         public static final int main=0x7f030000;
+        public static final int notifier_widget_layout=0x7f030001;
+        public static final int single_notofocation_layout=0x7f030002;
     }
     public static final class string {
-        public static final int app_name=0x7f040001;
-        public static final int app_notification_id=0x7f040002;
-        public static final int hello=0x7f040000;
+        public static final int accept_Notification_text=0x7f050004;
+        public static final int app_name=0x7f050001;
+        public static final int app_notification_id=0x7f050002;
+        public static final int hello=0x7f050000;
+        public static final int notifier_widget_name=0x7f050003;
+    }
+    public static final class style {
+        public static final int WidgetBackground=0x7f060000;
+    }
+    public static final class xml {
+        public static final int notifier_widget=0x7f040000;
     }
 }

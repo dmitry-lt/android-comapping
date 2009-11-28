@@ -3,4 +3,6 @@
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">Notifier</string>
     <string name="app_notification_id">notification_id</string>
+<string name="notifier_widget_name">Comapping Notifier Widget</string>
+<string name="accept_Notification_text">Accept Notification</string>
 </resources>

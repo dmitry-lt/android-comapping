@@ -17,6 +17,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        
+        <receiver android:name=".widget.NotifierWidgetProvider" android:label="@string/notifier_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/notifier_widget" />
+        </receiver>
+        
         <service android:name="BackgroundService"/>
         <service android:name="com.comapping.android.service.NotificationsChecker"/>
         <service android:name=".service.NotificationsChecker" android:label="NotificationCheacker"/>
