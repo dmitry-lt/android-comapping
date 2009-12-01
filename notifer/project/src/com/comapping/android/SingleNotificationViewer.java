@@ -20,81 +20,83 @@ import android.widget.TextView;
  */
 public class SingleNotificationViewer extends Activity {
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.single_notofocation_layout);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.single_notification_layout);
 
-		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.single_message_layout);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.single_message_layout);
 
-		Bundle extras = getIntent().getExtras();
-		LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.FILL_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
+        Bundle extras = getIntent().getExtras();
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.FILL_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
 
-		/*
-		 * remove this notification from @NotifyingActivity list if user click
-		 * on the 'accept' button
-		 */
-		if (extras.containsKey("position")) {		// position means the id of notification
-													// thats in case of 'accepting' we must
-													// remove it from the notifications database
-			final int position = extras.getInt("position");
-			Button acceptButton = (Button) findViewById(R.id.accept_message_button);
-			acceptButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
+        /*
+           * remove this notification from @NotifyingActivity list if user click
+           * on the 'accept' button
+           */
+        if (extras.containsKey("position")) {        // position means the id of notification
+            // thats in case of 'accepting' we must
+            // remove it from the notifications database
+            final int position = extras.getInt("position");
+            Button acceptButton = (Button) findViewById(R.id.accept_message_button);
+            acceptButton.setOnClickListener(new Button.OnClickListener() {
+                public void onClick(View v) {
 
-					/*
-					 * unnecessary the removing it from the comapping
-					 * notifications data base
-					 */
+                    /*
+                          * unnecessary the removing it from the comapping
+                          * notifications data base
+                          */
 
-				}
-			});
-		}
+                }
+            });
+        }
 
-		/* add image information if exist */
-		if (extras.containsKey("image")) {
-			int imageResourceKey = extras.getInt("image");
-			ImageView imageView = new ImageView(this);
-			imageView.setImageResource(imageResourceKey);
-			linearLayout.addView(imageView, p);
-		}
+        /* add image information if exist */
+        if (extras.containsKey("image")) {
+            int imageResourceKey = extras.getInt("image");
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(imageResourceKey);
+            linearLayout.addView(imageView, p);
+        }
 
-		/* add user information if exist */
-		if (extras.containsKey("description")) {
-			String userString = "Description: " + extras.getString("description") + "\n\n";
-			TextView textView = new TextView(this);
-			textView.setText(userString);
-			linearLayout.addView(textView, p);
-		}
+        /* add user information if exist */
+        if (extras.containsKey("description")) {
+            String userString = "Description: " + extras.getString("description") + "\n\n";
+            TextView textView = new TextView(this);
+            textView.setText(userString);
+            linearLayout.addView(textView, p);
+        }
 
-		/* add link information if exist */
-		if (extras.containsKey("link")) {
-			String linkString = "Link: " + extras.getString("link") + "\n\n";
-			TextView textView = new TextView(this);
-			textView.setText(linkString);
-			linearLayout.addView(textView, p);
-		}
+        /* add link information if exist */
+        if (extras.containsKey("link")) {
+            String linkString = "Link: " + extras.getString("link") + "\n\n";
+            TextView textView = new TextView(this);
+            textView.setText(linkString);
+            linearLayout.addView(textView, p);
+        }
 
-		/* add Date information if exist */
-		if (extras.containsKey("date")) {
-			String dateString = "Date: " + extras.getString("date") + "\n\n";
-			TextView textView = new TextView(this);
-			textView.setText(dateString);
-			linearLayout.addView(textView, p);
-		}
+        /* add Date information if exist */
+        if (extras.containsKey("date")) {
+            String dateString = "Date: " + extras.getString("date") + "\n\n";
+            TextView textView = new TextView(this);
+            textView.setText(dateString);
+            linearLayout.addView(textView, p);
+        }
 
-		/* add Message information if exist */
-		if (extras.containsKey("category")) {
-			String message = "Category: " + extras.getString("category") + "\n\n";
-			TextView textView = new TextView(this);
-			textView.setText(message);
-			textView.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-			linearLayout.addView(textView, p);
-		}
-	}
+        /* add Message information if exist */
+        if (extras.containsKey("category")) {
+            String message = "Category: " + extras.getString("category") + "\n\n";
+            TextView textView = new TextView(this);
+            textView.setText(message);
+            textView.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+            linearLayout.addView(textView, p);
+        }
+    }
 
 }
