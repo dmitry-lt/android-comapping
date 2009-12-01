@@ -147,6 +147,18 @@ public class NotificationsChecker extends Service {
                 // after addition new notifications into database notify user:
                 displayNotificationMessage("You have new " + cursor.getCount()
                         + " notification" + ((cursor.getCount() == 1) ? "" : "s") + "!");
+
+                // get count of unwatched notifications in database:
+                cursor = owner.getContentResolver().query(
+                        LocalHistoryProvider.CONTENT_URI,
+                        new String[]{LocalHistoryProvider.Columns._ID},
+                        LocalHistoryProvider.Columns.WATCHED + "=0",
+                        null,
+                        null);
+                displayNotificationMessage("You have " + cursor.getCount()
+                        + " unwatched notification"
+                        + ((cursor.getCount() == 1) ? "" : "s") + "!");
+
                 Log.d(LOG_TAG, "Worker notified user");
             }
         }

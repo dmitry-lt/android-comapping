@@ -11,7 +11,6 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import com.comapping.android.Notification;
-import com.comapping.android.provider.exceptions.NotImplementedException;
 
 import java.util.Date;
 
@@ -23,9 +22,9 @@ import java.util.Date;
  */
 public class LocalHistoryProvider extends ContentProvider {
     public static final String DATABASE_NAME = "comappingLocalHistory.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 7;
     public static final String TABLE_NAME = "localHistory";
-    public static final String DEFAULT_SORT_ORDER = "_ID DESC";
+    public static final String DEFAULT_SORT_ORDER = "_id DESC";
 
     public static final String AUTHORITY = "com.comapping.android.provider.LocalHistoryProvider";
     public final static Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/history");
@@ -38,7 +37,7 @@ public class LocalHistoryProvider extends ContentProvider {
         public static final String DESCRIPTION = "description";
         public static final String CATEGORY = "category";
         public static final String DATE = "date";
-        //TODO add column "READ"
+        public static final String WATCHED = "watched";
     }
 
     public static Uri getNotificationUri(int id) {
@@ -109,7 +108,7 @@ public class LocalHistoryProvider extends ContentProvider {
 
         // contentValues validation:
         String[] columns = getDefaultProjection();
-        for (int i = 1; i < columns.length; i++) {
+        for (int i = 1; i < columns.length - 1; i++) {
             if (!contentValues.containsKey(columns[i])) {
                 throw new SQLException("Failed to insert row into [" + uri
                         + "]: haven't got value of column \"" + columns[i] + "\"");
@@ -127,40 +126,11 @@ public class LocalHistoryProvider extends ContentProvider {
             throw new SQLException("Failed to insert row into ["
                     + uri + "]: field \"category\" must contain valid category name");
         }
-        /*
-        if (!contentValues.containsKey(Columns.TITLE)) {
-            throw new SQLException("Failed to insert row into ["
-                    + uri + "] because field \"TITLE\" is needed");
+
+        if (!(contentValues.containsKey(Columns.WATCHED))) {
+            contentValues.put(Columns.WATCHED, "0");
         }
-        if (!contentValues.containsKey(Columns.LINK)) {
-            throw new SQLException("Failed to insert row into ["
-                    + uri + "] because field \"LINK\" is needed");
-        }
-        if (!contentValues.containsKey(Columns.DESCRIPTION)) {
-            throw new SQLException("Failed to insert row into ["
-                    + uri + "] because field \"DESCRIPTION\" is needed");
-        }
-        if (!contentValues.containsKey(Columns.CATEGORY)) {
-            throw new SQLException("Failed to insert row into ["
-                    + uri + "] because field \"CATEGORY\" is needed");
-        } else {
-            try {
-                Notification.Category.valueOf((String) contentValues.get(Columns.CATEGORY));
-            } catch (IllegalArgumentException e) {
-                throw new SQLException("Failed to insert row into ["
-                        + uri + "] because field \"CATEGORY\" must contain category name");
-            }
-        }
-        if (!contentValues.containsKey(Columns.DATE)) {
-            throw new SQLException("Failed to insert row into ["
-                    + uri + "] because field \"DATE\" is needed");
-        } else {
-            if (!(contentValues.get(Columns.DATE) instanceof Long)) {
-                throw new SQLException("Failed to insert row into ["
-                        + uri + "] because field \"DATE\" must contain long value");
-            }
-        }
-        */
+
         SQLiteDatabase db = openHelper.getReadableDatabase();
         long rowId = db.insert(TABLE_NAME, Columns.TITLE, contentValues);
         if (rowId > 0) {
@@ -228,7 +198,8 @@ public class LocalHistoryProvider extends ContentProvider {
     private static String[] getDefaultProjection() {
         return new String[]{
                 Columns._ID, Columns.TITLE, Columns.LINK,
-                Columns.DESCRIPTION, Columns.CATEGORY, Columns.DATE
+                Columns.DESCRIPTION, Columns.CATEGORY,
+                Columns.DATE, Columns.WATCHED
         };
     }
 
@@ -246,7 +217,8 @@ public class LocalHistoryProvider extends ContentProvider {
                     + Columns.LINK + " TEXT,"
                     + Columns.DESCRIPTION + " TEXT,"
                     + Columns.CATEGORY + " TEXT,"
-                    + Columns.DATE + " INTEGER"
+                    + Columns.DATE + " INTEGER,"
+                    + Columns.WATCHED + " INTEGER"
                     + ");");
         }
 
@@ -254,7 +226,8 @@ public class LocalHistoryProvider extends ContentProvider {
         public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
             Log.w(LOG_TAG, "Updating database from version " + oldVersion
                     + " to " + newVersion + ", which will destroy all old data");
-            database.execSQL("DROP TABLE IF EXISTS " + LocalHistoryProvider.TABLE_NAME);
+            database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+            Log.w(LOG_TAG, "" + database.getVersion());
             onCreate(database);
         }
     }
