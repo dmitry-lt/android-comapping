@@ -14,9 +14,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.TabActivity;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,6 +41,8 @@ public class LocalHistoryViewer extends TabActivity implements
 
         // list of notification's titles for each tag
         public List<String> titles = null;
+        // list of id's for each tag
+        public List<Long> id = null;
     }
 
 
@@ -59,6 +59,7 @@ public class LocalHistoryViewer extends TabActivity implements
         // fill tag's title lists:
         for (Tag tag: Tag.values()) {
         	tag.titles = new ArrayList<String>();
+        	tag.id = new ArrayList<Long>();
         }
         
         // delete all in database
@@ -91,6 +92,7 @@ public class LocalHistoryViewer extends TabActivity implements
 
         int dateColumnIndex = cursor.getColumnIndex(NotificationProvider.Columns.DATE);
         int titleColumnIndex = cursor.getColumnIndex(NotificationProvider.Columns.TITLE);
+        int idColumnIndex = cursor.getColumnIndex(NotificationProvider.Columns._ID);
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             Date date = new Date(cursor.getLong(dateColumnIndex));
@@ -100,13 +102,17 @@ public class LocalHistoryViewer extends TabActivity implements
             int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
 
             String title = cursor.getString(titleColumnIndex);
+            Long id = cursor.getLong(idColumnIndex);
             Tag.All.titles.add(title);
+            Tag.All.id.add(id);
 
             if (dayNumber == curDayNumber) {
                 Tag.Day.titles.add(title);
+                Tag.Day.id.add(id);
             }
             if (weekNumber == curWeekNumber) {
                 Tag.Week.titles.add(title);
+                Tag.Week.id.add(id);
             }
         }
 
@@ -115,7 +121,6 @@ public class LocalHistoryViewer extends TabActivity implements
            * Button bindBtn = (Button) findViewById(R.id.bindBtn);
            * bindBtn.setOnClickListener(new OnClickListener() {
            *
-           * @Override public void onClick(View arg0) { startService(new
            * Intent(LocalHistoryViewer.this, BackgroundService.class)); } }); Button
            * unbindBtn = (Button) findViewById(R.id.unbindBtn);
            * unbindBtn.setOnClickListener(new OnClickListener() {
@@ -157,10 +162,10 @@ public class LocalHistoryViewer extends TabActivity implements
 				// TODO Auto-generated method stub
 				Log.v("ListView onItemClick",Integer.toString(arg2));
 				
-				//"Вы кликнули "+Integer.toString(arg2)+" элемент."
+				String message = "Вы кликнули "+Integer.toString(arg2)+" элемент.\n\nмного строчек";
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(LocalHistoryViewer.this);
-				builder.setMessage("Вы кликнули "+Integer.toString(arg2)+" элемент.\n\nмного строчек")
+				builder.setMessage(message)
 				       .setCancelable(false)
 				       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				           public void onClick(DialogInterface dialog, int id) {
