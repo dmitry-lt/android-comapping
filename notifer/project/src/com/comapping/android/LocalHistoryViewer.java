@@ -1,6 +1,7 @@
 /*
  * Written by Valery Petrov
  * Changed by Fedor Burdun (10.11.2009)
+ * 							(01.12.2009)
  * Changed by Eugene Bakisov (18.11.2009)   
  */
 package com.comapping.android;
@@ -12,12 +13,19 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.app.TabActivity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.AdapterView.OnItemClickListener;
+
 import com.comapping.android.provider.LocalHistoryProvider;
 import com.comapping.android.provider.NotificationProvider;
 
@@ -132,13 +140,24 @@ public class LocalHistoryViewer extends TabActivity implements
         super.onDestroy();
     }
 
-    
+   
     @Override
     public View createTabContent(String tag) {
         ListView lv = new ListView(this);
         lv.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 Tag.valueOf(tag).titles));
+        
+        lv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				Log.v("ListView onItemClick",Integer.toString(arg2));
+			}
+		});
+        
         return lv;
     }
 }
