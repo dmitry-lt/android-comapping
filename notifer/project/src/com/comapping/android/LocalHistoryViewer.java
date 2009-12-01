@@ -133,7 +133,7 @@ public class LocalHistoryViewer extends TabActivity implements
         for (Tag t : Tag.values()) {
             tabHost.addTab(tabHost.newTabSpec(t.name()).setIndicator(t.name())
                     .setContent(this));
-        }
+        }        
     }
 
     @Override
@@ -157,23 +157,18 @@ public class LocalHistoryViewer extends TabActivity implements
 				// TODO Auto-generated method stub
 				Log.v("ListView onItemClick",Integer.toString(arg2));
 				
-				AlertDialog.Builder builder = new AlertDialog.Builder(LocalHistoryViewer.this);
 				//"Вы кликнули "+Integer.toString(arg2)+" элемент."
 				
-				builder.setMessage("Are you sure you want to exit?")
-			       .setCancelable(false)
-			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			                LocalHistoryViewer.this.finish();
-			           }
-			       })
-			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			                dialog.cancel();
-			           }
-			       });
-				
+				AlertDialog.Builder builder = new AlertDialog.Builder(LocalHistoryViewer.this);
+				builder.setMessage("Вы кликнули "+Integer.toString(arg2)+" элемент.\n\nмного строчек")
+				       .setCancelable(false)
+				       .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				        	   dialog.cancel();
+				           }
+				       });
 				AlertDialog alert = builder.create();
+				alert.show();
 			}
 		});
         
