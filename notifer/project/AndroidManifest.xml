@@ -18,12 +18,20 @@
             </intent-filter>
         </activity>
         
-        <!-- <receiver android:name=".widget.NotifierWidgetProvider" android:label="@string/notifier_widget_name">
+	<activity	android:name=".SingleNotifyingActivity"
+					android:label="@string/next_activity_name">
+		<intent-filter>
+			<action android:name="android.intent.action.VIEW" />
+			<category android:name="android.intent.category.DEFAULT" />
+		</intent-filter>					
+	</activity>
+
+        <receiver android:name=".widget.NotifierWidgetProvider" android:label="@string/notifier_widget_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xmdl/notifier_widget" />
-        </receiver> -->
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/notifier_widget" />
+        </receiver>
         
         <service android:name="BackgroundService"/>
         <service android:name="com.comapping.android.service.NotificationsChecker"/>
