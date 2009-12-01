@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -155,6 +156,24 @@ public class LocalHistoryViewer extends TabActivity implements
 					long arg3) {
 				// TODO Auto-generated method stub
 				Log.v("ListView onItemClick",Integer.toString(arg2));
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(LocalHistoryViewer.this);
+				//"Вы кликнули "+Integer.toString(arg2)+" элемент."
+				
+				builder.setMessage("Are you sure you want to exit?")
+			       .setCancelable(false)
+			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                LocalHistoryViewer.this.finish();
+			           }
+			       })
+			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                dialog.cancel();
+			           }
+			       });
+				
+				AlertDialog alert = builder.create();
 			}
 		});
         
