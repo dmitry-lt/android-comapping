@@ -22,7 +22,7 @@ import java.util.Date;
  */
 public class LocalHistoryProvider extends ContentProvider {
     public static final String DATABASE_NAME = "comappingLocalHistory.db";
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     public static final String TABLE_NAME = "localHistory";
     public static final String DEFAULT_SORT_ORDER = "_id DESC";
 
@@ -37,10 +37,10 @@ public class LocalHistoryProvider extends ContentProvider {
         public static final String DESCRIPTION = "description";
         public static final String CATEGORY = "category";
         public static final String DATE = "date";
-        public static final String WATCHED = "watched";
+        public static final String READ = "read";
     }
 
-    public static Uri getNotificationUri(int id) {
+    public static Uri getNotificationUri(long id) {
         return Uri.parse(CONTENT_URI + "/" + id);
     }
 
@@ -127,8 +127,8 @@ public class LocalHistoryProvider extends ContentProvider {
                     + uri + "]: field \"category\" must contain valid category name");
         }
 
-        if (!(contentValues.containsKey(Columns.WATCHED))) {
-            contentValues.put(Columns.WATCHED, "0");
+        if (!(contentValues.containsKey(Columns.READ))) {
+            contentValues.put(Columns.READ, "0");
         }
 
         SQLiteDatabase db = openHelper.getReadableDatabase();
@@ -199,7 +199,7 @@ public class LocalHistoryProvider extends ContentProvider {
         return new String[]{
                 Columns._ID, Columns.TITLE, Columns.LINK,
                 Columns.DESCRIPTION, Columns.CATEGORY,
-                Columns.DATE, Columns.WATCHED
+                Columns.DATE, Columns.READ
         };
     }
 
@@ -218,7 +218,7 @@ public class LocalHistoryProvider extends ContentProvider {
                     + Columns.DESCRIPTION + " TEXT,"
                     + Columns.CATEGORY + " TEXT,"
                     + Columns.DATE + " INTEGER,"
-                    + Columns.WATCHED + " INTEGER"
+                    + Columns.READ + " INTEGER"
                     + ");");
         }
 
