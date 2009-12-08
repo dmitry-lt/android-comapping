@@ -38,5 +38,7 @@ public class MainActivity extends Activity {
                         NotificationsChecker.class));
             }
         });
+        
+        //remove this please
     }
 }

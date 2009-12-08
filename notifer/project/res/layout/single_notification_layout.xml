@@ -23,15 +23,22 @@
 
     <LinearLayout
         android:id="@+id/single_message_layout"
-        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/child_message_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal">
+
+    	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/ok_Notification_text" android:id="@+id/ok_message_button"></Button>
 
         <Button
-        	android:id="@+id/accept_message_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/accept_Notification_text"/>
+        	android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:text="@string/remove_Notification_text" android:id="@+id/remove_message_button"/>
 
-    </LinearLayout>
+	</LinearLayout>
+
+</LinearLayout>
 </ScrollView>

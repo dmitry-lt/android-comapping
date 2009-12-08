@@ -9,13 +9,19 @@ package com.comapping.android;
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import com.comapping.android.provider.LocalHistoryProvider;
@@ -131,7 +137,15 @@ public class LocalHistoryViewer extends TabActivity implements
         TabHost tabHost = getTabHost();
 
         for (Tag t : Tag.values()) {
-            tabHost.addTab(tabHost.newTabSpec(t.name()).setIndicator(t.name())
+            /*// Old version
+               tabHost.addTab(tabHost.newTabSpec(t.name()).setIndicator(t.name())
+                    .setContent(this));
+             */
+        	
+        	//testing with image
+        	ImageView iv = new ImageView(this);
+        	iv.setImageResource(R.drawable.note);
+            tabHost.addTab(tabHost.newTabSpec(t.name()).setIndicator(iv)
                     .setContent(this));
         }
     }
@@ -145,7 +159,7 @@ public class LocalHistoryViewer extends TabActivity implements
     public View createTabContent(String tag) {
         ListView lv = new ListView(this);
         lv.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, Tag.valueOf(tag).titles));
+                android.R.layout.simple_list_item_1, Tag.valueOf(tag).titles));        
 
         final String tagf = tag;
         lv.setOnItemClickListener(new OnItemClickListener() {
@@ -182,7 +196,40 @@ public class LocalHistoryViewer extends TabActivity implements
 
                     String message = title + "\n" + category + "\n"
                             + date.toString() + link + "\n" + description;
+                    
+                    //Create and initialize SingleNotificationActivity
+                    SingleNotificationViewer notificationViewer = new SingleNotificationViewer();
+                    Bundle extras = new Bundle();
 
+                    Notification.Category categoryValue = Notification.Category.valueOf(category);
+                    if (categoryValue.equals(Notification.Category.Update)) {
+                    	extras.putInt("image", R.drawable.ic_rewrite);
+                    } else
+                        if (categoryValue.equals(Notification.Category.Tasks)) {
+                        	extras.putInt("image", R.drawable.ic_add);
+                        } else
+                            if (categoryValue.equals(Notification.Category.Subscription)) {
+                            	extras.putInt("image", R.drawable.ic_other);
+                            } else
+                                if (categoryValue.equals(Notification.Category.MapChanges)) {
+                                	extras.putInt("image", R.drawable.ic_rewrite);
+                                } else
+                                    if (categoryValue.equals(Notification.Category.Invitation)) {
+                                    	extras.putInt("image", R.drawable.ic_other);
+                                    } else {
+                                    	extras.putInt("image", R.drawable.ic_other);
+                                    }
+                    
+                    extras.putString("description", description);
+                    extras.putString("date", date.toString());
+                    extras.putString("link", link);
+                    extras.putString("category", category);
+                    
+                    Intent intent = new Intent(LocalHistoryViewer.this, SingleNotificationViewer.class);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+          
+                    /*// Creating Dialog 
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             LocalHistoryViewer.this);
                     builder.setMessage(message).setCancelable(false)
@@ -195,6 +242,8 @@ public class LocalHistoryViewer extends TabActivity implements
                                     });
                     AlertDialog alert = builder.create();
                     alert.show();
+                    */
+                    
                 } else {
                     Log.i("LocalHistoryView.ListView.onClick",
                             "Can't find notification");

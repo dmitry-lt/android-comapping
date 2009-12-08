@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         
-	<activity	android:name=".SingleNotifyingActivity"
+	<activity	android:name=".SingleNotificationViewer"
 					android:label="@string/next_activity_name">
 		<intent-filter>
 			<action android:name="android.intent.action.VIEW" />
