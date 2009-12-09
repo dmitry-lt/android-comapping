@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.comapping.android"
-          android:versionCode="1"
-          android:versionName="1.0">
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".LocalHistoryViewer"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity"
-                  android:label="Service Starting Activity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        
-	<activity	android:name=".SingleNotificationViewer"
-					android:label="@string/next_activity_name">
-		<intent-filter>
-			<action android:name="android.intent.action.VIEW" />
-			<category android:name="android.intent.category.DEFAULT" />
-		</intent-filter>					
-	</activity>
+		  package="com.comapping.android"
+		  android:versionCode="1"
+		  android:versionName="1.0">
+	<application android:icon="@drawable/icon" android:label="@string/app_name">
+		<activity android:name=".LocalHistoryViewer"
+				  android:label="@string/app_name">
+			<intent-filter>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+		<activity android:name=".MainActivity"
+				  android:label="Service Starting Activity">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
 
-        <receiver android:name=".widget.NotifierWidgetProvider" android:label="@string/notifier_widget_name">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/notifier_widget" />
-        </receiver>
-        
-        <service android:name="BackgroundService"/>
-        <service android:name="com.comapping.android.service.NotificationsChecker"/>
-        <service android:name=".service.NotificationsChecker" android:label="NotificationCheacker"/>
-        <provider android:name="com.comapping.android.provider.NotificationProvider"
-                  android:authorities="com.comapping.android.provider.NotificationProvider"/>
-        <provider android:name="com.comapping.android.provider.LocalHistoryProvider"
-                  android:authorities="com.comapping.android.provider.LocalHistoryProvider"/>
-    </application>
-    <uses-sdk android:minSdkVersion="4"/>
+		<activity android:name=".SingleNotificationViewer"
+				  android:label="@string/next_activity_name">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
+			</intent-filter>
+		</activity>
+
+		<receiver android:name=".widget.NotifierWidgetProvider" android:label="@string/notifier_widget_name">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider" android:resource="@xml/notifier_widget"/>
+		</receiver>
+
+		<service android:name="BackgroundService"/>
+		<service android:name="com.comapping.android.service.NotificationsChecker"/>
+		<service android:name=".service.NotificationsChecker" android:label="NotificationCheacker"/>
+		<provider android:name="com.comapping.android.provider.NotificationProvider"
+				  android:authorities="com.comapping.android.provider.NotificationProvider"/>
+		<provider android:name="com.comapping.android.provider.LocalHistoryProvider"
+				  android:authorities="com.comapping.android.provider.LocalHistoryProvider"/>
+	</application>
+	<uses-sdk android:minSdkVersion="4"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
