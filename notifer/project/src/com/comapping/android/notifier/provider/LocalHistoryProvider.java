@@ -25,7 +25,7 @@ public class LocalHistoryProvider extends ContentProvider {
 	public static final String TABLE_NAME = "localHistory";
 	public static final String DEFAULT_SORT_ORDER = "_id DESC";
 
-	public static final String AUTHORITY = "com.comapping.android.provider.LocalHistoryProvider";
+	public static final String AUTHORITY = "com.comapping.android.notifier.provider.LocalHistoryProvider";
 	public final static Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/history");
 	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/notification";
 	public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/notification";
