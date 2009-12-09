@@ -176,7 +176,7 @@ public class NotificationProvider extends ContentProvider {
 				clientId = cursor.getString(cursor.getColumnIndex("clientId"));
 				Log.d(LOG_TAG, "clientId = " + clientId);
 			}
-			postParameters.add(new BasicNameValuePair("clientId", clientId));
+			postParameters.add(new BasicNameValuePair("clientID", clientId));
 
 			UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(postParameters);
 			request.setEntity(formEntity);
