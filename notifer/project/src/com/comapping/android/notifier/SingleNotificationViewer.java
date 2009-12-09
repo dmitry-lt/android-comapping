@@ -1,4 +1,4 @@
-package com.comapping.android;
+package com.comapping.android.notifier;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import android.widget.TextView;
  * initialized in @LocalHistoryViewer
  * 
  */
+
 public class SingleNotificationViewer extends Activity {
 
 	/**
@@ -53,7 +54,7 @@ public class SingleNotificationViewer extends Activity {
 			textView.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 			linearLayout.addView(textView, p);
 		}
-		
+
 		/* add Date information if exist */
 		if (extras.containsKey("date")) {
 			String dateString = "Date: " + extras.getString("date") + "\n\n";
@@ -84,10 +85,10 @@ public class SingleNotificationViewer extends Activity {
 		 * on the 'accept' button
 		 */
 		if (extras.containsKey("position")) { // position means the id of
-												// notification
+			// notification
 			// must be know as read
 			// to-do
-			
+
 			// thats in case of 'accepting' we must
 			// remove it from the notifications database
 			final int position = extras.getInt("position");
@@ -102,13 +103,13 @@ public class SingleNotificationViewer extends Activity {
 				}
 			});
 		}
-		
+
 		//Button
 		Button okButton = (Button) findViewById(R.id.ok_message_button);
 		okButton.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 			}
 		});
 
