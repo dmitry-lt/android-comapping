@@ -1,7 +1,6 @@
 package com.comapping.android.notifier.provider;
 
 import android.util.Log;
-import com.comapping.android.notifier.AbstractNotificationGenerator;
 import com.comapping.android.notifier.Notification;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -28,21 +27,22 @@ public class RssParser {
 	private static String LOG_TAG = "RssParser";
 
 	public static List<Notification> parse(InputStream source) {
-		printInputStreamContent(source);
+		//printInputStreamContent(source);
 		try {
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 			RssParserHandler handler = new RssParserHandler();
-			//parser.parse(source, handler);
-			//return handler.getNotification();
-			return AbstractNotificationGenerator.generateNotificationList(new Date(), 1);
+			parser.parse(source, handler);
+			return handler.getNotification();
 		} catch (ParserConfigurationException e) {
 			Log.e(LOG_TAG, "Exception: ", e);
+			e.printStackTrace();
 		} catch (SAXException e) {
 			Log.e(LOG_TAG, "Exception: ", e);
-		}/* catch (IOException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			Log.e(LOG_TAG, "Exception: ", e);
+			e.printStackTrace();
 		}
-		 */
 		return null;
 	}
 

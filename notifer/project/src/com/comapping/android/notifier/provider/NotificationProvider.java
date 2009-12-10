@@ -82,11 +82,11 @@ public class NotificationProvider extends ContentProvider {
 		}
 
 		cursor = new MatrixCursor(projection);
-
+		/*
 		if (notifications == null) {
 			return cursor;
 		}
-
+         */
 		for (int i = 0; i < notifications.size(); i++) {
 			Notification cur = notifications.get(i);
 			Object[] columnValues = new Object[projection.length];

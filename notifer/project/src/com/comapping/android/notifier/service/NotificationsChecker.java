@@ -104,8 +104,10 @@ public class NotificationsChecker extends Service {
 				// setup date after sleeping
 				date.setTime(System.currentTimeMillis());
 				// getting notifications from server
+				// TODO use NotificationProvider.getNotificationUri(date)
 				Cursor cursor = owner.getContentResolver().query(
-						NotificationProvider.getNotificationsUri(date),
+						NotificationProvider.CONTENT_URI,
+						//NotificationProvider.getNotificationsUri(date),
 						null, null, null, null);
 				Log.d(LOG_TAG, "Worker received " + cursor.getCount() + " new notifications");
 				// checking if there is some notifications:
