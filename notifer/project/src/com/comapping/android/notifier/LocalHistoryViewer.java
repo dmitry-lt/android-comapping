@@ -14,16 +14,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TabHost;
 import com.comapping.android.notifier.provider.LocalHistoryProvider;
 import com.comapping.android.notifier.provider.NotificationProvider;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class LocalHistoryViewer extends TabActivity implements
 		TabHost.TabContentFactory {
@@ -37,9 +33,9 @@ public class LocalHistoryViewer extends TabActivity implements
 		Day, Week, All;
 
 		// list of notification's titles for each tag
-		public List<String> titles = null;
+		public List<String> titles = new ArrayList<String>();
 		// list of id's for each tag
-		public List<Long> id = null;
+		public List<Long> id = new ArrayList<Long>();
 		//public TabHost.TabSpec spec = null;
 	}
 
@@ -64,24 +60,11 @@ public class LocalHistoryViewer extends TabActivity implements
 		this.startManagingCursor(cursor);
 
 		tabHost = this.getTabHost();
-		for (Tab tab : Tab.values()) {
-			TabHost.TabSpec tabSpec = tabHost.newTabSpec(tab.name());
-			tabSpec.setIndicator(tab.name(),
-					this.getResources().getDrawable(R.drawable.icon));
-			tabSpec.setContent(this);
-			tabHost.addTab(tabSpec);
-		}
-		/*
+
 		// get number of current day and week:
 		Calendar calendar = new GregorianCalendar();
 		int curDayNumber = calendar.get(Calendar.DAY_OF_YEAR);
 		int curWeekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
-
-		// fill tag's title lists:
-		for (Tab tag : Tab.values()) {
-			tag.titles = new ArrayList<String>();
-			tag.id = new ArrayList<Long>();
-		}
 
 		//Cursor
 		cursor = this.getContentResolver().query(
@@ -132,13 +115,11 @@ public class LocalHistoryViewer extends TabActivity implements
 
 		}
 
-		TabHost tabHost = getTabHost();
-
 		for (Tab tab : Tab.values()) {
-			/// Old version
+			/* Old version
 						   tabHost.addTab(tabHost.newTabSpec(tab.name()).setIndicator(tab.name())
 								.setContent(this));
-						 //
+						 */
 
 			//testing with image
 			ImageView iv = new ImageView(this);
@@ -147,8 +128,6 @@ public class LocalHistoryViewer extends TabActivity implements
 			tabHost.addTab(tabHost.newTabSpec(tab.name()).setIndicator(iv)
 					.setContent(this));
 		}
-		*/
-
 	}
 
 	@Override
@@ -158,7 +137,7 @@ public class LocalHistoryViewer extends TabActivity implements
 
 	@Override
 	public View createTabContent(String tag) {
-
+		/*
 		ListView tabListView = new ListView(this);
 		String[] from = new String[]{LocalHistoryProvider.Columns.TITLE};
 		int[] to = new int[]{R.id.tab_list_element_text};
@@ -170,24 +149,21 @@ public class LocalHistoryViewer extends TabActivity implements
 		a.add(tabListView.get)
 		List<ListView.FixedViewInfo> b = new ArrayList<ListView.FixedViewInfo>();
 		HeaderViewListAdapter wrapedAdapter = new HeaderViewListAdapter(a, b, adapter);
-		*/
+
 		tabListView.setAdapter(adapter);
 		tabListView.setClickable(true);
 		//tabListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 		//return tabListView;
-		/*
+		*/
 		ListView lv = new ListView(this);
 
 		lv.setAdapter(new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, Tab.valueOf(tag).titles));
 		//*/
 		final String tagf = tag;
-		/*
-		lv
-		*/
-		tabListView.setTextFilterEnabled(true);
-		tabListView.setOnItemClickListener(new OnItemClickListener() {
+
+		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -299,7 +275,7 @@ public class LocalHistoryViewer extends TabActivity implements
 			}
 		});
 
-		//return lv;
-		return tabListView;
+		return lv;
+		//return tabListView;
 	}
 }
