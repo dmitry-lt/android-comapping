@@ -109,53 +109,53 @@ public class NotificationsChecker extends Service {
 						null, null, null, null);
 				Log.d(LOG_TAG, "Worker received " + cursor.getCount() + " new notifications");
 				// checking if there is some notifications:
-				if (cursor.getCount() == 0)
-					continue;
+				if (cursor.getCount() != 0) {
 
-				int dateColumnIndex = cursor.getColumnIndex(LocalHistoryProvider.Columns.DATE);
+					int dateColumnIndex = cursor.getColumnIndex(LocalHistoryProvider.Columns.DATE);
 
-				// add all notification what we have into database:
-				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-					// fill inserting contentValues:
-					ContentValues contentValues = new ContentValues();
+					// add all notification what we have into database:
+					for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+						// fill inserting contentValues:
+						ContentValues contentValues = new ContentValues();
 
-					// DATE column have "Long" type
-					contentValues.put(LocalHistoryProvider.Columns.DATE,
-							cursor.getLong(dateColumnIndex));
+						// DATE column have "Long" type
+						contentValues.put(LocalHistoryProvider.Columns.DATE,
+								cursor.getLong(dateColumnIndex));
 
-					// all others columns have "String" type
-					String[] columns = {
-							LocalHistoryProvider.Columns.TITLE,
-							LocalHistoryProvider.Columns.LINK,
-							LocalHistoryProvider.Columns.DESCRIPTION,
-							LocalHistoryProvider.Columns.CATEGORY
-					};
+						// all others columns have "String" type
+						String[] columns = {
+								LocalHistoryProvider.Columns.TITLE,
+								LocalHistoryProvider.Columns.LINK,
+								LocalHistoryProvider.Columns.DESCRIPTION,
+								LocalHistoryProvider.Columns.CATEGORY
+						};
 
-					for (String column : columns) {
-						contentValues.put(column,
-								cursor.getString(cursor.getColumnIndex(column)));
+						for (String column : columns) {
+							contentValues.put(column,
+									cursor.getString(cursor.getColumnIndex(column)));
+						}
+						// insert contentValues into database
+						owner.getContentResolver().insert(
+								LocalHistoryProvider.CONTENT_URI, contentValues);
 					}
-					// insert contentValues into database
-					owner.getContentResolver().insert(
-							LocalHistoryProvider.CONTENT_URI, contentValues);
+					// after addition new notifications into database notify user:
+					displayNotificationMessage("You have new " + cursor.getCount()
+							+ " notification" + ((cursor.getCount() == 1) ? "" : "s") + "!");
+
+					// get count of unread notifications in database:
+					cursor = owner.getContentResolver().query(
+							LocalHistoryProvider.CONTENT_URI,
+							new String[]{LocalHistoryProvider.Columns._ID},
+							LocalHistoryProvider.Columns.READ + "=0",
+							null,
+							null);
+					displayNotificationMessage("You have " + cursor.getCount()
+							+ " unwatched notification"
+							+ ((cursor.getCount() == 1) ? "" : "s"));
+
+					Log.d(LOG_TAG, "Worker notified user");
+
 				}
-				// after addition new notifications into database notify user:
-				displayNotificationMessage("You have new " + cursor.getCount()
-						+ " notification" + ((cursor.getCount() == 1) ? "" : "s") + "!");
-
-				// get count of unread notifications in database:
-				cursor = owner.getContentResolver().query(
-						LocalHistoryProvider.CONTENT_URI,
-						new String[]{LocalHistoryProvider.Columns._ID},
-						LocalHistoryProvider.Columns.READ + "=0",
-						null,
-						null);
-				displayNotificationMessage("You have " + cursor.getCount()
-						+ " unwatched notification"
-						+ ((cursor.getCount() == 1) ? "" : "s"));
-
-				Log.d(LOG_TAG, "Worker notified user");
-
 				try {
 					Log.d(LOG_TAG, "Worker is going to sleep. Zzzz...");
 					Thread.sleep(sleepTime);

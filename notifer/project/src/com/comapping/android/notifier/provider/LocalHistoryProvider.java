@@ -98,6 +98,7 @@ public class LocalHistoryProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues contentValues) {
+		Log.d(LOG_TAG, "insert(" + uri + ", [" + contentValues + "])");
 		if (uriMatcher.match(uri) != UriID.NOTIFICATIONS_SET_URI_INDICATOR) {
 			throw new IllegalArgumentException("Unknown URI <" + uri + ">");
 		}
@@ -141,6 +142,7 @@ public class LocalHistoryProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
+		Log.d(LOG_TAG, "delete(" + uri + ")");
 		SQLiteDatabase db = openHelper.getWritableDatabase();
 		int count;
 		switch (uriMatcher.match(uri)) {
@@ -164,6 +166,7 @@ public class LocalHistoryProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues contentValues, String where,
 					  String[] whereArgs) {
+		Log.d(LOG_TAG, "update(" + uri + ", [" + contentValues + "])");
 		SQLiteDatabase db = openHelper.getWritableDatabase();
 		int count;
 		switch (uriMatcher.match(uri)) {

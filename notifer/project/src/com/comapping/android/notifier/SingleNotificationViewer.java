@@ -1,13 +1,16 @@
 package com.comapping.android.notifier;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.comapping.android.notifier.provider.LocalHistoryProvider;
 
 /*
  * author Yan Lobkarev;
@@ -20,6 +23,7 @@ import android.widget.TextView;
  */
 
 public class SingleNotificationViewer extends Activity {
+	private static final String LOG_TAG = "SingleNotificationViewer";
 
 	/**
 	 * Called when the activity is first created.
@@ -86,20 +90,31 @@ public class SingleNotificationViewer extends Activity {
 		 */
 		if (extras.containsKey("position")) { // position means the id of
 			// notification
-			// must be know as read
+			// must be know as update
 			// to-do
 
 			// thats in case of 'accepting' we must
 			// remove it from the notifications database
-			final int position = extras.getInt("position");
+			final long position = extras.getLong("position");
+
+			// automatically set current notification as "update" in database:
+			ContentValues update = new ContentValues();
+			update.put(LocalHistoryProvider.Columns.READ, 1);
+			int count = SingleNotificationViewer.this.getContentResolver().update(
+					LocalHistoryProvider.getNotificationUri(position),
+					update, null, null
+			);
+			Log.d(LOG_TAG, "update count = " + count);
+
 			Button removeButton = (Button) findViewById(R.id.remove_message_button);
 			removeButton.setOnClickListener(new Button.OnClickListener() {
 				public void onClick(View v) {
-
-					/*
-					 * unnecessary the removing it from the comapping
-					 * notifications data base
-					 */
+					int count =
+							SingleNotificationViewer.this.getContentResolver().delete(
+									LocalHistoryProvider.getNotificationUri(position),
+									null, null
+							);
+					Log.d(LOG_TAG, "delete count = " + count);
 				}
 			});
 		}
@@ -109,7 +124,7 @@ public class SingleNotificationViewer extends Activity {
 		okButton.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				SingleNotificationViewer.this.finish();
 			}
 		});
 
