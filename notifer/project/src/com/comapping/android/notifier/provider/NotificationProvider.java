@@ -13,17 +13,15 @@ import com.comapping.android.notifier.Notification;
 import com.comapping.android.notifier.provider.exceptions.NotImplementedException;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +45,8 @@ public class NotificationProvider extends ContentProvider {
 		public static final String DESCRIPTION = "description";
 		public static final String CATEGORY = "category";
 		public static final String DATE = "date";
-
+		public static final String AUTHOR = "author";
+		public static final String GUID = "date";
 	}
 
 	public static Uri getNotificationsUri(Date date) {
@@ -62,13 +61,12 @@ public class NotificationProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectArgs, String sortOrder) {
-		MatrixCursor cursor;
 		List<Notification> notifications;
 		List<String> segment = uri.getPathSegments();
 
 		switch (uriMatcher.match(uri)) {
 			case UriID.NOTIFICATIONS_SET_URI_INDICATOR:
-				notifications = getNotifications();
+				notifications = getNotifications(null);
 				break;
 			case UriID.NOTIFICATIONS_SET_AFTER_DATE_URI_INDICATOR:
 				notifications = getNotifications(segment.get(1));
@@ -77,43 +75,20 @@ public class NotificationProvider extends ContentProvider {
 				throw new IllegalArgumentException("Unknown URI: <" + uri + ">");
 		}
 
-		if (projection == null) {
-			projection = getDefaultProjection();
-		}
+		MatrixCursor cursor = new MatrixCursor(defaultProjection);
 
-		cursor = new MatrixCursor(projection);
-		/*
-		if (notifications == null) {
-			return cursor;
-		}
-         */
-		for (int i = 0; i < notifications.size(); i++) {
-			Notification cur = notifications.get(i);
-			Object[] columnValues = new Object[projection.length];
-
-			// fill columnValues as it described in projection:
-			for (int j = 0; j < columnValues.length; j++) {
-				if (projection[j].equals(Columns._ID)) {
-					columnValues[j] = i;
-				} else if (projection[j].equals(Columns._COUNT)) {
-					// TODO "_COUNT" - ???
-					columnValues[j] = 0;
-				} else if (projection[j].equals(Columns.DATE)) {
-					columnValues[j] = cur.date.getTime();
-				} else {
-					try {
-						Field column = Notification.class.getField(projection[j]);
-						columnValues[j] = column.get(cur);
-					} catch (NoSuchFieldException e) {
-						Log.e(LOG_TAG, "Wrong query's projection: [" + projection[j] + "]");
-						throw new IllegalArgumentException("Wrong query's projection: [" + projection[j] + "]");
-					} catch (IllegalAccessException e) {
-						Log.e(LOG_TAG, "o_O", e);
-					}
-				}
-			}
-
-			cursor.addRow(columnValues);
+		int i = 0;
+		for (Notification notification : notifications) {
+			cursor.addRow(new Object[]{
+					i++, // _ID
+					notification.getTitle(),
+					notification.getLink(),
+					notification.getDescription(),
+					notification.getCategory(),
+					notification.getDate().getTime(),
+					notification.getAuthor(),
+					notification.getGuid()
+			});
 		}
 
 		return cursor;
@@ -148,67 +123,77 @@ public class NotificationProvider extends ContentProvider {
 		throw new NotImplementedException();
 	}
 
+	private List<Notification> getNotifications(String date) {
+		//TODO rewrite work with exceptions!
+		if (clientId == null) {
+			setupClientId();
+		}
 
-	private List<Notification> getNotifications() {
-		return getNotifications(null);
+		InputStream streamToParse = getRssStream(date);
+		try {
+			return RssParser.parse(streamToParse);
+		} catch (SAXException e) {
+			// wrong answer from server.
+			// try to get new clientId and repeat:
+			setupClientId();
+			streamToParse = getRssStream(date);
+			try {
+				return RssParser.parse(streamToParse);
+			} catch (Exception e1) {
+				Log.e(LOG_TAG, "Exception: ", e1);
+				//TODO show up alert dialog
+				throw new RuntimeException(e1);
+			}
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "Exception: ", e);
+			//TODO show up alert dialog
+			throw new RuntimeException(e);
+		}
 	}
 
-	private List<Notification> getNotifications(String date) {
+	private void setupClientId() {
+		Cursor cursor = this.getContext().getContentResolver().query(
+				Uri.parse("content://www.comapping.com/login"),
+				null, null, null, null
+		);
+		cursor.moveToFirst();
+		clientId = cursor.getString(cursor.getColumnIndex("clientId"));
+		cursor.close();
+	}
+
+	private InputStream getRssStream(String date) {
+		HttpClient client = new DefaultHttpClient();
+		HttpPost request = new HttpPost("http://go.comapping.com/cgi-bin/comapping.n");
+		List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+
+		postParameters.add(new BasicNameValuePair("action", "get_latest_changes"));
+
+		if (date != null) {
+			String fromDate = DateFormat.format(
+					"yyyy-MM-dd HH:mm:ss",
+					new Long(date)
+			).toString();
+			postParameters.add(new BasicNameValuePair("fromDate", fromDate));
+		}
+
+		postParameters.add(new BasicNameValuePair("clientID", clientId));
+
 		try {
-			HttpClient client = new DefaultHttpClient();
-
-			HttpPost request = new HttpPost("http://go.comapping.com/cgi-bin/comapping.n");
-
-			List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-
-			postParameters.add(new BasicNameValuePair("action", "get_latest_changes"));
-
-			if (date != null) {
-				String fromDate = DateFormat.format(
-						"yyyy-MM-dd HH:mm:ss",
-						new Long(date)
-				).toString();
-				postParameters.add(new BasicNameValuePair("fromDate", fromDate));
-			}
-
-			if (clientId == null) {
-				Cursor cursor = this.getContext().getContentResolver().query(
-						Uri.parse("content://www.comapping.com/login"),
-						null, null, null, null
-				);
-				cursor.moveToFirst();
-				clientId = cursor.getString(cursor.getColumnIndex("clientId"));
-				Log.d(LOG_TAG, "clientId = " + clientId);
-			}
-			postParameters.add(new BasicNameValuePair("clientID", clientId));
-
 			UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(postParameters);
 			request.setEntity(formEntity);
-
 			HttpResponse response = client.execute(request);
-			InputStream content = response.getEntity().getContent();
-
-			return RssParser.parse(content);
-		} catch (UnsupportedEncodingException e) {
-			Log.e(LOG_TAG, "Exception :", e);
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			Log.e(LOG_TAG, "Exception :", e);
-			e.printStackTrace();
+			return response.getEntity().getContent();
 		} catch (IOException e) {
-			Log.e(LOG_TAG, "Exception :", e);
-			e.printStackTrace();
+			Log.e(LOG_TAG, "IOException: ", e);
+			// TODO show up alert dialog
+			throw new RuntimeException(e);
 		}
-		return null;
 	}
 
-
-	private static String[] getDefaultProjection() {
-		return new String[]{
-				Columns._ID, Columns.TITLE, Columns.LINK,
-				Columns.DESCRIPTION, Columns.CATEGORY, Columns.DATE
-		};
-	}
+	private static String[] defaultProjection = new String[]{
+			Columns._ID, Columns.TITLE, Columns.LINK, Columns.DESCRIPTION,
+			Columns.CATEGORY, Columns.DATE, Columns.AUTHOR, Columns.GUID
+	};
 
 	private static final String LOG_TAG = "NotificationProvider";
 

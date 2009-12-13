@@ -122,6 +122,6 @@ public class AbstractNotificationGenerator {
 				throw new RuntimeException("Unknown category");
 		}
 
-		return new Notification(title, link, description, category, date);
+		return new Notification(title, link, description, category, date, "Vasya Pupkin", 100500);
 	}
 }

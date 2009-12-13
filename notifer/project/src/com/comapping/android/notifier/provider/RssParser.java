@@ -1,14 +1,13 @@
 package com.comapping.android.notifier.provider;
 
 import android.util.Log;
+import com.comapping.android.notifier.AbstractNotificationGenerator;
 import com.comapping.android.notifier.Notification;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,24 +25,21 @@ import java.util.List;
 public class RssParser {
 	private static String LOG_TAG = "RssParser";
 
-	public static List<Notification> parse(InputStream source) {
+	public static List<Notification> parse(InputStream source) throws IOException, SAXException, ParserConfigurationException {
 		//printInputStreamContent(source);
-		try {
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			RssParserHandler handler = new RssParserHandler();
-			parser.parse(source, handler);
-			return handler.getNotification();
-		} catch (ParserConfigurationException e) {
-			Log.e(LOG_TAG, "Exception: ", e);
-			e.printStackTrace();
-		} catch (SAXException e) {
-			Log.e(LOG_TAG, "Exception: ", e);
-			e.printStackTrace();
-		} catch (IOException e) {
-			Log.e(LOG_TAG, "Exception: ", e);
-			e.printStackTrace();
+		//TODO realize RssParser;
+		return AbstractNotificationGenerator.generateNotificationList(new Date(), 1);
+		/*
+		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+		RssParserHandler handler = new RssParserHandler();
+		parser.parse(source, handler);
+
+		List<Notification> result = handler.getNotification();
+		for (Notification notification : result) {
+			Log.d(LOG_TAG, notification.toString());
 		}
-		return null;
+		return result;
+		*/
 	}
 
 	private static void printInputStreamContent(InputStream input) {
@@ -170,7 +166,8 @@ public class RssParser {
 			} else if (notificationInfoParsing) {
 				// that's mean we meet "</item>" tag
 				Notification parsedNotification =
-						new Notification(title, link, desc, category, date);
+						//TODO !!!
+						new Notification(title, link, desc, category, date, null, 100500);
 				parsedNotifications.add(parsedNotification);
 				title = link = desc = null;
 				date = null;
