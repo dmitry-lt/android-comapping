@@ -21,7 +21,7 @@ import java.util.Date;
  * Time: 10:56:56
  */
 public class LocalHistoryProvider extends ContentProvider {
-	public static final int DATABASE_VERSION = 8;
+	public static final int DATABASE_VERSION = 11;
 	public static final String TABLE_NAME = "localHistory";
 	public static final String DEFAULT_SORT_ORDER = "_id DESC";
 
@@ -37,6 +37,8 @@ public class LocalHistoryProvider extends ContentProvider {
 		public static final String CATEGORY = "category";
 		public static final String DATE = "date";
 		public static final String READ = "read";
+		public static final String AUTHOR = "author";
+		public static final String GUID = "guid";
 	}
 
 	public static Uri getNotificationUri(long id) {
@@ -198,7 +200,7 @@ public class LocalHistoryProvider extends ContentProvider {
 		return new String[]{
 				Columns._ID, Columns.TITLE, Columns.LINK,
 				Columns.DESCRIPTION, Columns.CATEGORY,
-				Columns.DATE, Columns.READ
+				Columns.DATE, Columns.AUTHOR, Columns.GUID, Columns.READ
 		};
 	}
 
@@ -217,7 +219,9 @@ public class LocalHistoryProvider extends ContentProvider {
 					+ Columns.DESCRIPTION + " TEXT,"
 					+ Columns.CATEGORY + " TEXT,"
 					+ Columns.DATE + " INTEGER,"
-					+ Columns.READ + " INTEGER"
+					+ Columns.READ + " INTEGER,"
+					+ Columns.AUTHOR + " TEXT,"
+					+ Columns.GUID + " INTEGER "
 					+ ");");
 		}
 
@@ -245,5 +249,4 @@ public class LocalHistoryProvider extends ContentProvider {
 		uriMatcher.addURI(AUTHORITY, "history", UriID.NOTIFICATIONS_SET_URI_INDICATOR);
 		uriMatcher.addURI(AUTHORITY, "history/#", UriID.SINGLE_NOTIFICATION_URI_INDICATOR);
 	}
-
 }

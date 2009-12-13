@@ -1,13 +1,15 @@
 package com.comapping.android.notifier.provider;
 
+import android.os.Bundle;
 import android.util.Log;
-import com.comapping.android.notifier.AbstractNotificationGenerator;
 import com.comapping.android.notifier.Notification;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,18 +30,11 @@ public class RssParser {
 	public static List<Notification> parse(InputStream source) throws IOException, SAXException, ParserConfigurationException {
 		//printInputStreamContent(source);
 		//TODO realize RssParser;
-		return AbstractNotificationGenerator.generateNotificationList(new Date(), 1);
-		/*
+		// return AbstractNotificationGenerator.generateNotificationList(new Date(), 1);
 		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 		RssParserHandler handler = new RssParserHandler();
 		parser.parse(source, handler);
-
-		List<Notification> result = handler.getNotification();
-		for (Notification notification : result) {
-			Log.d(LOG_TAG, notification.toString());
-		}
-		return result;
-		*/
+		return handler.getNotification();
 	}
 
 	private static void printInputStreamContent(InputStream input) {
@@ -76,17 +71,13 @@ public class RssParser {
 	private static class RssParserHandler extends DefaultHandler {
 		private StringBuilder buffer;
 		private List<Notification> parsedNotifications;
-		private Tag parsedTag;
-		private boolean endParsing;
+		private Tag lastInterestingTag;
 		private boolean notificationInfoParsing;
-		private String title;
-		private String link;
-		private String desc;
-		private Notification.Category category;
-		private Date date;
+		private boolean endParsing;
+		private Bundle notification;
 
 		private enum Tag {
-			item, title, link, description, category, pubDate
+			item, title, link, description, category, pubDate, author, guid
 		}
 
 		public List<Notification> getNotification() {
@@ -103,7 +94,8 @@ public class RssParser {
 			parsedNotifications = new ArrayList<Notification>();
 			endParsing = false;
 			notificationInfoParsing = false;
-			parsedTag = null;
+			lastInterestingTag = null;
+			notification = new Bundle();
 		}
 
 		@Override
@@ -112,7 +104,8 @@ public class RssParser {
 		}
 
 		@Override
-		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		public void startElement(String uri, String localName, String qName,
+								 Attributes attributes) throws SAXException {
 			String tagName = (qName.equals("") ? localName : qName);
 			try {
 				Tag currentTag = Tag.valueOf(tagName);
@@ -121,7 +114,7 @@ public class RssParser {
 					notificationInfoParsing = true;
 				} else {
 					if (notificationInfoParsing) {
-						parsedTag = currentTag;
+						lastInterestingTag = currentTag;
 					}
 				}
 			} catch (IllegalArgumentException e) {
@@ -131,54 +124,62 @@ public class RssParser {
 
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
-			if (parsedTag != null) {
+			if (lastInterestingTag != null) {
 				String content = buffer.toString();
-				switch (parsedTag) {
+				switch (lastInterestingTag) {
 					case title:
-						title = content;
+						notification.putString("title", content);
 						break;
 					case link:
-						link = content;
+						notification.putString("link", content);
 						break;
 					case description:
-						desc = content;
+						notification.putString("desc", content);
 						break;
 					case category:
-						if (content.equals("invitation")) {
-							category = Notification.Category.Invitation;
-						} else if (content.equals("map changes")) {
-							category = Notification.Category.MapChanges;
-						} else if (content.equals("tasks")) {
-							category = Notification.Category.Tasks;
-						} else if (content.equals("subscription")) {
-							category = Notification.Category.Subscription;
-						} else if (content.equals("update")) {
-							category = Notification.Category.Update;
-						}
+						notification.putString("category", content);
 						break;
 					case pubDate:
-						// TODO find right way to do this:
-						date = new Date(content);
+						notification.putLong("time", (new Date(content)).getTime());
+						break;
+					case author:
+						notification.putString("author", content);
+						break;
+					case guid:
+						notification.putLong("guid", Long.valueOf(content));
 						break;
 				}
 				buffer = null;
-				parsedTag = null;
+				lastInterestingTag = null;
 			} else if (notificationInfoParsing) {
 				// that's mean we meet "</item>" tag
+				String[] fieldNames = {"title", "link", "desc", "category",
+						"time", "author", "guid"};
+				for (String field : fieldNames) {
+					if (!notification.containsKey(field)) {
+						throw new RuntimeException("Wrong XML File");
+					}
+				}
 				Notification parsedNotification =
-						//TODO !!!
-						new Notification(title, link, desc, category, date, null, 100500);
+						new Notification(
+								notification.getString("title"),
+								notification.getString("link"),
+								notification.getString("desc"),
+								notification.getString("category"),
+								notification.getLong("time"),
+								notification.getString("author"),
+								notification.getLong("guid")
+						);
+
 				parsedNotifications.add(parsedNotification);
-				title = link = desc = null;
-				date = null;
-				category = null;
+				notification.clear();
 				notificationInfoParsing = false;
 			}
 		}
 
 		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
-			if (parsedTag != null) {
+			if (lastInterestingTag != null) {
 				if (buffer == null) {
 					buffer = new StringBuilder();
 				}

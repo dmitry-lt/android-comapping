@@ -46,7 +46,7 @@ public class NotificationProvider extends ContentProvider {
 		public static final String CATEGORY = "category";
 		public static final String DATE = "date";
 		public static final String AUTHOR = "author";
-		public static final String GUID = "date";
+		public static final String GUID = "guid";
 	}
 
 	public static Uri getNotificationsUri(Date date) {
