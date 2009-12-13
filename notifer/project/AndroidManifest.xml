@@ -34,7 +34,7 @@
 			<meta-data android:name="android.appwidget.provider" android:resource="@xml/notifier_widget"/>
 		</receiver>
 
-		<service android:name=".service.NotificationsChecker" android:label="NotificationCheacker"/>
+		<service android:name=".service.NotificationsChecker" android:label="NotificationChecker"/>
 		<provider android:name=".provider.NotificationProvider"
 				  android:authorities="com.comapping.android.notifier.provider.NotificationProvider"/>
 		<provider android:name=".provider.LocalHistoryProvider"

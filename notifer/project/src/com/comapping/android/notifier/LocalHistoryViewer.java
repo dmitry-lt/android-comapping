@@ -46,7 +46,8 @@ public class LocalHistoryViewer extends TabActivity implements
 		cursor = this.getContentResolver().query(
 				LocalHistoryProvider.CONTENT_URI, null, null, null, null
 		);
-		cursor.setNotificationUri(this.getContentResolver(), LocalHistoryProvider.CONTENT_URI);
+		// useless, cause LocalHistoryProvider do it by himself
+		//cursor.setNotificationUri(this.getContentResolver(), LocalHistoryProvider.CONTENT_URI);
 
 		cursor.registerContentObserver(new ContentObserver(new Handler()) {
 			@Override

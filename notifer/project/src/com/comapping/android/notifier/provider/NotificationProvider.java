@@ -23,7 +23,6 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,8 +48,8 @@ public class NotificationProvider extends ContentProvider {
 		public static final String GUID = "guid";
 	}
 
-	public static Uri getNotificationsUri(Date date) {
-		return Uri.parse(CONTENT_URI + "/" + date.getTime());
+	public static Uri getNotificationsUri(long time) {
+		return Uri.parse(CONTENT_URI + "/" + time);
 	}
 
 

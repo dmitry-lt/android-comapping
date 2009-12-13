@@ -104,24 +104,47 @@ public class NotificationsChecker extends Service {
 					new String[]{LocalHistoryProvider.Columns._ID},
 					LocalHistoryProvider.Columns.READ + "=0",
 					null, null);
+			Cursor syncDateCursor = owner.getContentResolver().query(
+					LocalHistoryProvider.LAST_SYNC_URI,
+					null, null, null, null
+			);
+			ContentValues contentValues = new ContentValues();
 			while (true) {
 				Log.d(LOG_TAG, "Worker wake up.");
 				// setup date after sleeping
 				date.setTime(System.currentTimeMillis());
 				// getting notifications from server
 				// TODO use NotificationProvider.getNotificationUri(date)
+				/*Cursor = owner.getContentResolver().query(
+						LocalHistoryProvider.LAST_SYNC_URI,
+						null, null, null, null
+				);*/
+				// get time of last synchronization:
+				syncDateCursor.requery();
+				int lastSyncTimeColumnIndex = syncDateCursor.getColumnIndex(
+						LocalHistoryProvider.LAST_SYNC_DATE);
+				syncDateCursor.moveToFirst();
+				long lastSyncTime = syncDateCursor.getLong(lastSyncTimeColumnIndex);
+				// get notifications from server from this time:
+				Log.d(LOG_TAG, "Last synchronization time: " + new Date(lastSyncTime));
 				Cursor cursor = owner.getContentResolver().query(
-						NotificationProvider.CONTENT_URI,
-						//NotificationProvider.getNotificationsUri(date),
+						//NotificationProvider.CONTENT_URI,
+						NotificationProvider.getNotificationsUri(lastSyncTime),
 						null, null, null, null);
+				// update time of last synchronization:
+				contentValues.put(LocalHistoryProvider.LAST_SYNC_DATE, (new Date()).getTime());
+				owner.getContentResolver().update(
+						LocalHistoryProvider.LAST_SYNC_URI,
+						contentValues, null, null);
+				contentValues.clear();
+
+
 				Log.d(LOG_TAG, "Worker received " + cursor.getCount() + " new notifications");
 				// checking if there is some notifications:
 				if (cursor.getCount() != 0) {
 					// add all notification what we have into database:
 					for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 						// fill inserting contentValues:
-						ContentValues contentValues = new ContentValues();
-
 						int dateColumnIndex = cursor.getColumnIndex(NotificationProvider.Columns.DATE);
 						int guidColumnIndex = cursor.getColumnIndex(NotificationProvider.Columns.GUID);
 
@@ -147,6 +170,7 @@ public class NotificationsChecker extends Service {
 						// insert contentValues into database
 						owner.getContentResolver().insert(
 								LocalHistoryProvider.CONTENT_URI, contentValues);
+						contentValues.clear();
 					}
 					// after addition new notifications into database notify user:
 					displayNotificationMessage("You have new " + cursor.getCount()
