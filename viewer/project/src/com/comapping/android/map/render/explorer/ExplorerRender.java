@@ -106,9 +106,9 @@ public class ExplorerRender extends MapRender {
 			if (y - radius > screenHeight) {
 				break;
 			}
-			if (onScreen(x - radius, y - radius, x + radius, y + radius)) {
+			if (onScreen(x, y, x + 2 * radius, y + 2 * radius)) {
 				plusMinusRender.collapsed = !expander.topic.isOpen;
-				plusMinusRender.draw(x - radius, y - radius, 0, 0, c);
+				plusMinusRender.draw(x, y, 0, 0, c);
 			}
 		}
 		p.setAntiAlias(false);

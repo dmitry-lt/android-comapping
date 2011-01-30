@@ -154,8 +154,8 @@ class TopicView {
 		if (topicData.getChildrenCount() != 0) {
 			// Draw +/- circle
 
-			plusMinusRender.draw(x + topicRender.getWidth(), y
-					+ getUnderlineOffset() - plusMinusRender.getWidth() / 2,
+			plusMinusRender.draw(x + topicRender.getWidth() + plusMinusRender.getWidth() / 2, y
+					+ getUnderlineOffset(),
 					plusMinusRender.getWidth(), plusMinusRender.getHeight(), c);
 
 		}

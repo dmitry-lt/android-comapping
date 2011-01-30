@@ -58,8 +58,13 @@ public class FormattedTextSaxBuilder {
 		try {
 			if (parser == null)
 				parser = saxParserFactory.newSAXParser();
-			else
-				parser.reset();
+			else {
+				try {
+					parser.reset();
+				} catch (UnsupportedOperationException e) {
+					parser = saxParserFactory.newSAXParser();
+				}
+			}
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
