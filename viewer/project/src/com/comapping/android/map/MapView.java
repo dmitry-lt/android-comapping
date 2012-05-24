@@ -1,12 +1,5 @@
 package com.comapping.android.map;
 
-import java.util.ArrayList;
-
-import com.comapping.android.Options;
-import com.comapping.android.R;
-import com.comapping.android.map.model.map.Topic;
-import com.comapping.android.map.render.MapRender;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,22 +7,21 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.Scroller;
-import android.widget.TextView;
-import android.widget.ZoomControls;
+import android.view.*;
+import android.widget.*;
+import com.comapping.android.Log;
+import com.comapping.android.Options;
+import com.comapping.android.R;
+import com.comapping.android.map.model.map.Topic;
+import com.comapping.android.map.render.MapRender;
+
+import java.util.ArrayList;
 
 public class MapView extends View {
 
 	// Zoom constants
-	private static final float MAX_SCALE = 1.0f;
-	private static final float MIN_SCALE = 0.5f;
+	public static final float MAX_SCALE = 1.0f;
+	public static final float MIN_SCALE = 0.5f;
 
 	// Taping constants
 	private static final long TAP_MAX_TIME = 500;
@@ -38,7 +30,7 @@ public class MapView extends View {
 	// Scrollbar constants
 	private static final int SCROLLBAR_WIDTH = 4;
 	private static final int SCROLLBAR_LINE_LEN = 15;
-	
+
 	private static final int SCROLL_BOTTOM_OFFSET = 100;
 
 	// Drawing variables
@@ -64,6 +56,7 @@ public class MapView extends View {
 	// Zooming variables
 	private float scale = MAX_SCALE;
 	private ZoomControls zoom;
+	private ScaleGestureDetector mScaleGestureDetector;
 
 	// Scrolling variables
 
@@ -75,7 +68,7 @@ public class MapView extends View {
 			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), -vx, -vy, 0);
 			mScroller.computeScrollOffset();
 		}
-		
+
 		@Override
 		public void smoothScroll(int destX, int destY) {
 			int vx = mScroller.getCurrX() - destX;
@@ -146,7 +139,7 @@ public class MapView extends View {
 	}
 
 	public void showZoom() {
-	
+
 		lastZoomPress = System.currentTimeMillis();
 
 		if (zoom == null)
@@ -167,7 +160,7 @@ public class MapView extends View {
 	public void hideZoom() {
 		if (zoom == null)
 			return;
-		
+
 		if (zoom.getVisibility() == View.VISIBLE) {
 			((Activity) getContext()).runOnUiThread(new Runnable() {
 
@@ -189,10 +182,12 @@ public class MapView extends View {
 		background.setBounds(0, 0, background.getIntrinsicWidth(), background
 				.getIntrinsicHeight());
 		background.setAlpha(127);
-		
+
 		zoomUpdateThread.start();
-		
+
 		requestFocus();
+
+		mScaleGestureDetector = new ScaleGestureDetector(context, new ScaleGestureListener(this));
 	}
 
 	void initScrolling(Context context) {
@@ -222,7 +217,7 @@ public class MapView extends View {
 	private int selectedSearchResult = 0;
 
 	public void setSearchUI(LinearLayout findLayout, ImageButton cancel,
-			ImageButton next, ImageButton prev, TextView queryLabel) {
+							ImageButton next, ImageButton prev, TextView queryLabel) {
 		this.cancel = cancel;
 		this.next = next;
 		this.prev = prev;
@@ -316,10 +311,10 @@ public class MapView extends View {
 	}
 
 	private boolean isFinished = false;
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
-		
+
 		if (!activity.canDraw()) {
 			new Thread() {
 				@Override
@@ -342,13 +337,13 @@ public class MapView extends View {
 		if (!isFinished) {
 			return;
 		}
-		
+
 		isDrawing = false;
 
 		if (needChangeSize) {
 			final View mainMapView = this;
 			new Thread(new Runnable() {
-	
+
 				public void run() {
 					mRender.onChangeSize();
 					mRender.setBounds(getScreenForRenderWidth(),
@@ -469,92 +464,92 @@ public class MapView extends View {
 				getWidth(), vertLen * vertLinePos + vertBarLen, scrollBarPaint);
 
 	}
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
+		mScaleGestureDetector.onTouchEvent(ev);
 
 		switch (ev.getAction()) {
-		case MotionEvent.ACTION_DOWN: {
+			case MotionEvent.ACTION_DOWN: {
 
-			mVelocityTracker = VelocityTracker.obtain();
-			oldX = (int) ev.getX();
-			oldY = (int) ev.getY();
-			startX = oldX;
-			startY = oldY;
-
-			touchStartTime = System.currentTimeMillis();
-			fixedScroll = true;
-			return true;
-		}
-		case MotionEvent.ACTION_MOVE: {
-
-			int pathLen = (startX - (int) ev.getX())
-					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
-					* (startY - (int) ev.getY());
-			long timeDelta = System.currentTimeMillis() - touchStartTime;
-
-			if ((timeDelta >= TAP_MAX_TIME) || (pathLen >= BLOCK_PATH_LEN))
-				fixedScroll = false;
-
-			if (!fixedScroll) {
-				mVelocityTracker.addMovement(ev);
-
-				int deltaX = (int) (oldX - ev.getX());
-				int deltaY = (int) (oldY - ev.getY());
+				mVelocityTracker = VelocityTracker.obtain();
 				oldX = (int) ev.getX();
 				oldY = (int) ev.getY();
+				startX = oldX;
+				startY = oldY;
 
-				if (mScroller.getCurrX() + deltaX > getScrollWidth())
-					deltaX = getScrollWidth() - mScroller.getCurrX();
-				if (mScroller.getCurrY() + deltaY > getScrollHeight())
-					deltaY = getScrollHeight() - mScroller.getCurrY();
-
-				if (mScroller.getCurrX() + deltaX < 0)
-					deltaX = -mScroller.getCurrX();
-				if (mScroller.getCurrY() + deltaY < 0)
-					deltaY = -mScroller.getCurrY();
-
-				mScroller.startScroll(mScroller.getCurrX(), mScroller
-						.getCurrY(), deltaX, deltaY, 0);
-
-				refresh();
+				touchStartTime = System.currentTimeMillis();
+				fixedScroll = true;
+				break;
 			}
-			return true;
-		}
-		case MotionEvent.ACTION_UP: {
-			long timeDelta = System.currentTimeMillis() - touchStartTime;
-			int pathLen = (startX - (int) ev.getX())
-					* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
-					* (startY - (int) ev.getY());
+			case MotionEvent.ACTION_MOVE: {
 
-			if (pathLen < BLOCK_PATH_LEN) {
-				if (timeDelta < TAP_MAX_TIME) {
-					mRender.onTouch(mScroller.getCurrX()
-							+ (int) (ev.getX() / scale), mScroller.getCurrY()
-							+ (int) (ev.getY() / scale));
+				int pathLen = (startX - (int) ev.getX())
+						* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
+						* (startY - (int) ev.getY());
+				long timeDelta = System.currentTimeMillis() - touchStartTime;
+
+				if ((timeDelta >= TAP_MAX_TIME) || (pathLen >= BLOCK_PATH_LEN))
+					fixedScroll = false;
+
+				if (!fixedScroll) {
+					mVelocityTracker.addMovement(ev);
+
+					int deltaX = (int) (oldX - ev.getX());
+					int deltaY = (int) (oldY - ev.getY());
+					oldX = (int) ev.getX();
+					oldY = (int) ev.getY();
+
+					if (mScroller.getCurrX() + deltaX > getScrollWidth())
+						deltaX = getScrollWidth() - mScroller.getCurrX();
+					if (mScroller.getCurrY() + deltaY > getScrollHeight())
+						deltaY = getScrollHeight() - mScroller.getCurrY();
+
+					if (mScroller.getCurrX() + deltaX < 0)
+						deltaX = -mScroller.getCurrX();
+					if (mScroller.getCurrY() + deltaY < 0)
+						deltaY = -mScroller.getCurrY();
+
+					mScroller.startScroll(mScroller.getCurrX(), mScroller
+							.getCurrY(), deltaX, deltaY, 0);
+
+					refresh();
 				}
-				refresh();
-			} else {
-				mVelocityTracker.addMovement(ev);
-
-				mVelocityTracker.computeCurrentVelocity(1000);
-
-				int vx = (int) mVelocityTracker.getXVelocity();
-				int vy = (int) mVelocityTracker.getYVelocity();
-
-				vx = vx * 3 / 4;
-				vy = vy * 3 / 4;
-
-				mScroller.fling(mScroller.getCurrX(), mScroller.getCurrY(),
-						-vx, -vy, 0, getScrollWidth(), 0, getScrollHeight());
-
-				mVelocityTracker.recycle();
-
-				refresh();
-
-				return true;
+				break;
 			}
-		}
+			case MotionEvent.ACTION_UP: {
+				long timeDelta = System.currentTimeMillis() - touchStartTime;
+				int pathLen = (startX - (int) ev.getX())
+						* (startX - (int) ev.getX()) + (startY - (int) ev.getY())
+						* (startY - (int) ev.getY());
+
+				if (pathLen < BLOCK_PATH_LEN) {
+					if (timeDelta < TAP_MAX_TIME) {
+						mRender.onTouch(mScroller.getCurrX()
+								+ (int) (ev.getX() / scale), mScroller.getCurrY()
+								+ (int) (ev.getY() / scale));
+					}
+					refresh();
+				} else {
+					mVelocityTracker.addMovement(ev);
+
+					mVelocityTracker.computeCurrentVelocity(1000);
+
+					int vx = (int) mVelocityTracker.getXVelocity();
+					int vy = (int) mVelocityTracker.getYVelocity();
+
+					vx = vx * 3 / 4;
+					vy = vy * 3 / 4;
+
+					mScroller.fling(mScroller.getCurrX(), mScroller.getCurrY(),
+							-vx, -vy, 0, getScrollWidth(), 0, getScrollHeight());
+
+					mVelocityTracker.recycle();
+
+					refresh();
+				}
+				break;
+			}
 
 		}
 		return true;
