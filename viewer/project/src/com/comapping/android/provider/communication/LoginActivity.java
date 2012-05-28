@@ -152,7 +152,7 @@ public class LoginActivity extends Activity {
 		splashActivate(LOGIN_ATTEMPT_MESSAGE);
 //		Log.d("Logic Activity", "splash activate end");
 		final String email = ((TextView) findViewById(R.id.eMail)).getText()
-				.toString();
+				.toString().trim();
 		final String password = ((TextView) findViewById(R.id.password))
 				.getText().toString();
 		final Boolean remember = ((CheckBox) findViewById(R.id.rememberUserCheckBox))

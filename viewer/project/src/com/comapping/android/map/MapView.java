@@ -20,8 +20,8 @@ import java.util.ArrayList;
 public class MapView extends View {
 
 	// Zoom constants
-	public static final float MAX_SCALE = 1.0f;
-	public static final float MIN_SCALE = 0.5f;
+	public static final float MAX_SCALE = 2.0f;
+	public static final float MIN_SCALE = 0.4f;
 
 	// Taping constants
 	private static final long TAP_MAX_TIME = 500;
@@ -57,6 +57,10 @@ public class MapView extends View {
 	private float scale = MAX_SCALE;
 	private ZoomControls zoom;
 	private ScaleGestureDetector mScaleGestureDetector;
+
+	// used for offsetting canvas relative focus point on zoom in onDraw method instead mScroll.startScroll(...)
+	private int delayedOffsetX = 0;
+	private int delayedOffsetY = 0;
 
 	// Scrolling variables
 
@@ -129,7 +133,23 @@ public class MapView extends View {
 		}
 		zoom.setIsZoomInEnabled(Math.abs(scale - MAX_SCALE) > eps);
 		zoom.setIsZoomOutEnabled(Math.abs(scale - MIN_SCALE) > eps);
+		int oldW = getScreenForRenderWidth();
+		int oldH = getScreenForRenderHeight();
 		this.scale = scale;
+		int newW = getScreenForRenderWidth();
+		int newH = getScreenForRenderHeight();
+		delayedOffsetX = (oldW - newW)/2;
+		delayedOffsetY = (oldH - newH)/2;
+
+		if (mScroller.getCurrX() + delayedOffsetX > getScrollWidth())
+			delayedOffsetX = getScrollWidth() - mScroller.getCurrX();
+		if (mScroller.getCurrY() + delayedOffsetY > getScrollHeight())
+			delayedOffsetY = getScrollHeight() - mScroller.getCurrY();
+
+		if (mScroller.getCurrX() + delayedOffsetX < 0)
+			delayedOffsetX = -mScroller.getCurrX();
+		if (mScroller.getCurrY() + delayedOffsetY < 0)
+			delayedOffsetY = -mScroller.getCurrY();
 
 		showZoom();
 	}
@@ -383,8 +403,18 @@ public class MapView extends View {
 
 		// Draw map
 		Log.d("Map", "Draw");
-		mRender.draw(mScroller.getCurrX(), mScroller.getCurrY(),
+		int x = mScroller.getCurrX() + delayedOffsetX;
+		int y = mScroller.getCurrY() + delayedOffsetY;
+		if (delayedOffsetX != 0) {
+			mScroller.setFinalX(x);
+		}
+		if (delayedOffsetY != 0) {
+			mScroller.setFinalY(y);
+		}
+		mRender.draw(x, y,
 				getScreenForRenderWidth(), getScreenForRenderHeight(), canvas);
+		delayedOffsetX = 0;
+		delayedOffsetY = 0;
 
 		// Restore matrix
 		canvas.restore();
