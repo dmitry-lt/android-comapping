@@ -18,7 +18,7 @@ public abstract class Render {
 	  * @author Stepan Korshakov
 	  * @param x		 X-coordinate
 	  * @param y		 Y-coordinate
-	  * @param wigth	 width of rendering rectangle
+	  * @param width	 width of rendering rectangle
 	  * @param height 	 height of rendering rectangle
 	  * @param c 	 	 Canvas for rendering
 	  */

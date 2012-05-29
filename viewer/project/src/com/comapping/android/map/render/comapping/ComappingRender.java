@@ -293,6 +293,7 @@ public class ComappingRender extends MapRender {
 
 			changeChildVisibleStatus(itm);
 			if (itm.isChildrenVisible()) {
+				// TODO: sometime it falls
 				focusTopic(itm.children[0]);
 			} else {
 				focusTopic(itm);

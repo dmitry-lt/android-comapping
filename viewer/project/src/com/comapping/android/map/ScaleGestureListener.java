@@ -9,6 +9,7 @@ public class ScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGest
 
 	private final MapView mMapView;
 	private float mScaleFactor = 1.f;
+
 	public ScaleGestureListener(MapView mMapView) {
 		this.mMapView = mMapView;
 	}
@@ -16,8 +17,8 @@ public class ScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGest
 	@Override
 	public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
 		mScaleFactor *= scaleGestureDetector.getScaleFactor();
-		mScaleFactor = Math.max(MapView.MIN_SCALE,Math.min(MapView.MAX_SCALE,mScaleFactor));
-		mMapView.setScale(mScaleFactor);
+		mScaleFactor = Math.max(MapView.MIN_SCALE, Math.min(MapView.MAX_SCALE, mScaleFactor));
+		mMapView.setScale(mScaleFactor, scaleGestureDetector.getFocusX(), scaleGestureDetector.getFocusY());
 		return true;
 	}
 }

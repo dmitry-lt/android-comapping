@@ -125,12 +125,7 @@ public class MapView extends View {
 	private static final float eps = 1e-6f;
 
 	public void setScale(float scale) {
-		if (scale > MAX_SCALE) {
-			scale = MAX_SCALE;
-		}
-		if (scale < MIN_SCALE) {
-			scale = MIN_SCALE;
-		}
+		scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
 		zoom.setIsZoomInEnabled(Math.abs(scale - MAX_SCALE) > eps);
 		zoom.setIsZoomOutEnabled(Math.abs(scale - MIN_SCALE) > eps);
 		int oldW = getScreenForRenderWidth();
@@ -141,6 +136,41 @@ public class MapView extends View {
 		delayedOffsetX = (oldW - newW)/2;
 		delayedOffsetY = (oldH - newH)/2;
 
+		fixDelayedOffset();
+
+		showZoom();
+	}
+
+	public void setScale(float scale, float focusX, float focusY) {
+		scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+		zoom.setIsZoomInEnabled(Math.abs(scale - MAX_SCALE) > eps);
+		zoom.setIsZoomOutEnabled(Math.abs(scale - MIN_SCALE) > eps);
+
+		int oldW = getScreenForRenderWidth();
+		int oldH = getScreenForRenderHeight();
+		this.scale = scale;
+		int newW = getScreenForRenderWidth();
+		int newH = getScreenForRenderHeight();
+
+		// calculate actual scale
+		float scaleX = (float) newW / (float) oldW;
+		float scaleY = (float) newH / (float) oldH;
+		// calculate coordinates of the focus point after transformation
+		int focusNewX = (int) (focusX * scaleX);
+		int focusNewY = (int) (focusY * scaleY);
+		// move coordinate system
+		delayedOffsetX = (int) (focusX - focusNewX);
+		delayedOffsetY = (int) (focusY - focusNewY);
+
+		fixDelayedOffset();
+
+		showZoom();
+	}
+
+	/**
+	 * Sets delayedOffset to bounds if it out of bounds
+	 */
+	private void fixDelayedOffset() {
 		if (mScroller.getCurrX() + delayedOffsetX > getScrollWidth())
 			delayedOffsetX = getScrollWidth() - mScroller.getCurrX();
 		if (mScroller.getCurrY() + delayedOffsetY > getScrollHeight())
@@ -150,8 +180,6 @@ public class MapView extends View {
 			delayedOffsetX = -mScroller.getCurrX();
 		if (mScroller.getCurrY() + delayedOffsetY < 0)
 			delayedOffsetY = -mScroller.getCurrY();
-
-		showZoom();
 	}
 
 	public void setZoom(ZoomControls zoom) {
