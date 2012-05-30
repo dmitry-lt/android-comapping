@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -141,7 +142,7 @@ public class MapActivity extends Activity {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				if (splash == null) {
-					splash = ProgressDialog.show(context, "Comapping", message);
+					splash = ProgressDialog.show(context, getString(R.string.MapActivitySplashTitle), message);
 					splash.setOnCancelListener(new OnCancelListener() {
 
 						public void onCancel(DialogInterface dialog) {
@@ -176,7 +177,7 @@ public class MapActivity extends Activity {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
 				Dialog dialog = (new AlertDialog.Builder(activity).setTitle(
-						"Error").setMessage(message).setNeutralButton("Ok",
+						getString(R.string.MapActivityErrorDialogTitle)).setMessage(message).setNeutralButton(getString(R.string.NeutralButtonText),
 						new DialogInterface.OnClickListener() {
 
 							public void onClick(DialogInterface dialog,
@@ -206,7 +207,7 @@ public class MapActivity extends Activity {
 	Map loadMap() throws StringToXMLConvertionException, MapParsingException {
 		final Map map;
 		if (!MemoryCache.has(mapRef) || (ignoreCache)) {
-			splashActivate("Downloading map", false);
+			splashActivate(getString(R.string.DownloadingMap), false);
 			String result = "";
 
 			try {
@@ -214,7 +215,7 @@ public class MapActivity extends Activity {
 						false, this);
 			} catch (MapNotFoundException e) {
 				Log.w(Log.MAP_CONTROLLER_TAG, e.toString());
-				showError("This map wasn't found on server!", false);
+				showError(getString(R.string.MapNotFoundOnServer), false);
 				result = MapContentProvider.getComap(mapRef, false, true, this);
 			}
 
@@ -224,7 +225,7 @@ public class MapActivity extends Activity {
 
 			// Log.e(Log.CONNECTION_TAG, result);
 
-			splashActivate("Parsing map", true);
+			splashActivate(getString(R.string.ParsingMap), true);
 			map = MetaMapActivity.mapBuilder.buildMap(result);
 
 			// add to cache
@@ -346,7 +347,7 @@ public class MapActivity extends Activity {
 		new Thread() {
 			@Override
 			public void run() {
-				splashActivate("Loading map", false);
+				splashActivate(getString(R.string.LoadingMap), false);
 				canDraw = false;
 				// Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
 				while (!mapRender.canRotate()) {
@@ -372,7 +373,7 @@ public class MapActivity extends Activity {
 		if (onSearchProcess())
 			return;
 		
-		splashActivate("Loading map", true);
+		splashActivate(getString(R.string.LoadingMap), true);
 
 		parseIntentParameters();
 
@@ -391,7 +392,7 @@ public class MapActivity extends Activity {
 						return;
 					}
 
-					splashActivate("Loading map", true);
+					splashActivate(getString(R.string.LoadingMap), true);
 
 					mapRender = initMapRender(map, viewType);
 
@@ -413,13 +414,13 @@ public class MapActivity extends Activity {
 					finish();
 				} catch (ConnectionRuntimeException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Connection error", true);
+					showError(getString(R.string.ConnectionError), true);
 				} catch (StringToXMLConvertionException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Wrong file format", true);
+					showError(getString(R.string.WrongFileFormat), true);
 				} catch (MapParsingException e) {
 					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError("Wrong file format", true);
+					showError(getString(R.string.WrongFileFormat), true);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -431,18 +432,18 @@ public class MapActivity extends Activity {
 
 	private void saveMapAs() {
 		AlertDialog dialog = (new AlertDialog.Builder(this).setIcon(
-				android.R.drawable.ic_dialog_info).setTitle("Save map")
+				android.R.drawable.ic_dialog_info).setTitle(getString(R.string.SaveMapDialogTitle))
 				.setMessage(
-						"Map: " + map.getName() + "\n" + "Save to "
-								+ SAVE_FOLDER + "?").setPositiveButton("Yes",
+						String.format(getString(R.string.SaveMapDialogMessageFormat), map.getName(), SAVE_FOLDER))
+				.setPositiveButton(getString(R.string.PositiveButtonText),
 						new DialogInterface.OnClickListener() {
 
 							public void onClick(DialogInterface dialog,
-									int which) {
-								if (android.os.Environment
+												int which) {
+								if (Environment
 										.getExternalStorageState()
 										.equals(
-												android.os.Environment.MEDIA_MOUNTED)) {
+												Environment.MEDIA_MOUNTED)) {
 									String path = SAVE_FOLDER + "\\"
 											+ map.getName() + ".comap";
 
@@ -464,12 +465,12 @@ public class MapActivity extends Activity {
 									(new AlertDialog.Builder(
 											getCurrentActivity()).setIcon(
 											android.R.drawable.ic_dialog_alert)
-											.setTitle("Alert Message")
-											.setMessage("You can't download this file, because SD card is not installed."))
+											.setTitle(getString(R.string.MapActivityAlertDialogTitle))
+											.setMessage(getString(R.string.CannotDownloadSdNotInstalled)))
 											.show();
 								}
 							}
-						}).setNegativeButton("No",
+						}).setNegativeButton(getString(R.string.NegativeButtonText),
 				new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int which) {
@@ -519,19 +520,19 @@ public class MapActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		menu.add(0, MENU_SEARCH, 0, "Search").setIcon(
+		menu.add(0, MENU_SEARCH, 0, getString(R.string.MenuSearch)).setIcon(
 				android.R.drawable.ic_menu_search);
 
-		menu.add(0, MENU_ZOOM, 0, "Zoom").setIcon(
+		menu.add(0, MENU_ZOOM, 0, getString(R.string.MenuZoom)).setIcon(
 				android.R.drawable.ic_menu_zoom);
 
-		menu.add(0, MENU_SWITCH_VIEW, 0, "Switch view").setIcon(
+		menu.add(0, MENU_SWITCH_VIEW, 0, getString(R.string.MenuSwitchView)).setIcon(
 				android.R.drawable.ic_menu_mapmode);
 
-		menu.add(0, MENU_SYNCHRONIZE, 0, "Synchronize").setIcon(
+		menu.add(0, MENU_SYNCHRONIZE, 0, getString(R.string.MenuSynchronize)).setIcon(
 				R.drawable.menu_sync);
 
-		menu.add(0, MENU_SAVE_AS, 0, "Save as").setIcon(
+		menu.add(0, MENU_SAVE_AS, 0, getString(R.string.MenuSaveAs)).setIcon(
 				android.R.drawable.ic_menu_save);
 
 		return true;

@@ -2,29 +2,57 @@
 <resources>
 	<string name="app_name">Comapping</string>
 
-	<string name="view_type_preference_key">viewType</string>
-	<string name="view_type_preference_title">View type</string>
-
-	<string name="explorer_view_value">Explorer view</string>
-	<string name="comapping_view_value">Comapping view</string>
-
-	<string name="download_folder_preference_key">downloadFolder</string>
-	<string name="download_folder_preference_title">Download Folder</string>
-	<string name="download_folder_preference_dialogTitle">Specify attachments downloading folder</string>
-	
-	<string name="use_proxy_preference_key">useProxy</string>
-	<string name="use_proxy_preference_title">Enable proxy</string>
-	<string name="proxy_host_preference_key">proxyHost</string>
-	<string name="proxy_host_preference_title">Proxy host</string>
-	<string name="proxy_port_preference_key">proxyPort</string>
-	<string name="proxy_port_preference_title">Proxy port</string>
-	<string name="use_proxy_auth_preference_key">useProxyAuth</string>
-	<string name="use_proxy_auth_preference_title">Use proxy auth</string>
-	<string name="proxy_name_preference_key">proxyAuthUserName</string>
-	<string name="proxy_name_preference_title">Proxy User Name</string>
-	<string name="proxy_password_preference_key">proxyAuthUserPassword</string>
-	<string name="proxy_password_preference_title">Proxy Password</string>
-	
 	<string name="search_label">Comapping</string>
-	<string name="search_hint">Search in the current map</string>	
+	<string name="search_hint">Search in the current map</string>
+
+    <!-- common -->
+    <string name="NeutralButtonText">OK</string>
+    <string name="PositiveButtonText">Yes</string>
+    <string name="NegativeButtonText">No</string>
+
+    <!-- map menu -->
+    <string name="MenuSearch">Search</string>
+    <string name="MenuZoom">Zoom</string>
+    <string name="MenuSwitchView">Switch view</string>
+    <string name="MenuSynchronize">Synchronize</string>
+    <string name="MenuSaveAs">Save as</string>
+
+    <!-- meta map & login menu -->
+    <string name="MenuLogout">Logout</string>
+    <string name="MenuPreferences">Preferences</string>
+    <string name="MenuAbout">About</string>
+
+    <!-- Login activity -->
+    <string name="LoginAttempt">Login attempt…</string>
+    <string name="AutologinAttemptFailed">Autologin attempt failed</string>
+    <string name="ConnectionError">Connection error</string>
+    <string name="EmailOrPasswordIncorrect">E-mail or password is incorrect</string>
+    <string name="UnknownResult">Unknown result</string>
+    <string name="LoginActivitySplashTitle">Comapping</string>
+
+    <!-- Map activity -->
+    <string name="MapActivitySplashTitle">Comapping</string>
+    <string name="MapActivityErrorDialogTitle">Error</string>
+    <string name="DownloadingMap">Downloading map</string>
+    <string name="MapNotFoundOnServer">This map wasn\'t found on server!</string>
+    <string name="ParsingMap">Parsing map</string>
+    <string name="LoadingMap">Loading map</string>
+    <string name="WrongFileFormat">Wrong file format</string>
+    <string name="SaveMapDialogTitle">Save map</string>
+    <string name="SaveMapDialogMessageFormat" formatted="false">Map: %s\nSave to %s ?</string>
+    <string name="MapActivityAlertDialogTitle">Alert Message</string>
+    <string name="CannotDownloadSdNotInstalled">You can\'t download this file, because SD card is not installed.
+    </string>
+
+    <!-- Meta map activity -->
+    <string name="PleaseSyncronizeMapList">Please synchronize your map list or open SD card view</string>
+    <string name="PleaseSyncronizeMapListNoSd">Please synchronize your map list.</string>
+    <string name="EmptyFolder">Folder is empty</string>
+    <string name="BytesSizeFormat">%d bytes</string>
+    <string name="KBytesSizeFormat">%d Kbytes</string>
+    <string name="TooBigMap" formatted="false">Map is too big.\nMax map size supported is: %s\nCurrent map:\n%s, %s</string>
+    <string name="MetaMapSplashTitle">Comapping</string>
+    <string name="LoadingMapList">Loading Map List…</string>
+
+
 </resources>

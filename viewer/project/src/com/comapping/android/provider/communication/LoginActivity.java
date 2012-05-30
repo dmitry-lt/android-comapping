@@ -34,13 +34,6 @@ public class LoginActivity extends Activity {
 
 	public static final String LOGIN_ACTIVITY_INTENT = "com.comapping.android.intent.LOGIN";
 
-	// messages
-	private static final String LOGIN_ATTEMPT_MESSAGE = "Login attempt...";
-	private static final String AUTOLOGIN_ATTEMPT_FAILED_MESSAGE = "Autologin attempt failed";
-	private static final String CONNECTION_ERROR_MESSAGE = "Connection error";
-	private static final String EMAIL_OR_PASSWORD_INCORRECT_MESSAGE = "E-mail or password is incorrect";
-	private static final String UNKNOWN_RESULT_MESSAGE = "Unknown result";
-
 	private static final int MENU_PREFERENCES = Menu.FIRST;
 	// private LoginView loginView;
 	private ProgressDialog splash = null;
@@ -81,19 +74,19 @@ public class LoginActivity extends Activity {
 			@Override
 			public void run() {
 				isWorking = true;
-				stateMsg = UNKNOWN_RESULT_MESSAGE;
+				stateMsg = getString(R.string.UnknownResult);
 				CachingClient client = Client.getClient(context);
 
 				try {
 					client.login(email, password, remember);
 				} catch (ConnectionException e) {
 					Log.e(Log.LOGIN_TAG, "connection exception");
-					stateMsg = CONNECTION_ERROR_MESSAGE;
+					stateMsg = getString(R.string.ConnectionError);
 				} catch (LoginInterruptedException e) {
 					Log.e(Log.LOGIN_TAG, "login interrupted");
 				} catch (InvalidCredentialsException e) {
 					Log.e(Log.LOGIN_TAG, "invalid credentails");
-					stateMsg = EMAIL_OR_PASSWORD_INCORRECT_MESSAGE;
+					stateMsg = getString(R.string.EmailOrPasswordIncorrect);
 				}
 
 				finishLoginAttempt(stateMsg);
@@ -118,7 +111,7 @@ public class LoginActivity extends Activity {
 			@Override
 			public void run() {
 				isWorking = true;
-				stateMsg = AUTOLOGIN_ATTEMPT_FAILED_MESSAGE;
+				stateMsg = getString(R.string.AutologinAttemptFailed);
 				CachingClient client = Client.getClient(context);
 
 				try {
@@ -126,7 +119,7 @@ public class LoginActivity extends Activity {
 					client.autologin();
 				} catch (ConnectionException e) {
 					Log.e(Log.LOGIN_TAG, "connection exception");
-					stateMsg = CONNECTION_ERROR_MESSAGE;
+					stateMsg = getString(R.string.ConnectionError);
 				} catch (LoginInterruptedException e) {
 					Log.e(Log.LOGIN_TAG, "login interrupted");
 				} catch (InvalidCredentialsException e) {
@@ -149,7 +142,7 @@ public class LoginActivity extends Activity {
 	public void loginClick() {
 
 //		Log.d("Logic Activity", "splash activate start");
-		splashActivate(LOGIN_ATTEMPT_MESSAGE);
+		splashActivate(getString(R.string.LoginAttempt));
 //		Log.d("Logic Activity", "splash activate end");
 		final String email = ((TextView) findViewById(R.id.eMail)).getText()
 				.toString().trim();
@@ -200,7 +193,7 @@ public class LoginActivity extends Activity {
 
 		if (isWorking) {
 //			Log.d("Logic Activity", "splash activate start");
-			splashActivate(LOGIN_ATTEMPT_MESSAGE);
+			splashActivate(getString(R.string.LoginAttempt));
 //			Log.d("Logic Activity", "splash activate end");
 		} else {
 			((TextView) findViewById(R.id.error)).setText(stateMsg);
@@ -208,7 +201,7 @@ public class LoginActivity extends Activity {
 				// autologin attempt
 				((TextView) findViewById(R.id.password)).setText("******");
 //				Log.d("Logic Activity", "splash activate start");
-				splashActivate(LOGIN_ATTEMPT_MESSAGE);
+				splashActivate(getString(R.string.LoginAttempt));
 //				Log.d("Logic Activity", "splash activate end");
 
 				startAutologin();
@@ -236,7 +229,7 @@ public class LoginActivity extends Activity {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				if (splash == null) {
-					splash = ProgressDialog.show(thisActivity, "Comapping",
+					splash = ProgressDialog.show(thisActivity, getString(R.string.LoginActivitySplashTitle),
 							message);
 				} else {
 					splash.setMessage(message);
@@ -269,7 +262,7 @@ public class LoginActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
 		// Build the menu that are shown when login.
-		menu.add(0, MENU_PREFERENCES, 0, "Preferences")
+		menu.add(0, MENU_PREFERENCES, 0, getString(R.string.MenuPreferences))
 		.setIcon(android.R.drawable.ic_menu_preferences);
 		
 		return true;

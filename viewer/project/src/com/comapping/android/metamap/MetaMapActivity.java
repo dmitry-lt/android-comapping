@@ -57,13 +57,6 @@ public class MetaMapActivity extends Activity {
 	private static final int MENU_PREFERENCES = Menu.FIRST + 1;
 	private static final int MENU_ABOUT = Menu.FIRST + 2;
 	
-	protected static final String DEFAULT_MAP_DESCRIPTION = "Map";
-	protected static final String DEFAULT_FOLDER_DESCRIPTION = "Folder";
-	
-	private static final String PLEASE_SYNCHRONIZE_MESSAGE = "Please synchronize your map list or open SD card view";
-	private static final String PLEASE_SYNCHRONIZE_NOSDMESSAGE = "Please synchronize your map list.";
-	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
-	
 	private static final int MAX_MAP_SIZE_IN_BYTES = 200 * 1024;
 	
 	// public variables
@@ -91,16 +84,19 @@ public class MetaMapActivity extends Activity {
 		
 		if (comappingProvider == null) {
 			if (isSdPresent())
-				comappingProvider = new MetaMapProvider(ComappingMapContentProvider.INFO, PLEASE_SYNCHRONIZE_MESSAGE,
-						EMPTY_FOLDER_MESSAGE, this);
+				comappingProvider = new MetaMapProvider(ComappingMapContentProvider.INFO, 
+						getString(R.string.PleaseSyncronizeMapList),
+						getString(R.string.EmptyFolder), this);
 			else
 				comappingProvider = new MetaMapProvider(ComappingMapContentProvider.INFO,
-						PLEASE_SYNCHRONIZE_NOSDMESSAGE, EMPTY_FOLDER_MESSAGE, this);
+						getString(R.string.PleaseSyncronizeMapListNoSd),
+						getString(R.string.EmptyFolder), this);
 		}
 		
 		if (sdCardProvider == null) {
-			sdCardProvider = new MetaMapProvider(FileMapContentProvider.INFO, EMPTY_FOLDER_MESSAGE,
-					EMPTY_FOLDER_MESSAGE, this);
+			sdCardProvider = new MetaMapProvider(FileMapContentProvider.INFO, 
+					getString(R.string.EmptyFolder),
+					getString(R.string.EmptyFolder), this);
 		}
 		
 		// set provider
@@ -139,15 +135,15 @@ public class MetaMapActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
-	private static String getSize(int size) {
+	private String getSize(int size) {
 		if (size == -1)
 			return "-";
 		
 		if (size < 1024) {
-			return size + " bytes";
+			return String.format(getString(R.string.BytesSizeFormat), size);
 		}
 		size /= 1024;
-		return size + " Kbytes";
+		return String.format(getString(R.string.KBytesSizeFormat), size);
 	}
 	
 	private void openMap(final MetaMapItem item, final String viewType, final boolean ignoreCache) {
@@ -165,9 +161,9 @@ public class MetaMapActivity extends Activity {
 					public void run() {
 						if (item.sizeInBytes > MAX_MAP_SIZE_IN_BYTES) {
 							new AlertDialog.Builder(currentActivity).setMessage(
-									"       Map is too big. \nMax map size supported is:\n"
-											+ getSize(MAX_MAP_SIZE_IN_BYTES) + "\nCurrent map:\n" + item.name + ", "
-											+ getSize(item.sizeInBytes)).create().show();
+									String.format(getString(R.string.TooBigMap),
+											getSize(MAX_MAP_SIZE_IN_BYTES),item.name,
+											getSize(item.sizeInBytes))).create().show();
 						} else {
 							MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
 						}
@@ -189,7 +185,7 @@ public class MetaMapActivity extends Activity {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				if (splash == null) {
-					splash = ProgressDialog.show(context, "Comapping", message);
+					splash = ProgressDialog.show(context, getString(R.string.MetaMapSplashTitle), message);
 					// splash.setOnCancelListener(new OnCancelListener() {
 					//
 					// public void onCancel(DialogInterface dialog) {
@@ -208,7 +204,7 @@ public class MetaMapActivity extends Activity {
 	}
 	
 	public void sync() {
-		final ProgressDialog splash = ProgressDialog.show(this, "Comapping", "Loading Map List...");
+		final ProgressDialog splash = ProgressDialog.show(this, getString(R.string.MetaMapSplashTitle), getString(R.string.LoadingMapList));
 		final Thread workThread = new Thread() {
 			@Override
 			public void run() {
@@ -538,9 +534,9 @@ public class MetaMapActivity extends Activity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		menu.add(0, MENU_LOGOUT, 0, "Logout").setIcon(R.drawable.menu_logout).setEnabled(currentProvider.canLogout());
-		menu.add(0, MENU_PREFERENCES, 0, "Preferences").setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(0, MENU_ABOUT, 0, "About").setIcon(android.R.drawable.ic_menu_info_details);
+		menu.add(0, MENU_LOGOUT, 0, getString(R.string.MenuLogout)).setIcon(R.drawable.menu_logout).setEnabled(currentProvider.canLogout());
+		menu.add(0, MENU_PREFERENCES, 0, getString(R.string.MenuPreferences)).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(0, MENU_ABOUT, 0, getString(R.string.MenuAbout)).setIcon(android.R.drawable.ic_menu_info_details);
 		return true;
 	}
 	
