@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Comapping</string>
+
+	<string name="search_label">Comapping</string>
+	<string name="search_hint">Искать на карте</string>
+
+    <!-- common -->
+    <string name="NeutralButtonText">OK</string>
+    <string name="PositiveButtonText">Да</string>
+    <string name="NegativeButtonText">Нет</string>
+    <string name="BytesIntegerSizeFormat" formatted="false">%d байт</string>
+    <string name="KBytesIntegerSizeFormat" formatted="false">%d КБ</string>
+    <string name="BytesFloatSizeFormat" formatted="false">%.2f байт</string>
+    <string name="KBytesFloatSizeFormat" formatted="false">%.2f КБ</string>
+    <string name="MBytesFloatSizeFormat" formatted="false">%.2f МБ</string>
+    <string name="GBytesFloatSizeFormat" formatted="false">%.2f ГБ</string>
+
+    <!-- map menu -->
+    <string name="MenuSearch">Поиск</string>
+    <string name="MenuZoom">Zoom</string>
+    <string name="MenuSwitchView">Switch view</string>
+    <string name="MenuSynchronize">Синхронизировать</string>
+    <string name="MenuSaveAs">Сохранить как</string>
+
+    <!-- meta map & login menu -->
+    <string name="MenuLogout">Logout</string>
+    <string name="MenuPreferences">Настройка</string>
+    <string name="MenuAbout">About</string>
+
+    <!-- Login activity -->
+    <string name="LoginAttempt">Авторизация…</string>
+    <string name="AutologinAttemptFailed">Не удалось войти</string>
+    <string name="ConnectionError">Ошибка соединения</string>
+    <string name="EmailOrPasswordIncorrect">Неверный e-mail или пароль</string>
+    <string name="UnknownResult">Неисзвестный результат</string>
+    <string name="LoginActivitySplashTitle">Comapping</string>
+
+    <!-- Map activity -->
+    <string name="MapActivitySplashTitle">Comapping</string>
+    <string name="MapActivityErrorDialogTitle">Ошибка</string>
+    <string name="DownloadingMap">Скачивание карты</string>
+    <string name="MapNotFoundOnServer">Карта не найдена на сервере!</string>
+    <string name="ParsingMap">Чтение карты</string>
+    <string name="LoadingMap">Загрузка карты</string>
+    <string name="WrongFileFormat">Неверный формат файла</string>
+    <string name="SaveMapDialogTitle">Сохранить карту</string>
+    <string name="SaveMapDialogMessageFormat" formatted="false">Карты: %s\nСохранить в %s ?</string>
+    <string name="MapActivityAlertDialogTitle">Внимание</string>
+    <string name="CannotDownloadSdNotInstalled">Невозможно скачать файл: нет SD карты
+    </string>
+    <string name="MapActivityNothingFound">Ничего не найдено</string>
+
+    <!-- Meta map activity -->
+    <string name="PleaseSyncronizeMapList">Пожалуйста, синхронизируйте список карт с сервером или откройте SD карту</string>
+    <string name="PleaseSyncronizeMapListNoSd">Пожалуйста, синхронизируйте список карт</string>
+    <string name="EmptyFolder">Пустая директория</string>
+    <string name="TooBigMap" formatted="false">Слишком большая карта.\nМаксимальный размер карты: %s\nВыбранная карта:\n%s, %s</string>
+    <string name="MetaMapSplashTitle">Comapping</string>
+    <string name="LoadingMapList">Загрузка списка карт…</string>
+
+    <!-- Map content provider -->
+    <string name="LastSynchronizationFormat" formatted="false">Синхронизировано %s\nРазмер: %s</string>
+    <string name="NotSynchronizedYet">Не синхронизировано</string>
+    <string name="JustNow">только что</string>
+    <string name="MinuteAgoFormat" formatted="false">%d мин назад</string>
+    <string name="MinutesAgoFormat" formatted="false">%d мин назад</string>
+    <string name="HourAgoFormat" formatted="false">%d ч назад</string>
+    <string name="HoursAgoFormat" formatted="false">%d ч назад</string>
+    <string name="DayAgoFormat" formatted="false">%d д назад</string>
+    <string name="DaysAgoFormat" formatted="false">%d д назад</string>
+
+    <!-- preferences -->
+    <string name="view_type_preference_key">viewType</string>
+    <string name="view_type_preference_title">Вид</string>
+
+    <string name="explorer_view_value">Explorer view</string>
+    <string name="comapping_view_value">Comapping view</string>
+
+    <string name="download_folder_preference_key">downloadFolder</string>
+    <string name="download_folder_preference_title">Download Folder</string>
+    <string name="download_folder_preference_dialogTitle">Specify attachments downloading folder</string>
+
+    <string name="use_proxy_preference_key">useProxy</string>
+    <string name="use_proxy_preference_title">Использовать прокси</string>
+    <string name="proxy_host_preference_key">proxyHost</string>
+    <string name="proxy_host_preference_title">Хост</string>
+    <string name="proxy_port_preference_key">proxyPort</string>
+    <string name="proxy_port_preference_title">Порт</string>
+    <string name="use_proxy_auth_preference_key">useProxyAuth</string>
+    <string name="use_proxy_auth_preference_title">Использовать авторизацию</string>
+    <string name="proxy_name_preference_key">proxyAuthUserName</string>
+    <string name="proxy_name_preference_title">Имя пользователя</string>
+    <string name="proxy_password_preference_key">proxyAuthUserPassword</string>
+    <string name="proxy_password_preference_title">Пароль</string>
+
+    <!-- about dialog -->
+    <string name="AboutDialogTitle">Информация</string>
+    <string name="AboutDevelopers">Версия: 1.0.0\n
+        Дата: 23.07.09\n
+        E-mail: android@comapping.com\n
+        \n
+        Разработчики:\n
+        Timur Abishev\n
+        Stepan Korshakov\n
+        Dmitriy Kozorez\n
+        Vladimir Kulikov\n
+        Dmitriy Manaev\n
+        Victor Passichenko\n
+        Yuri Zemlyanskiy\n
+        \n
+        Руководители:\n
+        Nikolay Artamonov\n
+        Dmitriy Kichinsky\n
+    </string>
+
+    <!-- map render -->
+    <string name="AttachmentDialogTitle">Вложение</string>
+    <string name="AttachmentDialogMessageFormat" formatted="false">Файл: %s\nЗагружен: %s\nSize: %s\n\nСохранить в %s ?</string>
+    <string name="ErrorDownloadingAndSavingFile">Ошибка при скачивании и сохранении файла</string>
+    <string name="AttachmentAlertDialogTitle">Внимание</string>
+    <string name="AttachmentAlertSdNotInstalled">Невозможно сохранить файл: нет SD карты
+    </string>
+
+    <!-- notes render -->
+    <string name="NoteDialogTitle">Заметка</string>
+
+    <!-- tasks render -->
+    <string name="TaskStartFormat" formatted="false">Начало: %s</string>
+    <string name="TaskDeadlineFormat" formatted="false">Окончание: %s</string>
+    <string name="TaskEstimateFormat" formatted="false">Оценка: %s</string>
+    <string name="TaskDialogTitle">Задача</string>
+    <string name="TaskDialogMessageFormat" formatted="false">Ответственный: %s\nНачало: %s\nОкончание: %s\nОценка: %s</string>
+
+</resources>

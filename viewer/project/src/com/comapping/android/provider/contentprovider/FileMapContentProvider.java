@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.comapping.android.Log;
+import com.comapping.android.R;
 import com.comapping.android.metamap.MetaMapItem;
 import com.comapping.android.provider.ioHelper;
 
@@ -19,7 +20,6 @@ public class FileMapContentProvider extends MapContentProvider {
 	public static final MapContentProviderInfo INFO = new MapContentProviderInfo(
 			"sdcard", "", false, false);
 	public static final Uri CONTENT_URI = Uri.parse("content://" + INFO.root);
-	private static final String EMPTY_FOLDER_MESSAGE = "Folder is empty";
 
 	private static final String MAP_DESCRIPTION = "";
 	private static final String FOLDER_DESCRIPTION = "";
@@ -134,7 +134,7 @@ public class FileMapContentProvider extends MapContentProvider {
 	}
 
 	public String getEmptyListText() {
-		return EMPTY_FOLDER_MESSAGE;
+		return getContext().getString(R.string.EmptyFolder);
 	}
 
 	private QueryType detectQueryType(Uri uri) {
