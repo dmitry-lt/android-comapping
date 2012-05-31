@@ -331,7 +331,7 @@ public class MapView extends View {
 			queryLabel.setText((selectedSearchResult + 1) + "\\"
 					+ findTopics.size() + "\n" + query);
 		} else {
-			queryLabel.setText("Nothing found!");
+			queryLabel.setText(R.string.MapActivityNothingFound);
 		}
 
 	}

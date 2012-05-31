@@ -9,6 +9,12 @@
     <string name="NeutralButtonText">OK</string>
     <string name="PositiveButtonText">Yes</string>
     <string name="NegativeButtonText">No</string>
+    <string name="BytesIntegerSizeFormat" formatted="false">%d bytes</string>
+    <string name="KBytesIntegerSizeFormat" formatted="false">%d KB</string>
+    <string name="BytesFloatSizeFormat" formatted="false">%.2f bytes</string>
+    <string name="KBytesFloatSizeFormat" formatted="false">%.2f KB</string>
+    <string name="MBytesFloatSizeFormat" formatted="false">%.2f MB</string>
+    <string name="GBytesFloatSizeFormat" formatted="false">%.2f GB</string>
 
     <!-- map menu -->
     <string name="MenuSearch">Search</string>
@@ -43,13 +49,12 @@
     <string name="MapActivityAlertDialogTitle">Alert Message</string>
     <string name="CannotDownloadSdNotInstalled">You can\'t download this file, because SD card is not installed.
     </string>
+    <string name="MapActivityNothingFound">Nothing found!</string>
 
     <!-- Meta map activity -->
     <string name="PleaseSyncronizeMapList">Please synchronize your map list or open SD card view</string>
     <string name="PleaseSyncronizeMapListNoSd">Please synchronize your map list.</string>
     <string name="EmptyFolder">Folder is empty</string>
-    <string name="BytesSizeFormat">%d bytes</string>
-    <string name="KBytesSizeFormat">%d Kbytes</string>
     <string name="TooBigMap" formatted="false">Map is too big.\nMax map size supported is: %s\nCurrent map:\n%s, %s</string>
     <string name="MetaMapSplashTitle">Comapping</string>
     <string name="LoadingMapList">Loading Map List…</string>
@@ -88,6 +93,8 @@
     <string name="proxy_name_preference_title">Proxy User Name</string>
     <string name="proxy_password_preference_key">proxyAuthUserPassword</string>
     <string name="proxy_password_preference_title">Proxy Password</string>
+
+    <!-- about dialog -->
     <string name="AboutDialogTitle">About Comap viewer</string>
     <string name="AboutDevelopers">Version: 1.0.0\n
         Release date: 23.07.09\n
@@ -106,4 +113,23 @@
         Nikolay Artamonov\n
         Dmitriy Kichinsky\n
     </string>
+
+    <!-- map render -->
+    <string name="AttachmentDialogTitle">Attachment</string>
+    <string name="AttachmentDialogMessageFormat" formatted="false">File: %s\nUpload date: %s\nSize: %s\n\nSave in %s ?</string>
+    <string name="ErrorDownloadingAndSavingFile">Error while downloading and saving file</string>
+    <string name="AttachmentAlertDialogTitle">Alert Message</string>
+    <string name="AttachmentAlertSdNotInstalled">You can\'t download this file because SD card is not installed.
+    </string>
+
+    <!-- notes render -->
+    <string name="NoteDialogTitle">Note</string>
+
+    <!-- tasks render -->
+    <string name="TaskStartFormat" formatted="false">Start: %s</string>
+    <string name="TaskDeadlineFormat" formatted="false">Deadline: %s</string>
+    <string name="TaskEstimateFormat" formatted="false">Estimate: %s</string>
+    <string name="TaskDialogTitle">Task</string>
+    <string name="TaskDialogMessageFormat" formatted="false">Responsible: %s\nStart date: %s\nDeadline: %s\nEstimate: %s</string>
+
 </resources>

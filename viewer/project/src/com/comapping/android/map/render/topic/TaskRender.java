@@ -1,5 +1,6 @@
 package com.comapping.android.map.render.topic;
 
+import com.comapping.android.R;
 import com.comapping.android.map.model.map.Task;
 import com.comapping.android.map.model.text.FormattedText;
 import com.comapping.android.map.model.text.TextFormat;
@@ -48,18 +49,18 @@ public class TaskRender extends Render {
 					task.getResponsible(), FORMAT);
 			responsibleRender = new TextRender(responsible, context);
 
-			FormattedText start = !task.getStart().equals("") ? new FormattedText(
-					"Start: " + task.getStart(), FORMAT)
+			FormattedText start = !task.getStart().equals("") ?
+					new FormattedText(String.format(context.getString(R.string.TaskStartFormat), task.getStart()), FORMAT)
 					: null;
 			startRender = new TextRender(start, context);
 
-			FormattedText deadline = !task.getDeadline().equals("") ? new FormattedText(
-					"Deadline: " + task.getDeadline(), FORMAT)
+			FormattedText deadline = !task.getDeadline().equals("") ? 
+					new FormattedText(String.format(context.getString(R.string.TaskDeadlineFormat), task.getDeadline()), FORMAT)
 					: null;
 			deadlineRender = new TextRender(deadline, context);
 
-			FormattedText estimate = !task.getEstimate().equals("") ? new FormattedText(
-					"Estimate: " + task.getEstimate(), FORMAT)
+			FormattedText estimate = !task.getEstimate().equals("") ? 
+					new FormattedText(String.format(context.getString(R.string.TaskEstimateFormat), task.getEstimate()), FORMAT)
 					: null;
 			estimateRender = new TextRender(estimate, context);
 
@@ -145,11 +146,10 @@ public class TaskRender extends Render {
 	public boolean onTouch(int x, int y) {
 		if (!isEmpty) {
 			if (dialog == null) {
-				dialog = (new AlertDialog.Builder(context).setTitle("Task").setMessage(
-						"Responsible: " + task.getResponsible() + "\n" + 
-						"Start date: " + task.getStart() + "\n" + 
-						"Deadline: " + task.getDeadline() + "\n" + 
-						"Estimate: " + task.getEstimate()).setNeutralButton("Ok", null)).create();
+				dialog = (new AlertDialog.Builder(context).setTitle(R.string.TaskDialogTitle).setMessage(
+						String.format(context.getString(R.string.TaskDialogMessageFormat),
+								task.getResponsible(), task.getStart(), task.getDeadline(), task.getEstimate()))
+						.setNeutralButton(R.string.NeutralButtonText, null)).create();
 			}
 			dialog.show();
 		}

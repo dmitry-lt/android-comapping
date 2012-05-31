@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.os.Environment;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
 import com.comapping.android.preferences.PreferencesStorage;
@@ -103,88 +104,86 @@ public class AttachmentRender extends Render {
 					PreferencesStorage.DOWNLOAD_FOLDER_DEFAULT_VALUE, context);
 
 			dialog = (new AlertDialog.Builder(context).setIcon(
-					android.R.drawable.ic_dialog_info).setTitle("Attachment")
+					android.R.drawable.ic_dialog_info).setTitle(R.string.AttachmentDialogTitle)
 					.setMessage(
-							"File: " + attachment.getFilename() + "\n"
-									+ "Upload date: "
-									+ formatDate(attachment.getDate()) + "\n"
-									+ "Size: "
-									+ formatFileSize(attachment.getSize())
-									+ "\n\n" + "Save in " + downloadFolder
-									+ " ?").setNegativeButton("No",
+							String.format(context.getString(R.string.AttachmentDialogMessageFormat),
+									attachment.getFilename(),
+									formatDate(attachment.getDate()),
+									formatFileSize(attachment.getSize()),
+									downloadFolder))
+					.setNegativeButton(R.string.NegativeButtonText,
 							new DialogInterface.OnClickListener() {
 
 								public void onClick(DialogInterface dialog,
-										int which) {
+													int which) {
 
 								}
-							}).setPositiveButton("Yes",
-					new DialogInterface.OnClickListener() {
+							})
+					.setPositiveButton(R.string.PositiveButtonText,
+							new DialogInterface.OnClickListener() {
 
-						public void onClick(DialogInterface dialog, int which) {
-							if (android.os.Environment
-									.getExternalStorageState()
-									.equals(
-											android.os.Environment.MEDIA_MOUNTED)) {
-								downloadProgressDialog = new ProgressDialog(
-										context);
-								downloadProgressDialog
-										.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-								downloadProgressDialog
-										.setOnDismissListener(new OnDismissListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									if (Environment
+											.getExternalStorageState()
+											.equals(
+													Environment.MEDIA_MOUNTED)) {
+										downloadProgressDialog = new ProgressDialog(
+												context);
+										downloadProgressDialog
+												.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+										downloadProgressDialog
+												.setOnDismissListener(new OnDismissListener() {
 
-											public void onDismiss(
-													DialogInterface dialog) {
-												if (!downloadedSuccessfully) {
-													(new AlertDialog.Builder(
-															context)
-															.setMessage(
-																	"Error while downloading and saving file")
-															.setNeutralButton(
-																	"Ok", null)
-															.create()).show();
-												}
-											}
-										});
-								downloadProgressDialog.show();
-								downloadProgressDialog.setProgress(0);
+													public void onDismiss(
+															DialogInterface dialog) {
+														if (!downloadedSuccessfully) {
+															(new AlertDialog.Builder(
+																	context)
+																	.setMessage(R.string.ErrorDownloadingAndSavingFile)
+																	.setNeutralButton(R.string.NeutralButtonText, null)
+																	.create()).show();
+														}
+													}
+												});
+										downloadProgressDialog.show();
+										downloadProgressDialog.setProgress(0);
 
-								final Thread downloadAndSaveThread = new Thread(
-										new Runnable() {
+										final Thread downloadAndSaveThread = new Thread(
+												new Runnable() {
 
-											public void run() {
-												try {
-													downloadAndSaveAttachment();
-													downloadedSuccessfully = true;
-												} catch (ConnectionException e) {
-													downloadedSuccessfully = false;
-													e.printStackTrace();
-												}
-												downloadProgressDialog
-														.dismiss();
-											}
-										});
-								downloadAndSaveThread.start();
+													public void run() {
+														try {
+															downloadAndSaveAttachment();
+															downloadedSuccessfully = true;
+														} catch (ConnectionException e) {
+															downloadedSuccessfully = false;
+															e.printStackTrace();
+														}
+														downloadProgressDialog
+																.dismiss();
+													}
+												});
+										downloadAndSaveThread.start();
 
-								downloadProgressDialog
-										.setOnCancelListener(new OnCancelListener() {
+										downloadProgressDialog
+												.setOnCancelListener(new OnCancelListener() {
 
-											public void onCancel(
-													DialogInterface dialog) {
-												downloadAndSaveThread
-														.interrupt();
-											}
-										});
-								downloadProgressDialog.setCancelable(true);
-							} else {
-								(new AlertDialog.Builder(context).setIcon(
-										android.R.drawable.ic_dialog_alert)
-										.setTitle("Alert Message")
-										.setMessage("You can't download this file because SD card is not installed."))
-										.show();
-							}
-						}
-					})).create();
+													public void onCancel(
+															DialogInterface dialog) {
+														downloadAndSaveThread
+																.interrupt();
+													}
+												});
+										downloadProgressDialog.setCancelable(true);
+									} else {
+										(new AlertDialog.Builder(context).setIcon(
+												android.R.drawable.ic_dialog_alert)
+												.setTitle(R.string.AttachmentAlertDialogTitle)
+												.setMessage(R.string.AttachmentAlertSdNotInstalled))
+												.show();
+									}
+								}
+							})).create();
 		}
 		dialog.show();
 		return false;
@@ -200,13 +199,13 @@ public class AttachmentRender extends Render {
 		float fSize = size;
 		String res = "";
 		if (size > 1024 * 1024 * 1024) {
-			res = String.format("%.2f", fSize / (1024 * 1024 * 1024)) + " GB";
+			res = String.format(context.getString(R.string.GBytesFloatSizeFormat), fSize / (1024 * 1024 * 1024));
 		} else if (size > 1024 * 1024) {
-			res = String.format("%.2f", fSize / (1024 * 1024)) + " MB";
+			res = String.format(context.getString(R.string.MBytesFloatSizeFormat), fSize / (1024 * 1024));
 		} else if (size > 1024) {
-			res = String.format("%.2f", fSize / 1024) + " KB";
+			res = String.format(context.getString(R.string.KBytesFloatSizeFormat), fSize / 1024);
 		} else if (size > 0) {
-			res = fSize + " bytes";
+			res = String.format(context.getString(R.string.BytesFloatSizeFormat), fSize);
 		}
 		return res;
 	}

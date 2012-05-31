@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+import com.comapping.android.R;
 import com.comapping.android.map.model.text.FormattedText;
 import com.comapping.android.map.model.text.TextFormat;
 import com.comapping.android.map.render.Render;
@@ -60,7 +61,7 @@ public class NoteRender extends Render {
 		if (!isEmpty) {
 			if (dialog == null) {
 				dialog = new AlertDialog.Builder(context)
-						.setTitle("Note").setMessage(note).setNeutralButton("Ok", null).create();
+						.setTitle(R.string.NoteDialogTitle).setMessage(note).setNeutralButton(R.string.NeutralButtonText, null).create();
 			}
 			dialog.show();
 			return true;

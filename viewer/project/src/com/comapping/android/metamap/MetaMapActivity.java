@@ -146,10 +146,10 @@ public class MetaMapActivity extends Activity {
 			return "-";
 		
 		if (size < 1024) {
-			return String.format(context.getString(R.string.BytesSizeFormat), size);
+			return String.format(context.getString(R.string.BytesIntegerSizeFormat), size);
 		}
 		size /= 1024;
-		return String.format(context.getString(R.string.KBytesSizeFormat), size);
+		return String.format(context.getString(R.string.KBytesIntegerSizeFormat), size);
 	}
 	
 	private void openMap(final MetaMapItem item, final String viewType, final boolean ignoreCache) {
