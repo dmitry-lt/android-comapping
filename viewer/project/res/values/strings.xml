@@ -54,5 +54,56 @@
     <string name="MetaMapSplashTitle">Comapping</string>
     <string name="LoadingMapList">Loading Map List…</string>
 
+    <!-- Map content provider -->
+    <string name="LastSynchronizationFormat" formatted="false">Last synchronization %s\nSize: %s</string>
+    <string name="NotSynchronizedYet">Not syncronized yet</string>
+    <string name="JustNow">just now</string>
+    <string name="MinuteAgoFormat" formatted="false">%d minute ago</string>
+    <string name="MinutesAgoFormat" formatted="false">%d minutes ago</string>
+    <string name="HourAgoFormat" formatted="false">%d hour ago</string>
+    <string name="HoursAgoFormat" formatted="false">%d hours ago</string>
+    <string name="DayAgoFormat" formatted="false">%d day ago</string>
+    <string name="DaysAgoFormat" formatted="false">%d days ago</string>
 
+    <!-- preferences -->
+    <string name="view_type_preference_key">viewType</string>
+    <string name="view_type_preference_title">View type</string>
+
+    <string name="explorer_view_value">Explorer view</string>
+    <string name="comapping_view_value">Comapping view</string>
+
+    <string name="download_folder_preference_key">downloadFolder</string>
+    <string name="download_folder_preference_title">Download Folder</string>
+    <string name="download_folder_preference_dialogTitle">Specify attachments downloading folder</string>
+
+    <string name="use_proxy_preference_key">useProxy</string>
+    <string name="use_proxy_preference_title">Enable proxy</string>
+    <string name="proxy_host_preference_key">proxyHost</string>
+    <string name="proxy_host_preference_title">Proxy host</string>
+    <string name="proxy_port_preference_key">proxyPort</string>
+    <string name="proxy_port_preference_title">Proxy port</string>
+    <string name="use_proxy_auth_preference_key">useProxyAuth</string>
+    <string name="use_proxy_auth_preference_title">Use proxy auth</string>
+    <string name="proxy_name_preference_key">proxyAuthUserName</string>
+    <string name="proxy_name_preference_title">Proxy User Name</string>
+    <string name="proxy_password_preference_key">proxyAuthUserPassword</string>
+    <string name="proxy_password_preference_title">Proxy Password</string>
+    <string name="AboutDialogTitle">About Comap viewer</string>
+    <string name="AboutDevelopers">Version: 1.0.0\n
+        Release date: 23.07.09\n
+        E-mail: android@comapping.com\n
+        \n
+        Developers:\n
+        Timur Abishev\n
+        Stepan Korshakov\n
+        Dmitriy Kozorez\n
+        Vladimir Kulikov\n
+        Dmitriy Manaev\n
+        Victor Passichenko\n
+        Yuri Zemlyanskiy\n
+        \n
+        Project managers:\n
+        Nikolay Artamonov\n
+        Dmitriy Kichinsky\n
+    </string>
 </resources>

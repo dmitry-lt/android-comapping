@@ -134,16 +134,22 @@ public class MetaMapActivity extends Activity {
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
-	private String getSize(int size) {
+
+	/**
+	 * Returns localized string with size
+	 * @param context for getting access to string resources
+	 * @param size in bytes
+	 * @return localized string containing size and measuring units
+	 */
+	public static String getSize(Context context, int size) {
 		if (size == -1)
 			return "-";
 		
 		if (size < 1024) {
-			return String.format(getString(R.string.BytesSizeFormat), size);
+			return String.format(context.getString(R.string.BytesSizeFormat), size);
 		}
 		size /= 1024;
-		return String.format(getString(R.string.KBytesSizeFormat), size);
+		return String.format(context.getString(R.string.KBytesSizeFormat), size);
 	}
 	
 	private void openMap(final MetaMapItem item, final String viewType, final boolean ignoreCache) {
@@ -162,8 +168,8 @@ public class MetaMapActivity extends Activity {
 						if (item.sizeInBytes > MAX_MAP_SIZE_IN_BYTES) {
 							new AlertDialog.Builder(currentActivity).setMessage(
 									String.format(getString(R.string.TooBigMap),
-											getSize(MAX_MAP_SIZE_IN_BYTES),item.name,
-											getSize(item.sizeInBytes))).create().show();
+											getSize(currentActivity, MAX_MAP_SIZE_IN_BYTES),item.name,
+											getSize(currentActivity, item.sizeInBytes))).create().show();
 						} else {
 							MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
 						}

@@ -174,7 +174,7 @@ public class LoginActivity extends Activity {
 		// bind login button
 		// loginView = new LoginView(this);
 
-		((Button) findViewById(R.id.login))
+		(findViewById(R.id.login))
 				.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						loginClick();
@@ -187,7 +187,7 @@ public class LoginActivity extends Activity {
 					null, this);
 			if (email != null) {
 				((TextView) findViewById(R.id.eMail)).setText(email);
-				((TextView) findViewById(R.id.password)).requestFocus();
+				(findViewById(R.id.password)).requestFocus();
 			}
 		}
 

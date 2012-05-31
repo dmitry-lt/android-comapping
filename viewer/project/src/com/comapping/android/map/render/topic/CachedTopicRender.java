@@ -48,11 +48,9 @@ public class CachedTopicRender {
 				return;
 			}
 		}
-		
-		for (int i = 1; i < CACHE_SIZE; i++) {
-			cache[i - 1] = cache[i];
-		}
-		
+
+		System.arraycopy(cache, 1, cache, 0, CACHE_SIZE - 1);
+
 		TopicRender topicRender = new TopicRender(topic, context);
 		topicRender.setMaxWidth(maxWidth);
 		cache[CACHE_SIZE - 1] = new CacheItem(maxWidth, topicRender);

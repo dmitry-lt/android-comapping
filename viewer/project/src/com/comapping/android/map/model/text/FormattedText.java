@@ -85,7 +85,7 @@ public class FormattedText implements Serializable {
 		for (int i = 0; i < textParagraphs.size(); i++) {
 			TextParagraph cur = textParagraphs.get(i);
 			if (i < textParagraphs.size() - 1) {
-				text.append(cur.getSimpleText() + "\n");
+				text.append(cur.getSimpleText()).append("\n");
 			} else {
 				text.append(cur.getSimpleText());
 			}

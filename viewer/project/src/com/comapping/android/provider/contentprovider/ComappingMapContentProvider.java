@@ -1,22 +1,18 @@
 package com.comapping.android.provider.contentprovider;
 
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.database.AbstractCursor;
 import android.database.Cursor;
 import android.net.Uri;
-
 import com.comapping.android.Log;
+import com.comapping.android.R;
 import com.comapping.android.map.model.map.Map;
 import com.comapping.android.map.model.map.Topic;
 import com.comapping.android.map.model.map.builder.MapBuilder;
 import com.comapping.android.map.model.map.builder.SaxMapBuilder;
+import com.comapping.android.metamap.MetaMapActivity;
 import com.comapping.android.metamap.MetaMapItem;
 import com.comapping.android.provider.communication.CachingClient;
 import com.comapping.android.provider.communication.Client;
@@ -27,6 +23,11 @@ import com.comapping.android.provider.contentprovider.exceptions.ConnectionRunti
 import com.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
 import com.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 import com.comapping.android.provider.contentprovider.exceptions.NotImplementedException;
+
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ComappingMapContentProvider extends MapContentProvider {
 	public static final MapContentProviderInfo INFO = new MapContentProviderInfo("www.comapping.com", "maps", true,
@@ -231,7 +232,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 				}
 			}
 			if (!folderFound) {
-				Log.w(Log.PROVIDER_COMAPPING_TAG, "Folder " + segment + " is't exist!");
+				Log.w(Log.PROVIDER_COMAPPING_TAG, "Folder " + segment + " isn't exist!");
 				// stop at curTopic
 				return curTopic;
 			}
@@ -274,7 +275,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 
 		@Override
 		public String[] getColumnNames() {
-			return new String[] { "clientId" };
+			return new String[]{"clientId"};
 		}
 
 		@Override
@@ -325,9 +326,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 	}
 
 	private class ComappingMetamapCursor extends MetamapCursor {
-		private static final String LAST_SYNCHRONIZATION = "Last synchronization";
 
-		private static final String MAP_DESCRIPTION = "Not syncronized yet";
 		private static final String FOLDER_DESCRIPTION = "";
 
 		public ComappingMetamapCursor(Topic topic) {
@@ -374,53 +373,40 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		private String getLastSynchronization(Timestamp date) {
 			long time = (System.currentTimeMillis() - date.getTime()) / 1000;
 			if (time < 5 * 60) {
-				return "just now";
+				return context.getString(R.string.JustNow);
 			}
 			time /= 60;
 			if (time < 60) {
 				if (time == 1) {
-					return time + " minute ago";
+					return String.format(context.getString(R.string.MinuteAgoFormat),time);
 				} else {
-					return time + " minutes ago";
+					return String.format(context.getString(R.string.MinutesAgoFormat),time);
 				}
 			}
 			time /= 60;
 			if (time < 24) {
 				if (time == 1) {
-					return time + " hour ago";
+					return String.format(context.getString(R.string.HourAgoFormat),time);
 				} else {
-					return time + " hours ago";
+					return String.format(context.getString(R.string.HoursAgoFormat),time);
 				}
 			}
 			time /= 24;
 			if (time == 1) {
-				return time + " day ago";
+				return String.format(context.getString(R.string.DayAgoFormat),time);
 			} else {
-				return time + " days ago";
+				return String.format(context.getString(R.string.DaysAgoFormat),time);
 			}
-		}
-
-		private String getSize(int size) {
-			if (size == -1)
-				return "-";
-
-			if (size < 1024) {
-				return size + " bytes";
-			}
-			size /= 1024;
-			return size + " Kbytes";
 		}
 
 		private String getMapDescription(MetaMapItem item) {
 			Timestamp lastSynchronizationDate = item.lastSynchronizationDate;
 
 			if (lastSynchronizationDate == null) {
-				return MAP_DESCRIPTION;
+				return context.getString(R.string.NotSynchronizedYet);
 			} else {
-				String result = LAST_SYNCHRONIZATION + ": " + getLastSynchronization(lastSynchronizationDate)
-						+ "\nSize: ";
-				result = result + getSize(item.sizeInBytes);
-				return result;
+				return String.format(context.getString(R.string.LastSynchronizationFormat),
+						getLastSynchronization(lastSynchronizationDate), MetaMapActivity.getSize(context, item.sizeInBytes));
 			}
 		}
 
