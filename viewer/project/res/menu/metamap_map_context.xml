@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-    	android:title="Open Map"
+    	android:title="@string/OpenMap"
     	android:id="@+id/open"
     />    
     <item
-    	android:title="Open with Explorer view"
+    	android:title="@string/OpenWithExplorerView"
     	android:id="@+id/openExplorer"
     />
     <item
-    	android:title="Open with Comapping view"
+    	android:title="@string/OpenWithComappingView"
     	android:id="@+id/openComapping"
     />
 </menu>

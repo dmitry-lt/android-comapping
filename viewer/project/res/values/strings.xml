@@ -158,4 +158,10 @@
     <string name="PreferencesProxyLoginHint">Enter Login for proxy</string>
     <string name="PreferencesProxyPasswordHint">Enter Pass for proxy</string>
 
+    <!-- context menu -->
+    <string name="OpenFolder">Open folder</string>
+    <string name="OpenMap">Open Map</string>
+    <string name="OpenWithExplorerView">Open with Explorer view</string>
+    <string name="OpenWithComappingView">Open with Comapping view</string>
+
 </resources>

@@ -54,7 +54,7 @@
     <!-- Meta map activity -->
     <string name="PleaseSyncronizeMapList">Пожалуйста, синхронизируйте список карт с сервером или откройте SD карту</string>
     <string name="PleaseSyncronizeMapListNoSd">Пожалуйста, синхронизируйте список карт</string>
-    <string name="EmptyFolder">Пустая директория</string>
+    <string name="EmptyFolder">Пустая папка</string>
     <string name="TooBigMap" formatted="false">Слишком большая карта.\nМаксимальный размер карты: %s\nВыбранная карта:\n%s, %s</string>
     <string name="MetaMapSplashTitle">Comapping</string>
     <string name="LoadingMapList">Загрузка списка карт…</string>
@@ -77,7 +77,7 @@
     <string name="comapping_view_value">Comapping view</string>
 
     <string name="download_folder_preference_title">Папка для загрузок</string>
-    <string name="download_folder_preference_dialogTitle">Укажите директорию для загрузки файлов</string>
+    <string name="download_folder_preference_dialogTitle">Укажите папку для загрузки файлов</string>
 
     <string name="full_screen_preference_title">На весь экран</string>
 
@@ -148,5 +148,11 @@
     <string name="PreferencesProxyPortHint">Введите номер порта (макс. 65536)</string>
     <string name="PreferencesProxyLoginHint">Введите логин для прокси</string>
     <string name="PreferencesProxyPasswordHint">Введите пароль для прокси</string>
+
+    <!-- context menu -->
+    <string name="OpenFolder">Открыть папку</string>
+    <string name="OpenMap">Открыть карту</string>
+    <string name="OpenWithExplorerView">Открыть в Explorer view</string>
+    <string name="OpenWithComappingView">Открыть в Comapping view</string>
 
 </resources>
