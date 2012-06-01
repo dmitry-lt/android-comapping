@@ -53,7 +53,7 @@
 				android:layout_width="wrap_content"
 				android:layout_gravity="center"
 				android:paddingBottom="10px"
-				android:text="Try to syncronize or open SD-card or other folder"
+				android:text="@string/MetaMapTryToSynchronize"
 				android:id="@+id/emptyListText">
 			</TextView>
 			<Button 
@@ -61,7 +61,7 @@
 				android:layout_height="wrap_content" 
 				android:layout_gravity="center"
 				android:id="@+id/welcome" 
-				android:text="Welcome map">
+				android:text="@string/MetaMapWelcomeMap">
 			</Button>
 		</LinearLayout>		
 	</FrameLayout>		

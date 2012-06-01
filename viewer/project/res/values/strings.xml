@@ -132,4 +132,27 @@
     <string name="TaskDialogTitle">Task</string>
     <string name="TaskDialogMessageFormat" formatted="false">Responsible: %s\nStart date: %s\nDeadline: %s\nEstimate: %s</string>
 
+    <!-- Login layout -->
+    <string name="Email">E-mail</string>
+    <string name="Password">Password</string>
+    <string name="RememberMe">Remember me</string>
+    <string name="Login">Login</string>
+
+    <!-- Meta map layout -->
+    <string name="MetaMapTryToSynchronize">Try to syncronize or open SD-card or other folder</string>
+    <string name="MetaMapWelcomeMap">Welcome map</string>
+    <string name="MetaMapNoAvailableText">no avalible text</string>
+
+    <!-- Preferences layout -->
+    <string name="PreferencesView">View</string>
+    <string name="PreferencesAttachment">Attachment</string>
+    <string name="PreferencesProxySettings">Proxy settings</string>
+    <string name="PreferencesProxySummary">Manage proxy, set proxy auth.</string>
+    <string name="PreferencesEnableProxy">Enable proxy</string>
+    <string name="PreferencesProxyAuth">Proxy Auth</string>
+    <string name="PreferencesProxyHostHint">Enter proxy host</string>
+    <string name="PreferencesProxyPortHint">Enter port number (max 65536)</string>
+    <string name="PreferencesProxyLoginHint">Enter Login for proxy</string>
+    <string name="PreferencesProxyPasswordHint">Enter Pass for proxy</string>
+
 </resources>

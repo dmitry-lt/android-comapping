@@ -31,7 +31,7 @@
 					android:id="@+id/eMailTextView"
 					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content"
-					android:text="E-mail" android:textSize="16px" android:textColor="#FFFFFFFF">
+					android:text="@string/Email" android:textSize="16px" android:textColor="#FFFFFFFF">
 				</TextView>
 				<EditText 
 					android:id="@+id/eMail"
@@ -39,7 +39,8 @@
 					android:maxWidth="10px"
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content"
-					android:layout_marginLeft="10px">
+					android:layout_marginLeft="10px"
+                    android:inputType="textEmailAddress">
 				</EditText>
 			</TableRow>
 			<TableRow 
@@ -50,7 +51,7 @@
 					android:id="@+id/passwordTextView"
 					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content"
-					android:text="Password" android:textSize="16px" android:textColor="#FFFFFFFF">
+					android:text="@string/Password" android:textSize="16px" android:textColor="#FFFFFFFF">
 				</TextView>
 				<EditText 
 					android:paddingRight="10px" 
@@ -59,7 +60,8 @@
 					android:maxWidth="10px"
 					android:layout_height="wrap_content" 
 					android:layout_width="fill_parent"
-					android:layout_marginLeft="10px">
+					android:layout_marginLeft="10px"
+                    android:inputType="textPassword">
 				</EditText>
 			</TableRow>
 		</TableLayout>
@@ -72,7 +74,7 @@
 				android:id="@+id/rememberUserCheckBox" 
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Remember me">
+				android:text="@string/RememberMe">
 			</CheckBox>
 		</RelativeLayout>
 		<Button 
@@ -80,7 +82,7 @@
 			android:layout_height="wrap_content" 
 			android:layout_gravity="center"
 			android:id="@+id/login" 
-			android:text="Login">
+			android:text="@string/Login">
 		</Button>
 		<TextView 
 			android:layout_width="wrap_content"

@@ -18,15 +18,15 @@
 
     <!-- map menu -->
     <string name="MenuSearch">Поиск</string>
-    <string name="MenuZoom">Zoom</string>
-    <string name="MenuSwitchView">Switch view</string>
+    <string name="MenuZoom">Масштаб</string>
+    <string name="MenuSwitchView">Изменить вид</string>
     <string name="MenuSynchronize">Синхронизировать</string>
     <string name="MenuSaveAs">Сохранить как</string>
 
     <!-- meta map & login menu -->
-    <string name="MenuLogout">Logout</string>
-    <string name="MenuPreferences">Настройка</string>
-    <string name="MenuAbout">About</string>
+    <string name="MenuLogout">Выйти</string>
+    <string name="MenuPreferences">Настройки</string>
+    <string name="MenuAbout">О приложении</string>
 
     <!-- Login activity -->
     <string name="LoginAttempt">Авторизация…</string>
@@ -78,8 +78,8 @@
     <string name="comapping_view_value">Comapping view</string>
 
     <string name="download_folder_preference_key">downloadFolder</string>
-    <string name="download_folder_preference_title">Download Folder</string>
-    <string name="download_folder_preference_dialogTitle">Specify attachments downloading folder</string>
+    <string name="download_folder_preference_title">Папка для загрузок</string>
+    <string name="download_folder_preference_dialogTitle">Укажите директорию для загрузки файлов</string>
 
     <string name="use_proxy_preference_key">useProxy</string>
     <string name="use_proxy_preference_title">Использовать прокси</string>
@@ -116,7 +116,7 @@
 
     <!-- map render -->
     <string name="AttachmentDialogTitle">Вложение</string>
-    <string name="AttachmentDialogMessageFormat" formatted="false">Файл: %s\nЗагружен: %s\nSize: %s\n\nСохранить в %s ?</string>
+    <string name="AttachmentDialogMessageFormat" formatted="false">Файл: %s\nЗагружен: %s\nРазмер: %s\n\nСохранить в %s ?</string>
     <string name="ErrorDownloadingAndSavingFile">Ошибка при скачивании и сохранении файла</string>
     <string name="AttachmentAlertDialogTitle">Внимание</string>
     <string name="AttachmentAlertSdNotInstalled">Невозможно сохранить файл: нет SD карты
@@ -131,5 +131,28 @@
     <string name="TaskEstimateFormat" formatted="false">Оценка: %s</string>
     <string name="TaskDialogTitle">Задача</string>
     <string name="TaskDialogMessageFormat" formatted="false">Ответственный: %s\nНачало: %s\nОкончание: %s\nОценка: %s</string>
+
+    <!-- Login layout -->
+    <string name="Email">E-mail</string>
+    <string name="Password">Пароль</string>
+    <string name="RememberMe">Запомнить меня</string>
+    <string name="Login">Войти</string>
+
+    <!-- Meta map layout -->
+    <string name="MetaMapTryToSynchronize">Попробуйте синхронизировать список с сервером или откройте другую папке на SD карте</string>
+    <string name="MetaMapWelcomeMap">Демо карта</string>
+    <string name="MetaMapNoAvailableText">текст не доступен</string>
+
+    <!-- Preferences layout -->
+    <string name="PreferencesView">Вид</string>
+    <string name="PreferencesAttachment">Вложения</string>
+    <string name="PreferencesProxySettings">Настройки прокси</string>
+    <string name="PreferencesProxySummary">Настройки прокси и авторизации</string>
+    <string name="PreferencesEnableProxy">Использовать прокси</string>
+    <string name="PreferencesProxyAuth">Авторизация прокси</string>
+    <string name="PreferencesProxyHostHint">Введите адрес хоста</string>
+    <string name="PreferencesProxyPortHint">Введите номер порта (макс. 65536)</string>
+    <string name="PreferencesProxyLoginHint">Введите логин для прокси</string>
+    <string name="PreferencesProxyPasswordHint">Введите пароль для прокси</string>
 
 </resources>
