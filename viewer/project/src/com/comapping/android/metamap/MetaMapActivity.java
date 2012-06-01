@@ -75,16 +75,16 @@ public class MetaMapActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.metamap);
-		
+
 		initControls();
-		
+
 		// Init providers
-		
+
 		if (comappingProvider == null) {
 			if (isSdPresent())
-				comappingProvider = new MetaMapProvider(ComappingMapContentProvider.INFO, 
+				comappingProvider = new MetaMapProvider(ComappingMapContentProvider.INFO,
 						getString(R.string.PleaseSyncronizeMapList),
 						getString(R.string.EmptyFolder), this);
 			else
@@ -92,21 +92,27 @@ public class MetaMapActivity extends Activity {
 						getString(R.string.PleaseSyncronizeMapListNoSd),
 						getString(R.string.EmptyFolder), this);
 		}
-		
+
 		if (sdCardProvider == null) {
-			sdCardProvider = new MetaMapProvider(FileMapContentProvider.INFO, 
+			sdCardProvider = new MetaMapProvider(FileMapContentProvider.INFO,
 					getString(R.string.EmptyFolder),
 					getString(R.string.EmptyFolder), this);
 		}
-		
+
 		// set provider
-		
+
 		if (currentProvider == null)
 			enableProvider(comappingProvider);
 		else
 			enableProvider(currentProvider);
 	}
-	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PreferencesStorage.updateFullScreenStatus(this);
+	}
+
 	@Override
 	protected void onDestroy() {
 		currentProvider.finishWork();

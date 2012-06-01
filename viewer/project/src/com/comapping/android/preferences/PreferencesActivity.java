@@ -1,13 +1,11 @@
 package com.comapping.android.preferences;
 
+import android.app.Activity;
+import android.preference.*;
 import com.comapping.android.Constants;
 import com.comapping.android.R;
 
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
 
 public class PreferencesActivity extends PreferenceActivity {
@@ -59,6 +57,15 @@ public class PreferencesActivity extends PreferenceActivity {
 		initListPreference((ListPreference) findPreference("viewType"),
 				Constants.VIEW_TYPE_COMAPPING);
 
+		final Activity preferencesActivity = this;
+		findPreference(PreferencesStorage.FULL_SCREEN_KEY).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				PreferencesStorage.updateFullScreenStatus(preferencesActivity, (Boolean) newValue);
+				return true;
+			}
+		});
+
 		// init download preference
 		initTextPreference(
 				(EditTextPreference) findPreference("downloadFolder"),
@@ -79,5 +86,12 @@ public class PreferencesActivity extends PreferenceActivity {
 		initTextPreference(
 				(EditTextPreference) findPreference("proxyAuthUserPassword"),
 				"");
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PreferencesStorage.updateFullScreenStatus(this);
 	}
 }

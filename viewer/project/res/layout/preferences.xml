@@ -9,6 +9,10 @@
 			android:entries="@array/view_types"
 			android:entryValues="@array/view_types" 
 			android:defaultValue="@string/comapping_view_value" />
+        <CheckBoxPreference
+                android:key="@string/full_screen_preference_key"
+                android:title="@string/full_screen_preference_title"
+                />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/PreferencesAttachment">
 		<EditTextPreference 

@@ -28,6 +28,7 @@ import android.widget.ZoomControls;
 import com.comapping.android.Constants;
 import com.comapping.android.Log;
 import com.comapping.android.Options;
+import com.comapping.android.preferences.PreferencesStorage;
 import com.comapping.android.provider.communication.Client;
 import com.comapping.android.R;
 import com.comapping.android.map.model.exceptions.MapParsingException;
@@ -428,6 +429,12 @@ public class MapActivity extends Activity {
 		};
 
 		mapProcessingThread.start();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PreferencesStorage.updateFullScreenStatus(this);
 	}
 
 	private void saveMapAs() {

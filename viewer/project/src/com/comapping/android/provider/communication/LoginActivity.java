@@ -212,6 +212,12 @@ public class LoginActivity extends Activity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		PreferencesStorage.updateFullScreenStatus(this);
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 

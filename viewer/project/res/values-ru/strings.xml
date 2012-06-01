@@ -71,27 +71,21 @@
     <string name="DaysAgoFormat" formatted="false">%d д назад</string>
 
     <!-- preferences -->
-    <string name="view_type_preference_key">viewType</string>
     <string name="view_type_preference_title">Вид</string>
 
     <string name="explorer_view_value">Explorer view</string>
     <string name="comapping_view_value">Comapping view</string>
 
-    <string name="download_folder_preference_key">downloadFolder</string>
     <string name="download_folder_preference_title">Папка для загрузок</string>
     <string name="download_folder_preference_dialogTitle">Укажите директорию для загрузки файлов</string>
 
-    <string name="use_proxy_preference_key">useProxy</string>
+    <string name="full_screen_preference_title">На весь экран</string>
+
     <string name="use_proxy_preference_title">Использовать прокси</string>
-    <string name="proxy_host_preference_key">proxyHost</string>
     <string name="proxy_host_preference_title">Хост</string>
-    <string name="proxy_port_preference_key">proxyPort</string>
     <string name="proxy_port_preference_title">Порт</string>
-    <string name="use_proxy_auth_preference_key">useProxyAuth</string>
     <string name="use_proxy_auth_preference_title">Использовать авторизацию</string>
-    <string name="proxy_name_preference_key">proxyAuthUserName</string>
     <string name="proxy_name_preference_title">Имя пользователя</string>
-    <string name="proxy_password_preference_key">proxyAuthUserPassword</string>
     <string name="proxy_password_preference_title">Пароль</string>
 
     <!-- about dialog -->

@@ -8,6 +8,8 @@
 
 package com.comapping.android.preferences;
 
+import android.app.Activity;
+import android.view.WindowManager;
 import com.comapping.android.Constants;
 import com.comapping.android.Log;
 
@@ -33,6 +35,9 @@ public class PreferencesStorage {
 	public static final boolean USE_PROXY_AUTH_DEFAULT_VALUE = false;
 	public static final String PROXY_NAME_KEY = "proxyAuthUserName";
 	public static final String PROXY_PASSWORD_KEY = "proxyAuthUserPassword";
+
+	public static final String FULL_SCREEN_KEY = "fullScreenMode";
+	public static final boolean FULL_SCREEN_DEFAULT_VALUE = false;
 
 	public static void set(String key, String value, Context context) {
 		SharedPreferences preferences = PreferenceManager
@@ -66,4 +71,21 @@ public class PreferencesStorage {
 		return preferences.getBoolean(key, defaultValue);
 	}
 
+	public static void updateFullScreenStatus(Activity activity, boolean isFullScreen) {
+		if (isFullScreen) {
+			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		} else {
+			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+
+		// request redraw of the top view tree
+		activity.getWindow().getDecorView().findViewById(android.R.id.content).requestLayout();
+	}
+
+	public static void updateFullScreenStatus(Activity activity) {
+		updateFullScreenStatus(activity, PreferencesStorage.getBoolean(PreferencesStorage.FULL_SCREEN_KEY,
+				PreferencesStorage.FULL_SCREEN_DEFAULT_VALUE, activity));
+	}
 }
