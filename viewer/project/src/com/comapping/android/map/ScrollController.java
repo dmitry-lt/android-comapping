@@ -1,6 +1,19 @@
 package com.comapping.android.map;
 
 public abstract class ScrollController {
-	public abstract void smoothScroll(int destX, int destY);
-	public abstract void intermediateScroll(int destX, int destY);
+	/**
+	 * Start smooth scrolling by providing the distance to travel.
+	 *
+	 * @param dx Horizontal distance to travel. Positive numbers will scroll the content to the left.
+	 * @param dy Vertical distance to travel. Positive numbers will scroll the content up.
+	 */
+	public abstract void smoothScroll(int dx, int dy);
+
+	/**
+	 * Intermediate scroll by the distance to travel.
+	 *
+	 * @param dx Horizontal distance to travel. Positive numbers will scroll the content to the left.
+	 * @param dy Vertical distance to travel. Positive numbers will scroll the content up.
+	 */
+	public abstract void intermediateScroll(int dx, int dy);
 }

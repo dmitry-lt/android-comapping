@@ -368,41 +368,17 @@ public class ComappingRender extends MapRender {
 		int screenW = renderZoneWidth;
 		int screenH = renderZoneHeight;
 
-		int deltaX = topicX + (topicW - screenW) / 2;
-		int deltaY = topicY + (topicH - screenH) / 2;
+		int deltaX = topicX - xOffset + (topicW - screenW) / 2;
+		int deltaY = topicY - yOffset + (topicH - screenH) / 2;
 
 		smoothScroll(deltaX, deltaY);
 	}
 
-	private int fixXOffset(int dx) {
-		if (dx > this.getWidth() - renderZoneWidth)
-			dx = this.getWidth() - renderZoneWidth;
-
-		if (dx < 0)
-			dx = 0;
-
-		return dx;
-	}
-
-	private int fixYOffset(int dy) {
-		if (dy > this.getHeight() - renderZoneHeight)
-			dy = this.getHeight() - renderZoneHeight;
-
-		if (dy < 0)
-			dy = 0;
-
-		return dy;
-	}
-
 	private void smoothScroll(int dx, int dy) {
-		dx = fixXOffset(dx);
-		dy = fixYOffset(dy);
 		scrollController.smoothScroll(dx, dy);
 	}
 
 	private void sharpScroll(int dx, int dy) {
-		dx = fixXOffset(dx);
-		dy = fixYOffset(dy);
 		scrollController.intermediateScroll(dx, dy);
 	}
 
@@ -418,11 +394,7 @@ public class ComappingRender extends MapRender {
 		int destOffsetY = topic.getTopicOffset() + topic.getRenderZoneY()
 				- deltaY;
 
-		if ((fixXOffset(destOffsetX) != destOffsetX)
-				|| (fixXOffset(destOffsetY) != destOffsetY))
-			smoothScroll(destOffsetX, destOffsetY);
-		else
-			sharpScroll(destOffsetX, destOffsetY);
+		smoothScroll(destOffsetX, destOffsetY);
 	}
 
 	/**

@@ -66,20 +66,15 @@ public class MapView extends View {
 
 	ScrollController scrollController = new ScrollController() {
 		@Override
-		public void intermediateScroll(int destX, int destY) {
-			int vx = mScroller.getCurrX() - destX;
-			int vy = mScroller.getCurrY() - destY;
-			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), -vx, -vy, 0);
+		public void intermediateScroll(int dx, int dy) {
+			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), fixXOffset(dx), fixYOffset(dy), 0);
 			mScroller.computeScrollOffset();
 		}
 
 		@Override
-		public void smoothScroll(int destX, int destY) {
-			int vx = mScroller.getCurrX() - destX;
-			int vy = mScroller.getCurrY() - destY;
-			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), -vx, -vy);
+		public void smoothScroll(int dx, int dy) {
+			mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), fixXOffset(dx), fixYOffset(dy));
 		}
-
 	};
 
 	// Taping variables
@@ -133,10 +128,8 @@ public class MapView extends View {
 		this.scale = scale;
 		int newW = getScreenForRenderWidth();
 		int newH = getScreenForRenderHeight();
-		delayedOffsetX = (oldW - newW)/2;
-		delayedOffsetY = (oldH - newH)/2;
-
-		fixDelayedOffset();
+		delayedOffsetX = fixXOffset((oldW - newW)/2);
+		delayedOffsetY = fixYOffset((oldH - newH)/2);
 
 		showZoom();
 	}
@@ -159,27 +152,10 @@ public class MapView extends View {
 		int focusNewX = (int) (focusX * scaleX);
 		int focusNewY = (int) (focusY * scaleY);
 		// move coordinate system
-		delayedOffsetX = (int) (focusX - focusNewX);
-		delayedOffsetY = (int) (focusY - focusNewY);
-
-		fixDelayedOffset();
+		delayedOffsetX = fixXOffset((int) (focusX - focusNewX));
+		delayedOffsetY = fixYOffset((int) (focusY - focusNewY));
 
 		showZoom();
-	}
-
-	/**
-	 * Sets delayedOffset to bounds if it out of bounds
-	 */
-	private void fixDelayedOffset() {
-		if (mScroller.getCurrX() + delayedOffsetX > getScrollWidth())
-			delayedOffsetX = getScrollWidth() - mScroller.getCurrX();
-		if (mScroller.getCurrY() + delayedOffsetY > getScrollHeight())
-			delayedOffsetY = getScrollHeight() - mScroller.getCurrY();
-
-		if (mScroller.getCurrX() + delayedOffsetX < 0)
-			delayedOffsetX = -mScroller.getCurrX();
-		if (mScroller.getCurrY() + delayedOffsetY < 0)
-			delayedOffsetY = -mScroller.getCurrY();
 	}
 
 	public void setZoom(ZoomControls zoom) {
@@ -662,6 +638,34 @@ public class MapView extends View {
 
 		mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(),
 				deltaX, deltaY, 0);
+	}
+
+	/**
+	 * Returns fixed distance to scroll by x axis: if dx out of scrolling rectangle's bounds - returned closest bound
+	 *
+	 * @param dx distance to scroll by x axis
+	 * @return dx if it in scrolling rectangle's bounds else - closest bound
+	 */
+	private int fixXOffset(int dx) {
+		int currX = mScroller.getCurrX();
+		int maxDx = getScrollWidth() - currX;
+		dx = maxDx < dx ? maxDx : dx;
+		dx = currX + dx < 0 ? -currX : dx;
+		return dx;
+	}
+
+	/**
+	 * Returns fixed distance to scroll by y axis: if dy out of scrolling rectangle's bounds - returned closest bound
+	 *
+	 * @param dy distance to scroll by y axis
+	 * @return dy if it in scrolling rectangle's bounds else - closest bound
+	 */
+	private int fixYOffset(int dy) {
+		int currY = mScroller.getCurrY();
+		int maxDy = getScrollHeight() - currY;
+		dy = maxDy < dy ? maxDy : dy;
+		dy = currY + dy < 0 ? -currY : dy;
+		return dy;
 	}
 
 	@Override
