@@ -317,7 +317,7 @@ public class MapActivity extends Activity {
 	}
 
 	// ===========================================================
-	// Live cycle
+	// Life cycle
 	// ===========================================================
 
 	public boolean onSearchProcess() {

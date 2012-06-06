@@ -77,7 +77,7 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Render constructor
-	 * 
+	 *
 	 * @param context
 	 *            Execution context
 	 * @param map
@@ -90,7 +90,7 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Building custom tree with some helpful information
-	 * 
+	 *
 	 * @param itm
 	 *            Root item for (sub)tree
 	 * @param parent
@@ -104,7 +104,7 @@ public class ComappingRender extends MapRender {
 		items.add(res);
 		int index = 0;
 		int childrenCount = itm.getChildrenCount();
-	
+
 		for (int i = 0; i < childrenCount; i++) {
 			Topic child = itm.getChildByIndex(i);
 			res.children[index++] = buildTree(child, res);
@@ -114,7 +114,7 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Checks is TopicView is on screen. (MUST BE CHANGED FOR BETTER DESIGN)
-	 * 
+	 *
 	 * @param x
 	 *            Offset to x0 (Remove this)
 	 * @param y
@@ -147,7 +147,7 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Draws TopicView and it's children (MUST BE CHANGED FOR BETTER DESIGN)
-	 * 
+	 *
 	 * @param baseX
 	 *            basic x-offset for drawing
 	 * @param baseY
@@ -227,7 +227,7 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Returns offset for centering small o collapsed maps
-	 * 
+	 *
 	 * @return Offset for drawing
 	 */
 	private final int getVertOffset() {
@@ -268,7 +268,7 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Recursive processing Touch events
-	 * 
+	 *
 	 * @param baseX
 	 *            basic x-offset (remove it)
 	 * @param baseY
@@ -293,7 +293,7 @@ public class ComappingRender extends MapRender {
 
 			changeChildVisibleStatus(itm);
 			if (itm.isChildrenVisible()) {
-				// TODO: sometime it falls
+				// TODO: sometimes it falls
 				focusTopic(itm.children[0]);
 			} else {
 				focusTopic(itm);
@@ -334,7 +334,7 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Selecting topic
-	 * 
+	 *
 	 * @param topic
 	 *            TopicView to select
 	 */
@@ -345,14 +345,14 @@ public class ComappingRender extends MapRender {
 		if (topic.parent != null)
 			if (topic.parent.show())
 				root.clearTree();
-				
+
 		topic.setSelected(true);
 		selected = topic;
 	}
 
 	/**
 	 * Focusing on topic
-	 * 
+	 *
 	 * @param topic
 	 *            TopicView to focus on
 	 */
@@ -363,26 +363,15 @@ public class ComappingRender extends MapRender {
 		int topicX = topic.getRenderZoneX();
 		int topicY = topic.getTopicOffset() + topic.getRenderZoneY();
 
-		int screenPosX = topicX - xOffset;
-		int screenPosY = topicY - yOffset;
+		int topicW = topic.getTopicWidth();
+		int topicH = topic.getTopicHeight();
+		int screenW = renderZoneWidth;
+		int screenH = renderZoneHeight;
 
-		int deltaX = xOffset;
-		int deltaY = yOffset;
-
-		if (screenPosX < 0)
-			deltaX += screenPosX;
-		else if (screenPosX + topic.getFocusWidth() > renderZoneWidth)
-			deltaX += screenPosX + topic.getFocusWidth() - renderZoneWidth;
-
-		if (screenPosY < 0)
-			deltaY += screenPosY;
-		else if (screenPosY +  topic.getFocusHeight() > renderZoneHeight)
-			deltaY += screenPosY + topic.getFocusHeight() - renderZoneHeight;
+		int deltaX = topicX + (topicW - screenW) / 2;
+		int deltaY = topicY + (topicH - screenH) / 2;
 
 		smoothScroll(deltaX, deltaY);
-
-		// smoothScroll(topic.getRenderZoneX(), topic.getTopicOffset()
-		// + topic.getRenderZoneY());
 	}
 
 	private int fixXOffset(int dx) {
@@ -438,7 +427,7 @@ public class ComappingRender extends MapRender {
 
 	/**
 	 * Show/Hide chldren
-	 * 
+	 *
 	 * @param topic
 	 *            Parent TopicView
 	 */
@@ -740,7 +729,7 @@ public class ComappingRender extends MapRender {
 	public void setScrollController(ScrollController scroll) {
 		scrollController = scroll;
 	}
-	
+
 	@Override
 	public void onKeyDown(int keyCode) {
 		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
@@ -785,5 +774,5 @@ public class ComappingRender extends MapRender {
 	@Override
 	public void onChangeSize() {
 
-	}	
+	}
 }
