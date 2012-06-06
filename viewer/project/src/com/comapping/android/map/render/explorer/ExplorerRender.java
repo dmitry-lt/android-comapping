@@ -88,10 +88,10 @@ public class ExplorerRender extends MapRender {
 
 		// draw lines
 		for (Rect line : lines) {
-			int x1 = line.left + xOffset;
-			int y1 = line.top + yOffset;
-			int x2 = line.right + xOffset;
-			int y2 = line.bottom + yOffset;
+			int x1 = line.left - xOffset;
+			int y1 = line.top - yOffset;
+			int x2 = line.right - xOffset;
+			int y2 = line.bottom - yOffset;
 			if (onScreen(x1, y1, x2, y2)) {
 				c.drawLine(x1, y1, x2, y2, p);
 			}
@@ -99,10 +99,10 @@ public class ExplorerRender extends MapRender {
 
 		// draw circles
 		p.setAntiAlias(true);
-		for (int i = getFirstOccurence(expanders, new Expander(0, -radius - yOffset, null)); i < expanders.size(); i++) {
+		for (int i = getFirstOccurence(expanders, new Expander(0, -radius + yOffset, null)); i < expanders.size(); i++) {
 			Expander expander = expanders.get(i);
-			int x = expander.x + xOffset;
-			int y = expander.y + yOffset;
+			int x = expander.x - xOffset;
+			int y = expander.y - yOffset;
 			if (y - radius > screenHeight) {
 				break;
 			}
@@ -113,10 +113,10 @@ public class ExplorerRender extends MapRender {
 		}
 		p.setAntiAlias(false);
 
-		for (int i = getFirstOccurence(topics, new TopicView(-yOffset)); i < topics.size(); i++) {
+		for (int i = getFirstOccurence(topics, new TopicView(yOffset)); i < topics.size(); i++) {
 			TopicView topic = topics.get(i);
-			int x = topic.topicRenderX + xOffset;
-			int y = topic.topicRenderY + yOffset;
+			int x = topic.topicRenderX - xOffset;
+			int y = topic.topicRenderY - yOffset;
 			if (y > screenHeight) {
 				break;
 			}
@@ -138,24 +138,11 @@ public class ExplorerRender extends MapRender {
 		}
 		topic.topicRender.getCurTopicRender().setSelected(true);
 		selectedTopic = topic;
-		int x1 = topic.x1 + xOffset;
-		int y1 = topic.y1 + yOffset;
-		int x2 = topic.x2 + xOffset;
-		int y2 = topic.y2 + yOffset;
-		int nx = -xOffset, ny = -yOffset;
-		if (x2 > screenWidth) {
-			nx -= screenWidth - x2;
-		}
-		if (y2 > screenHeight) {
-			ny -= screenHeight - y2;
-		}
-		if (x1 < 0) {
-			nx = topic.x1;
-		}
-		if (y1 < 0) {
-			ny = topic.y1;
-		}
-		scroll.smoothScroll(nx, ny);
+	}
+
+	private void focusTopic(TopicView topic) {
+		selectTopic(topic);
+		scroll.smoothScroll(topic.x1 - xOffset, topic.y1 - yOffset);
 	}
 
 	// Method to calculate coordinates of topics, circles
@@ -245,12 +232,12 @@ public class ExplorerRender extends MapRender {
 
 	@Override
 	public void draw(int x, int y, int width, int height, Canvas c) {
-		xOffset = -x;
-		yOffset = -y;
+		xOffset = x;
+		yOffset = y;
 		screenWidth = width;
 		screenHeight = height;
 		if (selectRootNeeded) {
-			selectTopic(root);
+			focusTopic(root);
 			selectRootNeeded = false;
 		}
 		if (expandingNeeded) {
@@ -275,7 +262,11 @@ public class ExplorerRender extends MapRender {
 		for (Expander expander : expanders) {
 			if ((expander.x - x) * (expander.x - x) + (expander.y - y) * (expander.y - y) <= radius * radius) {
 				expander.topic.isOpen = !expander.topic.isOpen;
-				selectTopic(expander.topic);
+				if (expander.topic.isOpen) {
+					focusTopic(expander.topic);
+				} else {
+					selectTopic(expander.topic);
+				}
 				update();
 				break;
 			}
@@ -310,13 +301,14 @@ public class ExplorerRender extends MapRender {
 		}
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_UP:
-			selectTopic(selectedTopic.getPrevTopic());
+			focusTopic(selectedTopic.getPrevTopic());
+
 			break;
 		case KeyEvent.KEYCODE_DPAD_DOWN:
-			selectTopic(selectedTopic.getNextTopic());
+			focusTopic(selectedTopic.getNextTopic());
 			break;
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			selectTopic(selectedTopic.parent);
+			focusTopic(selectedTopic.parent);
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			if (selectedTopic.children.size() > 0) {
@@ -324,7 +316,7 @@ public class ExplorerRender extends MapRender {
 					selectedTopic.isOpen = true;
 					update();
 				}
-				selectTopic(selectedTopic.children.get(0));
+				focusTopic(selectedTopic.children.get(0));
 			}
 			break;
 		case KeyEvent.KEYCODE_DPAD_CENTER:
@@ -370,7 +362,7 @@ public class ExplorerRender extends MapRender {
 			topicView.isOpen = true;
 		}
 		update();
-		selectTopic(allTopics.get(topic));
+		focusTopic(allTopics.get(topic));
 	}
 	
 	@Override
