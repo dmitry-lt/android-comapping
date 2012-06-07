@@ -457,9 +457,10 @@ public class MetaMapActivity extends Activity {
 		final Activity currentActivity = this;
 		welcomeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// TODO: use right view type
-				MapActivity.openMap("content://resources/welcome", PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, false,
-						currentActivity);
+				MapActivity.openMap("content://resources/welcome",
+						PreferencesStorage.get(PreferencesStorage.VIEW_TYPE_KEY,
+								PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, currentActivity),
+						false, currentActivity);
 			}
 		});
 	}
