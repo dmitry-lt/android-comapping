@@ -35,6 +35,8 @@ import static com.comapping.android.map.render.topic.RenderHelper.getBitmap;
 
 public class AttachmentRender extends Render {
 	private static final int ICON_SIZE = 30;
+	// used for downloading file name when file with the same name exists in the directory
+	private static final String NEXT_FILE_NAME_FORMAT = "%s (%d)%s";
 
 	private static Bitmap attachmentIcon;
 
@@ -111,7 +113,7 @@ public class AttachmentRender extends Render {
 									formatDate(attachment.getDate()),
 									formatFileSize(attachment.getSize()),
 									downloadFolder))
-					.setNegativeButton(R.string.NegativeButtonText,
+					.setNegativeButton(R.string.AttachmentCancel,
 							new DialogInterface.OnClickListener() {
 
 								public void onClick(DialogInterface dialog,
@@ -119,7 +121,13 @@ public class AttachmentRender extends Render {
 
 								}
 							})
-					.setPositiveButton(R.string.PositiveButtonText,
+					.setPositiveButton(R.string.AttachmentSaveAndOpen, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+
+						}
+					})
+					.setNeutralButton(R.string.AttachmentSave,
 							new DialogInterface.OnClickListener() {
 
 								public void onClick(DialogInterface dialog, int which) {
@@ -248,13 +256,14 @@ public class AttachmentRender extends Render {
 		downloadProgressDialog.setMax(contentLength);
 
 		try {
-			String path = downloadFolder + "\\" + attachment.getFilename();
+			String path = downloadFolder + "/" + attachment.getFilename();
 			String name;
+			// extension with dot
 			String ext;
 			int dotIndex = path.lastIndexOf('.');
 			if (dotIndex != -1) {
 				name = path.substring(0, dotIndex);
-				ext = path.substring(dotIndex + 1, path.length());
+				ext = path.substring(dotIndex, path.length());
 			} else {
 				name = path;
 				ext = "";
@@ -266,7 +275,7 @@ public class AttachmentRender extends Render {
 			file = new File(path);
 			int counter = 1;
 			while (file.exists()) {
-				file = new File(name + "(" + counter + ")" + ext);
+				file = new File(String.format(NEXT_FILE_NAME_FORMAT, name, counter, ext));
 				counter++;
 			}
 			file.createNewFile();

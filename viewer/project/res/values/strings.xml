@@ -119,6 +119,9 @@
 
     <!-- map render -->
     <string name="AttachmentDialogTitle">Attachment</string>
+    <string name="AttachmentSave">Save</string>
+    <string name="AttachmentSaveAndOpen">Save and open</string>
+    <string name="AttachmentCancel">Cancel</string>
     <string name="AttachmentDialogMessageFormat" formatted="false">File: %s\nUpload date: %s\nSize: %s\n\nSave in %s ?</string>
     <string name="ErrorDownloadingAndSavingFile">Error while downloading and saving file</string>
     <string name="AttachmentAlertDialogTitle">Alert Message</string>
