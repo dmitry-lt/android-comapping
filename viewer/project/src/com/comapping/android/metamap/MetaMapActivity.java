@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,6 +67,9 @@ public class MetaMapActivity extends Activity {
 	
 	private MetaMapItem[] metaMapItems;
 	private AboutDialog aboutDialog;
+
+	private View welcomeButton;
+	private View emptyListLayout;
 	
 	// ====================================================
 	// Live Cycle
@@ -261,6 +263,13 @@ public class MetaMapActivity extends Activity {
 		
 		metaMapItems = currentProvider.getCurrentLevel();
 		listView.setAdapter(new MetaMapListAdapter(this, metaMapItems));
+
+		if (metaMapItems.length == 0 && currentProvider == comappingProvider
+				&& !currentProvider.canLogout() && currentProvider.isInRoot()) {
+			welcomeButton.setVisibility(View.VISIBLE);
+		} else {
+			welcomeButton.setVisibility(View.GONE);
+		}
 		
 		position = Math.min(position, metaMapItems.length - 1);
 		listView.setSelection(position);
@@ -444,10 +453,11 @@ public class MetaMapActivity extends Activity {
 		
 		// Welcome map
 		
-		Button welcomeButton = (Button) findViewById(R.id.welcome);
+		welcomeButton = findViewById(R.id.welcome);
 		final Activity currentActivity = this;
 		welcomeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				// TODO: use right view type
 				MapActivity.openMap("content://resources/welcome", PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, false,
 						currentActivity);
 			}
@@ -481,8 +491,8 @@ public class MetaMapActivity extends Activity {
 				}
 			}
 		});
-		
-		listView.setEmptyView(findViewById(R.id.emptyListText));
+		emptyListLayout = findViewById(R.id.emptyListLayout);
+		listView.setEmptyView(emptyListLayout);
 	}
 	
 	// ====================================================

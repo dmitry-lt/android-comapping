@@ -97,7 +97,7 @@ public class MetaMapProvider {
 		return false;
 	}
 
-	private boolean isInRoot() {
+	public boolean isInRoot() {
 		return currentPath.equals(info.root);
 	}
 
