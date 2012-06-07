@@ -265,7 +265,7 @@ public class MetaMapActivity extends Activity {
 		listView.setAdapter(new MetaMapListAdapter(this, metaMapItems));
 
 		if (metaMapItems.length == 0 && currentProvider == comappingProvider
-				&& !currentProvider.canLogout() && currentProvider.isInRoot()) {
+				&& currentProvider.isInRoot()) {
 			welcomeButton.setVisibility(View.VISIBLE);
 		} else {
 			welcomeButton.setVisibility(View.GONE);

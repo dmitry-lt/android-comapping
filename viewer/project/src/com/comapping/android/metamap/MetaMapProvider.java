@@ -93,6 +93,7 @@ public class MetaMapProvider {
 
 	public boolean sync() {
 		query(info.sync);
+		// TODO: it doesn't mean that can logout (LoginInterruptedException for example)
 		info.setLogout(true);
 		return false;
 	}
