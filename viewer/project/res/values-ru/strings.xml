@@ -112,6 +112,7 @@
     <string name="AttachmentDialogTitle">Вложение</string>
     <string name="AttachmentDialogMessageFormat" formatted="false">Файл: %s\nЗагружен: %s\nРазмер: %s\n\nСохранить в %s ?</string>
     <string name="ErrorDownloadingAndSavingFile">Ошибка при скачивании и сохранении файла</string>
+    <string name="AttachmentUnknownFileType">Невозможно открыть файл: неизвестный тип файла</string>
     <string name="AttachmentAlertDialogTitle">Внимание</string>
     <string name="AttachmentAlertSdNotInstalled">Невозможно сохранить файл: нет SD карты
     </string>
