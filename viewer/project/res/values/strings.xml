@@ -120,9 +120,9 @@
     <!-- map render -->
     <string name="AttachmentDialogTitle">Attachment</string>
     <string name="AttachmentSave">Save</string>
-    <string name="AttachmentSaveAndOpen">Save and open</string>
+    <string name="AttachmentSaveAndOpen">Open</string>
     <string name="AttachmentCancel">Cancel</string>
-    <string name="AttachmentDialogMessageFormat" formatted="false">File: %s\nUpload date: %s\nSize: %s\n\nSave in %s ?</string>
+    <string name="AttachmentDialogMessageFormat" formatted="false">File: %s\nUpload date: %s\nSize: %s\n\nWill be saved in %s</string>
     <string name="ErrorDownloadingAndSavingFile">Error while downloading and saving file</string>
     <string name="AttachmentUnknownFileType">Unable to open file: unknown file type</string>
     <string name="AttachmentAlertDialogTitle">Alert Message</string>

@@ -109,8 +109,11 @@
     </string>
 
     <!-- map render -->
+    <string name="AttachmentSave">Сохранить</string>
+    <string name="AttachmentSaveAndOpen">Открыть</string>
+    <string name="AttachmentCancel">Отмена</string>
     <string name="AttachmentDialogTitle">Вложение</string>
-    <string name="AttachmentDialogMessageFormat" formatted="false">Файл: %s\nЗагружен: %s\nРазмер: %s\n\nСохранить в %s ?</string>
+    <string name="AttachmentDialogMessageFormat" formatted="false">Файл: %s\nЗагружен: %s\nРазмер: %s\n\nБудет сохранён в %s</string>
     <string name="ErrorDownloadingAndSavingFile">Ошибка при скачивании и сохранении файла</string>
     <string name="AttachmentUnknownFileType">Невозможно открыть файл: неизвестный тип файла</string>
     <string name="AttachmentAlertDialogTitle">Внимание</string>
