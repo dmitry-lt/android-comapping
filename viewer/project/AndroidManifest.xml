@@ -29,10 +29,18 @@
 		</activity> 
 
 		<activity android:name="com.comapping.android.map.MapActivity" android:configChanges="orientation|keyboardHidden">
-			<intent-filter>
-				<action android:name="com.comapping.android.intent.MAP"/>
-				<category android:name="android.intent.category.DEFAULT"/>
-			</intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="file" android:host="*" android:pathPattern=".*\\.comap" android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" android:host="*" android:pathPattern=".*\\.comap" android:mimeType="*/*" />
+            </intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -42,6 +50,6 @@
 		</activity>
 
 		<provider android:name="com.comapping.android.provider.contentprovider.ComappingMapContentProvider" android:authorities="www.comapping.com"/> 
-  		<provider android:name="com.comapping.android.provider.contentprovider.FileMapContentProvider" android:authorities="sdcard"/> 
+  		<provider android:name="com.comapping.android.provider.contentprovider.FileMapContentProvider" android:authorities="sdcard"/>
 	</application>
 </manifest>

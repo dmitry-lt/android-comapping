@@ -14,16 +14,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.ZoomControls;
+import android.widget.*;
 
 import com.comapping.android.Constants;
 import com.comapping.android.Log;
@@ -74,7 +72,7 @@ public class MapActivity extends Activity {
 
 	public static void openMap(final String mapRef, final String viewType,
 			boolean ignoreCache, Activity parent) {
-		Intent intent = new Intent(Constants.MAP_ACTIVITY_INTENT);
+		Intent intent = new Intent(parent, MapActivity.class);
 
 		intent.putExtra(MapActivity.EXT_MAP_REF, mapRef);
 		intent.putExtra(MapActivity.EXT_VIEW_TYPE, viewType);
@@ -98,7 +96,6 @@ public class MapActivity extends Activity {
 
 	static private String viewType;
 	static private String mapRef;
-	static private String mapPath;
 	static private boolean ignoreCache;
 
 	// ===========================================================
@@ -247,13 +244,13 @@ public class MapActivity extends Activity {
 			public void run() {
 
 				setContentView(R.layout.map);
-				saveConstrols();
-				initConstrols();
+				saveControls();
+				initControls();
 			};
 		});
 	}
 
-	void saveConstrols() {
+	void saveControls() {
 		zoom = (ZoomControls) findViewById(R.id.zoom);
 		prev = (ImageButton) findViewById(R.id.previousButton);
 		next = (ImageButton) findViewById(R.id.nextButton);
@@ -262,7 +259,7 @@ public class MapActivity extends Activity {
 		view = (MapView) findViewById(R.id.mapView);
 	}
 
-	void initConstrols() {
+	void initControls() {
 		// View
 
 		LinearLayout findLayout = (LinearLayout) findViewById(R.id.findView);
@@ -292,18 +289,31 @@ public class MapActivity extends Activity {
 	}
 
 	void parseIntentParameters() {
-		Bundle extras = getIntent().getExtras();
+		// defaults
+        mapRef = null;
+        viewType = PreferencesStorage.get(PreferencesStorage.VIEW_TYPE_KEY, PreferencesStorage.VIEW_TYPE_DEFAULT_VALUE, this);
+        ignoreCache = false;
 
-		try {
-			viewType = extras.getString(EXT_VIEW_TYPE);
-			mapRef = extras.getString(EXT_MAP_REF);
-			mapPath = mapRef.substring(10);
-			if (!mapPath.startsWith("sdcard")) {
-				mapPath = "";
-			}
+		Bundle extras = getIntent().getExtras();
+        if (extras != null) {
 			ignoreCache = extras.getBoolean(EXT_IS_IGNORE_CACHE);
-		} catch (Exception e) {
-			// TODO Empty catch
+
+            String viewTypeExtras = extras.getString(EXT_VIEW_TYPE);
+            viewType = viewTypeExtras != null ? viewTypeExtras : viewType;
+
+            String mapRefExtras = extras.getString(EXT_MAP_REF);
+            mapRef = mapRefExtras != null ? mapRefExtras : mapRef;
+		}
+
+		Uri data = getIntent().getData();
+		if (mapRef == null && data != null) {
+			String filePath = data.getEncodedPath();
+            // TODO: workaround to open files with path /mnt/sdcard/blah/blah/blah
+            //  currently it can open files only with path like /sdcard/blah/blah/blah
+            if (filePath != null && filePath.startsWith("/mnt")) {
+                filePath = filePath.substring("/mnt".length());
+            }
+			mapRef = "content:/"+filePath;
 		}
 	}
 

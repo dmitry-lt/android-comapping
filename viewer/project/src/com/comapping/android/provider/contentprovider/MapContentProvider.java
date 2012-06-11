@@ -23,14 +23,23 @@ public abstract class MapContentProvider extends ContentProvider {
 	
 	public static String getComap(String mapRef, Context context) {
 		Uri fullUri = Uri.parse(mapRef);
-		// Log.d(Log.PROVIDER_TAG, "getComap: uri=" + fullUri);
 		Cursor cursor = context.getContentResolver().query(fullUri, null, null, null, null);
-		
-		return cursor.getString(cursor.getColumnIndex(CONTENT));
+		if (cursor == null) {
+            return null;
+        }
+        int columnIndex = cursor.getColumnIndex(CONTENT);
+        if (columnIndex == -1) {
+            // column not found
+            return null;
+        }
+        return cursor.getString(columnIndex);
 	}
 	
 	public static String getComap(String mapRef, boolean ignoreCache, boolean ignoreInternet, Context context) {
-		if (mapRef.equals("content://resources/welcome")) {
+        if (mapRef == null) {
+            return null;
+        }
+		if ("content://resources/welcome".equals(mapRef)) {
 			// TODO: create normal Resource map provider
 			InputStream input = context.getResources().openRawResource(com.comapping.android.R.raw.welcome);
 			return ioHelper.getTextFromInputStream(input);

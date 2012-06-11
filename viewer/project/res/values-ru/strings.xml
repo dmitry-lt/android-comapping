@@ -45,7 +45,7 @@
     <string name="LoadingMap">Загрузка карты</string>
     <string name="WrongFileFormat">Неверный формат файла</string>
     <string name="SaveMapDialogTitle">Сохранить карту</string>
-    <string name="SaveMapDialogMessageFormat" formatted="false">Карты: %s\nСохранить в %s ?</string>
+    <string name="SaveMapDialogMessageFormat" formatted="false">Карта: %s\nСохранить в %s ?</string>
     <string name="MapActivityAlertDialogTitle">Внимание</string>
     <string name="CannotDownloadSdNotInstalled">Невозможно скачать файл: нет SD карты
     </string>
