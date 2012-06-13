@@ -176,7 +176,7 @@ public class MetaMapProvider {
 		public int compare(MetaMapItem topic1, MetaMapItem topic2) {
 			if ((topic1.isFolder && topic2.isFolder) || (!topic1.isFolder && !topic2.isFolder)) {
 				// if both folder or both maps we compare texts
-				return topic1.name.compareTo(topic2.name);
+				return topic1.name.compareToIgnoreCase(topic2.name);
 			} else {
 				if (topic1.isFolder) {
 					return -1;
