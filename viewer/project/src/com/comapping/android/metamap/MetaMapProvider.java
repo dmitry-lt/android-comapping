@@ -158,6 +158,24 @@ public class MetaMapProvider {
 			isCurrentPresented = cursor.moveToNext();
 		}
 
+        // remove hidden files
+        int size = currentLevel.length;
+        // calculate count of non-hidden files
+        for (MetaMapItem item : currentLevel) {
+            if (item.name != null && item.name.startsWith(".")) {
+               size--;
+            }
+        }
+        MetaMapItem[] result = new MetaMapItem[size];
+        int idx = 0;
+        // copy non-hidden files to result
+        for (MetaMapItem item : currentLevel) {
+            if (item.name == null || !item.name.startsWith(".")) {
+                result[idx++] = item;
+            }
+        }
+        currentLevel = result;
+
 		Arrays.sort(currentLevel, new MetaMapItemComparator());
 	}
 
