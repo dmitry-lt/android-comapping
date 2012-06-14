@@ -163,12 +163,6 @@ public class MetaMapActivity extends Activity {
 		new Thread() {
 			@Override
 			public void run() {
-				try {
-					item.sizeInBytes = currentProvider.getMapSizeInBytes(item);
-				} catch (LoginInterruptedRuntimeException e) {
-					return;
-				}
-				
 				runOnUiThread(new Runnable() {
 					public void run() {
                         MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
