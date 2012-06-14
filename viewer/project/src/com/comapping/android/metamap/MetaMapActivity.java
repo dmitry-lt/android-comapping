@@ -56,8 +56,6 @@ public class MetaMapActivity extends Activity {
 	private static final int MENU_PREFERENCES = Menu.FIRST + 1;
 	private static final int MENU_ABOUT = Menu.FIRST + 2;
 	
-	private static final int MAX_MAP_SIZE_IN_BYTES = 200 * 1024;
-	
 	// public variables
 	public static MapBuilder mapBuilder = new SaxMapBuilder();
 	
@@ -173,14 +171,7 @@ public class MetaMapActivity extends Activity {
 				
 				runOnUiThread(new Runnable() {
 					public void run() {
-						if (item.sizeInBytes > MAX_MAP_SIZE_IN_BYTES) {
-							new AlertDialog.Builder(currentActivity).setMessage(
-									String.format(getString(R.string.TooBigMap),
-											getSize(currentActivity, MAX_MAP_SIZE_IN_BYTES),item.name,
-											getSize(currentActivity, item.sizeInBytes))).create().show();
-						} else {
-							MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
-						}
+                        MapActivity.openMap(item.reference, viewType, ignoreCache, currentActivity);
 					}
 				});
 			}

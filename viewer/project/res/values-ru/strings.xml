@@ -37,6 +37,7 @@
     <string name="LoginActivitySplashTitle">Comapping</string>
 
     <!-- Map activity -->
+    <string name="LargeMapAlertText">Загрузка карты может занять много времени. Продолжить?</string>
     <string name="MapActivitySplashTitle">Comapping</string>
     <string name="MapActivityErrorDialogTitle">Ошибка</string>
     <string name="DownloadingMap">Скачивание карты</string>
@@ -55,7 +56,6 @@
     <string name="PleaseSyncronizeMapList">Пожалуйста, синхронизируйте список карт с сервером или откройте SD карту</string>
     <string name="PleaseSyncronizeMapListNoSd">Пожалуйста, синхронизируйте список карт</string>
     <string name="EmptyFolder">Пустая папка</string>
-    <string name="TooBigMap" formatted="false">Слишком большая карта.\nМаксимальный размер карты: %s\nВыбранная карта:\n%s, %s</string>
     <string name="MetaMapSplashTitle">Comapping</string>
     <string name="LoadingMapList">Загрузка списка карт…</string>
 

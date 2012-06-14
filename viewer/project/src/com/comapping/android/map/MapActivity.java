@@ -46,6 +46,12 @@ import com.comapping.android.storage.MemoryCache;
 
 public class MapActivity extends Activity {
 
+    /**
+     * Length of the map in characters. If loaded map length is greater than this number - alert will be shown.
+     * <p>Using size is a bad way, because a single character may be encoded by various size depends of encoding</p>
+     */
+    private static final int LARGE_MAP_LENGTH = 250000;
+
 	// ===========================================================
 	// Identifiers for our menu items.
 	// ===========================================================
@@ -104,13 +110,28 @@ public class MapActivity extends Activity {
 
 	private Map map;
 	private MapRender mapRender;
+    /**
+     * Raw xml presented the map. Null if map loaded from cache.
+     */
+    private String mapSource;
 
 	// ===========================================================
 	// Misc
 	// ===========================================================
 
 	private ProgressDialog splash = null;
+    /**
+     * Used for download map or get it from local file system. Places result to {@link #mapSource}.
+     */
+	private Thread mapDownloadingThread;
+    /**
+     * Used for parsing map from {@link #mapSource} to {@link #map}
+     */
 	private Thread mapProcessingThread;
+    /**
+     * In this thread {@link #mapRender} inited from {@link #map}
+     */
+	private Thread initRenderThread;
 
 	private boolean canDraw = true;
 
@@ -144,10 +165,19 @@ public class MapActivity extends Activity {
 					splash.setOnCancelListener(new OnCancelListener() {
 
 						public void onCancel(DialogInterface dialog) {
-							mapProcessingThread.interrupt();
-							mapProcessingThread
-									.setPriority(Thread.MIN_PRIORITY);
-							finish();
+                            if (mapDownloadingThread != null) {
+                                mapDownloadingThread.interrupt();
+                                mapDownloadingThread.setPriority(Thread.MIN_PRIORITY);
+                            }
+                            if (mapProcessingThread != null) {
+                                mapProcessingThread.interrupt();
+                                mapProcessingThread.setPriority(Thread.MIN_PRIORITY);
+                            }
+                            if (initRenderThread != null) {
+                                initRenderThread.interrupt();
+                                initRenderThread.setPriority(Thread.MIN_PRIORITY);
+                            }
+                            finish();
 						}
 					});
 				} else {
@@ -169,26 +199,62 @@ public class MapActivity extends Activity {
 		});
 	}
 
-	private void showError(final String message, final boolean finish) {
-		final Activity activity = this;
+    private void showError(final String message, final boolean finish) {
+        final Activity activity = this;
 
-		activity.runOnUiThread(new Runnable() {
-			public void run() {
-				Dialog dialog = (new AlertDialog.Builder(activity).setTitle(
-						getString(R.string.MapActivityErrorDialogTitle)).setMessage(message).setNeutralButton(getString(R.string.NeutralButtonText),
-						new DialogInterface.OnClickListener() {
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                Dialog dialog = (new AlertDialog.Builder(activity)
+                        .setTitle(getString(R.string.MapActivityErrorDialogTitle))
+                        .setMessage(message)
+                        .setNeutralButton(getString(R.string.NeutralButtonText),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (finish) {
+                                            activity.finish();
+                                        }
+                                    }
+                                }))
+                        .create();
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        });
+    }
 
-							public void onClick(DialogInterface dialog,
-									int which) {
-								if (finish) {
-									activity.finish();
-								}
-							}
-						})).create();
-				dialog.show();
-			}
-		});
-	}
+    /**
+     * Show warning dialog if downloaded map is large.
+     */
+    private void showLargeMapWarning() {
+        final Activity activity = this;
+
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                AlertDialog dialog = new AlertDialog.Builder(activity)
+                        .setMessage(R.string.LargeMapAlertText)
+                        .setPositiveButton(R.string.PositiveButtonText, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (mapProcessingThread != null) {
+                                    mapProcessingThread.start();
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.NegativeButtonText, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                activity.finish();
+                            }
+                        })
+                        .create();
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        });
+    }
+
+
 
 	// ===========================================================
 	// Misc
@@ -202,36 +268,23 @@ public class MapActivity extends Activity {
 	// Map Loading
 	// ===========================================================
 
-	Map loadMap() throws StringToXMLConvertionException, MapParsingException {
-		final Map map;
-		if (!MemoryCache.has(mapRef) || (ignoreCache)) {
+    /**
+     * Download map as raw xml string from internet or file system to {@link #mapSource}
+     */
+	private synchronized void loadMap() {
 			splashActivate(getString(R.string.DownloadingMap), false);
-			String result = "";
-
 			try {
-				result = MapContentProvider.getComap(mapRef, ignoreCache,
+				mapSource = MapContentProvider.getComap(mapRef, ignoreCache,
 						false, this);
 			} catch (MapNotFoundException e) {
 				Log.w(Log.MAP_CONTROLLER_TAG, e.toString());
 				showError(getString(R.string.MapNotFoundOnServer), false);
-				result = MapContentProvider.getComap(mapRef, false, true, this);
+                mapSource = MapContentProvider.getComap(mapRef, false, true, this);
 			}
 
-			if (result == null) {
-				result = "";
+			if (mapSource == null) {
+                mapSource = "";
 			}
-
-			// Log.e(Log.CONNECTION_TAG, result);
-
-			splashActivate(getString(R.string.ParsingMap), true);
-			map = MetaMapActivity.mapBuilder.buildMap(result);
-
-			// add to cache
-			MemoryCache.set(mapRef, map);
-		} else {
-			map = (Map) MemoryCache.get(mapRef);
-		}
-		return map;
 	}
 
 	// ===========================================================
@@ -246,7 +299,7 @@ public class MapActivity extends Activity {
 				setContentView(R.layout.map);
 				saveControls();
 				initControls();
-			};
+			}
 		});
 	}
 
@@ -369,77 +422,113 @@ public class MapActivity extends Activity {
 					}
 				}
 				splashDeactivate();
-				// Log.d(Log.MAP_CONTROLLER_TAG,
-				// "onConfigurationChanged finish");
 				canDraw = true;
 				view.onRotate();
 			}
 		}.start();
 	}
-	
-	@Override
+
+    private synchronized void setMap(Map map) {
+        this.map = map;
+    }
+
+    private synchronized Map getMap() {
+        return map;
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		if (onSearchProcess())
-			return;
-		
-		splashActivate(getString(R.string.LoadingMap), true);
+        super.onCreate(savedInstanceState);
 
-		parseIntentParameters();
+        if (onSearchProcess())
+            return;
 
-		currentActivity = this;
+        splashActivate(getString(R.string.LoadingMap), true);
 
-		final Activity current = this;
+        parseIntentParameters();
 
-		mapProcessingThread = new Thread() {
-			@Override			
-			public void run() {
-				try {
-					map = loadMap();
+        currentActivity = this;
 
-					// Canceled
-					if (interrupted()) {
-						return;
-					}
+        final Activity current = this;
 
-					splashActivate(getString(R.string.LoadingMap), true);
+        mapProcessingThread = new Thread() {
+            @Override
+            public void run() {
+                splashActivate(getString(R.string.ParsingMap), true);
+                try {
+                    setMap(MetaMapActivity.mapBuilder.buildMap(mapSource));
+                    MemoryCache.set(mapRef, getMap());
+                } catch (StringToXMLConvertionException e) {
+                    Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
+                    showError(getString(R.string.WrongFileFormat), true);
+                } catch (MapParsingException e) {
+                    Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
+                    showError(getString(R.string.WrongFileFormat), true);
+                }
+                if (!interrupted()) {
+                    initRenderThread.start();
+                }
+            }
+        };
+        initRenderThread = new Thread() {
+            @Override
+            public void run() {
+                if (getMap() == null) {
+                    // something goes wrong in other processing threads. Just ignore that. They know what to do.
+                    return;
+                }
+                splashActivate(getString(R.string.LoadingMap), true);
+                mapRender = initMapRender(getMap(), viewType);
+                initLayout();
+                // Canceled
+                while (view == null || !view.isInitialized()) {
+                    if (interrupted()) {
+                        current.finish();
+                        return;
+                    }
+                    try {
+                        sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                splashDeactivate();
+            }
+        };
 
-					mapRender = initMapRender(map, viewType);
+        if (!MemoryCache.has(mapRef) || (ignoreCache)) {
+            // download map
+            mapDownloadingThread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        loadMap();
 
-					initLayout();
+                        if (interrupted()) {
+                            return;
+                        }
 
-					// Canceled
-					while (view == null || !view.isInitialized()) {
-						if (interrupted()) {
-							current.finish();
-							return;
-						}
-						sleep(100);
-					}
-
-					splashDeactivate();
-
-				} catch (LoginInterruptedRuntimeException e) {
-					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					finish();
-				} catch (ConnectionRuntimeException e) {
-					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError(getString(R.string.ConnectionError), true);
-				} catch (StringToXMLConvertionException e) {
-					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError(getString(R.string.WrongFileFormat), true);
-				} catch (MapParsingException e) {
-					Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
-					showError(getString(R.string.WrongFileFormat), true);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-
-		mapProcessingThread.start();
-	}
+                        if (mapSource.length() > LARGE_MAP_LENGTH) {
+                            showLargeMapWarning();
+                        } else {
+                            mapProcessingThread.start();
+                        }
+                    } catch (LoginInterruptedRuntimeException e) {
+                        Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
+                        finish();
+                    } catch (ConnectionRuntimeException e) {
+                        Log.e(Log.MAP_CONTROLLER_TAG, e.toString());
+                        showError(getString(R.string.ConnectionError), true);
+                    }
+                }
+            };
+            mapDownloadingThread.start();
+        } else {
+            // get from cache
+            setMap((Map) MemoryCache.get(mapRef));
+            initRenderThread.start();
+        }
+    }
 
 	@Override
 	protected void onResume() {
@@ -513,7 +602,7 @@ public class MapActivity extends Activity {
 
 		ArrayList<Topic> searchResult = new ArrayList<Topic>();
 
-		search(searchQuery, map.getRoot(), searchResult);
+		search(searchQuery, getMap().getRoot(), searchResult);
 
 		view.onSearch(searchResult, s);
 	}

@@ -37,6 +37,7 @@
     <string name="LoginActivitySplashTitle">Comapping</string>
 
     <!-- Map activity -->
+    <string name="LargeMapAlertText">The map is very large. Operation can take a long time. Continue?</string>
     <string name="MapActivitySplashTitle">Comapping</string>
     <string name="MapActivityErrorDialogTitle">Error</string>
     <string name="DownloadingMap">Downloading map</string>
@@ -55,7 +56,6 @@
     <string name="PleaseSyncronizeMapList">Please synchronize your map list or open SD card view</string>
     <string name="PleaseSyncronizeMapListNoSd">Please synchronize your map list.</string>
     <string name="EmptyFolder">Folder is empty</string>
-    <string name="TooBigMap" formatted="false">Map is too big.\nMax map size supported is: %s\nCurrent map:\n%s, %s</string>
     <string name="MetaMapSplashTitle">Comapping</string>
     <string name="LoadingMapList">Loading Map List…</string>
 
