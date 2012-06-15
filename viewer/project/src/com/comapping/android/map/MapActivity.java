@@ -413,8 +413,7 @@ public class MapActivity extends Activity {
 			public void run() {
 				splashActivate(getString(R.string.LoadingMap), false);
 				canDraw = false;
-				// Log.d(Log.MAP_CONTROLLER_TAG, "onConfigurationChanged");
-				while (!mapRender.canRotate()) {
+				while (mapRender == null || !mapRender.canRotate() || view == null) {
 					try {
 						sleep(100);
 					} catch (InterruptedException e) {
