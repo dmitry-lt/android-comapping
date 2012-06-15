@@ -99,22 +99,30 @@
 
     <!-- about dialog -->
     <string name="AboutDialogTitle">About Comap viewer</string>
-    <string name="AboutDevelopers">Version: 1.0.0\n
-        Release date: 23.07.09\n
-        E-mail: android@comapping.com\n
+    <string name="AboutDevelopers">
+        <![CDATA[
+        Comapping is online mind mapping software to manage and share information.
+        Use it to take notes, plan and organize.
+        It\'s a way to have one set of notes. One set of files. For everyone.\n
+        \nMap out your work. Map out your life. Become a Comapper.\n\n\n
+        Version: 1.0.0\n
+        Release date: 15.06.12\n
+        E-mail: contact@lanit-tercom.com\n
         \n
         Developers:\n
         Timur Abishev\n
-        Stepan Korshakov\n
+        Yuri Zemlyanskiy\n
+        Grigory Kalabin\n
         Dmitriy Kozorez\n
+        Stepan Korshakov\n
         Vladimir Kulikov\n
         Dmitriy Manaev\n
         Victor Passichenko\n
-        Yuri Zemlyanskiy\n
         \n
         Project managers:\n
         Nikolay Artamonov\n
         Dmitriy Kichinsky\n
+        ]]>
     </string>
 
     <!-- map render -->

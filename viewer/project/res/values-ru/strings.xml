@@ -90,22 +90,30 @@
 
     <!-- about dialog -->
     <string name="AboutDialogTitle">Информация</string>
-    <string name="AboutDevelopers">Версия: 1.0.0\n
-        Дата: 23.07.09\n
-        E-mail: android@comapping.com\n
+    <string name="AboutDevelopers">
+        <![CDATA[
+        Comapping это онлайн-сервис для управления и обмена информацией.
+        С его помощью можно делать заметки, планировать и обсуждать.
+        Это способ работать с общим набором заметок. Общим набором файлов. Для каждого.\n
+        \nПланируйте вашу работу. Планируйте вашу жизнь. Станьте пользователем Comapping.\n\n\n
+        Версия: 1.0.0\n
+        Дата: 15.06.12\n
+        E-mail: contact@lanit-tercom.com\n
         \n
         Разработчики:\n
-        Timur Abishev\n
-        Stepan Korshakov\n
-        Dmitriy Kozorez\n
-        Vladimir Kulikov\n
-        Dmitriy Manaev\n
-        Victor Passichenko\n
-        Yuri Zemlyanskiy\n
+        Абишев Тимур\n
+        Землянский Юрий\n
+        Калабин Григорий\n
+        Козорез Дмитрий\n
+        Коршаков Степан\n
+        Куликов Владимир\n
+        Манаев Дмитрий\n
+        Пасиченко Виктор\n
         \n
         Руководители:\n
-        Nikolay Artamonov\n
-        Dmitriy Kichinsky\n
+        Артамонов Николай\n
+        Кичинский Дмитрий\n
+        ]]>
     </string>
 
     <!-- map render -->
