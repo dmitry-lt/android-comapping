@@ -3,7 +3,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content" 
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<com.comapping.android.map.MapView
+	<com.lanit_tercom.comapping.android.map.MapView
 		android:id="@+id/mapView"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
