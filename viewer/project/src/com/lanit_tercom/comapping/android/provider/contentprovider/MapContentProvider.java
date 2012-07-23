@@ -41,7 +41,7 @@ public abstract class MapContentProvider extends ContentProvider {
         }
 		if ("content://resources/welcome".equals(mapRef)) {
 			// TODO: create normal Resource map provider
-			InputStream input = context.getResources().openRawResource(com.comapping.android.R.raw.welcome);
+			InputStream input = context.getResources().openRawResource(com.lanit_tercom.comapping.android.R.raw.welcome);
 			return ioHelper.getTextFromInputStream(input);
 		} else {
 			mapRef = infoForParameters.setIgnoreCache(mapRef, ignoreCache);

@@ -7,7 +7,7 @@ import android.database.AbstractCursor;
 import android.database.Cursor;
 import android.net.Uri;
 import com.lanit_tercom.comapping.android.Log;
-import com.comapping.android.R;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.map.model.map.Map;
 import com.lanit_tercom.comapping.android.map.model.map.Topic;
 import com.lanit_tercom.comapping.android.map.model.map.builder.MapBuilder;

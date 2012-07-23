@@ -3,10 +3,10 @@ package com.lanit_tercom.comapping.android.preferences;
 import android.app.Activity;
 import android.preference.*;
 import com.lanit_tercom.comapping.android.Constants;
-import com.comapping.android.R;
 
 import android.os.Bundle;
 import android.preference.Preference.OnPreferenceChangeListener;
+import com.lanit_tercom.comapping.android.R;
 
 public class PreferencesActivity extends PreferenceActivity {
 	public final static String PREFERENCES_ACTIVITY_INTENT = "com.comapping.android.intent.PREFERENCES";

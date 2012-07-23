@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import com.lanit_tercom.comapping.android.R;
 
-import com.comapping.android.R;
 
 public class AboutDialog implements OnClickListener {
 

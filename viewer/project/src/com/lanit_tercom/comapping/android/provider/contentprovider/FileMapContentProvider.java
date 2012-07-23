@@ -11,7 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.lanit_tercom.comapping.android.Log;
-import com.comapping.android.R;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.metamap.MetaMapItem;
 import com.lanit_tercom.comapping.android.provider.ioHelper;
 

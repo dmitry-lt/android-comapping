@@ -17,7 +17,7 @@ import android.os.Environment;
 import android.webkit.MimeTypeMap;
 import com.lanit_tercom.comapping.android.Log;
 import com.lanit_tercom.comapping.android.Options;
-import com.comapping.android.R;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.map.model.map.Attachment;
 import com.lanit_tercom.comapping.android.map.render.Render;
 import com.lanit_tercom.comapping.android.preferences.PreferencesStorage;

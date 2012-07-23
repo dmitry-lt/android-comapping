@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import com.comapping.android.R;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.map.model.text.FormattedText;
 import com.lanit_tercom.comapping.android.map.model.text.TextFormat;
 import com.lanit_tercom.comapping.android.map.render.Render;

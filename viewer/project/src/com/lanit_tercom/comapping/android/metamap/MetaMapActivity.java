@@ -31,11 +31,11 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.lanit_tercom.comapping.android.Constants;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.preferences.PreferencesActivity;
 import com.lanit_tercom.comapping.android.preferences.PreferencesStorage;
 import com.lanit_tercom.comapping.android.provider.contentprovider.ComappingMapContentProvider;
 import com.lanit_tercom.comapping.android.provider.contentprovider.FileMapContentProvider;
-import com.comapping.android.R;
 import com.lanit_tercom.comapping.android.map.MapActivity;
 import com.lanit_tercom.comapping.android.map.model.map.builder.MapBuilder;
 import com.lanit_tercom.comapping.android.map.model.map.builder.SaxMapBuilder;

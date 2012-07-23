@@ -1,6 +1,6 @@
 package com.lanit_tercom.comapping.android.map.render.topic;
 
-import com.comapping.android.R;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.map.model.map.Task;
 import com.lanit_tercom.comapping.android.map.model.text.FormattedText;
 import com.lanit_tercom.comapping.android.map.model.text.TextFormat;

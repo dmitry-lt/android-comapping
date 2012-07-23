@@ -1,6 +1,5 @@
 package com.lanit_tercom.comapping.android.metamap;
 
-import com.comapping.android.R;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.lanit_tercom.comapping.android.R;
 
 class MetaMapListAdapter extends ArrayAdapter<MetaMapItem> {
 	

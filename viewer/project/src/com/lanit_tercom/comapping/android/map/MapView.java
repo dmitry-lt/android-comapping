@@ -11,7 +11,7 @@ import android.view.*;
 import android.widget.*;
 import com.lanit_tercom.comapping.android.Log;
 import com.lanit_tercom.comapping.android.Options;
-import com.comapping.android.R;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.map.model.map.Topic;
 import com.lanit_tercom.comapping.android.map.render.MapRender;
 

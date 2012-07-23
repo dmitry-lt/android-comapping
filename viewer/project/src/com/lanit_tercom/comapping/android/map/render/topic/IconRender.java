@@ -1,6 +1,6 @@
 package com.lanit_tercom.comapping.android.map.render.topic;
 
-import com.comapping.android.R;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.map.model.map.Icon;
 import com.lanit_tercom.comapping.android.map.model.map.Topic;
 import com.lanit_tercom.comapping.android.map.render.Render;

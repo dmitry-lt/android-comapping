@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 
 import com.lanit_tercom.comapping.android.Log;
-import com.comapping.android.R;
+import com.lanit_tercom.comapping.android.R;
 import com.lanit_tercom.comapping.android.preferences.PreferencesActivity;
 import com.lanit_tercom.comapping.android.preferences.PreferencesStorage;
 import com.lanit_tercom.comapping.android.provider.communication.exceptions.ConnectionException;
