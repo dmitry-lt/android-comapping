@@ -1,0 +1,1 @@
+![http://stepa.name/wp-content/uploads/2009/07/architecture-with-contentproviders.png](http://stepa.name/wp-content/uploads/2009/07/architecture-with-contentproviders.png)
