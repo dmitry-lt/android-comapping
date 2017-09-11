@@ -1,0 +1,7 @@
+/viewer/project/.idea
+/viewer/project/*.iml
+/viewer/project/bin
+/viewer/project/tests/*.iml
+/viewer/project/gen
+/viewer/project/tests/gen
+
