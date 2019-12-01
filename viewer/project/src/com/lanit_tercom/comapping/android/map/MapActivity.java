@@ -1,18 +1,13 @@
 package com.lanit_tercom.comapping.android.map;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,14 +16,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
-
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.ZoomControls;
 import com.lanit_tercom.comapping.android.Constants;
 import com.lanit_tercom.comapping.android.Log;
 import com.lanit_tercom.comapping.android.Options;
 import com.lanit_tercom.comapping.android.R;
-import com.lanit_tercom.comapping.android.preferences.PreferencesStorage;
-import com.lanit_tercom.comapping.android.provider.communication.Client;
 import com.lanit_tercom.comapping.android.map.model.exceptions.MapParsingException;
 import com.lanit_tercom.comapping.android.map.model.exceptions.StringToXMLConvertionException;
 import com.lanit_tercom.comapping.android.map.model.map.Map;
@@ -38,11 +33,18 @@ import com.lanit_tercom.comapping.android.map.render.MapRender;
 import com.lanit_tercom.comapping.android.map.render.comapping.ComappingRender;
 import com.lanit_tercom.comapping.android.map.render.explorer.ExplorerRender;
 import com.lanit_tercom.comapping.android.metamap.MetaMapActivity;
+import com.lanit_tercom.comapping.android.preferences.PreferencesStorage;
+import com.lanit_tercom.comapping.android.provider.communication.Client;
 import com.lanit_tercom.comapping.android.provider.contentprovider.MapContentProvider;
 import com.lanit_tercom.comapping.android.provider.contentprovider.exceptions.ConnectionRuntimeException;
 import com.lanit_tercom.comapping.android.provider.contentprovider.exceptions.LoginInterruptedRuntimeException;
 import com.lanit_tercom.comapping.android.provider.contentprovider.exceptions.MapNotFoundException;
 import com.lanit_tercom.comapping.android.storage.MemoryCache;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class MapActivity extends Activity {
 
@@ -50,7 +52,7 @@ public class MapActivity extends Activity {
      * Length of the map in characters. If loaded map length is greater than this number - alert will be shown.
      * <p>Using size is a bad way, because a single character may be encoded by various size depends of encoding</p>
      */
-    private static final int LARGE_MAP_LENGTH = 250000;
+    private static final int LARGE_MAP_LENGTH = 2500000;
 
 	// ===========================================================
 	// Identifiers for our menu items.
