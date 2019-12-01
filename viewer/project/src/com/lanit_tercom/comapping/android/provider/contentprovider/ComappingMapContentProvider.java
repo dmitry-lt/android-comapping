@@ -186,8 +186,8 @@ public class ComappingMapContentProvider extends MapContentProvider {
 			public void statusChanged(String mapId, int downloadedInBytes) {
 				MapInfo mapInfo = mapInfos.get(mapId);
 				if (mapInfo != null) {
-					mapInfo.notification.setLatestEventInfo(context, "Downloading map, mapId" + mapId,
-							downloadedInBytes + "/" + mapInfo.sizeInBytes, null);
+//					mapInfo.notification.setLatestEventInfo(context, "Downloading map, mapId" + mapId,
+//							downloadedInBytes + "/" + mapInfo.sizeInBytes, null);
 				}
 			}
 		});
@@ -214,7 +214,7 @@ public class ComappingMapContentProvider extends MapContentProvider {
 		CharSequence contentTitle = "Downloading map, mapId" + mapId;
 		CharSequence contentText = "0/" + mapInfo.sizeInBytes;
 
-		notification.setLatestEventInfo(context, contentTitle, contentText, null);
+//		notification.setLatestEventInfo(context, contentTitle, contentText, null);
 		mNotificationManager.notify(1, notification);
 
 		client.startMapDownloading(mapId);
